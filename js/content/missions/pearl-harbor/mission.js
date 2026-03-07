@@ -7,11 +7,63 @@
  * - Historical ripple events
  * - Knowledge checkpoint questions
  * 
- * This file will be implemented in Task 5.2
+ * This is pure data - no logic, following architecture rules.
+ * Registration with MissionRegistry happens in main.js during bootstrap.
+ * 
+ * Requirements: 3.3, 4.2, 3A.3
  */
 
-// TODO: Task 5.2 - Define Pearl Harbor mission configuration
-// - Mission metadata with historicalDate: "1941-12-07"
-// - Three roles: japanese-aviator, american-sailor, american-civilian
-// - Teaser description for timeline tooltip
-// - Register with MissionRegistry
+/**
+ * Pearl Harbor Mission Configuration
+ * December 7, 1941 - The attack that brought America into World War II
+ */
+const pearlHarborMission = {
+  // Unique mission identifier
+  id: 'pearl-harbor',
+  
+  // Display title
+  title: 'Pearl Harbor',
+  
+  // Historical date in ISO format (YYYY-MM-DD)
+  historicalDate: '1941-12-07',
+  
+  // Historical era for timeline grouping
+  era: 'Modern',
+  
+  // Mission is unlocked and playable
+  unlocked: true,
+  
+  // One-line teaser for timeline tooltip
+  teaser: 'Experience the attack that brought America into World War II from three perspectives',
+  
+  // Three playable roles
+  roles: [
+    {
+      id: 'japanese-aviator',
+      name: 'Japanese Naval Aviator',
+      description: 'Pilot a Mitsubishi A6M Zero fighter in the first wave of the attack',
+      scenes: [] // Will be populated in Task 10.1
+    },
+    {
+      id: 'american-sailor',
+      name: 'American Sailor (USS Arizona)',
+      description: 'Serve aboard the USS Arizona during the surprise attack',
+      scenes: [] // Will be populated in Task 10.2
+    },
+    {
+      id: 'american-civilian',
+      name: 'American Civilian',
+      description: 'Experience the attack as a civilian living near Pearl Harbor',
+      scenes: [] // Will be populated in Task 10.3
+    }
+  ],
+  
+  // Historical ripple events (will be populated in Task 14.1)
+  historicalRipple: [],
+  
+  // Knowledge checkpoint questions (will be populated in Task 15.1)
+  knowledgeQuestions: []
+};
+
+// Export pure data - registration happens in main.js
+export default pearlHarborMission;

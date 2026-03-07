@@ -51,7 +51,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Validate mission objects have required fields (id, title, historicalDate, era, roles)
     - _Requirements: 2.1, 15.1, 15.2, 15.3, 15.5, 3A.12_
   
-  - [~] 5.2 Create Pearl Harbor mission.js
+  - [x] 5.2 Create Pearl Harbor mission.js
     - Define mission metadata: id, title, historicalDate ("1941-12-07"), era ("Modern"), unlocked: true
     - Define three roles: japanese-aviator, american-sailor, american-civilian
     - Include teaser description for timeline tooltip
