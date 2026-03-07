@@ -15,7 +15,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
   - _Requirements: 1.1, 1.5, 13.1-13.5, 19.4_
 
 - [ ] 2. Implement EventBus communication system
-  - [~] 2.1 Create EventBus.js with pub/sub pattern
+  - [x] 2.1 Create EventBus.js with pub/sub pattern
     - Implement on(), off(), emit() methods
     - Ensure no global variables, ES6 module exports only
     - _Requirements: 14.1, 14.2, 14.3, 14.4, 19.1, 19.2_
