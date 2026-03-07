@@ -45,7 +45,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
   - Verify no global variables in console
   - Ask user if questions arise
 
-- [ ] 5. Implement MissionRegistry and content loading
+- [x] 5. Implement MissionRegistry and content loading
   - [x] 5.1 Create MissionRegistry.js
     - Implement register(), getMission(), getAllMissions(), getMissionsByEra() methods
     - Validate mission objects have required fields (id, title, historicalDate, era, roles)
@@ -59,7 +59,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - _Requirements: 3.3, 4.2, 3A.3_
 
 - [ ] 6. Implement UI rendering system
-  - [~] 6.1 Create UIController.js
+  - [x] 6.1 Create UIController.js
     - Implement showScreen(), renderScene(), showLoading(), applyEffect(), updateProgress() methods
     - Subscribe to EventBus for scene:transition, game:start, game:complete events
     - Render screens: landing, timeline, role-selection, scene, outcome, historical-ripple, knowledge-checkpoint, results-card

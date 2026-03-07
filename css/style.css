@@ -314,6 +314,92 @@ button:disabled, .button:disabled {
 }
 
 /* ============================================
+   Progress Bar
+   ============================================ */
+.progress-bar {
+    width: 100%;
+    height: 8px;
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--border-radius-sm);
+    overflow: hidden;
+    margin-top: var(--spacing-xs);
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        var(--color-accent-gold) 0%,
+        var(--color-accent-red) 100%
+    );
+    transition: width var(--transition-base);
+}
+
+/* ============================================
+   Atmospheric Effects
+   ============================================ */
+/* Smoke effect */
+@keyframes smoke {
+    0% {
+        background-position: 0% 0%;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+body.effect-smoke::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        radial-gradient(circle at 20% 50%, rgba(100, 100, 100, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 80%, rgba(100, 100, 100, 0.1) 0%, transparent 50%);
+    background-size: 200% 200%;
+    animation: smoke 4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: var(--z-elevated);
+}
+
+/* Fire glow effect */
+@keyframes fireGlow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(196, 30, 58, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px rgba(196, 30, 58, 0.6);
+    }
+}
+
+body.effect-fire #app {
+    animation: fireGlow 1s ease-in-out infinite;
+}
+
+/* Screen shake effect */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+    20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+body.effect-shake #app {
+    animation: shake 0.5s ease-in-out;
+}
+
+/* ============================================
+   Scene Choices
+   ============================================ */
+.choice-button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    margin-bottom: var(--spacing-sm);
+}
+
+/* ============================================
    Utility Classes
    ============================================ */
 .text-center {
@@ -326,6 +412,10 @@ button:disabled, .button:disabled {
 
 .text-red {
     color: var(--color-accent-red);
+}
+
+.text-secondary {
+    color: var(--color-text-secondary);
 }
 
 .mt-sm { margin-top: var(--spacing-sm); }
