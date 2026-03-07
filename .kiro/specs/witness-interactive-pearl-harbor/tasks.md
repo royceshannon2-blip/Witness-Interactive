@@ -26,7 +26,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Display loading animation on index.html initial load
     - _Requirements: 18.3_
 
-- [ ] 3. Implement core game state management
+- [x] 3. Implement core game state management
   - [x] 3.1 Create ConsequenceSystem.js
     - Implement setFlag(), getFlag(), getAllFlags(), reset() methods
     - Track boolean and numeric flags
@@ -40,13 +40,13 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Emit scene:transition events via EventBus
     - _Requirements: 2.4, 5.4, 6.5, 20.3_
 
-- [ ] 4. Checkpoint - Verify core engine components
+- [x] 4. Checkpoint - Verify core engine components
   - Ensure EventBus, ConsequenceSystem, SceneStateMachine load without errors
   - Verify no global variables in console
   - Ask user if questions arise
 
 - [ ] 5. Implement MissionRegistry and content loading
-  - [~] 5.1 Create MissionRegistry.js
+  - [x] 5.1 Create MissionRegistry.js
     - Implement register(), getMission(), getAllMissions(), getMissionsByEra() methods
     - Validate mission objects have required fields (id, title, historicalDate, era, roles)
     - _Requirements: 2.1, 15.1, 15.2, 15.3, 15.5, 3A.12_
