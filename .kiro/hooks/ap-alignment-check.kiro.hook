@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "AP Theme Alignment Check",
+  "description": "Reminds Kiro to verify AP theme tags (causation, continuity, perspective, argumentation, contextualization) are present in scene objects when mission content files are modified",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "js/content/missions/*.js"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Verify that every scene object in the edited file includes an apThemes array with at least one of these AP History reasoning skills: causation, continuity, perspective, argumentation, contextualization. If any scene is missing apThemes, add the appropriate tags based on the scene's educational content before completing."
+  }
+}

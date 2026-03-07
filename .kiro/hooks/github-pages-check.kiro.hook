@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "name": "GitHub Pages Deployment Check",
+  "description": "Verifies that newly created or edited files use relative paths only and require no build step. Flags absolute paths and npm imports that would break GitHub Pages deployment.",
+  "version": "1",
+  "when": {
+    "type": "fileCreated",
+    "patterns": [
+      "*.js",
+      "*.html",
+      "*.css"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check this file for GitHub Pages compatibility: verify it uses relative paths only (no absolute paths like /js/...), contains no npm imports or require() statements, and needs no build step. If you find violations, flag them immediately and suggest fixes."
+  }
+}

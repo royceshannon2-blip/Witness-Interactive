@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Architecture Guard",
+  "description": "Prevents content leaking into engine files by verifying no hardcoded strings, narratives, or mission data exist in js/engine/",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "js/engine/*.js"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Verify the edited engine file contains zero game content (no hardcoded scene narratives, mission data, or content strings). Engine files must only contain logic. If content is found, refactor it to the appropriate js/content/ file before completing."
+  }
+}

@@ -1,0 +1,7 @@
+# MCP Usage Rules
+
+- Use GitHub MCP to commit after every completed feature
+- Use Fetch MCP to verify historical facts before writing any scene content
+- Use Playwright MCP to test full game flow after any engine change
+- Commit format: type(scope): description
+- Never commit broken or incomplete code to main
