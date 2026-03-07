@@ -33,7 +33,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Subscribe to EventBus for choice:made events
     - _Requirements: 6.1, 6.2, 6.4, 6.5, 20.1, 20.2_
   
-  - [~] 3.2 Create SceneStateMachine.js
+  - [x] 3.2 Create SceneStateMachine.js
     - Implement loadRole(), getCurrentScene(), transitionTo(), isComplete() methods
     - Validate scene objects have required fields (id, narrative, apThemes, choices)
     - Log warning if apThemes array is empty
