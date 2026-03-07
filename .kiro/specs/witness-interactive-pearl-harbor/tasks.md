@@ -20,7 +20,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Ensure no global variables, ES6 module exports only
     - _Requirements: 14.1, 14.2, 14.3, 14.4, 19.1, 19.2_
   
-  - [~] 2.2 Create LoadingStateHandler.js
+  - [-] 2.2 Create LoadingStateHandler.js
     - Implement showLoading(), hideLoading(), updateProgress() methods
     - Subscribe to EventBus for module loading events
     - Display loading animation on index.html initial load

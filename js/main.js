@@ -9,9 +9,10 @@
  * All components communicate via EventBus for loose coupling.
  */
 
-// Engine imports will be added in subsequent tasks
-// import { EventBus } from './engine/EventBus.js';
-// import { LoadingStateHandler } from './engine/LoadingStateHandler.js';
+// Engine imports
+import EventBus from './engine/EventBus.js';
+import LoadingStateHandler from './engine/LoadingStateHandler.js';
+// Additional imports will be added in subsequent tasks
 // import { ConsequenceSystem } from './engine/ConsequenceSystem.js';
 // import { SceneStateMachine } from './engine/SceneStateMachine.js';
 // import { UIController } from './engine/UIController.js';
@@ -19,14 +20,22 @@
 
 /**
  * Initialize the application
- * This function will be implemented in Task 6.2
+ * This function will be fully implemented in Task 6.2
  */
 async function initializeApp() {
     console.log('Witness Interactive: Pearl Harbor - Initializing...');
     
-    // TODO: Task 6.2 - Initialize all engine components
-    // 1. Create EventBus instance
-    // 2. Create LoadingStateHandler
+    // Initialize EventBus
+    const eventBus = new EventBus();
+    
+    // Initialize LoadingStateHandler and subscribe to events
+    const loadingHandler = new LoadingStateHandler();
+    loadingHandler.subscribeToEvents(eventBus);
+    
+    // Show loading screen
+    eventBus.emit('game:initializing', { message: 'Initializing game engine...' });
+    
+    // TODO: Task 6.2 - Initialize remaining engine components
     // 3. Create ConsequenceSystem
     // 4. Create SceneStateMachine
     // 5. Create UIController
@@ -35,13 +44,19 @@ async function initializeApp() {
     // 8. Emit game:start event
     // 9. Transition to landing screen
     
-    // For now, just hide the loading screen after a delay
+    // Simulate module loading for demonstration
     setTimeout(() => {
-        const loadingScreen = document.getElementById('loading-screen');
-        if (loadingScreen) {
-            loadingScreen.classList.remove('active');
-        }
-        console.log('Application initialized (placeholder)');
+        eventBus.emit('module:progress', { percent: 50 });
+    }, 500);
+    
+    setTimeout(() => {
+        eventBus.emit('module:progress', { percent: 100 });
+    }, 1000);
+    
+    // Hide loading screen after initialization
+    setTimeout(() => {
+        eventBus.emit('game:ready');
+        console.log('Application initialized (LoadingStateHandler active)');
     }, 1500);
 }
 
