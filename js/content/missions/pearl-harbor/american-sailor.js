@@ -33,6 +33,11 @@ Your buddy nudges you, points at the sky. "Aircraft. Lot of 'em." You squint int
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: null,
+    timedChoice: {
+      enabled: true,
+      duration: 8000,
+      defaultChoice: "as-choice-01-c"
+    },
     choices: [
       {
         id: "as-choice-01-a",
@@ -74,6 +79,11 @@ A torpedo bomber roars past Arizona's bow, missing by yards. You're moored outbo
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "shake",
+    timedChoice: {
+      enabled: true,
+      duration: 10000,
+      defaultChoice: "as-choice-02-b"
+    },
     choices: [
       {
         id: "as-choice-02-a",
@@ -117,6 +127,11 @@ Your ears ring. You can't hear anything. Smoke, fire, chaos. The forward part of
     apThemes: ["perspective", "continuity"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "fire",
+    timedChoice: {
+      enabled: true,
+      duration: 12000,
+      defaultChoice: "as-choice-03-a"
+    },
     choices: [
       {
         id: "as-choice-03-a",
@@ -158,6 +173,11 @@ You see sailors in the water, some swimming, some floating face-down. Oil fires 
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "smoke",
+    timedChoice: {
+      enabled: true,
+      duration: 10000,
+      defaultChoice: "as-choice-04-c"
+    },
     choices: [
       {
         id: "as-choice-04-a",

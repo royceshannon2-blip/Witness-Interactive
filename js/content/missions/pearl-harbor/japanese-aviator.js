@@ -112,6 +112,11 @@ Your fuel gauge shows three-quarters remaining. Your ammunition counter reads fu
     apThemes: ["perspective", "continuity"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "smoke",
+    timedChoice: {
+      enabled: true,
+      duration: 10000,
+      defaultChoice: "ja-choice-03-c"
+    },
     choices: [
       {
         id: "ja-choice-03-a",
@@ -153,6 +158,11 @@ Your fuel gauge reads half. Enough to escort him partway, maybe. Or enough to ma
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "shake",
+    timedChoice: {
+      enabled: true,
+      duration: 12000,
+      defaultChoice: "ja-choice-04-b"
+    },
     choices: [
       {
         id: "ja-choice-04-a",

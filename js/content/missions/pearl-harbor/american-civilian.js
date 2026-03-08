@@ -75,6 +75,11 @@ Then you hear a different sound—a whistling, getting louder. Something is fall
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "shake",
+    timedChoice: {
+      enabled: true,
+      duration: 6000,
+      defaultChoice: "ac-choice-02-a"
+    },
     choices: [
       {
         id: "ac-choice-02-a",
@@ -116,6 +121,11 @@ You can hear sirens now, but they're all heading toward Pearl Harbor and the mil
     apThemes: ["perspective", "continuity"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "smoke",
+    timedChoice: {
+      enabled: true,
+      duration: 8000,
+      defaultChoice: "ac-choice-03-b"
+    },
     choices: [
       {
         id: "ac-choice-03-a",
