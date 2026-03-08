@@ -75,9 +75,14 @@ class TypewriterEffect {
       return;
     }
 
-    // Add click listener for skip functionality
+    // Add click listener for skip functionality after a small delay
+    // This prevents the click that triggered the scene transition from immediately skipping
     if (this.config.skipOnClick) {
-      document.addEventListener('click', this.skipHandler);
+      setTimeout(() => {
+        if (this.active) {
+          document.addEventListener('click', this.skipHandler);
+        }
+      }, 100);
     }
 
     // Start animation
