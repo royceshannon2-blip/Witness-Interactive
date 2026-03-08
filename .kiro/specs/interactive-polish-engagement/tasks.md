@@ -3,68 +3,68 @@
 ## Task 1: TypewriterEffect Component
 
 ### Task 1.1: Create TypewriterEffect.js
-- [ ] Create `js/engine/TypewriterEffect.js`
-- [ ] Implement constructor with EventBus and config parameters
-- [ ] Implement `revealText(element, text, speed, onComplete)` method
-- [ ] Implement `skipToEnd()` method for click-to-complete
-- [ ] Implement `isActive()` method to check animation state
-- [ ] Check `prefers-reduced-motion` and skip animation if enabled
-- [ ] Use `requestAnimationFrame` for smooth character reveal
-- [ ] Store interval ID for cleanup
-- [ ] Subscribe to `scene:transition` event
-- [ ] Emit `typewriter:complete` when finished
-- [ ] Emit `typewriter:skipped` when user skips
+- [x] Create `js/engine/TypewriterEffect.js`
+- [x] Implement constructor with EventBus and config parameters
+- [x] Implement `revealText(element, text, speed, onComplete)` method
+- [x] Implement `skipToEnd()` method for click-to-complete
+- [x] Implement `isActive()` method to check animation state
+- [x] Check `prefers-reduced-motion` and skip animation if enabled
+- [x] Use `requestAnimationFrame` for smooth character reveal
+- [x] Store interval ID for cleanup
+- [x] Subscribe to `scene:transition` event
+- [x] Emit `typewriter:complete` when finished
+- [x] Emit `typewriter:skipped` when user skips
 
 ### Task 1.2: Write TypewriterEffect tests
-- [ ] Create `js/engine/TypewriterEffect.test.js`
-- [ ] Test character-by-character reveal
-- [ ] Test skip-on-click functionality
-- [ ] Test prefers-reduced-motion handling
-- [ ] Test EventBus integration
+- [x] Create `js/engine/TypewriterEffect.test.js`
+- [x] Test character-by-character reveal
+- [x] Test skip-on-click functionality
+- [x] Test prefers-reduced-motion handling
+- [x] Test EventBus integration
 
 ---
 
 ## Task 2: TimedChoiceSystem Component
 
 ### Task 2.1: Create TimedChoiceSystem.js
-- [ ] Create `js/engine/TimedChoiceSystem.js`
-- [ ] Implement constructor with EventBus and config parameters
-- [ ] Implement `startTimer(duration, defaultChoiceId, onExpire)` method
-- [ ] Implement `cancelTimer()` method
-- [ ] Implement `getRemainingTime()` method
-- [ ] Use `setInterval` for countdown updates
-- [ ] Store timer ID for cleanup
-- [ ] Subscribe to `scene:transition` event to cancel timer
-- [ ] Subscribe to `choice:made` event to cancel timer
-- [ ] Emit `timer:started` when countdown begins
-- [ ] Emit `timer:expired` when time runs out
-- [ ] Emit `timer:cancelled` when player chooses in time
-- [ ] Auto-select default choice on expiration
+- [x] Create `js/engine/TimedChoiceSystem.js`
+- [x] Implement constructor with EventBus and config parameters
+- [x] Implement `startTimer(duration, defaultChoiceId, onExpire)` method
+- [x] Implement `cancelTimer()` method
+- [x] Implement `getRemainingTime()` method
+- [x] Use `setInterval` for countdown updates
+- [x] Store timer ID for cleanup
+- [x] Subscribe to `scene:transition` event to cancel timer
+- [x] Subscribe to `choice:made` event to cancel timer
+- [x] Emit `timer:started` when countdown begins
+- [x] Emit `timer:expired` when time runs out
+- [x] Emit `timer:cancelled` when player chooses in time
+- [x] Auto-select default choice on expiration
 
 ### Task 2.2: Create timer UI rendering
-- [ ] Add timer display HTML in UIController
-- [ ] Create circular progress indicator CSS
-- [ ] Show remaining seconds as text
-- [ ] Add pulse/flash animation when < 3 seconds remain
-- [ ] Use red color for urgency
-- [ ] Respect `prefers-reduced-motion` for pulse effects
+- [x] Add timer display HTML in UIController
+- [x] Create circular progress indicator CSS
+- [x] Show remaining seconds as text
+- [x] Add pulse/flash animation when < 3 seconds remain
+- [x] Use red color for urgency
+- [x] Respect `prefers-reduced-motion` for pulse effects
 
 ### Task 2.3: Write TimedChoiceSystem tests
-- [ ] Create `js/engine/TimedChoiceSystem.test.js`
-- [ ] Test timer countdown
-- [ ] Test auto-select on expiration
-- [ ] Test timer cancellation on choice
-- [ ] Test EventBus integration
+- [x] Create `js/engine/TimedChoiceSystem.test.js`
+- [x] Test timer countdown
+- [x] Test auto-select on expiration
+- [x] Test timer cancellation on choice
+- [x] Test EventBus integration
 
 ### Task 2.4: Tag scenes with timed choices
-- [ ] Review `js/content/missions/pearl-harbor/american-sailor.js`
-- [ ] Add `timedChoice` configuration to appropriate scenes (focus on combat scenes)
-- [ ] Specify duration and default choice for each timed scene
-- [ ] Review `js/content/missions/pearl-harbor/american-civilian.js`
-- [ ] Add `timedChoice` configuration to 1-2 high-urgency scenes
-- [ ] Review `js/content/missions/pearl-harbor/japanese-aviator.js`
-- [ ] Add `timedChoice` configuration to 1-2 combat decision scenes
-- [ ] **Arizona sailor role should have the most timed choices (4-5 scenes)**
+- [x] Review `js/content/missions/pearl-harbor/american-sailor.js`
+- [x] Add `timedChoice` configuration to appropriate scenes (focus on combat scenes)
+- [x] Specify duration and default choice for each timed scene
+- [x] Review `js/content/missions/pearl-harbor/american-civilian.js`
+- [x] Add `timedChoice` configuration to 1-2 high-urgency scenes
+- [x] Review `js/content/missions/pearl-harbor/japanese-aviator.js`
+- [x] Add `timedChoice` configuration to 1-2 combat decision scenes
+- [x] **Arizona sailor role should have the most timed choices (4-5 scenes)**
 
 ---
 
@@ -138,82 +138,82 @@
 ## Task 4: AtmosphericEffects Component
 
 ### Task 4.1: Create atmospheric-effects.css
-- [ ] Create `css/atmospheric-effects.css`
-- [ ] Implement `.effect-smoke` CSS animation (dark particles rising)
-- [ ] Implement `.effect-fire` CSS animation (orange/red flickering glow)
-- [ ] Implement `.effect-shake` CSS animation (screen shake)
-- [ ] Implement `.effect-dawn` CSS animation (soft orange/pink gradient)
-- [ ] Implement `.effect-explosion` CSS animation (bright white flash + fade)
-- [ ] Implement `.effect-aftermath` CSS animation (desaturated hazy overlay)
-- [ ] Implement `.effect-rain` CSS animation (subtle rain particles)
-- [ ] Implement `.effect-ocean` CSS animation (gentle wave motion blur)
-- [ ] Implement `.effect-ash` CSS animation (gray ash particles falling)
-- [ ] Use GPU-accelerated properties (`transform`, `opacity`)
-- [ ] Add `@media (prefers-reduced-motion: reduce)` rules
-- [ ] Ensure effects don't obscure text or choices
-- [ ] Link CSS file in `index.html`
+- [x] Create `css/atmospheric-effects.css`
+- [x] Implement `.effect-smoke` CSS animation (dark particles rising)
+- [x] Implement `.effect-fire` CSS animation (orange/red flickering glow)
+- [x] Implement `.effect-shake` CSS animation (screen shake)
+- [x] Implement `.effect-dawn` CSS animation (soft orange/pink gradient)
+- [x] Implement `.effect-explosion` CSS animation (bright white flash + fade)
+- [x] Implement `.effect-aftermath` CSS animation (desaturated hazy overlay)
+- [x] Implement `.effect-rain` CSS animation (subtle rain particles)
+- [x] Implement `.effect-ocean` CSS animation (gentle wave motion blur)
+- [x] Implement `.effect-ash` CSS animation (gray ash particles falling)
+- [x] Use GPU-accelerated properties (`transform`, `opacity`)
+- [x] Add `@media (prefers-reduced-motion: reduce)` rules
+- [x] Ensure effects don't obscure text or choices
+- [x] Link CSS file in `index.html`
 
 ### Task 4.2: Create AtmosphericEffects.js
-- [ ] Create `js/engine/AtmosphericEffects.js`
-- [ ] Implement constructor with EventBus and config parameters
-- [ ] Implement `applyEffect(effectName, duration)` method
-- [ ] Implement `removeEffect(effectName)` method
-- [ ] Implement `clearAllEffects()` method
-- [ ] Add/remove CSS classes on `document.body`
-- [ ] Check `prefers-reduced-motion` before applying
-- [ ] Auto-remove effects after duration (default 2000ms)
-- [ ] Support multiple simultaneous effects
-- [ ] Subscribe to `scene:transition` event
-- [ ] Emit `effect:applied` when effect starts
-- [ ] Emit `effect:removed` when effect ends
+- [x] Create `js/engine/AtmosphericEffects.js`
+- [x] Implement constructor with EventBus and config parameters
+- [x] Implement `applyEffect(effectName, duration)` method
+- [x] Implement `removeEffect(effectName)` method
+- [x] Implement `clearAllEffects()` method
+- [x] Add/remove CSS classes on `document.body`
+- [x] Check `prefers-reduced-motion` before applying
+- [x] Auto-remove effects after duration (default 2000ms)
+- [x] Support multiple simultaneous effects
+- [x] Subscribe to `scene:transition` event
+- [x] Emit `effect:applied` when effect starts
+- [x] Emit `effect:removed` when effect ends
 
 ### Task 4.3: Tag scenes with atmospheric effects
-- [ ] Review `js/content/missions/pearl-harbor/american-sailor.js`
-- [ ] Add `atmosphericEffect` to appropriate scenes
-- [ ] Review `js/content/missions/pearl-harbor/american-civilian.js`
-- [ ] Add `atmosphericEffect` to appropriate scenes
-- [ ] Review `js/content/missions/pearl-harbor/japanese-aviator.js`
-- [ ] Add `atmosphericEffect` to appropriate scenes
+- [x] Review `js/content/missions/pearl-harbor/american-sailor.js`
+- [x] Add `atmosphericEffect` to appropriate scenes
+- [x] Review `js/content/missions/pearl-harbor/american-civilian.js`
+- [x] Add `atmosphericEffect` to appropriate scenes
+- [x] Review `js/content/missions/pearl-harbor/japanese-aviator.js`
+- [x] Add `atmosphericEffect` to appropriate scenes
 
 ### Task 4.4: Write AtmosphericEffects tests
-- [ ] Create `js/engine/AtmosphericEffects.test.js`
-- [ ] Test effect application
-- [ ] Test effect removal
-- [ ] Test multiple simultaneous effects
-- [ ] Test prefers-reduced-motion handling
-- [ ] Test EventBus integration
+- [x] Create `js/engine/AtmosphericEffects.test.js`
+- [x] Test effect application
+- [x] Test effect removal
+- [x] Test multiple simultaneous effects
+- [x] Test prefers-reduced-motion handling
+- [x] Test EventBus integration
 
 ---
 
 ## Task 5: SceneTransition Component
 
 ### Task 5.1: Create SceneTransition.js
-- [ ] Create `js/engine/SceneTransition.js`
-- [ ] Implement constructor with EventBus and config parameters
-- [ ] Implement `transition(fromScene, toScene, type, duration)` method
-- [ ] Support transition types: fade, flash, none
-- [ ] Use CSS animations for performance
-- [ ] Block user input during transition
-- [ ] Total duration: 500ms (250ms out + 250ms in)
-- [ ] Check `prefers-reduced-motion` (use instant transition)
-- [ ] Subscribe to `scene:transition` event
-- [ ] Emit `transition:start` when animation begins
-- [ ] Emit `transition:complete` when animation finishes
+- [x] Create `js/engine/SceneTransition.js`
+- [x] Implement constructor with EventBus and config parameters
+- [x] Implement `transition(fromScene, toScene, type, duration)` method
+- [x] Support transition types: fade, flash, none
+- [x] Use CSS animations for performance
+- [x] Block user input during transition
+- [x] Total duration: 500ms (250ms out + 250ms in)
+- [x] Check `prefers-reduced-motion` (use instant transition)
+- [x] Subscribe to `scene:transition` event
+- [x] Emit `transition:start` when animation begins
+- [x] Emit `transition:complete` when animation finishes
 
 ### Task 5.2: Create transition CSS
-- [ ] Add transition CSS to `css/style.css`
-- [ ] Implement `.scene-transition-fade-out` animation
-- [ ] Implement `.scene-transition-fade-in` animation
-- [ ] Implement `.scene-transition-flash` animation
-- [ ] Add `@media (prefers-reduced-motion: reduce)` rules
+- [x] Add transition CSS to `css/style.css`
+- [x] Implement `.scene-transition-fade-out` animation
+- [x] Implement `.scene-transition-fade-in` animation
+- [x] Implement `.scene-transition-flash` animation
+- [x] Add `@media (prefers-reduced-motion: reduce)` rules
 
 ### Task 5.3: Write SceneTransition tests
-- [ ] Create `js/engine/SceneTransition.test.js`
-- [ ] Test fade transition
-- [ ] Test flash transition
-- [ ] Test instant transition (prefers-reduced-motion)
-- [ ] Test input blocking during transition
-- [ ] Test EventBus integration
+- [x] Create `js/engine/SceneTransition.test.js`
+- [x] Test fade transition
+- [x] Test flash transition
+- [x] Test instant transition (prefers-reduced-motion)
+- [x] Test input blocking during transition
+- [x] Test EventBus integration
 
 ---
 
@@ -233,39 +233,46 @@
 ## Task 7: UIController Integration
 
 ### Task 7.1: Update UIController constructor
-- [ ] Import all new components in `js/engine/UIController.js`
-- [ ] Accept components object parameter in constructor
-- [ ] Store component references
-- [ ] Initialize components with inline config
+- [x] Import all new components in `js/engine/UIController.js`
+- [x] Accept components object parameter in constructor
+- [x] Store component references
+- [x] Initialize components with inline config
 
 ### Task 7.2: Update UIController.renderScene method
-- [ ] Apply scene transition before rendering
-- [ ] Render narrative with typewriter effect
-- [ ] **CRITICAL**: Disable choices until typewriter completes
-- [ ] **CRITICAL**: Start timed choice ONLY AFTER typewriter completes (in typewriter callback)
-- [ ] Apply atmospheric effects if specified
-- [ ] Change ambient sound if specified
-- [ ] Ensure proper cleanup on scene transition
+- [x] Apply scene transition before rendering
+- [x] Render narrative with typewriter effect
+- [x] **CRITICAL**: Disable choices until typewriter completes
+- [x] **CRITICAL**: Start timed choice ONLY AFTER typewriter completes (in typewriter callback)
+- [x] Apply atmospheric effects if specified
+- [ ] Change ambient sound if specified (blocked by Task 3 - AmbientSoundManager not implemented)
+- [x] Ensure proper cleanup on scene transition
 
 ### Task 7.3: Add enableChoices/disableChoices methods
-- [ ] Implement `enableChoices()` method to make buttons clickable
-- [ ] Implement `disableChoices()` method to prevent clicks during typewriter
-- [ ] Call `disableChoices()` at start of scene render
-- [ ] Call `enableChoices()` in typewriter completion callback
+- [x] Implement `enableChoices()` method to make buttons clickable
+- [x] Implement `disableChoices()` method to prevent clicks during typewriter
+- [x] Call `disableChoices()` at start of scene render
+- [x] Call `enableChoices()` in typewriter completion callback
+
+### Task 7.4: Add timer event handlers
+- [x] Implement `handleTimerStarted()` to show timer UI
+- [x] Implement `handleTimerUpdate()` to update countdown display
+- [x] Implement `handleTimerExpired()` to hide timer UI
+- [x] Implement `handleTimerCancelled()` to hide timer UI
+- [x] Implement `updateTimerDisplay()` to update timer text and progress
 
 ---
 
 ## Task 8: Main.js Integration
 
 ### Task 8.1: Initialize components in main.js
-- [ ] Import all new components in `js/main.js`
-- [ ] Initialize TypewriterEffect with inline config
-- [ ] Initialize TimedChoiceSystem with inline config
-- [ ] Initialize AmbientSoundManager with inline config
-- [ ] Initialize AtmosphericEffects with inline config
-- [ ] Initialize SceneTransition with inline config
-- [ ] Pass components object to UIController constructor
-- [ ] Verify no global variables are created
+- [x] Import all new components in `js/main.js`
+- [x] Initialize TypewriterEffect with inline config
+- [x] Initialize TimedChoiceSystem with inline config
+- [ ] Initialize AmbientSoundManager with inline config (blocked by Task 3 - not implemented)
+- [x] Initialize AtmosphericEffects with inline config
+- [x] Initialize SceneTransition with inline config
+- [x] Pass components object to UIController constructor
+- [x] Verify no global variables are created
 
 ### Task 8.2: Update component verification
 - [x] Update `js/engine/verify-components.test.js`
