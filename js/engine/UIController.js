@@ -24,9 +24,11 @@ class UIController {
    * @param {EventBus} eventBus - Event bus for component communication
    * @param {TimelineSelector} timelineSelector - Timeline selector component
    * @param {MissionRegistry} missionRegistry - Mission registry for accessing mission data
+   * @param {ConsequenceSystem} consequenceSystem - Consequence system for outcome calculation
+   * @param {ResultsCard} resultsCard - Results card generator component
    * @param {object} uiContent - UI text content configuration (from js/content/ui-content.js)
    */
-  constructor(eventBus, timelineSelector, missionRegistry, uiContent) {
+  constructor(eventBus, timelineSelector, missionRegistry, consequenceSystem, resultsCard, uiContent) {
     // Store reference to event bus
     this.eventBus = eventBus;
     
@@ -38,6 +40,12 @@ class UIController {
     
     // Store reference to mission registry
     this.missionRegistry = missionRegistry;
+    
+    // Store reference to consequence system
+    this.consequenceSystem = consequenceSystem;
+    
+    // Store reference to results card generator
+    this.resultsCard = resultsCard;
     
     // Get reference to app container
     this.appContainer = document.getElementById('app');
@@ -55,6 +63,9 @@ class UIController {
     
     // Track current mission ID for role selection
     this.currentMissionId = null;
+    
+    // Track current role ID for outcome calculation
+    this.currentRoleId = null;
     
     // Track completed roles in session (no localStorage)
     // Set of roleIds that have been completed
@@ -114,13 +125,18 @@ class UIController {
 
   /**
    * Handle game:complete event
-   * @param {object} data - Event data containing roleId
+   * @param {object} data - Event data containing roleId and missionId
    * @private
    */
   handleGameComplete(data) {
     // Mark role as completed in session
     if (data && data.roleId) {
       this.completedRoles.add(data.roleId);
+      this.currentRoleId = data.roleId;
+    }
+    
+    if (data && data.missionId) {
+      this.currentMissionId = data.missionId;
     }
     
     this.showScreen('outcome', data);
@@ -404,17 +420,21 @@ class UIController {
 
   /**
    * Render results card screen HTML
-   * @param {object} data - Results data
+   * @param {object} data - Results data from checkpoint:complete event
    * @returns {string} HTML string
    * @private
    */
   renderResultsCardScreen(data) {
     const c = this.content.resultsCard;
+    
+    // Generate results card HTML using ResultsCard component
+    const cardHTML = this.resultsCard ? this.resultsCard.generateCard(data) : '<p>Error: Results card generator not available.</p>';
+    
     return `
       <div class="results-content text-center">
         <h2 class="text-gold">${c.title}</h2>
         <div id="results-card" class="panel panel-parchment mt-lg">
-          <!-- Results card will be populated dynamically -->
+          ${cardHTML}
         </div>
         <button id="copy-results" class="mt-md">${c.copyButtonText}</button>
         <button id="play-again" class="mt-md">${c.playAgainButtonText}</button>
@@ -577,8 +597,10 @@ class UIController {
       this.populateRoleCards(screen);
     }
     
-    // Outcome screen
+    // Outcome screen - populate outcome data
     if (screenName === 'outcome') {
+      this.populateOutcomeScreen(screen);
+      
       const continueButton = screen.querySelector('#continue-to-ripple');
       if (continueButton) {
         continueButton.addEventListener('click', () => {
@@ -589,10 +611,27 @@ class UIController {
     
     // Historical ripple screen
     if (screenName === 'historical-ripple') {
+      this.populateHistoricalRipple(screen);
+      
       const continueButton = screen.querySelector('#continue-to-checkpoint');
       if (continueButton) {
         continueButton.addEventListener('click', () => {
           this.showScreen('knowledge-checkpoint');
+        });
+      }
+    }
+    
+    // Knowledge checkpoint screen
+    if (screenName === 'knowledge-checkpoint') {
+      this.populateKnowledgeCheckpoint(screen);
+      
+      const viewResultsButton = screen.querySelector('#view-results');
+      if (viewResultsButton) {
+        viewResultsButton.addEventListener('click', () => {
+          this.eventBus.emit('checkpoint:complete', {
+            score: this.checkpointScore,
+            totalQuestions: this.checkpointTotalQuestions
+          });
         });
       }
     }
@@ -716,22 +755,396 @@ class UIController {
   }
 
   /**
-   * Copy results text to clipboard
+   * Populate outcome screen with calculated outcome data
+   * @param {HTMLElement} screen - Outcome screen element
    * @private
    */
-  copyResultsToClipboard() {
-    const resultsCard = document.getElementById('results-card');
-    if (!resultsCard) {
+  populateOutcomeScreen(screen) {
+    const outcomeResultContainer = screen.querySelector('#outcome-result');
+    
+    if (!outcomeResultContainer) {
+      console.error('UIController.populateOutcomeScreen: #outcome-result container not found');
       return;
     }
     
-    const resultsText = resultsCard.innerText;
+    // Get current mission and role
+    if (!this.currentMissionId || !this.currentRoleId) {
+      console.error('UIController.populateOutcomeScreen: No mission or role ID stored');
+      outcomeResultContainer.innerHTML = '<p>Error: Unable to determine outcome. Mission or role data missing.</p>';
+      return;
+    }
     
-    navigator.clipboard.writeText(resultsText).then(() => {
-      alert('Results copied to clipboard!');
-    }).catch(err => {
-      console.error('Failed to copy results:', err);
+    const mission = this.missionRegistry.getMission(this.currentMissionId);
+    
+    if (!mission) {
+      console.error(`UIController.populateOutcomeScreen: Mission "${this.currentMissionId}" not found`);
+      outcomeResultContainer.innerHTML = '<p>Error: Mission data not found.</p>';
+      return;
+    }
+    
+    // Find the current role
+    const role = mission.roles.find(r => r.id === this.currentRoleId);
+    
+    if (!role || !role.outcomes) {
+      console.error(`UIController.populateOutcomeScreen: Role "${this.currentRoleId}" not found or has no outcomes`);
+      outcomeResultContainer.innerHTML = '<p>Error: Role outcome data not found.</p>';
+      return;
+    }
+    
+    // Calculate outcome using ConsequenceSystem
+    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes);
+    
+    if (!outcomeId) {
+      console.error('UIController.populateOutcomeScreen: No matching outcome found for current flags');
+      outcomeResultContainer.innerHTML = '<p>Error: Unable to determine outcome based on your choices.</p>';
+      return;
+    }
+    
+    // Find the matching outcome object
+    const outcome = role.outcomes.find(o => o.id === outcomeId);
+    
+    if (!outcome) {
+      console.error(`UIController.populateOutcomeScreen: Outcome "${outcomeId}" not found in role outcomes`);
+      outcomeResultContainer.innerHTML = '<p>Error: Outcome data not found.</p>';
+      return;
+    }
+    
+    // Populate the outcome screen
+    const survivalStatus = outcome.survived ? 'You Survived' : 'You Did Not Survive';
+    const survivalClass = outcome.survived ? 'text-success' : 'text-danger';
+    
+    outcomeResultContainer.innerHTML = `
+      <h3 class="${survivalClass}">${survivalStatus}</h3>
+      <div class="outcome-epilogue mt-md">
+        ${this.formatEpilogue(outcome.epilogue)}
+      </div>
+    `;
+  }
+
+  /**
+   * Format epilogue text with paragraph breaks
+   * @param {string} epilogue - Raw epilogue text
+   * @returns {string} HTML formatted epilogue
+   * @private
+   */
+  formatEpilogue(epilogue) {
+    // Split epilogue into paragraphs (separated by double newlines)
+    const paragraphs = epilogue.split('\n\n').filter(p => p.trim() !== '');
+    
+    // Wrap each paragraph in <p> tags
+    return paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
+  }
+
+  /**
+   * Populate historical ripple timeline with events from mission data
+   * @param {HTMLElement} screen - Historical ripple screen element
+   * @private
+   */
+  populateHistoricalRipple(screen) {
+    const rippleTimelineContainer = screen.querySelector('#ripple-timeline');
+    
+    if (!rippleTimelineContainer) {
+      console.error('UIController.populateHistoricalRipple: #ripple-timeline container not found');
+      return;
+    }
+    
+    // Get current mission from stored mission ID
+    if (!this.currentMissionId) {
+      console.error('UIController.populateHistoricalRipple: No mission ID stored');
+      return;
+    }
+    
+    const mission = this.missionRegistry.getMission(this.currentMissionId);
+    
+    if (!mission || !mission.historicalRipple) {
+      console.error(`UIController.populateHistoricalRipple: Mission "${this.currentMissionId}" not found or has no historical ripple events`);
+      return;
+    }
+    
+    // Clear existing events
+    rippleTimelineContainer.innerHTML = '';
+    
+    // Create a ripple event element for each event in the mission data
+    mission.historicalRipple.forEach((event, index) => {
+      const eventElement = document.createElement('div');
+      eventElement.className = 'ripple-event';
+      
+      // Set animation delay based on event's animationDelay property
+      eventElement.style.animationDelay = `${event.animationDelay}ms`;
+      
+      // Create event header with date
+      const eventHeader = document.createElement('div');
+      eventHeader.className = 'ripple-event-header';
+      
+      const eventDate = document.createElement('div');
+      eventDate.className = 'ripple-event-date';
+      eventDate.textContent = event.date;
+      
+      eventHeader.appendChild(eventDate);
+      
+      // Create event title
+      const eventTitle = document.createElement('h3');
+      eventTitle.className = 'ripple-event-title';
+      eventTitle.textContent = event.title;
+      
+      // Create event description
+      const eventDescription = document.createElement('p');
+      eventDescription.className = 'ripple-event-description';
+      eventDescription.textContent = event.description;
+      
+      // Create AP theme tag
+      const eventTheme = document.createElement('span');
+      eventTheme.className = 'ripple-event-theme';
+      eventTheme.textContent = `${this.content.historicalRipple.apThemeLabel} ${this.formatApTheme(event.apTheme)}`;
+      eventTheme.setAttribute('aria-label', `AP History theme: ${event.apTheme}`);
+      
+      // Assemble event element
+      eventElement.appendChild(eventHeader);
+      eventElement.appendChild(eventTitle);
+      eventElement.appendChild(eventDescription);
+      eventElement.appendChild(eventTheme);
+      
+      rippleTimelineContainer.appendChild(eventElement);
     });
+  }
+
+  /**
+   * Format AP theme name for display
+   * @param {string} theme - AP theme identifier (e.g., "causation", "continuity")
+   * @returns {string} Formatted theme name
+   * @private
+   */
+  formatApTheme(theme) {
+    // Capitalize first letter
+    return theme.charAt(0).toUpperCase() + theme.slice(1);
+  }
+
+  /**
+   * Populate knowledge checkpoint with role-specific questions
+   * @param {HTMLElement} screen - Knowledge checkpoint screen element
+   * @private
+   */
+  populateKnowledgeCheckpoint(screen) {
+    const questionsContainer = screen.querySelector('#checkpoint-questions');
+    const viewResultsButton = screen.querySelector('#view-results');
+    
+    if (!questionsContainer) {
+      console.error('UIController.populateKnowledgeCheckpoint: #checkpoint-questions container not found');
+      return;
+    }
+    
+    // Get current mission and role
+    if (!this.currentMissionId || !this.currentRoleId) {
+      console.error('UIController.populateKnowledgeCheckpoint: No mission or role ID stored');
+      questionsContainer.innerHTML = '<p>Error: Unable to load questions. Mission or role data missing.</p>';
+      return;
+    }
+    
+    const mission = this.missionRegistry.getMission(this.currentMissionId);
+    
+    if (!mission || !mission.knowledgeQuestions) {
+      console.error(`UIController.populateKnowledgeCheckpoint: Mission "${this.currentMissionId}" not found or has no knowledge questions`);
+      questionsContainer.innerHTML = '<p>Error: Knowledge questions not found.</p>';
+      return;
+    }
+    
+    // Filter questions by roleSpecific field
+    const roleQuestions = mission.knowledgeQuestions.filter(q => q.roleSpecific === this.currentRoleId);
+    
+    if (roleQuestions.length === 0) {
+      console.error(`UIController.populateKnowledgeCheckpoint: No questions found for role "${this.currentRoleId}"`);
+      questionsContainer.innerHTML = '<p>Error: No questions available for this role.</p>';
+      return;
+    }
+    
+    // Initialize checkpoint tracking
+    this.checkpointAnswers = new Map(); // questionId -> {selectedAnswer, correct}
+    this.checkpointScore = 0;
+    this.checkpointTotalQuestions = roleQuestions.length;
+    
+    // Clear existing questions
+    questionsContainer.innerHTML = '';
+    
+    // Render each question
+    roleQuestions.forEach((question, index) => {
+      const questionElement = document.createElement('div');
+      questionElement.className = 'checkpoint-question panel panel-parchment mt-md';
+      questionElement.dataset.questionId = question.id;
+      
+      // Question header with number and AP skill
+      const questionHeader = document.createElement('div');
+      questionHeader.className = 'question-header';
+      
+      const questionNumber = document.createElement('h3');
+      questionNumber.className = 'question-number';
+      questionNumber.textContent = `Question ${index + 1}`;
+      
+      const apSkillTag = document.createElement('span');
+      apSkillTag.className = 'ap-skill-tag';
+      apSkillTag.textContent = `AP Skill: ${this.formatApTheme(question.apSkill)}`;
+      apSkillTag.setAttribute('aria-label', `AP reasoning skill: ${question.apSkill}`);
+      
+      questionHeader.appendChild(questionNumber);
+      questionHeader.appendChild(apSkillTag);
+      
+      // Question text
+      const questionText = document.createElement('p');
+      questionText.className = 'question-text';
+      questionText.textContent = question.question;
+      
+      // Options container
+      const optionsContainer = document.createElement('div');
+      optionsContainer.className = 'question-options mt-sm';
+      
+      // Render each option as a button
+      question.options.forEach(option => {
+        const optionButton = document.createElement('button');
+        optionButton.className = 'option-button';
+        optionButton.dataset.optionId = option.id;
+        optionButton.dataset.correct = option.correct;
+        optionButton.textContent = `${option.id.toUpperCase()}. ${option.text}`;
+        
+        // Add click handler for answer selection
+        optionButton.addEventListener('click', () => {
+          this.handleAnswerSelection(question, option, questionElement, optionsContainer);
+        });
+        
+        optionsContainer.appendChild(optionButton);
+      });
+      
+      // Explanation container (initially hidden)
+      const explanationContainer = document.createElement('div');
+      explanationContainer.className = 'question-explanation hidden mt-md';
+      explanationContainer.innerHTML = `
+        <h4>Explanation:</h4>
+        <p>${question.explanation}</p>
+      `;
+      
+      // Assemble question element
+      questionElement.appendChild(questionHeader);
+      questionElement.appendChild(questionText);
+      questionElement.appendChild(optionsContainer);
+      questionElement.appendChild(explanationContainer);
+      
+      questionsContainer.appendChild(questionElement);
+    });
+  }
+
+  /**
+   * Handle answer selection for a knowledge checkpoint question
+   * @param {object} question - Question object
+   * @param {object} selectedOption - Selected option object
+   * @param {HTMLElement} questionElement - Question container element
+   * @param {HTMLElement} optionsContainer - Options container element
+   * @private
+   */
+  handleAnswerSelection(question, selectedOption, questionElement, optionsContainer) {
+    // Check if question has already been answered
+    if (this.checkpointAnswers.has(question.id)) {
+      return; // Don't allow re-answering
+    }
+    
+    // Record the answer
+    const isCorrect = selectedOption.correct === true;
+    this.checkpointAnswers.set(question.id, {
+      selectedAnswer: selectedOption.id,
+      correct: isCorrect
+    });
+    
+    // Update score if correct
+    if (isCorrect) {
+      this.checkpointScore++;
+    }
+    
+    // Disable all option buttons
+    const optionButtons = optionsContainer.querySelectorAll('.option-button');
+    optionButtons.forEach(button => {
+      button.disabled = true;
+      
+      // Add visual feedback
+      const buttonCorrect = button.dataset.correct === 'true';
+      if (button.dataset.optionId === selectedOption.id) {
+        // This is the selected answer
+        if (isCorrect) {
+          button.classList.add('correct');
+        } else {
+          button.classList.add('incorrect');
+        }
+      } else if (buttonCorrect) {
+        // Show the correct answer
+        button.classList.add('correct');
+      }
+    });
+    
+    // Show explanation
+    const explanationContainer = questionElement.querySelector('.question-explanation');
+    if (explanationContainer) {
+      explanationContainer.classList.remove('hidden');
+    }
+    
+    // Check if all questions have been answered
+    if (this.checkpointAnswers.size === this.checkpointTotalQuestions) {
+      this.showCheckpointResults();
+    }
+  }
+
+  /**
+   * Show checkpoint results and enable "View Results" button
+   * @private
+   */
+  showCheckpointResults() {
+    const viewResultsButton = document.getElementById('view-results');
+    
+    if (!viewResultsButton) {
+      console.error('UIController.showCheckpointResults: #view-results button not found');
+      return;
+    }
+    
+    // Show the button
+    viewResultsButton.classList.remove('hidden');
+    
+    // Add score display above the button
+    const checkpointContent = document.querySelector('.checkpoint-content');
+    if (checkpointContent) {
+      // Check if score display already exists
+      let scoreDisplay = document.getElementById('checkpoint-score');
+      
+      if (!scoreDisplay) {
+        scoreDisplay = document.createElement('div');
+        scoreDisplay.id = 'checkpoint-score';
+        scoreDisplay.className = 'checkpoint-score text-center mt-lg';
+        
+        const scorePercentage = Math.round((this.checkpointScore / this.checkpointTotalQuestions) * 100);
+        const scoreClass = scorePercentage >= 70 ? 'text-success' : 'text-warning';
+        
+        scoreDisplay.innerHTML = `
+          <h3 class="${scoreClass}">Your Score: ${this.checkpointScore}/${this.checkpointTotalQuestions}</h3>
+          <p class="text-secondary">${scorePercentage}% Correct</p>
+        `;
+        
+        // Insert before the view results button
+        checkpointContent.insertBefore(scoreDisplay, viewResultsButton);
+      }
+    }
+  }
+
+  /**
+   * Copy results text to clipboard using ResultsCard component
+   * @private
+   */
+  async copyResultsToClipboard() {
+    if (!this.resultsCard) {
+      console.error('UIController.copyResultsToClipboard: ResultsCard component not available');
+      return;
+    }
+    
+    const success = await this.resultsCard.copyCardText();
+    
+    if (success) {
+      alert('Results copied to clipboard!');
+    } else {
+      alert('Failed to copy results. Please try again.');
+    }
   }
 }
 

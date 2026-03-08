@@ -242,7 +242,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Subscribe to EventBus for all player actions
     - _Requirements: 26.1, 26.2, 26.3, 26.4_
   
-  - [~] 17.2 Create ResultsCard.js
+  - [x] 17.2 Create ResultsCard.js
     - Implement generateCard(), copyCardText() methods
     - Display mission name, role played, survival status, checkpoint score, completion timestamp
     - List AP themes engaged during session
