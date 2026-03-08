@@ -64,7 +64,7 @@ async function initializeApp() {
     console.log('✓ TimelineSelector initialized');
     
     // 8. Initialize UIController (handles all DOM rendering)
-    const uiController = new UIController(eventBus, timelineSelector);
+    const uiController = new UIController(eventBus, timelineSelector, missionRegistry);
     console.log('✓ UIController initialized');
     
     // Update loading progress

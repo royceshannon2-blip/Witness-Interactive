@@ -97,7 +97,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
   - Ask user if questions arise
 
 - [ ] 9. Implement role selection screen
-  - [~] 9.1 Create role selection UI
+  - [x] 9.1 Create role selection UI
     - Display mission title and three role cards
     - Show role name, description for each role
     - Add selection buttons that emit role:selected event

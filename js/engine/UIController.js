@@ -23,13 +23,17 @@ class UIController {
    * Initialize the UIController
    * @param {EventBus} eventBus - Event bus for component communication
    * @param {TimelineSelector} timelineSelector - Timeline selector component
+   * @param {MissionRegistry} missionRegistry - Mission registry for accessing mission data
    */
-  constructor(eventBus, timelineSelector) {
+  constructor(eventBus, timelineSelector, missionRegistry) {
     // Store reference to event bus
     this.eventBus = eventBus;
     
     // Store reference to timeline selector
     this.timelineSelector = timelineSelector;
+    
+    // Store reference to mission registry
+    this.missionRegistry = missionRegistry;
     
     // Get reference to app container
     this.appContainer = document.getElementById('app');
@@ -44,6 +48,13 @@ class UIController {
     
     // Track current scene data for rendering
     this.currentSceneData = null;
+    
+    // Track current mission ID for role selection
+    this.currentMissionId = null;
+    
+    // Track completed roles in session (no localStorage)
+    // Set of roleIds that have been completed
+    this.completedRoles = new Set();
     
     // Subscribe to EventBus events
     this.subscribeToEvents();
@@ -60,7 +71,7 @@ class UIController {
     // Game start - show landing screen
     this.eventBus.on('game:start', this.handleGameStart.bind(this));
     
-    // Game complete - show outcome screen
+    // Game complete - show outcome screen and mark role as completed
     this.eventBus.on('game:complete', this.handleGameComplete.bind(this));
     
     // Mission selected - show role selection
@@ -99,10 +110,15 @@ class UIController {
 
   /**
    * Handle game:complete event
-   * @param {object} data - Event data
+   * @param {object} data - Event data containing roleId
    * @private
    */
   handleGameComplete(data) {
+    // Mark role as completed in session
+    if (data && data.roleId) {
+      this.completedRoles.add(data.roleId);
+    }
+    
     this.showScreen('outcome', data);
   }
 
@@ -112,6 +128,11 @@ class UIController {
    * @private
    */
   handleMissionSelected(data) {
+    // Store current mission ID for role selection
+    if (data && data.missionId) {
+      this.currentMissionId = data.missionId;
+    }
+    
     this.showScreen('role-selection', data);
   }
 
@@ -277,11 +298,12 @@ class UIController {
 
   /**
    * Render role selection screen HTML
-   * @param {object} data - Mission data
+   * @param {object} data - Mission data containing missionId
    * @returns {string} HTML string
    * @private
    */
   renderRoleSelectionScreen(data) {
+    // Get mission from registry (will be populated in attachEventListeners)
     return `
       <div class="role-selection-content">
         <h2 class="text-center text-gold">Choose Your Perspective</h2>
@@ -541,6 +563,11 @@ class UIController {
       }
     }
     
+    // Role selection screen - populate role cards
+    if (screenName === 'role-selection') {
+      this.populateRoleCards(screen);
+    }
+    
     // Outcome screen
     if (screenName === 'outcome') {
       const continueButton = screen.querySelector('#continue-to-ripple');
@@ -573,10 +600,110 @@ class UIController {
       const playAgainButton = screen.querySelector('#play-again');
       if (playAgainButton) {
         playAgainButton.addEventListener('click', () => {
-          this.showScreen('role-selection');
+          // Get current mission ID from last mission:selected event
+          // For now, default to pearl-harbor
+          this.eventBus.emit('mission:selected', { missionId: 'pearl-harbor' });
         });
       }
     }
+  }
+
+  /**
+   * Populate role cards in the role selection screen
+   * @param {HTMLElement} screen - Role selection screen element
+   * @private
+   */
+  populateRoleCards(screen) {
+    const roleCardsContainer = screen.querySelector('#role-cards-container');
+    const endingsCountElement = screen.querySelector('#endings-count');
+    
+    if (!roleCardsContainer) {
+      console.error('UIController.populateRoleCards: #role-cards-container not found');
+      return;
+    }
+    
+    // Get current mission from stored mission ID
+    if (!this.currentMissionId) {
+      console.error('UIController.populateRoleCards: No mission ID stored');
+      return;
+    }
+    
+    const mission = this.missionRegistry.getMission(this.currentMissionId);
+    
+    if (!mission || !mission.roles) {
+      console.error(`UIController.populateRoleCards: Mission "${this.currentMissionId}" not found or has no roles`);
+      return;
+    }
+    
+    // Clear existing cards
+    roleCardsContainer.innerHTML = '';
+    
+    // Create a card for each role
+    mission.roles.forEach(role => {
+      const roleCard = document.createElement('div');
+      roleCard.className = 'role-card';
+      
+      // Check if role is completed
+      const isCompleted = this.completedRoles.has(role.id);
+      if (isCompleted) {
+        roleCard.classList.add('completed');
+      }
+      
+      // Create card content
+      const roleTitle = document.createElement('h3');
+      roleTitle.className = 'role-title';
+      roleTitle.textContent = role.name;
+      
+      const roleDescription = document.createElement('p');
+      roleDescription.className = 'role-description';
+      roleDescription.textContent = role.description;
+      
+      const selectButton = document.createElement('button');
+      selectButton.className = 'role-select-button';
+      selectButton.textContent = isCompleted ? 'Play Again' : 'Select Role';
+      selectButton.dataset.roleId = role.id;
+      
+      // Add completion indicator if completed
+      if (isCompleted) {
+        const completionBadge = document.createElement('span');
+        completionBadge.className = 'completion-badge';
+        completionBadge.textContent = '✓ Completed';
+        completionBadge.setAttribute('aria-label', 'Role completed');
+        roleCard.appendChild(completionBadge);
+      }
+      
+      // Add click handler
+      selectButton.addEventListener('click', () => {
+        this.handleRoleSelection(role.id);
+      });
+      
+      // Assemble card
+      roleCard.appendChild(roleTitle);
+      roleCard.appendChild(roleDescription);
+      roleCard.appendChild(selectButton);
+      
+      roleCardsContainer.appendChild(roleCard);
+    });
+    
+    // Update endings counter
+    if (endingsCountElement) {
+      const totalRoles = mission.roles.length;
+      const completedCount = this.completedRoles.size;
+      endingsCountElement.textContent = `${completedCount}/${totalRoles}`;
+    }
+  }
+
+  /**
+   * Handle role selection button click
+   * @param {string} roleId - ID of the selected role
+   * @private
+   */
+  handleRoleSelection(roleId) {
+    // Emit role:selected event
+    this.eventBus.emit('role:selected', {
+      missionId: this.currentMissionId,
+      roleId: roleId
+    });
   }
 
   /**

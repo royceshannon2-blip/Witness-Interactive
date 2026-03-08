@@ -785,3 +785,110 @@ body.effect-shake #app {
         font-size: 1rem;
     }
 }
+
+/* ============================================
+   Role Selection Screen
+   ============================================ */
+.role-selection-content {
+    max-width: var(--max-width-wide);
+    margin: 0 auto;
+}
+
+#role-cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+}
+
+.role-card {
+    position: relative;
+    background: linear-gradient(
+        135deg,
+        var(--color-bg-panel) 0%,
+        var(--color-bg-secondary) 100%
+    );
+    border: 2px solid rgba(212, 175, 55, 0.3);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-base);
+}
+
+.role-card:hover {
+    border-color: var(--color-accent-gold);
+    box-shadow: 
+        var(--shadow-lg),
+        0 0 20px rgba(212, 175, 55, 0.2);
+    transform: translateY(-4px);
+}
+
+.role-card.completed {
+    border-color: rgba(74, 123, 167, 0.5);
+}
+
+.role-card.completed:hover {
+    border-color: var(--color-accent-blue);
+}
+
+.role-title {
+    color: var(--color-accent-gold);
+    font-size: var(--font-size-large);
+    margin-bottom: var(--spacing-sm);
+    line-height: var(--line-height-tight);
+}
+
+.role-description {
+    color: var(--color-text-secondary);
+    font-size: var(--font-size-base);
+    margin-bottom: var(--spacing-md);
+    line-height: var(--line-height-base);
+}
+
+.role-select-button {
+    width: 100%;
+    margin-top: var(--spacing-sm);
+}
+
+.completion-badge {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    background-color: var(--color-accent-blue);
+    color: var(--color-text-primary);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-small);
+    font-family: var(--font-family-ui);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.endings-counter {
+    margin-top: var(--spacing-xl);
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
+}
+
+.endings-counter p {
+    font-size: var(--font-size-large);
+    font-family: var(--font-family-ui);
+}
+
+.endings-counter #endings-count {
+    color: var(--color-accent-gold);
+    font-weight: 700;
+}
+
+/* Responsive adjustments for role cards */
+@media (max-width: 768px) {
+    #role-cards-container {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .role-card {
+        padding: var(--spacing-md);
+    }
+}
