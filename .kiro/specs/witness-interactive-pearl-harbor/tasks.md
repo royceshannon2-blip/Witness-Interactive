@@ -73,7 +73,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - _Requirements: 3.1, 18.3_
 
 - [ ] 7. Implement landing screen and mission selection
-  - [~] 7.1 Create landing screen HTML/CSS
+  - [x] 7.1 Create landing screen HTML/CSS
     - Display game title, tagline, context setter
     - Add "Begin" button that transitions to timeline
     - Use dark cinematic theme with CSS custom properties

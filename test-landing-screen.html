@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Screen Test - Witness Interactive</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <div id="landing-screen" class="screen active">
+            <div class="landing-content text-center">
+                <h1 class="text-gold">Witness Interactive</h1>
+                <h2>Pearl Harbor</h2>
+                <p class="tagline">December 7, 1941 — A Date Which Will Live in Infamy</p>
+                <p class="context">
+                    Experience the attack on Pearl Harbor from three different perspectives.
+                    Your choices matter. History remembers.
+                </p>
+                <button id="begin-button" class="mt-lg">Begin Experience</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Simple test script to verify button interaction
+        document.getElementById('begin-button').addEventListener('click', () => {
+            alert('Landing screen button works! In the full game, this transitions to the timeline.');
+        });
+    </script>
+</body>
+</html>
