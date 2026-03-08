@@ -13,6 +13,8 @@
  * Requirements: 3.3, 4.2, 3A.3
  */
 
+import japaneseAviator from './japanese-aviator.js';
+
 /**
  * Pearl Harbor Mission Configuration
  * December 7, 1941 - The attack that brought America into World War II
@@ -42,7 +44,8 @@ const pearlHarborMission = {
       id: 'japanese-aviator',
       name: 'Japanese Naval Aviator',
       description: 'Pilot a Mitsubishi A6M Zero fighter in the first wave of the attack',
-      scenes: [] // Will be populated in Task 10.1
+      scenes: japaneseAviator.scenes,
+      outcomes: japaneseAviator.outcomes
     },
     {
       id: 'american-sailor',
