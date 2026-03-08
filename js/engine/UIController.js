@@ -509,6 +509,11 @@ class UIController {
       return;
     }
     
+    // Apply scene transition animation before rendering (Task 7.2)
+    if (this.sceneTransition) {
+      this.sceneTransition.transition(null, scene, 'fade', 500);
+    }
+    
     // Ensure scene screen exists
     if (this.currentScreen !== 'scene') {
       this.showScreen('scene');
