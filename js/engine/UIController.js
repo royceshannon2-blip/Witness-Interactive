@@ -20,6 +20,8 @@
 
 import TypewriterEffect from './TypewriterEffect.js';
 import SceneTransition from './SceneTransition.js';
+import AtmosphericEffects from './AtmosphericEffects.js';
+import TimedChoiceSystem from './TimedChoiceSystem.js';
 
 class UIController {
   /**
@@ -33,6 +35,8 @@ class UIController {
    * @param {object} components - Optional interactive polish components
    * @param {TypewriterEffect} components.typewriterEffect - Typewriter text reveal component
    * @param {SceneTransition} components.sceneTransition - Scene transition animation component
+   * @param {AtmosphericEffects} components.atmosphericEffects - Atmospheric effects component
+   * @param {TimedChoiceSystem} components.timedChoiceSystem - Timed choice system component
    */
   constructor(eventBus, timelineSelector, missionRegistry, consequenceSystem, resultsCard, uiContent, components = {}) {
     // Store reference to event bus
@@ -56,6 +60,8 @@ class UIController {
     // Store interactive polish components (if provided)
     this.typewriterEffect = components.typewriterEffect || null;
     this.sceneTransition = components.sceneTransition || null;
+    this.atmosphericEffects = components.atmosphericEffects || null;
+    this.timedChoiceSystem = components.timedChoiceSystem || null;
     
     // Get reference to app container
     this.appContainer = document.getElementById('app');
@@ -107,6 +113,12 @@ class UIController {
     
     // Checkpoint complete - show results card
     this.eventBus.on('checkpoint:complete', this.handleCheckpointComplete.bind(this));
+    
+    // Timer events - update timer UI
+    this.eventBus.on('timer:started', this.handleTimerStarted.bind(this));
+    this.eventBus.on('timer:update', this.handleTimerUpdate.bind(this));
+    this.eventBus.on('timer:expired', this.handleTimerExpired.bind(this));
+    this.eventBus.on('timer:cancelled', this.handleTimerCancelled.bind(this));
   }
 
   /**
@@ -268,9 +280,9 @@ class UIController {
     // Update current screen tracker
     this.currentScreen = screenName;
     
-    // Apply any atmospheric effects if specified in data
-    if (data.atmosphericEffect) {
-      this.applyEffect(data.atmosphericEffect);
+    // Apply any atmospheric effects if specified in data (using AtmosphericEffects component)
+    if (data.atmosphericEffect && this.atmosphericEffects) {
+      this.atmosphericEffects.applyEffect(data.atmosphericEffect);
     }
   }
 
@@ -397,6 +409,18 @@ class UIController {
         <section id="scene-narrative" class="panel panel-parchment" role="region" aria-label="Scene narrative">
           <!-- Scene narrative will be rendered here -->
         </section>
+        <div id="timer-display" class="timer-display hidden" role="timer" aria-live="assertive" aria-atomic="true">
+          <div class="timer-circle">
+            <svg class="timer-progress" viewBox="0 0 100 100" aria-hidden="true">
+              <circle class="timer-progress-bg" cx="50" cy="50" r="45"></circle>
+              <circle class="timer-progress-fill" cx="50" cy="50" r="45"></circle>
+            </svg>
+            <div class="timer-text">
+              <span id="timer-seconds" class="timer-seconds">10</span>
+              <span class="timer-label">seconds</span>
+            </div>
+          </div>
+        </div>
         <nav id="scene-choices" class="mt-md" role="navigation" aria-label="Available choices">
           <!-- Scene choices will be rendered here -->
         </nav>
@@ -565,23 +589,38 @@ class UIController {
           () => {
             // Enable choices after typewriter completes
             this.enableChoices();
+            
+            // Start timed choice AFTER typewriter completes (if specified)
+            if (scene.timedChoice && this.timedChoiceSystem) {
+              this.startTimedChoice(scene.timedChoice);
+            }
           }
         );
       } else {
         // Fallback: enable choices immediately if paragraph not found
         this.enableChoices();
+        
+        // Start timed choice if specified
+        if (scene.timedChoice && this.timedChoiceSystem) {
+          this.startTimedChoice(scene.timedChoice);
+        }
       }
     } else {
       // No typewriter effect available, enable choices immediately
       this.enableChoices();
+      
+      // Start timed choice if specified
+      if (scene.timedChoice && this.timedChoiceSystem) {
+        this.startTimedChoice(scene.timedChoice);
+      }
     }
     
     // Update progress indicator
     this.updateProgress(sceneIndex + 1, totalScenes);
     
-    // Apply atmospheric effect if specified
-    if (scene.atmosphericEffect) {
-      this.applyEffect(scene.atmosphericEffect);
+    // Apply atmospheric effect if specified (using AtmosphericEffects component)
+    if (scene.atmosphericEffect && this.atmosphericEffects) {
+      this.atmosphericEffects.applyEffect(scene.atmosphericEffect);
     }
   }
 
@@ -612,6 +651,51 @@ class UIController {
   }
 
   /**
+   * Start timed choice countdown
+   * @param {object} timedChoiceConfig - Timed choice configuration from scene
+   * @private
+   */
+  startTimedChoice(timedChoiceConfig) {
+    if (!this.timedChoiceSystem) {
+      console.warn('UIController.startTimedChoice: TimedChoiceSystem not available');
+      return;
+    }
+
+    // Validate configuration
+    if (!timedChoiceConfig.duration || !timedChoiceConfig.defaultChoice) {
+      console.error('UIController.startTimedChoice: Invalid timedChoice configuration');
+      return;
+    }
+
+    // Find the default choice object
+    const choiceButtons = document.querySelectorAll('.choice-button');
+    let defaultChoiceButton = null;
+
+    choiceButtons.forEach(button => {
+      if (button.dataset.choiceId === timedChoiceConfig.defaultChoice) {
+        defaultChoiceButton = button;
+      }
+    });
+
+    if (!defaultChoiceButton) {
+      console.error(`UIController.startTimedChoice: Default choice "${timedChoiceConfig.defaultChoice}" not found`);
+      return;
+    }
+
+    // Start the timer with callback to auto-select default choice
+    this.timedChoiceSystem.startTimer(
+      timedChoiceConfig.duration,
+      timedChoiceConfig.defaultChoice,
+      (choiceId) => {
+        // Auto-select the default choice when timer expires
+        if (defaultChoiceButton) {
+          defaultChoiceButton.click();
+        }
+      }
+    );
+  }
+
+  /**
    * Handle choice button click
    * @param {object} choice - Choice object
    * @private
@@ -634,27 +718,6 @@ class UIController {
    */
   showLoading() {
     this.showScreen('loading');
-  }
-
-  /**
-   * Apply atmospheric effect
-   * @param {string} effectName - Name of effect: "smoke", "fire", "shake"
-   */
-  applyEffect(effectName) {
-    const validEffects = ['smoke', 'fire', 'shake'];
-    
-    if (!validEffects.includes(effectName)) {
-      console.warn(`UIController.applyEffect: Unknown effect "${effectName}"`);
-      return;
-    }
-    
-    // Add effect class to body
-    document.body.classList.add(`effect-${effectName}`);
-    
-    // Remove effect after animation completes (2 seconds)
-    setTimeout(() => {
-      document.body.classList.remove(`effect-${effectName}`);
-    }, 2000);
   }
 
   /**
@@ -1277,6 +1340,96 @@ class UIController {
       alert('Results copied to clipboard!');
     } else {
       alert('Failed to copy results. Please try again.');
+    }
+  }
+
+  /**
+   * Handle timer:started event - show timer UI
+   * @param {object} data - Event data with duration and defaultChoiceId
+   * @private
+   */
+  handleTimerStarted(data) {
+    const timerDisplay = document.getElementById('timer-display');
+    if (!timerDisplay) return;
+    
+    // Show timer display
+    timerDisplay.classList.remove('hidden');
+    
+    // Initialize timer display with full duration
+    const seconds = Math.ceil(data.duration / 1000);
+    this.updateTimerDisplay(data.duration, data.duration);
+  }
+
+  /**
+   * Handle timer:update event - update timer UI
+   * @param {object} data - Event data with remaining time and warning flag
+   * @private
+   */
+  handleTimerUpdate(data) {
+    const timerDisplay = document.getElementById('timer-display');
+    if (!timerDisplay) return;
+    
+    // Update timer display
+    this.updateTimerDisplay(data.remaining, null);
+    
+    // Add warning class if time is running out
+    if (data.isWarning) {
+      timerDisplay.classList.add('timer-warning');
+    } else {
+      timerDisplay.classList.remove('timer-warning');
+    }
+  }
+
+  /**
+   * Handle timer:expired event - hide timer UI
+   * @param {object} data - Event data
+   * @private
+   */
+  handleTimerExpired(data) {
+    const timerDisplay = document.getElementById('timer-display');
+    if (!timerDisplay) return;
+    
+    // Hide timer display
+    timerDisplay.classList.add('hidden');
+    timerDisplay.classList.remove('timer-warning');
+  }
+
+  /**
+   * Handle timer:cancelled event - hide timer UI
+   * @param {object} data - Event data
+   * @private
+   */
+  handleTimerCancelled(data) {
+    const timerDisplay = document.getElementById('timer-display');
+    if (!timerDisplay) return;
+    
+    // Hide timer display
+    timerDisplay.classList.add('hidden');
+    timerDisplay.classList.remove('timer-warning');
+  }
+
+  /**
+   * Update timer display with remaining time
+   * @param {number} remaining - Remaining time in milliseconds
+   * @param {number} duration - Total duration in milliseconds (optional, for progress calculation)
+   * @private
+   */
+  updateTimerDisplay(remaining, duration) {
+    const timerSeconds = document.getElementById('timer-seconds');
+    const timerProgressFill = document.querySelector('.timer-progress-fill');
+    
+    if (!timerSeconds) return;
+    
+    // Update seconds text
+    const seconds = Math.ceil(remaining / 1000);
+    timerSeconds.textContent = seconds;
+    
+    // Update circular progress indicator if duration is provided
+    if (timerProgressFill && duration) {
+      const progress = remaining / duration;
+      const circumference = 2 * Math.PI * 45; // radius = 45
+      const offset = circumference * (1 - progress);
+      timerProgressFill.style.strokeDashoffset = offset;
     }
   }
 }

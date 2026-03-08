@@ -1505,3 +1505,158 @@ body.effect-shake #app {
         filter: none;
     }
 }
+/* ============================================
+   Timer Display (Timed Choice System)
+   ============================================ */
+
+.timer-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: var(--spacing-lg) 0;
+    animation: fadeIn var(--transition-fast);
+}
+
+.timer-display.hidden {
+    display: none;
+}
+
+.timer-circle {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.timer-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.timer-progress-bg {
+    fill: none;
+    stroke: var(--color-bg-secondary);
+    stroke-width: 8;
+}
+
+.timer-progress-fill {
+    fill: none;
+    stroke: var(--color-accent-gold);
+    stroke-width: 8;
+    stroke-linecap: round;
+    stroke-dasharray: 283; /* 2 * PI * 45 */
+    stroke-dashoffset: 0;
+    transition: stroke-dashoffset 0.1s linear, stroke 0.3s ease;
+}
+
+.timer-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-base);
+}
+
+.timer-seconds {
+    font-size: var(--font-size-xxlarge);
+    font-weight: 700;
+    color: var(--color-accent-gold);
+    line-height: 1;
+    font-family: var(--font-family-ui);
+}
+
+.timer-label {
+    font-size: var(--font-size-small);
+    color: var(--color-text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: var(--spacing-xs);
+    font-family: var(--font-family-ui);
+}
+
+/* Warning state - when time is running out (< 3 seconds) */
+.timer-display.timer-warning .timer-progress-fill {
+    stroke: var(--color-accent-red);
+}
+
+.timer-display.timer-warning .timer-seconds {
+    color: var(--color-accent-red);
+    animation: timerPulse 0.5s ease-in-out infinite;
+}
+
+.timer-display.timer-warning .timer-circle {
+    animation: timerShake 0.5s ease-in-out infinite;
+}
+
+/* Pulse animation for urgent timer */
+@keyframes timerPulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+/* Shake animation for urgent timer */
+@keyframes timerShake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-2px);
+    }
+    75% {
+        transform: translateX(2px);
+    }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .timer-display.timer-warning .timer-seconds {
+        animation: none;
+    }
+    
+    .timer-display.timer-warning .timer-circle {
+        animation: none;
+    }
+    
+    .timer-progress-fill {
+        transition: stroke 0.3s ease;
+    }
+}
+
+/* Responsive adjustments for timer */
+@media (max-width: 768px) {
+    .timer-circle {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .timer-seconds {
+        font-size: var(--font-size-xlarge);
+    }
+    
+    .timer-label {
+        font-size: 0.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .timer-circle {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .timer-seconds {
+        font-size: var(--font-size-large);
+    }
+}

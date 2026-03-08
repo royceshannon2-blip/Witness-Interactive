@@ -2,8 +2,8 @@
  * Component Verification Test
  * 
  * This test verifies that the core engine components (EventBus, ConsequenceSystem, 
- * SceneStateMachine, TypewriterEffect, SceneTransition) load without errors and 
- * have no global variables.
+ * SceneStateMachine, TypewriterEffect, SceneTransition, AtmosphericEffects, 
+ * TimedChoiceSystem) load without errors and have no global variables.
  * 
  * Run this test by opening test-components.html in a browser and checking the console.
  */
@@ -13,6 +13,8 @@ import ConsequenceSystem from './ConsequenceSystem.js';
 import SceneStateMachine from './SceneStateMachine.js';
 import TypewriterEffect from './TypewriterEffect.js';
 import SceneTransition from './SceneTransition.js';
+import AtmosphericEffects from './AtmosphericEffects.js';
+import TimedChoiceSystem from './TimedChoiceSystem.js';
 
 console.log('=== Component Verification Test ===');
 
@@ -196,8 +198,121 @@ try {
   console.error('✗ SceneTransition failed to load:', error);
 }
 
-// Test 6: Check for global variables
-console.log('\n6. Checking for global variables...');
+// Test 6: Verify AtmosphericEffects loads and instantiates
+console.log('\n6. Testing AtmosphericEffects...');
+try {
+  const eventBus = new EventBus();
+  const atmosphericEffects = new AtmosphericEffects(eventBus, {
+    defaultDuration: 2000,
+    respectMotionPrefs: false // Disable for testing
+  });
+  console.log('✓ AtmosphericEffects instantiated successfully');
+  
+  // Test that it has the expected methods
+  if (typeof atmosphericEffects.applyEffect === 'function' &&
+      typeof atmosphericEffects.removeEffect === 'function' &&
+      typeof atmosphericEffects.clearAllEffects === 'function' &&
+      typeof atmosphericEffects.isEffectActive === 'function' &&
+      typeof atmosphericEffects.getActiveEffects === 'function') {
+    console.log('✓ AtmosphericEffects has required methods');
+  } else {
+    console.error('✗ AtmosphericEffects missing required methods');
+  }
+  
+  // Test effect application
+  atmosphericEffects.applyEffect('smoke');
+  if (document.body.classList.contains('effect-smoke')) {
+    console.log('✓ AtmosphericEffects applies CSS classes correctly');
+  } else {
+    console.error('✗ AtmosphericEffects does not apply CSS classes');
+  }
+  
+  // Clean up
+  atmosphericEffects.clearAllEffects();
+  
+  // Test EventBus integration
+  let effectApplied = false;
+  eventBus.on('effect:applied', () => {
+    effectApplied = true;
+  });
+  
+  atmosphericEffects.applyEffect('fire');
+  
+  if (effectApplied) {
+    console.log('✓ AtmosphericEffects emits EventBus events correctly');
+  } else {
+    console.error('✗ AtmosphericEffects does not emit EventBus events');
+  }
+  
+  // Clean up
+  atmosphericEffects.clearAllEffects();
+} catch (error) {
+  console.error('✗ AtmosphericEffects failed to load:', error);
+}
+
+// Test 7: Verify TimedChoiceSystem loads and instantiates
+console.log('\n7. Testing TimedChoiceSystem...');
+try {
+  const eventBus = new EventBus();
+  const timedChoiceSystem = new TimedChoiceSystem(eventBus, {
+    warningThreshold: 3000,
+    pulseInterval: 500
+  });
+  console.log('✓ TimedChoiceSystem instantiated successfully');
+  
+  // Test that it has the expected methods
+  if (typeof timedChoiceSystem.startTimer === 'function' &&
+      typeof timedChoiceSystem.cancelTimer === 'function' &&
+      typeof timedChoiceSystem.getRemainingTime === 'function') {
+    console.log('✓ TimedChoiceSystem has required methods');
+  } else {
+    console.error('✗ TimedChoiceSystem missing required methods');
+  }
+  
+  // Test EventBus integration - verify it emits timer events
+  let timerStarted = false;
+  let timerExpired = false;
+  
+  eventBus.on('timer:started', () => {
+    timerStarted = true;
+  });
+  
+  eventBus.on('timer:expired', () => {
+    timerExpired = true;
+  });
+  
+  // Start a very short timer (100ms) to test expiration
+  let callbackInvoked = false;
+  timedChoiceSystem.startTimer(100, 'test-choice', (choiceId) => {
+    callbackInvoked = true;
+  });
+  
+  if (timerStarted) {
+    console.log('✓ TimedChoiceSystem emits timer:started event');
+  } else {
+    console.error('✗ TimedChoiceSystem does not emit timer:started event');
+  }
+  
+  // Wait for timer to expire
+  setTimeout(() => {
+    if (timerExpired) {
+      console.log('✓ TimedChoiceSystem emits timer:expired event');
+    } else {
+      console.error('✗ TimedChoiceSystem does not emit timer:expired event');
+    }
+    
+    if (callbackInvoked) {
+      console.log('✓ TimedChoiceSystem invokes callback on expiration');
+    } else {
+      console.error('✗ TimedChoiceSystem does not invoke callback');
+    }
+  }, 200);
+} catch (error) {
+  console.error('✗ TimedChoiceSystem failed to load:', error);
+}
+
+// Test 8: Check for global variables
+console.log('\n8. Checking for global variables...');
 const globalsBefore = Object.keys(window);
 const suspiciousGlobals = globalsBefore.filter(key => {
   return key.includes('EventBus') || 
@@ -205,6 +320,8 @@ const suspiciousGlobals = globalsBefore.filter(key => {
          key.includes('Scene') ||
          key.includes('Typewriter') ||
          key.includes('Transition') ||
+         key.includes('Atmospheric') ||
+         key.includes('TimedChoice') ||
          key.includes('witness') ||
          key.includes('game');
 });

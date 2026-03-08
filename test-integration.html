@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Integration Test - AtmosphericEffects & TimedChoiceSystem</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/atmospheric-effects.css">
+  <style>
+    body {
+      padding: 2rem;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .test-section {
+      margin: 2rem 0;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .test-result {
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      border-radius: 4px;
+    }
+    .test-result.pass {
+      background: #d4edda;
+      color: #155724;
+    }
+    .test-result.fail {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    #timer-display {
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Integration Test: AtmosphericEffects & TimedChoiceSystem</h1>
+  
+  <div class="test-section">
+    <h2>Test 1: Components Load Successfully</h2>
+    <div id="test1-results"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Test 2: AtmosphericEffects Integration</h2>
+    <button id="test-smoke">Apply Smoke Effect</button>
+    <button id="test-fire">Apply Fire Effect</button>
+    <button id="test-shake">Apply Shake Effect</button>
+    <div id="test2-results"></div>
+  </div>
+  
+  <div class="test-section">
+    <h2>Test 3: TimedChoiceSystem Integration</h2>
+    <button id="test-timer">Start 5-Second Timer</button>
+    <div id="timer-display" class="timer-display hidden">
+      <div class="timer-circle">
+        <svg class="timer-progress" viewBox="0 0 100 100">
+          <circle class="timer-progress-bg" cx="50" cy="50" r="45"></circle>
+          <circle class="timer-progress-fill" cx="50" cy="50" r="45"></circle>
+        </svg>
+        <div class="timer-text">
+          <span id="timer-seconds" class="timer-seconds">5</span>
+          <span class="timer-label">seconds</span>
+        </div>
+      </div>
+    </div>
+    <div id="test3-results"></div>
+  </div>
+
+  <script type="module">
+    import EventBus from './js/engine/EventBus.js';
+    import AtmosphericEffects from './js/engine/AtmosphericEffects.js';
+    import TimedChoiceSystem from './js/engine/TimedChoiceSystem.js';
+
+    // Test 1: Load components
+    const test1Results = document.getElementById('test1-results');
+    
+    try {
+      const eventBus = new EventBus();
+      addResult(test1Results, 'EventBus loaded', true);
+      
+      const atmosphericEffects = new AtmosphericEffects(eventBus, {
+        defaultDuration: 2000,
+        respectMotionPrefs: false
+      });
+      addResult(test1Results, 'AtmosphericEffects loaded', true);
+      
+      const timedChoiceSystem = new TimedChoiceSystem(eventBus, {
+        warningThreshold: 3000,
+        pulseInterval: 500
+      });
+      addResult(test1Results, 'TimedChoiceSystem loaded', true);
+      
+      // Test 2: AtmosphericEffects
+      const test2Results = document.getElementById('test2-results');
+      
+      document.getElementById('test-smoke').addEventListener('click', () => {
+        atmosphericEffects.applyEffect('smoke');
+        addResult(test2Results, 'Smoke effect applied', true);
+      });
+      
+      document.getElementById('test-fire').addEventListener('click', () => {
+        atmosphericEffects.applyEffect('fire');
+        addResult(test2Results, 'Fire effect applied', true);
+      });
+      
+      document.getElementById('test-shake').addEventListener('click', () => {
+        atmosphericEffects.applyEffect('shake');
+        addResult(test2Results, 'Shake effect applied', true);
+      });
+      
+      // Test 3: TimedChoiceSystem
+      const test3Results = document.getElementById('test3-results');
+      const timerDisplay = document.getElementById('timer-display');
+      const timerSeconds = document.getElementById('timer-seconds');
+      
+      eventBus.on('timer:started', (data) => {
+        timerDisplay.classList.remove('hidden');
+        addResult(test3Results, 'Timer started event received', true);
+      });
+      
+      eventBus.on('timer:update', (data) => {
+        const seconds = Math.ceil(data.remaining / 1000);
+        timerSeconds.textContent = seconds;
+        
+        if (data.isWarning) {
+          timerDisplay.classList.add('timer-warning');
+        }
+      });
+      
+      eventBus.on('timer:expired', () => {
+        timerDisplay.classList.add('hidden');
+        timerDisplay.classList.remove('timer-warning');
+        addResult(test3Results, 'Timer expired event received', true);
+      });
+      
+      document.getElementById('test-timer').addEventListener('click', () => {
+        test3Results.innerHTML = '';
+        timedChoiceSystem.startTimer(5000, 'default-choice', (choiceId) => {
+          addResult(test3Results, `Timer expired, callback invoked with: ${choiceId}`, true);
+        });
+      });
+      
+    } catch (error) {
+      addResult(test1Results, `Error: ${error.message}`, false);
+    }
+    
+    function addResult(container, message, pass) {
+      const div = document.createElement('div');
+      div.className = `test-result ${pass ? 'pass' : 'fail'}`;
+      div.textContent = `${pass ? '✓' : '✗'} ${message}`;
+      container.appendChild(div);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timer UI Test - Witness Interactive</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            padding: 2rem;
+        }
+        .test-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            border: 2px solid var(--color-accent-gold);
+            border-radius: var(--border-radius-md);
+        }
+        .test-controls {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .test-controls button {
+            min-width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <h1 class="text-gold text-center">Timer UI Component Test</h1>
+        
+        <!-- Test Section 1: Timer Display -->
+        <div class="test-section">
+            <h2 class="text-gold">Test 1: Timer Display States</h2>
+            <p class="text-secondary">Test the timer display in different states</p>
+            
+            <div id="timer-display" class="timer-display" role="timer" aria-live="assertive" aria-atomic="true">
+                <div class="timer-circle">
+                    <svg class="timer-progress" viewBox="0 0 100 100" aria-hidden="true">
+                        <circle class="timer-progress-bg" cx="50" cy="50" r="45"></circle>
+                        <circle class="timer-progress-fill" cx="50" cy="50" r="45"></circle>
+                    </svg>
+                    <div class="timer-text">
+                        <span id="timer-seconds" class="timer-seconds">10</span>
+                        <span class="timer-label">seconds</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="test-controls">
+                <button onclick="setTimerValue(10)">10 Seconds</button>
+                <button onclick="setTimerValue(5)">5 Seconds</button>
+                <button onclick="setTimerValue(2)">2 Seconds (Warning)</button>
+                <button onclick="toggleWarning()">Toggle Warning State</button>
+                <button onclick="hideTimer()">Hide Timer</button>
+                <button onclick="showTimer()">Show Timer</button>
+            </div>
+        </div>
+        
+        <!-- Test Section 2: Timer with Scene Content -->
+        <div class="test-section">
+            <h2 class="text-gold">Test 2: Timer in Scene Context</h2>
+            <p class="text-secondary">Test timer display with narrative and choices</p>
+            
+            <section id="scene-narrative" class="panel panel-parchment" role="region" aria-label="Scene narrative">
+                <p>0806 hours. You're on the main deck when you hear it—a low rumble that grows into a deafening roar. A Japanese bomber screams overhead, so close you can see the pilot's face. The ship shudders as bombs strike nearby vessels. Flames erupt from the USS Arizona. You have seconds to decide.</p>
+            </section>
+            
+            <div id="timer-display-2" class="timer-display" role="timer" aria-live="assertive" aria-atomic="true">
+                <div class="timer-circle">
+                    <svg class="timer-progress" viewBox="0 0 100 100" aria-hidden="true">
+                        <circle class="timer-progress-bg" cx="50" cy="50" r="45"></circle>
+                        <circle class="timer-progress-fill" cx="50" cy="50" r="45"></circle>
+                    </svg>
+                    <div class="timer-text">
+                        <span id="timer-seconds-2" class="timer-seconds">8</span>
+                        <span class="timer-label">seconds</span>
+                    </div>
+                </div>
+            </div>
+            
+            <nav id="scene-choices" class="mt-md" role="navigation" aria-label="Available choices">
+                <button class="choice-button mt-sm">Jump overboard. Swim for Ford Island.</button>
+                <button class="choice-button mt-sm">Run below deck to help wounded sailors.</button>
+                <button class="choice-button mt-sm">Man the anti-aircraft gun on the stern.</button>
+            </nav>
+            
+            <div class="test-controls">
+                <button onclick="startCountdown()">Start 10s Countdown</button>
+                <button onclick="stopCountdown()">Stop Countdown</button>
+            </div>
+        </div>
+        
+        <!-- Test Section 3: Reduced Motion -->
+        <div class="test-section">
+            <h2 class="text-gold">Test 3: Reduced Motion Support</h2>
+            <p class="text-secondary">Test timer with prefers-reduced-motion enabled</p>
+            <p class="text-secondary"><em>Note: Enable "Reduce motion" in your OS accessibility settings to test this properly.</em></p>
+            
+            <div id="timer-display-3" class="timer-display timer-warning" role="timer" aria-live="assertive" aria-atomic="true">
+                <div class="timer-circle">
+                    <svg class="timer-progress" viewBox="0 0 100 100" aria-hidden="true">
+                        <circle class="timer-progress-bg" cx="50" cy="50" r="45"></circle>
+                        <circle class="timer-progress-fill" cx="50" cy="50" r="45"></circle>
+                    </svg>
+                    <div class="timer-text">
+                        <span id="timer-seconds-3" class="timer-seconds">2</span>
+                        <span class="timer-label">seconds</span>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="text-secondary mt-md">With reduced motion enabled, the pulse and shake animations should be disabled, but the color change to red should still occur.</p>
+        </div>
+    </div>
+    
+    <script>
+        // Test helper functions
+        function setTimerValue(seconds) {
+            const timerSeconds = document.getElementById('timer-seconds');
+            const timerProgressFill = document.querySelector('.timer-progress-fill');
+            
+            timerSeconds.textContent = seconds;
+            
+            // Update progress circle
+            const progress = seconds / 10; // Assuming 10 second max
+            const circumference = 2 * Math.PI * 45;
+            const offset = circumference * (1 - progress);
+            timerProgressFill.style.strokeDashoffset = offset;
+            
+            // Auto-apply warning if < 3 seconds
+            const timerDisplay = document.getElementById('timer-display');
+            if (seconds < 3) {
+                timerDisplay.classList.add('timer-warning');
+            } else {
+                timerDisplay.classList.remove('timer-warning');
+            }
+        }
+        
+        function toggleWarning() {
+            const timerDisplay = document.getElementById('timer-display');
+            timerDisplay.classList.toggle('timer-warning');
+        }
+        
+        function hideTimer() {
+            const timerDisplay = document.getElementById('timer-display');
+            timerDisplay.classList.add('hidden');
+        }
+        
+        function showTimer() {
+            const timerDisplay = document.getElementById('timer-display');
+            timerDisplay.classList.remove('hidden');
+        }
+        
+        // Countdown simulation
+        let countdownInterval = null;
+        let currentTime = 10;
+        
+        function startCountdown() {
+            stopCountdown(); // Clear any existing countdown
+            
+            const timerDisplay = document.getElementById('timer-display-2');
+            const timerSeconds = document.getElementById('timer-seconds-2');
+            const timerProgressFill = document.querySelectorAll('.timer-progress-fill')[1];
+            
+            currentTime = 10;
+            timerDisplay.classList.remove('hidden');
+            timerDisplay.classList.remove('timer-warning');
+            
+            countdownInterval = setInterval(() => {
+                currentTime -= 0.1;
+                
+                if (currentTime <= 0) {
+                    stopCountdown();
+                    timerDisplay.classList.add('hidden');
+                    alert('Timer expired!');
+                    return;
+                }
+                
+                // Update display
+                const seconds = Math.ceil(currentTime);
+                timerSeconds.textContent = seconds;
+                
+                // Update progress
+                const progress = currentTime / 10;
+                const circumference = 2 * Math.PI * 45;
+                const offset = circumference * (1 - progress);
+                timerProgressFill.style.strokeDashoffset = offset;
+                
+                // Add warning state
+                if (currentTime < 3) {
+                    timerDisplay.classList.add('timer-warning');
+                }
+            }, 100);
+        }
+        
+        function stopCountdown() {
+            if (countdownInterval) {
+                clearInterval(countdownInterval);
+                countdownInterval = null;
+            }
+        }
+        
+        // Initialize progress circles
+        document.addEventListener('DOMContentLoaded', () => {
+            const progressFills = document.querySelectorAll('.timer-progress-fill');
+            const circumference = 2 * Math.PI * 45;
+            
+            progressFills.forEach(fill => {
+                fill.style.strokeDasharray = circumference;
+                fill.style.strokeDashoffset = 0;
+            });
+        });
+    </script>
+</body>
+</html>
