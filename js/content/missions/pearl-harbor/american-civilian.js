@@ -23,7 +23,7 @@
 // VERIFIED: Friendly fire details from National WWII Museum and historical records
 // DRAMATIZED: Individual civilian thoughts and sensory details (composite character)
 
-export const americanCivilianScenes = [
+const americanCivilianScenes = [
   {
     id: "ac-scene-01",
     narrative: `Sunday morning, 0745 hours. The smell of coffee drifts from the kitchen. Your small house sits in a neighborhood between Pearl Harbor and Honolulu—close enough to hear the morning bugle calls from the naval base, far enough to feel like home. Through the window, you can see neighbors tending gardens, children playing in yards, the peaceful rhythm of a Sunday morning.
@@ -214,7 +214,7 @@ You think about this morning—the coffee, the peaceful Sunday, the plans for ch
 ];
 
 // Outcome rules based on consequence flags
-export const americanCivilianOutcomes = [
+const americanCivilianOutcomes = [
   {
     id: "ac-outcome-survived-hero",
     conditions: {

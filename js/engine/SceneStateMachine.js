@@ -198,21 +198,13 @@ class SceneStateMachine {
   /**
    * Transition to next scene based on choice
    * @param {string} nextSceneId - ID of the next scene to transition to
-   * @param {object} consequences - Consequence flags to set (optional)
    */
-  transitionTo(nextSceneId, consequences = {}) {
+  transitionTo(nextSceneId) {
     // Validate nextSceneId
     if (typeof nextSceneId !== 'string') {
       console.error('SceneStateMachine.transitionTo: nextSceneId must be a string');
       return;
     }
-
-    // Emit choice:made event with consequences
-    this.eventBus.emit('choice:made', {
-      sceneId: this.getCurrentScene()?.id,
-      nextSceneId: nextSceneId,
-      consequences: consequences
-    });
 
     // Find the next scene by ID
     const nextSceneIndex = this.scenes.findIndex(scene => scene.id === nextSceneId);

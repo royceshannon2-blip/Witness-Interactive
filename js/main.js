@@ -68,6 +68,39 @@ async function initializeApp() {
     const uiController = new UIController(eventBus, timelineSelector, missionRegistry, uiContent);
     console.log('✓ UIController initialized');
     
+    // 9. Set up role:selected handler to load scenes into SceneStateMachine
+    eventBus.on('role:selected', (data) => {
+        const { missionId, roleId } = data;
+        const mission = missionRegistry.getMission(missionId);
+        
+        if (!mission) {
+            console.error(`main.js: Mission "${missionId}" not found`);
+            return;
+        }
+        
+        const role = mission.roles.find(r => r.id === roleId);
+        
+        if (!role) {
+            console.error(`main.js: Role "${roleId}" not found in mission "${missionId}"`);
+            return;
+        }
+        
+        // Load the role's scenes into the SceneStateMachine
+        sceneStateMachine.loadRole(missionId, roleId, role.scenes);
+        console.log(`✓ Loaded role "${roleId}" with ${role.scenes.length} scenes`);
+    });
+    
+    // 10. Set up choice:made handler to transition scenes
+    eventBus.on('choice:made', (data) => {
+        const { nextSceneId, consequences } = data;
+        
+        // ConsequenceSystem will handle setting flags
+        // SceneStateMachine will handle scene transition
+        sceneStateMachine.transitionTo(nextSceneId);
+        
+        console.log(`✓ Transitioning to scene "${nextSceneId}"`, consequences);
+    });
+    
     // Update loading progress
     eventBus.emit('module:progress', { percent: 75 });
     

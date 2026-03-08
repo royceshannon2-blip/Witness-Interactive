@@ -19,7 +19,7 @@
 // VERIFIED: Historical timeline and force composition from Naval History and Heritage Command
 // DRAMATIZED: Individual pilot thoughts and sensory details (composite character)
 
-export const japaneseAviatorScenes = [
+const japaneseAviatorScenes = [
   {
     id: "ja-scene-01",
     narrative: `The carrier deck pitches beneath your boots. 0545 hours. Your Mitsubishi A6M Zero sits fueled and armed, engine cowling still warm from the pre-flight check. Around you, 182 other aircraft crowd the decks of six carriers—the entire Kido Butai strike force.
@@ -213,7 +213,7 @@ You think about the burning ships, the men in the water, the carriers that weren
 ];
 
 // Outcome rules based on consequence flags
-export const japaneseAviatorOutcomes = [
+const japaneseAviatorOutcomes = [
   {
     id: "ja-outcome-survived-conflicted",
     conditions: {

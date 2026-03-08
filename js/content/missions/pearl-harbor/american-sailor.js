@@ -22,7 +22,7 @@
 // VERIFIED: USS Arizona specifications and attack details from National Park Service
 // DRAMATIZED: Individual sailor thoughts and sensory details (composite character)
 
-export const americanSailorScenes = [
+const americanSailorScenes = [
   {
     id: "as-scene-01",
     narrative: `Sunday morning, 0745 hours. The mess deck smells like coffee and pancakes. Around you, sailors in dungarees joke about shore leave, complain about the heat, argue about last night's boxing match. Through the porthole, you can see the other battleships of Battleship Row—California, Maryland, Oklahoma, Tennessee, West Virginia, Nevada. Eight battleships lined up like steel dominoes.
@@ -215,7 +215,7 @@ You stand on Ford Island, covered in oil and ash, watching your ship burn. You t
 ];
 
 // Outcome rules based on consequence flags
-export const americanSailorOutcomes = [
+const americanSailorOutcomes = [
   {
     id: "as-outcome-survived-hero",
     conditions: {
