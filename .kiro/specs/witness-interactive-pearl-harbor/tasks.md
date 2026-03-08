@@ -290,7 +290,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5_
 
 - [~] 21. Add UI controls and final touches
-  - [~] 21.1 Add sound toggle button (visual placeholder)
+  - [x] 21.1 Add sound toggle button (visual placeholder)
     - Display toggle button in UI (non-functional for MVP)
     - Style consistently with theme
     - _Requirements: 18.1, 18.2_

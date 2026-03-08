@@ -246,6 +246,44 @@ button:disabled, .button:disabled {
 }
 
 /* ============================================
+   Sound Toggle Button (Visual Placeholder)
+   ============================================ */
+.sound-toggle-button {
+    position: fixed;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(42, 47, 62, 0.9);
+    border: 2px solid var(--color-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: not-allowed;
+    z-index: 1000;
+    transition: all var(--transition-speed) ease;
+    opacity: 0.6;
+}
+
+.sound-toggle-button:hover {
+    background-color: rgba(42, 47, 62, 0.95);
+    border-color: var(--color-text-secondary);
+    transform: none;
+}
+
+.sound-toggle-button:focus {
+    outline: 2px solid var(--color-text-secondary);
+    outline-offset: 2px;
+}
+
+.sound-toggle-button .sound-icon {
+    font-size: 24px;
+    line-height: 1;
+    user-select: none;
+}
+
+/* ============================================
    Responsive Design
    ============================================ */
 @media (max-width: 768px) {
@@ -257,6 +295,18 @@ button:disabled, .button:disabled {
     
     #app {
         padding: var(--spacing-sm);
+    }
+    
+    /* Sound toggle button - smaller on mobile */
+    .sound-toggle-button {
+        width: 44px;
+        height: 44px;
+        top: var(--spacing-sm);
+        right: var(--spacing-sm);
+    }
+    
+    .sound-toggle-button .sound-icon {
+        font-size: 20px;
     }
     
     button, .button {

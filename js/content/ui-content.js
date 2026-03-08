@@ -36,7 +36,8 @@ const uiContent = {
   historicalRipple: {
     title: "Historical Consequences",
     subtitle: "The ripples of December 7, 1941",
-    buttonText: "Continue"
+    buttonText: "Continue",
+    apThemeLabel: "AP Theme:"
   },
   
   knowledgeCheckpoint: {
@@ -59,6 +60,12 @@ const uiContent = {
     title: "Coming Soon",
     message: "This mission is not yet available. Check back soon for more historical experiences!",
     buttonText: "Back to Timeline"
+  },
+  
+  soundToggle: {
+    muteLabel: "Mute Sound",
+    unmuteLabel: "Unmute Sound",
+    placeholderNote: "(Sound coming soon)"
   }
 };
 
