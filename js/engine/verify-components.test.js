@@ -2,7 +2,8 @@
  * Component Verification Test
  * 
  * This test verifies that the core engine components (EventBus, ConsequenceSystem, 
- * SceneStateMachine) load without errors and have no global variables.
+ * SceneStateMachine, TypewriterEffect, SceneTransition) load without errors and 
+ * have no global variables.
  * 
  * Run this test by opening test-components.html in a browser and checking the console.
  */
@@ -10,6 +11,8 @@
 import EventBus from './EventBus.js';
 import ConsequenceSystem from './ConsequenceSystem.js';
 import SceneStateMachine from './SceneStateMachine.js';
+import TypewriterEffect from './TypewriterEffect.js';
+import SceneTransition from './SceneTransition.js';
 
 console.log('=== Component Verification Test ===');
 
@@ -111,13 +114,97 @@ try {
   console.error('✗ SceneStateMachine failed to load:', error);
 }
 
-// Test 4: Check for global variables
-console.log('\n4. Checking for global variables...');
+// Test 4: Verify TypewriterEffect loads and instantiates
+console.log('\n4. Testing TypewriterEffect...');
+try {
+  const eventBus = new EventBus();
+  const typewriterEffect = new TypewriterEffect(eventBus, {
+    defaultSpeed: 30,
+    skipOnClick: true,
+    respectMotionPrefs: true
+  });
+  console.log('✓ TypewriterEffect instantiated successfully');
+  
+  // Test that it has the expected methods
+  if (typeof typewriterEffect.revealText === 'function' &&
+      typeof typewriterEffect.skipToEnd === 'function' &&
+      typeof typewriterEffect.isActive === 'function') {
+    console.log('✓ TypewriterEffect has required methods');
+  } else {
+    console.error('✗ TypewriterEffect missing required methods');
+  }
+  
+  // Test EventBus integration - verify it listens to scene:transition
+  let transitionHandled = false;
+  const originalCleanup = typewriterEffect.cleanup.bind(typewriterEffect);
+  typewriterEffect.cleanup = () => {
+    transitionHandled = true;
+    originalCleanup();
+  };
+  
+  eventBus.emit('scene:transition');
+  
+  if (transitionHandled) {
+    console.log('✓ TypewriterEffect responds to EventBus scene:transition');
+  } else {
+    console.error('✗ TypewriterEffect does not respond to EventBus events');
+  }
+} catch (error) {
+  console.error('✗ TypewriterEffect failed to load:', error);
+}
+
+// Test 5: Verify SceneTransition loads and instantiates
+console.log('\n5. Testing SceneTransition...');
+try {
+  const eventBus = new EventBus();
+  const sceneTransition = new SceneTransition(eventBus, {
+    defaultType: 'fade',
+    duration: 500,
+    respectMotionPrefs: true
+  });
+  console.log('✓ SceneTransition instantiated successfully');
+  
+  // Test that it has the expected methods
+  if (typeof sceneTransition.transition === 'function' &&
+      typeof sceneTransition.isActive === 'function') {
+    console.log('✓ SceneTransition has required methods');
+  } else {
+    console.error('✗ SceneTransition missing required methods');
+  }
+  
+  // Test EventBus integration - verify it emits transition events
+  let transitionStarted = false;
+  let transitionCompleted = false;
+  
+  eventBus.on('transition:start', () => {
+    transitionStarted = true;
+  });
+  
+  eventBus.on('transition:complete', () => {
+    transitionCompleted = true;
+  });
+  
+  // Trigger a transition with type 'none' for instant completion
+  sceneTransition.transition(null, null, 'none', 0);
+  
+  if (transitionStarted && transitionCompleted) {
+    console.log('✓ SceneTransition emits EventBus events correctly');
+  } else {
+    console.error('✗ SceneTransition does not emit EventBus events correctly');
+  }
+} catch (error) {
+  console.error('✗ SceneTransition failed to load:', error);
+}
+
+// Test 6: Check for global variables
+console.log('\n6. Checking for global variables...');
 const globalsBefore = Object.keys(window);
 const suspiciousGlobals = globalsBefore.filter(key => {
   return key.includes('EventBus') || 
          key.includes('Consequence') || 
          key.includes('Scene') ||
+         key.includes('Typewriter') ||
+         key.includes('Transition') ||
          key.includes('witness') ||
          key.includes('game');
 });
