@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline Selector Test</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <div class="screen active">
+            <div class="timeline-content">
+                <h2 class="text-center text-gold">Historical Timeline Test</h2>
+                <p class="text-center">Testing TimelineSelector component</p>
+                <div id="timeline-container" class="mt-lg"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        import EventBus from './js/engine/EventBus.js';
+        import MissionRegistry from './js/content/MissionRegistry.js';
+        import TimelineSelector from './js/engine/TimelineSelector.js';
+        import pearlHarborMission from './js/content/missions/pearl-harbor/mission.js';
+        
+        // Initialize components
+        const eventBus = new EventBus();
+        const missionRegistry = new MissionRegistry();
+        const timelineSelector = new TimelineSelector(eventBus, missionRegistry);
+        
+        // Register Pearl Harbor mission
+        missionRegistry.register(pearlHarborMission);
+        
+        // Add some locked missions for testing
+        missionRegistry.register({
+            id: 'ancient-rome',
+            title: 'Fall of Rome',
+            historicalDate: '0476-09-04',
+            era: 'Ancient',
+            unlocked: false,
+            teaser: 'Witness the fall of the Western Roman Empire',
+            roles: []
+        });
+        
+        missionRegistry.register({
+            id: 'normandy',
+            title: 'D-Day',
+            historicalDate: '1944-06-06',
+            era: 'Modern',
+            unlocked: false,
+            teaser: 'Experience the Allied invasion of Normandy',
+            roles: []
+        });
+        
+        missionRegistry.register({
+            id: 'cold-war',
+            title: 'Cuban Missile Crisis',
+            historicalDate: '1962-10-16',
+            era: 'Modern',
+            unlocked: false,
+            teaser: 'Navigate the brink of nuclear war',
+            roles: []
+        });
+        
+        // Listen for mission selection
+        eventBus.on('mission:selected', (data) => {
+            console.log('Mission selected:', data.missionId);
+            alert(`Mission selected: ${data.missionId}`);
+        });
+        
+        // Render timeline
+        const container = document.getElementById('timeline-container');
+        timelineSelector.render(container);
+        
+        console.log('Timeline rendered successfully!');
+    </script>
+</body>
+</html>

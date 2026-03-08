@@ -24,10 +24,14 @@ class UIController {
    * @param {EventBus} eventBus - Event bus for component communication
    * @param {TimelineSelector} timelineSelector - Timeline selector component
    * @param {MissionRegistry} missionRegistry - Mission registry for accessing mission data
+   * @param {object} uiContent - UI text content configuration (from js/content/ui-content.js)
    */
-  constructor(eventBus, timelineSelector, missionRegistry) {
+  constructor(eventBus, timelineSelector, missionRegistry, uiContent) {
     // Store reference to event bus
     this.eventBus = eventBus;
+    
+    // Store UI content configuration (ZERO hardcoded content strings in engine)
+    this.content = uiContent;
     
     // Store reference to timeline selector
     this.timelineSelector = timelineSelector;
@@ -265,16 +269,14 @@ class UIController {
    * @private
    */
   renderLandingScreen() {
+    const c = this.content.landing;
     return `
       <div class="landing-content text-center">
-        <h1 class="text-gold">Witness Interactive</h1>
-        <h2>Pearl Harbor</h2>
-        <p class="tagline">December 7, 1941 — A Date Which Will Live in Infamy</p>
-        <p class="context">
-          Experience the attack on Pearl Harbor from three different perspectives.
-          Your choices matter. History remembers.
-        </p>
-        <button id="begin-button" class="mt-lg">Begin Experience</button>
+        <h1 class="text-gold">${c.title}</h1>
+        <h2>${c.subtitle}</h2>
+        <p class="tagline">${c.tagline}</p>
+        <p class="context">${c.context}</p>
+        <button id="begin-button" class="mt-lg">${c.buttonText}</button>
       </div>
     `;
   }
@@ -285,10 +287,11 @@ class UIController {
    * @private
    */
   renderTimelineScreen() {
+    const c = this.content.timeline;
     return `
       <div class="timeline-content">
-        <h2 class="text-center text-gold">Historical Timeline</h2>
-        <p class="text-center">Select a mission to begin</p>
+        <h2 class="text-center text-gold">${c.title}</h2>
+        <p class="text-center">${c.subtitle}</p>
         <div id="timeline-container" class="mt-lg">
           <!-- Timeline will be rendered by TimelineSelector component -->
         </div>
@@ -303,16 +306,17 @@ class UIController {
    * @private
    */
   renderRoleSelectionScreen(data) {
+    const c = this.content.roleSelection;
     // Get mission from registry (will be populated in attachEventListeners)
     return `
       <div class="role-selection-content">
-        <h2 class="text-center text-gold">Choose Your Perspective</h2>
-        <p class="text-center">Experience Pearl Harbor through different eyes</p>
+        <h2 class="text-center text-gold">${c.title}</h2>
+        <p class="text-center">${c.subtitle}</p>
         <div id="role-cards-container" class="mt-lg">
           <!-- Role cards will be populated dynamically -->
         </div>
         <div class="endings-counter text-center mt-md">
-          <p class="text-secondary">Endings Discovered: <span id="endings-count">0/3</span></p>
+          <p class="text-secondary">${c.endingsLabel} <span id="endings-count">0/3</span></p>
         </div>
       </div>
     `;
@@ -346,13 +350,14 @@ class UIController {
    * @private
    */
   renderOutcomeScreen(data) {
+    const c = this.content.outcome;
     return `
       <div class="outcome-content text-center">
-        <h2 class="text-gold">Your Story</h2>
+        <h2 class="text-gold">${c.title}</h2>
         <div id="outcome-result" class="panel panel-parchment mt-lg">
           <!-- Outcome will be populated dynamically -->
         </div>
-        <button id="continue-to-ripple" class="mt-lg">Continue</button>
+        <button id="continue-to-ripple" class="mt-lg">${c.buttonText}</button>
       </div>
     `;
   }
@@ -364,14 +369,15 @@ class UIController {
    * @private
    */
   renderHistoricalRippleScreen(data) {
+    const c = this.content.historicalRipple;
     return `
       <div class="ripple-content">
-        <h2 class="text-center text-gold">Historical Consequences</h2>
-        <p class="text-center">The ripples of December 7, 1941</p>
+        <h2 class="text-center text-gold">${c.title}</h2>
+        <p class="text-center">${c.subtitle}</p>
         <div id="ripple-timeline" class="mt-lg">
           <!-- Ripple events will be rendered here -->
         </div>
-        <button id="continue-to-checkpoint" class="mt-lg">Continue</button>
+        <button id="continue-to-checkpoint" class="mt-lg">${c.buttonText}</button>
       </div>
     `;
   }
@@ -383,14 +389,15 @@ class UIController {
    * @private
    */
   renderKnowledgeCheckpointScreen(data) {
+    const c = this.content.knowledgeCheckpoint;
     return `
       <div class="checkpoint-content">
-        <h2 class="text-center text-gold">Knowledge Checkpoint</h2>
-        <p class="text-center">Test your understanding of the historical context</p>
+        <h2 class="text-center text-gold">${c.title}</h2>
+        <p class="text-center">${c.subtitle}</p>
         <div id="checkpoint-questions" class="mt-lg">
           <!-- Questions will be rendered here -->
         </div>
-        <button id="view-results" class="mt-lg hidden">View Results</button>
+        <button id="view-results" class="mt-lg hidden">${c.buttonText}</button>
       </div>
     `;
   }
@@ -402,14 +409,15 @@ class UIController {
    * @private
    */
   renderResultsCardScreen(data) {
+    const c = this.content.resultsCard;
     return `
       <div class="results-content text-center">
-        <h2 class="text-gold">Mission Complete</h2>
+        <h2 class="text-gold">${c.title}</h2>
         <div id="results-card" class="panel panel-parchment mt-lg">
           <!-- Results card will be populated dynamically -->
         </div>
-        <button id="copy-results" class="mt-md">Copy Results</button>
-        <button id="play-again" class="mt-md">Play Another Role</button>
+        <button id="copy-results" class="mt-md">${c.copyButtonText}</button>
+        <button id="play-again" class="mt-md">${c.playAgainButtonText}</button>
       </div>
     `;
   }
@@ -530,8 +538,9 @@ class UIController {
       return;
     }
     
+    const c = this.content.progress;
     progressContainer.innerHTML = `
-      <p class="text-secondary">Scene ${current} of ${total}</p>
+      <p class="text-secondary">${c.sceneLabel} ${current} of ${total}</p>
       <div class="progress-bar">
         <div class="progress-fill" style="width: ${(current / total) * 100}%"></div>
       </div>

@@ -21,8 +21,9 @@ import UIController from './engine/UIController.js';
 import TimelineSelector from './engine/TimelineSelector.js';
 import MissionRegistry from './content/MissionRegistry.js';
 
-// Mission content imports
+// Content imports
 import pearlHarborMission from './content/missions/pearl-harbor/mission.js';
+import uiContent from './content/ui-content.js';
 
 /**
  * Initialize the application
@@ -64,7 +65,7 @@ async function initializeApp() {
     console.log('✓ TimelineSelector initialized');
     
     // 8. Initialize UIController (handles all DOM rendering)
-    const uiController = new UIController(eventBus, timelineSelector, missionRegistry);
+    const uiController = new UIController(eventBus, timelineSelector, missionRegistry, uiContent);
     console.log('✓ UIController initialized');
     
     // Update loading progress
