@@ -8,15 +8,15 @@
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div id="app">
-        <div id="loading-screen" class="screen active">
+    <main id="app" role="main" aria-label="Witness Interactive Game">
+        <div id="loading-screen" class="screen active" role="status" aria-live="polite">
             <div class="loading-content">
                 <h1>Witness Interactive</h1>
-                <div class="loading-spinner"></div>
+                <div class="loading-spinner" aria-hidden="true"></div>
                 <p>Loading historical experience...</p>
             </div>
         </div>
-    </div>
+    </main>
     
     <!-- ES6 Module Entry Point -->
     <script type="module" src="js/main.js"></script>

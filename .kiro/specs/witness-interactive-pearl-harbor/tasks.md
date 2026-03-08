@@ -267,7 +267,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Support Arrow keys for choice navigation
     - _Requirements: 25.1, 25.2, 25.6_
   
-  - [~] 19.2 Add ARIA labels and semantic HTML
+  - [x] 19.2 Add ARIA labels and semantic HTML
     - Use semantic HTML5 elements (nav, main, article, button)
     - Add ARIA labels to all interactive elements
     - Add role attributes where appropriate

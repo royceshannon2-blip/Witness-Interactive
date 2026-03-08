@@ -287,13 +287,13 @@ class UIController {
   renderLandingScreen() {
     const c = this.content.landing;
     return `
-      <div class="landing-content text-center">
-        <h1 class="text-gold">${c.title}</h1>
+      <article class="landing-content text-center" role="article" aria-labelledby="landing-title">
+        <h1 id="landing-title" class="text-gold">${c.title}</h1>
         <h2>${c.subtitle}</h2>
         <p class="tagline">${c.tagline}</p>
         <p class="context">${c.context}</p>
-        <button id="begin-button" class="mt-lg">${c.buttonText}</button>
-      </div>
+        <button id="begin-button" class="mt-lg" aria-label="Begin game and view mission timeline">${c.buttonText}</button>
+      </article>
     `;
   }
 
@@ -305,13 +305,13 @@ class UIController {
   renderTimelineScreen() {
     const c = this.content.timeline;
     return `
-      <div class="timeline-content">
-        <h2 class="text-center text-gold">${c.title}</h2>
+      <article class="timeline-content" role="article" aria-labelledby="timeline-title">
+        <h2 id="timeline-title" class="text-center text-gold">${c.title}</h2>
         <p class="text-center">${c.subtitle}</p>
-        <div id="timeline-container" class="mt-lg">
+        <nav id="timeline-container" class="mt-lg" role="navigation" aria-label="Historical mission timeline">
           <!-- Timeline will be rendered by TimelineSelector component -->
-        </div>
-      </div>
+        </nav>
+      </article>
     `;
   }
 
@@ -325,16 +325,16 @@ class UIController {
     const c = this.content.roleSelection;
     // Get mission from registry (will be populated in attachEventListeners)
     return `
-      <div class="role-selection-content">
-        <h2 class="text-center text-gold">${c.title}</h2>
+      <article class="role-selection-content" role="article" aria-labelledby="role-selection-title">
+        <h2 id="role-selection-title" class="text-center text-gold">${c.title}</h2>
         <p class="text-center">${c.subtitle}</p>
-        <div id="role-cards-container" class="mt-lg">
+        <section id="role-cards-container" class="mt-lg" role="region" aria-label="Available roles">
           <!-- Role cards will be populated dynamically -->
+        </section>
+        <div class="endings-counter text-center mt-md" role="status" aria-live="polite">
+          <p class="text-secondary">${c.endingsLabel} <span id="endings-count" aria-label="Roles completed">0/3</span></p>
         </div>
-        <div class="endings-counter text-center mt-md">
-          <p class="text-secondary">${c.endingsLabel} <span id="endings-count">0/3</span></p>
-        </div>
-      </div>
+      </article>
     `;
   }
 
@@ -345,17 +345,17 @@ class UIController {
    */
   renderSceneScreen() {
     return `
-      <div class="scene-content">
-        <div id="scene-narrative" class="panel panel-parchment">
+      <article class="scene-content" role="article" aria-labelledby="scene-narrative">
+        <section id="scene-narrative" class="panel panel-parchment" role="region" aria-label="Scene narrative">
           <!-- Scene narrative will be rendered here -->
-        </div>
-        <div id="scene-choices" class="mt-md">
+        </section>
+        <nav id="scene-choices" class="mt-md" role="navigation" aria-label="Available choices">
           <!-- Scene choices will be rendered here -->
-        </div>
-        <div id="scene-progress" class="text-center mt-md">
+        </nav>
+        <div id="scene-progress" class="text-center mt-md" role="status" aria-live="polite">
           <!-- Progress indicator will be rendered here -->
         </div>
-      </div>
+      </article>
     `;
   }
 
@@ -368,13 +368,13 @@ class UIController {
   renderOutcomeScreen(data) {
     const c = this.content.outcome;
     return `
-      <div class="outcome-content text-center">
-        <h2 class="text-gold">${c.title}</h2>
-        <div id="outcome-result" class="panel panel-parchment mt-lg">
+      <article class="outcome-content text-center" role="article" aria-labelledby="outcome-title">
+        <h2 id="outcome-title" class="text-gold">${c.title}</h2>
+        <section id="outcome-result" class="panel panel-parchment mt-lg" role="region" aria-label="Your outcome">
           <!-- Outcome will be populated dynamically -->
-        </div>
-        <button id="continue-to-ripple" class="mt-lg">${c.buttonText}</button>
-      </div>
+        </section>
+        <button id="continue-to-ripple" class="mt-lg" aria-label="Continue to historical ripple timeline">${c.buttonText}</button>
+      </article>
     `;
   }
 
@@ -387,14 +387,14 @@ class UIController {
   renderHistoricalRippleScreen(data) {
     const c = this.content.historicalRipple;
     return `
-      <div class="ripple-content">
-        <h2 class="text-center text-gold">${c.title}</h2>
+      <article class="ripple-content" role="article" aria-labelledby="ripple-title">
+        <h2 id="ripple-title" class="text-center text-gold">${c.title}</h2>
         <p class="text-center">${c.subtitle}</p>
-        <div id="ripple-timeline" class="mt-lg">
+        <section id="ripple-timeline" class="mt-lg" role="region" aria-label="Historical consequences timeline">
           <!-- Ripple events will be rendered here -->
-        </div>
-        <button id="continue-to-checkpoint" class="mt-lg">${c.buttonText}</button>
-      </div>
+        </section>
+        <button id="continue-to-checkpoint" class="mt-lg" aria-label="Continue to knowledge checkpoint">${c.buttonText}</button>
+      </article>
     `;
   }
 
@@ -407,14 +407,14 @@ class UIController {
   renderKnowledgeCheckpointScreen(data) {
     const c = this.content.knowledgeCheckpoint;
     return `
-      <div class="checkpoint-content">
-        <h2 class="text-center text-gold">${c.title}</h2>
+      <article class="checkpoint-content" role="article" aria-labelledby="checkpoint-title">
+        <h2 id="checkpoint-title" class="text-center text-gold">${c.title}</h2>
         <p class="text-center">${c.subtitle}</p>
-        <div id="checkpoint-questions" class="mt-lg">
+        <section id="checkpoint-questions" class="mt-lg" role="region" aria-label="Knowledge assessment questions">
           <!-- Questions will be rendered here -->
-        </div>
-        <button id="view-results" class="mt-lg hidden">${c.buttonText}</button>
-      </div>
+        </section>
+        <button id="view-results" class="mt-lg hidden" aria-label="View your results">${c.buttonText}</button>
+      </article>
     `;
   }
 
@@ -431,14 +431,14 @@ class UIController {
     const cardHTML = this.resultsCard ? this.resultsCard.generateCard(data) : '<p>Error: Results card generator not available.</p>';
     
     return `
-      <div class="results-content text-center">
-        <h2 class="text-gold">${c.title}</h2>
-        <div id="results-card" class="panel panel-parchment mt-lg">
+      <article class="results-content text-center" role="article" aria-labelledby="results-title">
+        <h2 id="results-title" class="text-gold">${c.title}</h2>
+        <section id="results-card" class="panel panel-parchment mt-lg" role="region" aria-label="Your game results">
           ${cardHTML}
-        </div>
-        <button id="copy-results" class="mt-md">${c.copyButtonText}</button>
-        <button id="play-again" class="mt-md">${c.playAgainButtonText}</button>
-      </div>
+        </section>
+        <button id="copy-results" class="mt-md" aria-label="Copy results to clipboard">${c.copyButtonText}</button>
+        <button id="play-again" class="mt-md" aria-label="Play again with a different role">${c.playAgainButtonText}</button>
+      </article>
     `;
   }
 
@@ -482,6 +482,7 @@ class UIController {
       choiceButton.dataset.choiceId = choice.id;
       choiceButton.dataset.nextScene = choice.nextScene;
       choiceButton.dataset.consequences = JSON.stringify(choice.consequences || {});
+      choiceButton.setAttribute('aria-label', `Choice ${index + 1}: ${choice.text}`);
       
       // Add click handler
       choiceButton.addEventListener('click', () => {
@@ -688,8 +689,10 @@ class UIController {
     
     // Create a card for each role
     mission.roles.forEach(role => {
-      const roleCard = document.createElement('div');
+      const roleCard = document.createElement('article');
       roleCard.className = 'role-card';
+      roleCard.setAttribute('role', 'article');
+      roleCard.setAttribute('aria-labelledby', `role-title-${role.id}`);
       
       // Check if role is completed
       const isCompleted = this.completedRoles.has(role.id);
@@ -699,6 +702,7 @@ class UIController {
       
       // Create card content
       const roleTitle = document.createElement('h3');
+      roleTitle.id = `role-title-${role.id}`;
       roleTitle.className = 'role-title';
       roleTitle.textContent = role.name;
       
@@ -710,6 +714,7 @@ class UIController {
       selectButton.className = 'role-select-button';
       selectButton.textContent = isCompleted ? 'Play Again' : 'Select Role';
       selectButton.dataset.roleId = role.id;
+      selectButton.setAttribute('aria-label', `${isCompleted ? 'Play again as' : 'Select role'}: ${role.name}`);
       
       // Add completion indicator if completed
       if (isCompleted) {
@@ -866,24 +871,28 @@ class UIController {
     
     // Create a ripple event element for each event in the mission data
     mission.historicalRipple.forEach((event, index) => {
-      const eventElement = document.createElement('div');
+      const eventElement = document.createElement('article');
       eventElement.className = 'ripple-event';
+      eventElement.setAttribute('role', 'article');
+      eventElement.setAttribute('aria-labelledby', `ripple-event-title-${index}`);
       
       // Set animation delay based on event's animationDelay property
       eventElement.style.animationDelay = `${event.animationDelay}ms`;
       
       // Create event header with date
-      const eventHeader = document.createElement('div');
+      const eventHeader = document.createElement('header');
       eventHeader.className = 'ripple-event-header';
       
-      const eventDate = document.createElement('div');
+      const eventDate = document.createElement('time');
       eventDate.className = 'ripple-event-date';
       eventDate.textContent = event.date;
+      eventDate.setAttribute('datetime', event.date);
       
       eventHeader.appendChild(eventDate);
       
       // Create event title
       const eventTitle = document.createElement('h3');
+      eventTitle.id = `ripple-event-title-${index}`;
       eventTitle.className = 'ripple-event-title';
       eventTitle.textContent = event.title;
       
@@ -967,12 +976,14 @@ class UIController {
     
     // Render each question
     roleQuestions.forEach((question, index) => {
-      const questionElement = document.createElement('div');
+      const questionElement = document.createElement('article');
       questionElement.className = 'checkpoint-question panel panel-parchment mt-md';
       questionElement.dataset.questionId = question.id;
+      questionElement.setAttribute('role', 'article');
+      questionElement.setAttribute('aria-labelledby', `question-${index}-text`);
       
       // Question header with number and AP skill
-      const questionHeader = document.createElement('div');
+      const questionHeader = document.createElement('header');
       questionHeader.className = 'question-header';
       
       const questionNumber = document.createElement('h3');
@@ -989,12 +1000,15 @@ class UIController {
       
       // Question text
       const questionText = document.createElement('p');
+      questionText.id = `question-${index}-text`;
       questionText.className = 'question-text';
       questionText.textContent = question.question;
       
       // Options container
-      const optionsContainer = document.createElement('div');
+      const optionsContainer = document.createElement('nav');
       optionsContainer.className = 'question-options mt-sm';
+      optionsContainer.setAttribute('role', 'navigation');
+      optionsContainer.setAttribute('aria-label', `Answer options for question ${index + 1}`);
       
       // Render each option as a button
       question.options.forEach(option => {
@@ -1003,6 +1017,7 @@ class UIController {
         optionButton.dataset.optionId = option.id;
         optionButton.dataset.correct = option.correct;
         optionButton.textContent = `${option.id.toUpperCase()}. ${option.text}`;
+        optionButton.setAttribute('aria-label', `Option ${option.id.toUpperCase()}: ${option.text}`);
         
         // Add click handler for answer selection
         optionButton.addEventListener('click', () => {
@@ -1013,8 +1028,10 @@ class UIController {
       });
       
       // Explanation container (initially hidden)
-      const explanationContainer = document.createElement('div');
+      const explanationContainer = document.createElement('section');
       explanationContainer.className = 'question-explanation hidden mt-md';
+      explanationContainer.setAttribute('role', 'region');
+      explanationContainer.setAttribute('aria-label', 'Answer explanation');
       explanationContainer.innerHTML = `
         <h4>Explanation:</h4>
         <p>${question.explanation}</p>

@@ -97,20 +97,23 @@ class TimelineSelector {
     const isUnlocked = mission.unlocked === true;
     const nodeClass = isUnlocked ? 'timeline-node unlocked' : 'timeline-node locked';
     const animationDelay = index * 0.1; // Stagger animation by 100ms per node
+    const statusText = isUnlocked ? 'Available' : 'Locked';
+    const ariaLabel = `${mission.title}, ${this.formatDate(mission.historicalDate)}, ${statusText}`;
 
     return `
-      <div class="${nodeClass}" 
+      <button class="${nodeClass}" 
            data-mission-id="${mission.id}"
            data-unlocked="${isUnlocked}"
-           style="animation-delay: ${animationDelay}s">
-        <div class="timeline-node-marker">
+           style="animation-delay: ${animationDelay}s"
+           aria-label="${ariaLabel}">
+        <div class="timeline-node-marker" aria-hidden="true">
           ${isUnlocked ? '<span class="node-icon">●</span>' : '<span class="node-icon lock">🔒</span>'}
         </div>
         <div class="timeline-node-label">
           <span class="node-title">${mission.title}</span>
           <span class="node-date">${this.formatDate(mission.historicalDate)}</span>
         </div>
-      </div>
+      </button>
     `;
   }
 
@@ -163,11 +166,7 @@ class TimelineSelector {
         this.showTooltip(missionId, event);
       });
 
-      // Keyboard accessibility
-      node.setAttribute('tabindex', '0');
-      node.setAttribute('role', 'button');
-      node.setAttribute('aria-label', `Mission: ${missionId}`);
-
+      // Keyboard accessibility - already a button element, no need for tabindex/role
       node.addEventListener('keydown', (event) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();
@@ -219,6 +218,8 @@ class TimelineSelector {
     // Create tooltip element
     const tooltip = document.createElement('div');
     tooltip.className = 'timeline-tooltip';
+    tooltip.setAttribute('role', 'tooltip');
+    tooltip.setAttribute('aria-live', 'polite');
     tooltip.innerHTML = `
       <h4>${mission.title}</h4>
       <p class="tooltip-date">${this.formatDate(mission.historicalDate)}</p>
@@ -284,18 +285,24 @@ class TimelineSelector {
     // Create temporary message overlay
     const message = document.createElement('div');
     message.className = 'coming-soon-message';
+    message.setAttribute('role', 'dialog');
+    message.setAttribute('aria-labelledby', 'coming-soon-title');
+    message.setAttribute('aria-modal', 'true');
     message.innerHTML = `
       <div class="message-content">
-        <h3>Coming Soon</h3>
+        <h3 id="coming-soon-title">Coming Soon</h3>
         <p>This mission will be available in a future update.</p>
-        <button id="close-message">Close</button>
+        <button id="close-message" aria-label="Close coming soon message">Close</button>
       </div>
     `;
 
     document.body.appendChild(message);
 
-    // Add close handler
+    // Focus the close button for accessibility
     const closeButton = message.querySelector('#close-message');
+    closeButton.focus();
+
+    // Add close handler
     closeButton.addEventListener('click', () => {
       message.remove();
     });
