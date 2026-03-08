@@ -18,6 +18,9 @@
  * Requirements: 5.2, 5.3, 5.5, 18.4
  */
 
+import TypewriterEffect from './TypewriterEffect.js';
+import SceneTransition from './SceneTransition.js';
+
 class UIController {
   /**
    * Initialize the UIController
@@ -27,8 +30,11 @@ class UIController {
    * @param {ConsequenceSystem} consequenceSystem - Consequence system for outcome calculation
    * @param {ResultsCard} resultsCard - Results card generator component
    * @param {object} uiContent - UI text content configuration (from js/content/ui-content.js)
+   * @param {object} components - Optional interactive polish components
+   * @param {TypewriterEffect} components.typewriterEffect - Typewriter text reveal component
+   * @param {SceneTransition} components.sceneTransition - Scene transition animation component
    */
-  constructor(eventBus, timelineSelector, missionRegistry, consequenceSystem, resultsCard, uiContent) {
+  constructor(eventBus, timelineSelector, missionRegistry, consequenceSystem, resultsCard, uiContent, components = {}) {
     // Store reference to event bus
     this.eventBus = eventBus;
     
@@ -46,6 +52,10 @@ class UIController {
     
     // Store reference to results card generator
     this.resultsCard = resultsCard;
+    
+    // Store interactive polish components (if provided)
+    this.typewriterEffect = components.typewriterEffect || null;
+    this.sceneTransition = components.sceneTransition || null;
     
     // Get reference to app container
     this.appContainer = document.getElementById('app');
@@ -536,6 +546,31 @@ class UIController {
       choicesContainer.appendChild(choiceButton);
     });
     
+    // Disable choices initially (will be enabled after typewriter completes)
+    this.disableChoices();
+    
+    // If typewriter effect is available, use it for narrative reveal
+    if (this.typewriterEffect) {
+      const narrativeParagraph = narrativeContainer.querySelector('p');
+      if (narrativeParagraph) {
+        this.typewriterEffect.revealText(
+          narrativeParagraph,
+          scene.narrative,
+          30, // speed in ms per character
+          () => {
+            // Enable choices after typewriter completes
+            this.enableChoices();
+          }
+        );
+      } else {
+        // Fallback: enable choices immediately if paragraph not found
+        this.enableChoices();
+      }
+    } else {
+      // No typewriter effect available, enable choices immediately
+      this.enableChoices();
+    }
+    
     // Update progress indicator
     this.updateProgress(sceneIndex + 1, totalScenes);
     
@@ -543,6 +578,32 @@ class UIController {
     if (scene.atmosphericEffect) {
       this.applyEffect(scene.atmosphericEffect);
     }
+  }
+
+  /**
+   * Enable choice buttons to make them clickable
+   * Called after typewriter effect completes
+   */
+  enableChoices() {
+    const choiceButtons = document.querySelectorAll('.choice-button');
+    choiceButtons.forEach(button => {
+      button.disabled = false;
+      button.style.pointerEvents = 'auto';
+      button.style.opacity = '1';
+    });
+  }
+
+  /**
+   * Disable choice buttons to prevent clicks during typewriter animation
+   * Called at the start of scene rendering
+   */
+  disableChoices() {
+    const choiceButtons = document.querySelectorAll('.choice-button');
+    choiceButtons.forEach(button => {
+      button.disabled = true;
+      button.style.pointerEvents = 'none';
+      button.style.opacity = '0.5';
+    });
   }
 
   /**

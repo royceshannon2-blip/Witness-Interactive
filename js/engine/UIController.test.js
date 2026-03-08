@@ -17,6 +17,51 @@ function log(msg) {
 
 log('=== UIController Tests ===\n');
 
+// Mock UI content for tests
+const mockUIContent = {
+  landing: {
+    title: "Test Title",
+    subtitle: "Test Subtitle",
+    tagline: "Test Tagline",
+    context: "Test Context",
+    buttonText: "Test Button"
+  },
+  timeline: {
+    title: "Timeline Title",
+    subtitle: "Timeline Subtitle"
+  },
+  roleSelection: {
+    title: "Role Selection",
+    subtitle: "Choose Role",
+    endingsLabel: "Endings:",
+    allRolesCompletedTitle: "All Complete",
+    allRolesCompletedMessage: "All roles completed"
+  },
+  outcome: {
+    title: "Outcome",
+    buttonText: "Continue"
+  },
+  historicalRipple: {
+    title: "Historical Ripple",
+    subtitle: "Ripple Subtitle",
+    buttonText: "Continue",
+    apThemeLabel: "AP Theme:"
+  },
+  knowledgeCheckpoint: {
+    title: "Checkpoint",
+    subtitle: "Test your knowledge",
+    buttonText: "View Results"
+  },
+  resultsCard: {
+    title: "Results",
+    copyButtonText: "Copy",
+    playAgainButtonText: "Play Again"
+  },
+  progress: {
+    sceneLabel: "Scene"
+  }
+};
+
 // Setup test environment
 function setupTestDOM() {
   // Create app container if it doesn't exist
@@ -39,7 +84,7 @@ function testInitialization() {
   
   const appContainer = setupTestDOM();
   const eventBus = new EventBus();
-  const uiController = new UIController(eventBus);
+  const uiController = new UIController(eventBus, null, null, null, null, mockUIContent);
   
   if (uiController.eventBus === eventBus) {
     log('✓ EventBus reference stored correctly');
@@ -68,7 +113,7 @@ function testShowLandingScreen() {
   
   setupTestDOM();
   const eventBus = new EventBus();
-  const uiController = new UIController(eventBus);
+  const uiController = new UIController(eventBus, null, null, null, null, mockUIContent);
   
   uiController.showScreen('landing');
   
@@ -101,7 +146,7 @@ function testSceneRendering() {
   
   setupTestDOM();
   const eventBus = new EventBus();
-  const uiController = new UIController(eventBus);
+  const uiController = new UIController(eventBus, null, null, null, null, mockUIContent);
   
   // Create test scene
   const testScene = {
@@ -164,7 +209,7 @@ function testGameStartEvent() {
   
   setupTestDOM();
   const eventBus = new EventBus();
-  const uiController = new UIController(eventBus);
+  const uiController = new UIController(eventBus, null, null, null, null, mockUIContent);
   
   // Emit game:start event
   eventBus.emit('game:start');
@@ -185,7 +230,7 @@ function testSceneTransitionEvent() {
   
   setupTestDOM();
   const eventBus = new EventBus();
-  const uiController = new UIController(eventBus);
+  const uiController = new UIController(eventBus, null, null, null, null, mockUIContent);
   
   const testScene = {
     id: 'test-scene-01',
@@ -226,7 +271,7 @@ function testProgressUpdate() {
   
   setupTestDOM();
   const eventBus = new EventBus();
-  const uiController = new UIController(eventBus);
+  const uiController = new UIController(eventBus, null, null, null, null, mockUIContent);
   
   // Create scene screen first
   uiController.showScreen('scene');
@@ -257,7 +302,7 @@ function testInvalidScreenName() {
   
   setupTestDOM();
   const eventBus = new EventBus();
-  const uiController = new UIController(eventBus);
+  const uiController = new UIController(eventBus, null, null, null, null, mockUIContent);
   
   // Capture console errors
   const originalError = console.error;
@@ -287,7 +332,7 @@ function testAtmosphericEffects() {
   
   setupTestDOM();
   const eventBus = new EventBus();
-  const uiController = new UIController(eventBus);
+  const uiController = new UIController(eventBus, null, null, null, null, mockUIContent);
   
   // Test smoke effect
   uiController.applyEffect('smoke');
@@ -324,6 +369,177 @@ function testAtmosphericEffects() {
   console.log('');
 }
 
+// Test 9: Enable and disable choices
+function testEnableDisableChoices() {
+  console.log('Test 9: Enable and disable choices');
+  
+  setupTestDOM();
+  const eventBus = new EventBus();
+  const uiController = new UIController(eventBus, null, null, null, null, mockUIContent);
+  
+  // Create test scene with choices
+  const testScene = {
+    id: 'test-scene-01',
+    narrative: 'Test narrative.',
+    apThemes: ['causation'],
+    choices: [
+      {
+        id: 'choice-01',
+        text: 'Choice 1',
+        nextScene: 'test-scene-02',
+        consequences: {}
+      },
+      {
+        id: 'choice-02',
+        text: 'Choice 2',
+        nextScene: 'test-scene-03',
+        consequences: {}
+      }
+    ],
+    atmosphericEffect: null
+  };
+  
+  // Render scene (choices should be disabled initially)
+  uiController.renderScene(testScene, 0, 3);
+  
+  const choiceButtons = document.querySelectorAll('.choice-button');
+  
+  // Check that choices are initially disabled
+  let allDisabled = true;
+  choiceButtons.forEach(button => {
+    if (!button.disabled || button.style.pointerEvents !== 'none' || button.style.opacity !== '0.5') {
+      allDisabled = false;
+    }
+  });
+  
+  if (allDisabled && choiceButtons.length === 2) {
+    console.log('✓ Choices are disabled initially after renderScene');
+  } else {
+    console.error('✗ Choices are not properly disabled initially');
+  }
+  
+  // Test enableChoices method
+  uiController.enableChoices();
+  
+  let allEnabled = true;
+  choiceButtons.forEach(button => {
+    if (button.disabled || button.style.pointerEvents !== 'auto' || button.style.opacity !== '1') {
+      allEnabled = false;
+    }
+  });
+  
+  if (allEnabled) {
+    console.log('✓ enableChoices() enables all choice buttons');
+  } else {
+    console.error('✗ enableChoices() did not enable all buttons');
+  }
+  
+  // Test disableChoices method
+  uiController.disableChoices();
+  
+  allDisabled = true;
+  choiceButtons.forEach(button => {
+    if (!button.disabled || button.style.pointerEvents !== 'none' || button.style.opacity !== '0.5') {
+      allDisabled = false;
+    }
+  });
+  
+  if (allDisabled) {
+    console.log('✓ disableChoices() disables all choice buttons');
+  } else {
+    console.error('✗ disableChoices() did not disable all buttons');
+  }
+  
+  console.log('');
+}
+
+// Test 10: TypewriterEffect integration with choices
+function testTypewriterIntegration() {
+  console.log('Test 10: TypewriterEffect integration with choices');
+  
+  setupTestDOM();
+  const eventBus = new EventBus();
+  
+  // Create mock TypewriterEffect
+  let revealTextCalled = false;
+  let completionCallback = null;
+  const mockTypewriter = {
+    revealText: (element, text, speed, onComplete) => {
+      revealTextCalled = true;
+      completionCallback = onComplete;
+    }
+  };
+  
+  const uiController = new UIController(
+    eventBus,
+    null, // timelineSelector
+    null, // missionRegistry
+    null, // consequenceSystem
+    null, // resultsCard
+    mockUIContent, // uiContent
+    { typewriterEffect: mockTypewriter }
+  );
+  
+  const testScene = {
+    id: 'test-scene-01',
+    narrative: 'Test narrative with typewriter.',
+    apThemes: ['causation'],
+    choices: [
+      {
+        id: 'choice-01',
+        text: 'Choice 1',
+        nextScene: 'test-scene-02',
+        consequences: {}
+      }
+    ],
+    atmosphericEffect: null
+  };
+  
+  uiController.renderScene(testScene, 0, 3);
+  
+  if (revealTextCalled) {
+    console.log('✓ TypewriterEffect.revealText() called when rendering scene');
+  } else {
+    console.error('✗ TypewriterEffect.revealText() not called');
+  }
+  
+  // Verify choices are disabled before typewriter completes
+  const choiceButtons = document.querySelectorAll('.choice-button');
+  let allDisabled = true;
+  choiceButtons.forEach(button => {
+    if (!button.disabled) {
+      allDisabled = false;
+    }
+  });
+  
+  if (allDisabled) {
+    console.log('✓ Choices disabled while typewriter is active');
+  } else {
+    console.error('✗ Choices not disabled during typewriter');
+  }
+  
+  // Simulate typewriter completion
+  if (completionCallback) {
+    completionCallback();
+  }
+  
+  // Verify choices are enabled after typewriter completes
+  let allEnabled = true;
+  choiceButtons.forEach(button => {
+    if (button.disabled) {
+      allEnabled = false;
+    }
+  });
+  
+  if (allEnabled) {
+    console.log('✓ Choices enabled after typewriter completion callback');
+  } else {
+    console.error('✗ Choices not enabled after typewriter completion');
+  }
+  
+  console.log('');
+}
+
 // Run all tests
 testInitialization();
 testShowLandingScreen();
@@ -333,6 +549,8 @@ testSceneTransitionEvent();
 testProgressUpdate();
 testInvalidScreenName();
 testAtmosphericEffects();
+testEnableDisableChoices();
+testTypewriterIntegration();
 
 log('=== All UIController Tests Complete ===');
 
