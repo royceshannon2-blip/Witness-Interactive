@@ -19,6 +19,7 @@ import ConsequenceSystem from './engine/ConsequenceSystem.js';
 import SceneStateMachine from './engine/SceneStateMachine.js';
 import UIController from './engine/UIController.js';
 import TimelineSelector from './engine/TimelineSelector.js';
+import AnalyticsTracker from './engine/AnalyticsTracker.js';
 import MissionRegistry from './content/MissionRegistry.js';
 
 // Content imports
@@ -64,11 +65,15 @@ async function initializeApp() {
     const timelineSelector = new TimelineSelector(eventBus, missionRegistry);
     console.log('✓ TimelineSelector initialized');
     
-    // 8. Initialize UIController (handles all DOM rendering)
-    const uiController = new UIController(eventBus, timelineSelector, missionRegistry, uiContent);
+    // 8. Initialize AnalyticsTracker (session tracking)
+    const analyticsTracker = new AnalyticsTracker(eventBus);
+    console.log('✓ AnalyticsTracker initialized');
+    
+    // 9. Initialize UIController (handles all DOM rendering)
+    const uiController = new UIController(eventBus, timelineSelector, missionRegistry, consequenceSystem, uiContent);
     console.log('✓ UIController initialized');
     
-    // 9. Set up role:selected handler to load scenes into SceneStateMachine
+    // 10. Set up role:selected handler to load scenes into SceneStateMachine
     eventBus.on('role:selected', (data) => {
         const { missionId, roleId } = data;
         const mission = missionRegistry.getMission(missionId);
@@ -90,7 +95,7 @@ async function initializeApp() {
         console.log(`✓ Loaded role "${roleId}" with ${role.scenes.length} scenes`);
     });
     
-    // 10. Set up choice:made handler to transition scenes
+    // 11. Set up choice:made handler to transition scenes
     eventBus.on('choice:made', (data) => {
         const { nextSceneId, consequences } = data;
         
@@ -127,7 +132,7 @@ async function initializeApp() {
     
     // Small delay to show loading animation, then transition to landing screen
     setTimeout(() => {
-        // 9. Emit game:start event (UIController will show landing screen)
+        // 12. Emit game:start event (UIController will show landing screen)
         eventBus.emit('game:start');
         console.log('✓ Game started - landing screen displayed');
         

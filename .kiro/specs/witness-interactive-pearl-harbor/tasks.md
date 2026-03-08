@@ -217,7 +217,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Add questions to mission.js knowledgeQuestions array
     - _Requirements: 9.2, 9.3, 24.4_
   
-  - [~] 15.2 Create knowledge checkpoint UI logic
+  - [x] 15.2 Create knowledge checkpoint UI logic
     - Render 3 role-specific questions from mission data
     - Show 4 multiple-choice options per question
     - Provide immediate feedback on answer selection (correct/incorrect)
@@ -235,7 +235,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
   - Ask user if questions arise
 
 - [~] 17. Implement AnalyticsTracker and ResultsCard
-  - [~] 17.1 Create AnalyticsTracker.js
+  - [x] 17.1 Create AnalyticsTracker.js
     - Implement startSession(), logAction(), getSessionSummary(), exportSession() methods
     - Track session start/end times, choices, flags, checkpoint answers
     - Log session data to console as JSON
