@@ -22,10 +22,14 @@ class UIController {
   /**
    * Initialize the UIController
    * @param {EventBus} eventBus - Event bus for component communication
+   * @param {TimelineSelector} timelineSelector - Timeline selector component
    */
-  constructor(eventBus) {
+  constructor(eventBus, timelineSelector) {
     // Store reference to event bus
     this.eventBus = eventBus;
+    
+    // Store reference to timeline selector
+    this.timelineSelector = timelineSelector;
     
     // Get reference to app container
     this.appContainer = document.getElementById('app');
@@ -526,6 +530,14 @@ class UIController {
         beginButton.addEventListener('click', () => {
           this.showScreen('timeline');
         });
+      }
+    }
+    
+    // Timeline screen - render timeline using TimelineSelector
+    if (screenName === 'timeline') {
+      const timelineContainer = screen.querySelector('#timeline-container');
+      if (timelineContainer && this.timelineSelector) {
+        this.timelineSelector.render(timelineContainer);
       }
     }
     

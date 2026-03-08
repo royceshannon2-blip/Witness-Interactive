@@ -491,3 +491,297 @@ body.effect-shake #app {
     white-space: nowrap;
     border-width: 0;
 }
+
+/* ============================================
+   Timeline Selector
+   ============================================ */
+.timeline-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: var(--spacing-lg) 0;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+}
+
+.timeline-track {
+    display: flex;
+    gap: var(--spacing-xl);
+    min-width: min-content;
+    padding: 0 var(--spacing-md);
+    position: relative;
+}
+
+/* Timeline connecting line */
+.timeline-track::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(
+        to right,
+        var(--color-bg-secondary) 0%,
+        var(--color-accent-gold) 20%,
+        var(--color-accent-gold) 80%,
+        var(--color-bg-secondary) 100%
+    );
+    z-index: 0;
+    transform: translateY(-50%);
+}
+
+.timeline-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    min-width: 150px;
+    cursor: pointer;
+    position: relative;
+    z-index: var(--z-base);
+    opacity: 0;
+    animation: slideInTimeline 0.5s ease forwards;
+    transition: transform var(--transition-fast);
+}
+
+@keyframes slideInTimeline {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.timeline-node:hover {
+    transform: translateY(-5px);
+}
+
+.timeline-node:focus {
+    outline: 2px solid var(--color-accent-gold);
+    outline-offset: 4px;
+    border-radius: var(--border-radius-sm);
+}
+
+.timeline-node-marker {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg-panel);
+    border: 3px solid var(--color-accent-gold);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-fast);
+    position: relative;
+    z-index: var(--z-elevated);
+}
+
+.timeline-node.unlocked .timeline-node-marker {
+    background-color: var(--color-accent-gold);
+    border-color: var(--color-accent-gold);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+}
+
+.timeline-node.locked .timeline-node-marker {
+    background-color: var(--color-bg-secondary);
+    border-color: var(--color-text-secondary);
+    opacity: 0.6;
+}
+
+.timeline-node:hover .timeline-node-marker {
+    transform: scale(1.1);
+}
+
+.node-icon {
+    font-size: 1.5rem;
+    color: var(--color-bg-primary);
+}
+
+.timeline-node.unlocked .node-icon {
+    color: var(--color-bg-primary);
+}
+
+.timeline-node.locked .node-icon {
+    font-size: 1rem;
+    filter: grayscale(100%);
+}
+
+.timeline-node-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--spacing-xs);
+}
+
+.node-title {
+    font-family: var(--font-family-ui);
+    font-size: var(--font-size-small);
+    font-weight: bold;
+    color: var(--color-text-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.timeline-node.locked .node-title {
+    color: var(--color-text-secondary);
+}
+
+.node-date {
+    font-family: var(--font-family-ui);
+    font-size: var(--font-size-small);
+    color: var(--color-text-secondary);
+}
+
+/* Timeline Tooltip */
+.timeline-tooltip {
+    position: fixed;
+    background-color: var(--color-bg-panel);
+    border: 2px solid var(--color-accent-gold);
+    border-radius: var(--border-radius-md);
+    padding: var(--spacing-md);
+    max-width: 300px;
+    box-shadow: var(--shadow-lg);
+    z-index: var(--z-modal);
+    pointer-events: none;
+    animation: fadeIn var(--transition-fast);
+}
+
+.timeline-tooltip h4 {
+    color: var(--color-accent-gold);
+    font-size: var(--font-size-large);
+    margin-bottom: var(--spacing-xs);
+}
+
+.tooltip-date {
+    font-family: var(--font-family-ui);
+    font-size: var(--font-size-small);
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-sm);
+}
+
+.tooltip-teaser {
+    font-size: var(--font-size-small);
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-sm);
+    line-height: var(--line-height-base);
+}
+
+.tooltip-status {
+    font-family: var(--font-family-ui);
+    font-size: var(--font-size-small);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    display: inline-block;
+}
+
+.tooltip-status.unlocked {
+    background-color: rgba(212, 175, 55, 0.2);
+    color: var(--color-accent-gold);
+    border: 1px solid var(--color-accent-gold);
+}
+
+.tooltip-status.locked {
+    background-color: rgba(184, 168, 136, 0.2);
+    color: var(--color-text-secondary);
+    border: 1px solid var(--color-text-secondary);
+}
+
+/* Coming Soon Message Overlay */
+.coming-soon-message {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(10, 14, 26, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: var(--z-modal);
+    animation: fadeIn var(--transition-fast);
+}
+
+.message-content {
+    background-color: var(--color-bg-panel);
+    border: 2px solid var(--color-accent-gold);
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    max-width: 400px;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+}
+
+.message-content h3 {
+    color: var(--color-accent-gold);
+    font-size: var(--font-size-xlarge);
+    margin-bottom: var(--spacing-md);
+}
+
+.message-content p {
+    color: var(--color-text-primary);
+    margin-bottom: var(--spacing-lg);
+}
+
+.message-content button {
+    width: 100%;
+}
+
+/* Mobile Responsive Timeline */
+@media (max-width: 768px) {
+    .timeline-wrapper {
+        padding: var(--spacing-md) 0;
+    }
+    
+    .timeline-track {
+        gap: var(--spacing-lg);
+    }
+    
+    .timeline-node {
+        min-width: 120px;
+    }
+    
+    .timeline-node-marker {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .node-icon {
+        font-size: 1.25rem;
+    }
+    
+    .node-title {
+        font-size: 0.75rem;
+    }
+    
+    .node-date {
+        font-size: 0.7rem;
+    }
+    
+    .timeline-tooltip {
+        max-width: 250px;
+        padding: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    .timeline-node {
+        min-width: 100px;
+    }
+    
+    .timeline-node-marker {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .node-icon {
+        font-size: 1rem;
+    }
+}

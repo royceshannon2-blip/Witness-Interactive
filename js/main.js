@@ -18,6 +18,7 @@ import LoadingStateHandler from './engine/LoadingStateHandler.js';
 import ConsequenceSystem from './engine/ConsequenceSystem.js';
 import SceneStateMachine from './engine/SceneStateMachine.js';
 import UIController from './engine/UIController.js';
+import TimelineSelector from './engine/TimelineSelector.js';
 import MissionRegistry from './content/MissionRegistry.js';
 
 // Mission content imports
@@ -50,17 +51,21 @@ async function initializeApp() {
     const sceneStateMachine = new SceneStateMachine(eventBus);
     console.log('✓ SceneStateMachine initialized');
     
-    // 5. Initialize UIController (handles all DOM rendering)
-    const uiController = new UIController(eventBus);
-    console.log('✓ UIController initialized');
-    
-    // 6. Initialize MissionRegistry (mission catalog)
+    // 5. Initialize MissionRegistry (mission catalog)
     const missionRegistry = new MissionRegistry();
     console.log('✓ MissionRegistry initialized');
     
-    // 7. Load Pearl Harbor mission
+    // 6. Load Pearl Harbor mission
     missionRegistry.register(pearlHarborMission);
     console.log('✓ Pearl Harbor mission loaded');
+    
+    // 7. Initialize TimelineSelector (mission selection UI)
+    const timelineSelector = new TimelineSelector(eventBus, missionRegistry);
+    console.log('✓ TimelineSelector initialized');
+    
+    // 8. Initialize UIController (handles all DOM rendering)
+    const uiController = new UIController(eventBus, timelineSelector);
+    console.log('✓ UIController initialized');
     
     // Update loading progress
     eventBus.emit('module:progress', { percent: 75 });
@@ -88,7 +93,7 @@ async function initializeApp() {
     
     // Small delay to show loading animation, then transition to landing screen
     setTimeout(() => {
-        // 8. Emit game:start event (UIController will show landing screen)
+        // 9. Emit game:start event (UIController will show landing screen)
         eventBus.emit('game:start');
         console.log('✓ Game started - landing screen displayed');
         

@@ -79,7 +79,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Use dark cinematic theme with CSS custom properties
     - _Requirements: 3.1, 10.1, 10.2, 10.3, 10.4_
   
-  - [~] 7.2 Create TimelineSelector.js
+  - [x] 7.2 Create TimelineSelector.js
     - Implement render(), onNodeClick(), showTooltip() methods
     - Render horizontal timeline with Pearl Harbor unlocked, other eras locked
     - Display tooltips on hover/tap with event name, date, teaser
