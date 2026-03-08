@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AmbientSoundManager Test</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      background: #1a1a1a;
+      color: #e0e0e0;
+    }
+    h1 { color: #d4af37; }
+    .test-section {
+      background: #2a2a2a;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 8px;
+      border-left: 4px solid #d4af37;
+    }
+    .test-result {
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      border-radius: 4px;
+    }
+    .pass { background: #1a4d1a; color: #4ade80; }
+    .fail { background: #4d1a1a; color: #f87171; }
+    button {
+      background: #d4af37;
+      color: #1a1a1a;
+      border: none;
+      padding: 0.5rem 1rem;
+      margin: 0.5rem 0.5rem 0.5rem 0;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    button:hover { background: #c19b2e; }
+    .controls {
+      background: #333;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+    .status {
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      background: #2a2a2a;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔊 AmbientSoundManager Test Suite</h1>
+  
+  <div class="test-section">
+    <h2>Manual Controls</h2>
+    <div class="controls">
+      <button onclick="testPlaySound()">Play Ocean Waves</button>
+      <button onclick="testPlayAircraft()">Play Aircraft Engines</button>
+      <button onclick="testCrossfade()">Crossfade Ocean → Aircraft</button>
+      <button onclick="testStopAll()">Stop All Sounds</button>
+      <button onclick="testToggleMute()">Toggle Mute</button>
+      <div class="status" id="status">Ready to test...</div>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>Automated Tests</h2>
+    <button onclick="runAllTests()">Run All Tests</button>
+    <div id="test-results"></div>
+  </div>
+
+  <script type="module">
+    import AmbientSoundManager from './js/engine/AmbientSoundManager.js';
+    import EventBus from './js/engine/EventBus.js';
+
+    // Initialize
+    const eventBus = new EventBus();
+    const manager = new AmbientSoundManager(eventBus, {
+      defaultVolume: 0.6,
+      crossfadeDuration: 1000,
+      audioPath: '/audio/ambient/'
+    });
+
+    // Make available globally for manual controls
+    window.manager = manager;
+    window.eventBus = eventBus;
+
+    // Status updates
+    const statusEl = document.getElementById('status');
+    function updateStatus(message) {
+      statusEl.textContent = message;
+      console.log(message);
+    }
+
+    // Event listeners for debugging
+    eventBus.on('sound:playing', (data) => {
+      updateStatus(`▶️ Playing: ${data.soundId} (volume: ${data.volume})`);
+    });
+
+    eventBus.on('sound:stopped', (data) => {
+      updateStatus(`⏹️ Stopped: ${data.soundId}`);
+    });
+
+    eventBus.on('sound:error', (data) => {
+      updateStatus(`❌ Error loading: ${data.soundId} - ${data.error}`);
+    });
+
+    eventBus.on('sound:muted', (data) => {
+      updateStatus(`🔇 Muted: ${data.muted}`);
+    });
+
+    // Manual test functions
+    window.testPlaySound = () => {
+      manager.playSound('ocean-waves', true, 0.5);
+    };
+
+    window.testPlayAircraft = () => {
+      manager.playSound('aircraft-engines', true, 0.5);
+    };
+
+    window.testCrossfade = () => {
+      if (!manager.activeSounds.has('ocean-waves')) {
+        manager.playSound('ocean-waves', true, 0.5);
+        setTimeout(() => {
+          manager.crossfade('ocean-waves', 'aircraft-engines', 2000);
+        }, 500);
+      } else {
+        manager.crossfade('ocean-waves', 'aircraft-engines', 2000);
+      }
+    };
+
+    window.testStopAll = () => {
+      manager.activeSounds.forEach((_, soundId) => {
+        manager.stopSound(soundId, true);
+      });
+    };
+
+    window.testToggleMute = () => {
+      manager.toggleMute();
+    };
+
+    // Automated tests
+    const resultsEl = document.getElementById('test-results');
+    
+    function addTestResult(name, passed, message = '') {
+      const div = document.createElement('div');
+      div.className = `test-result ${passed ? 'pass' : 'fail'}`;
+      div.textContent = `${passed ? '✓' : '✗'} ${name}${message ? ': ' + message : ''}`;
+      resultsEl.appendChild(div);
+    }
+
+    window.runAllTests = async () => {
+      resultsEl.innerHTML = '<p>Running tests...</p>';
+      
+      try {
+        // Test 1: Constructor
+        addTestResult('Constructor initializes with config', 
+          manager.config.defaultVolume === 0.6 &&
+          manager.config.crossfadeDuration === 1000
+        );
+
+        // Test 2: Initial mute state
+        addTestResult('Initial mute state is false', !manager.isMuted());
+
+        // Test 3: Toggle mute
+        manager.toggleMute();
+        addTestResult('Toggle mute changes state', manager.isMuted());
+        manager.toggleMute(); // Reset
+
+        // Test 4: Play sound creates audio element
+        const beforeSize = manager.audioElements.size;
+        manager.playSound('test-sound', true, 0.5);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        addTestResult('Play sound creates audio element', 
+          manager.audioElements.size > beforeSize
+        );
+
+        // Test 5: Active sounds tracking
+        addTestResult('Active sounds tracked correctly',
+          manager.activeSounds.has('test-sound')
+        );
+
+        // Test 6: Stop sound
+        manager.stopSound('test-sound', false);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        addTestResult('Stop sound removes from active sounds',
+          !manager.activeSounds.has('test-sound')
+        );
+
+        // Test 7: EventBus integration
+        let eventReceived = false;
+        eventBus.on('sound:playing', () => { eventReceived = true; });
+        manager.playSound('test-sound-2', true, 0.5);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        addTestResult('EventBus emits sound:playing', eventReceived);
+
+        // Test 8: Graceful error handling
+        let errorReceived = false;
+        eventBus.on('sound:error', () => { errorReceived = true; });
+        manager.playSound('non-existent-file', true, 0.5);
+        await new Promise(resolve => setTimeout(resolve, 200));
+        // Trigger error manually since we can't actually load a missing file
+        const audio = manager.audioElements.get('non-existent-file');
+        if (audio) {
+          audio.dispatchEvent(new Event('error'));
+          await new Promise(resolve => setTimeout(resolve, 100));
+        }
+        addTestResult('Graceful error handling', errorReceived);
+
+        // Test 9: Mute affects volume
+        manager.playSound('test-sound-3', true, 0.7);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        const beforeMute = manager.activeSounds.get('test-sound-3')?.element.volume;
+        manager.toggleMute();
+        const afterMute = manager.activeSounds.get('test-sound-3')?.element.volume;
+        addTestResult('Mute sets volume to 0', afterMute === 0);
+        manager.toggleMute(); // Reset
+
+        // Test 10: Crossfade
+        manager.playSound('sound-a', true, 0.5);
+        await new Promise(resolve => setTimeout(resolve, 100));
+        manager.crossfade('sound-a', 'sound-b', 500);
+        await new Promise(resolve => setTimeout(resolve, 600));
+        addTestResult('Crossfade switches sounds',
+          manager.activeSounds.has('sound-b') && !manager.activeSounds.has('sound-a')
+        );
+
+        // Cleanup
+        manager.destroy();
+        addTestResult('Destroy cleans up resources',
+          manager.activeSounds.size === 0 && manager.audioElements.size === 0
+        );
+
+        resultsEl.insertAdjacentHTML('afterbegin', '<p><strong>All tests completed!</strong></p>');
+        
+      } catch (error) {
+        addTestResult('Test suite', false, error.message);
+      }
+    };
+
+    updateStatus('AmbientSoundManager initialized and ready');
+  </script>
+</body>
+</html>
