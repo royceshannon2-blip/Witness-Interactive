@@ -9,6 +9,8 @@ import EventBus from './EventBus.js';
 import UIController from './UIController.js';
 import MissionRegistry from '../content/MissionRegistry.js';
 import TimelineSelector from './TimelineSelector.js';
+import ConsequenceSystem from './ConsequenceSystem.js';
+import uiContent from '../content/ui-content.js';
 
 /**
  * Test: Role selection screen displays mission title and role cards
@@ -20,6 +22,7 @@ function testRoleSelectionDisplaysRoles() {
   // Setup
   const eventBus = new EventBus();
   const missionRegistry = new MissionRegistry();
+  const consequenceSystem = new ConsequenceSystem(eventBus);
   const timelineSelector = new TimelineSelector(eventBus, missionRegistry);
   
   // Register test mission with 3 roles
@@ -51,7 +54,7 @@ function testRoleSelectionDisplaysRoles() {
     ]
   });
   
-  const uiController = new UIController(eventBus, timelineSelector, missionRegistry);
+  const uiController = new UIController(eventBus, timelineSelector, missionRegistry, consequenceSystem, null, uiContent);
   
   // Emit mission:selected event
   eventBus.emit('mission:selected', { missionId: 'test-mission' });
@@ -108,6 +111,7 @@ function testRoleSelectionEmitsEvent() {
   // Setup
   const eventBus = new EventBus();
   const missionRegistry = new MissionRegistry();
+  const consequenceSystem = new ConsequenceSystem(eventBus);
   const timelineSelector = new TimelineSelector(eventBus, missionRegistry);
   
   missionRegistry.register({
@@ -126,7 +130,7 @@ function testRoleSelectionEmitsEvent() {
     ]
   });
   
-  const uiController = new UIController(eventBus, timelineSelector, missionRegistry);
+  const uiController = new UIController(eventBus, timelineSelector, missionRegistry, consequenceSystem, null, uiContent);
   
   // Listen for role:selected event
   let eventEmitted = false;
@@ -179,6 +183,7 @@ function testEndingsCounter() {
   // Setup
   const eventBus = new EventBus();
   const missionRegistry = new MissionRegistry();
+  const consequenceSystem = new ConsequenceSystem(eventBus);
   const timelineSelector = new TimelineSelector(eventBus, missionRegistry);
   
   missionRegistry.register({
@@ -194,7 +199,7 @@ function testEndingsCounter() {
     ]
   });
   
-  const uiController = new UIController(eventBus, timelineSelector, missionRegistry);
+  const uiController = new UIController(eventBus, timelineSelector, missionRegistry, consequenceSystem, null, uiContent);
   
   // Show role selection screen
   eventBus.emit('mission:selected', { missionId: 'test-mission' });
@@ -238,6 +243,7 @@ function testCompletionBadge() {
   // Setup
   const eventBus = new EventBus();
   const missionRegistry = new MissionRegistry();
+  const consequenceSystem = new ConsequenceSystem(eventBus);
   const timelineSelector = new TimelineSelector(eventBus, missionRegistry);
   
   missionRegistry.register({
@@ -252,7 +258,7 @@ function testCompletionBadge() {
     ]
   });
   
-  const uiController = new UIController(eventBus, timelineSelector, missionRegistry);
+  const uiController = new UIController(eventBus, timelineSelector, missionRegistry, consequenceSystem, null, uiContent);
   
   // Show role selection screen
   eventBus.emit('mission:selected', { missionId: 'test-mission' });
@@ -290,6 +296,93 @@ function testCompletionBadge() {
 }
 
 /**
+ * Test: Special message when all roles completed
+ * Requirement 23.4: Display special completion message when all 3 roles completed
+ */
+function testAllRolesCompletedMessage() {
+  console.log('\n=== Test: All roles completed message ===');
+  
+  // Setup
+  const eventBus = new EventBus();
+  const missionRegistry = new MissionRegistry();
+  const consequenceSystem = new ConsequenceSystem(eventBus);
+  const timelineSelector = new TimelineSelector(eventBus, missionRegistry);
+  
+  missionRegistry.register({
+    id: 'test-mission',
+    title: 'Test Mission',
+    historicalDate: '1941-12-07',
+    era: 'Modern',
+    unlocked: true,
+    roles: [
+      { id: 'role-1', name: 'Role 1', description: 'Desc 1', scenes: [] },
+      { id: 'role-2', name: 'Role 2', description: 'Desc 2', scenes: [] },
+      { id: 'role-3', name: 'Role 3', description: 'Desc 3', scenes: [] }
+    ]
+  });
+  
+  const uiController = new UIController(eventBus, timelineSelector, missionRegistry, consequenceSystem, null, uiContent);
+  
+  // Show role selection screen initially
+  eventBus.emit('mission:selected', { missionId: 'test-mission' });
+  
+  // Verify message is hidden initially
+  let allRolesMessage = document.getElementById('all-roles-completed-message');
+  if (!allRolesMessage) {
+    console.error('✗ FAIL: All roles completed message element not found');
+    return false;
+  }
+  
+  if (!allRolesMessage.classList.contains('hidden')) {
+    console.error('✗ FAIL: All roles completed message should be hidden initially');
+    return false;
+  }
+  
+  // Complete first role
+  eventBus.emit('game:complete', { roleId: 'role-1' });
+  eventBus.emit('mission:selected', { missionId: 'test-mission' });
+  
+  // Verify message still hidden after 1 role
+  allRolesMessage = document.getElementById('all-roles-completed-message');
+  if (!allRolesMessage.classList.contains('hidden')) {
+    console.error('✗ FAIL: All roles completed message should be hidden after 1 role');
+    return false;
+  }
+  
+  // Complete second role
+  eventBus.emit('game:complete', { roleId: 'role-2' });
+  eventBus.emit('mission:selected', { missionId: 'test-mission' });
+  
+  // Verify message still hidden after 2 roles
+  allRolesMessage = document.getElementById('all-roles-completed-message');
+  if (!allRolesMessage.classList.contains('hidden')) {
+    console.error('✗ FAIL: All roles completed message should be hidden after 2 roles');
+    return false;
+  }
+  
+  // Complete third role
+  eventBus.emit('game:complete', { roleId: 'role-3' });
+  eventBus.emit('mission:selected', { missionId: 'test-mission' });
+  
+  // Verify message is now visible
+  allRolesMessage = document.getElementById('all-roles-completed-message');
+  if (allRolesMessage.classList.contains('hidden')) {
+    console.error('✗ FAIL: All roles completed message should be visible after completing all 3 roles');
+    return false;
+  }
+  
+  // Verify endings counter shows 3/3
+  const endingsCount = document.getElementById('endings-count');
+  if (!endingsCount || endingsCount.textContent !== '3/3') {
+    console.error(`✗ FAIL: Expected endings count '3/3', got '${endingsCount ? endingsCount.textContent : 'not found'}'`);
+    return false;
+  }
+  
+  console.log('✓ PASS: Special message displays when all roles completed');
+  return true;
+}
+
+/**
  * Test: Session-only tracking (no localStorage)
  * Requirement 23.5: Track completion only for current browser session
  */
@@ -302,6 +395,7 @@ function testSessionOnlyTracking() {
   // Setup and complete a role
   const eventBus = new EventBus();
   const missionRegistry = new MissionRegistry();
+  const consequenceSystem = new ConsequenceSystem(eventBus);
   const timelineSelector = new TimelineSelector(eventBus, missionRegistry);
   
   missionRegistry.register({
@@ -315,7 +409,7 @@ function testSessionOnlyTracking() {
     ]
   });
   
-  const uiController = new UIController(eventBus, timelineSelector, missionRegistry);
+  const uiController = new UIController(eventBus, timelineSelector, missionRegistry, consequenceSystem, null, uiContent);
   
   eventBus.emit('mission:selected', { missionId: 'test-mission' });
   eventBus.emit('game:complete', { roleId: 'role-1' });
@@ -344,6 +438,7 @@ export function runRoleSelectionTests() {
   results.push(testRoleSelectionEmitsEvent());
   results.push(testEndingsCounter());
   results.push(testCompletionBadge());
+  results.push(testAllRolesCompletedMessage());
   results.push(testSessionOnlyTracking());
   
   const passed = results.filter(r => r === true).length;

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Role Completion Tracking Test</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .test-controls {
+      background: var(--color-panel-bg);
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+    }
+    .test-controls button {
+      margin: 5px;
+    }
+    .test-status {
+      background: var(--color-bg-secondary);
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      font-family: monospace;
+    }
+  </style>
+</head>
+<body>
+  <h1>Role Completion Tracking Test</h1>
+  
+  <div class="test-controls">
+    <h2>Test Controls</h2>
+    <p>Use these buttons to simulate completing roles and verify the tracking works:</p>
+    <button id="complete-role-1">Complete Japanese Aviator</button>
+    <button id="complete-role-2">Complete American Sailor</button>
+    <button id="complete-role-3">Complete American Civilian</button>
+    <button id="reset-test">Reset Test</button>
+    <button id="show-role-selection">Show Role Selection Screen</button>
+  </div>
+  
+  <div class="test-status">
+    <h3>Test Status:</h3>
+    <div id="test-output"></div>
+  </div>
+  
+  <div id="app"></div>
+  
+  <script type="module">
+    import EventBus from './js/engine/EventBus.js';
+    import UIController from './js/engine/UIController.js';
+    import MissionRegistry from './js/content/MissionRegistry.js';
+    import TimelineSelector from './js/engine/TimelineSelector.js';
+    import ConsequenceSystem from './js/engine/ConsequenceSystem.js';
+    import ResultsCard from './js/engine/ResultsCard.js';
+    import AnalyticsTracker from './js/engine/AnalyticsTracker.js';
+    import pearlHarborMission from './js/content/missions/pearl-harbor/mission.js';
+    import uiContent from './js/content/ui-content.js';
+    
+    // Initialize components
+    const eventBus = new EventBus();
+    const consequenceSystem = new ConsequenceSystem(eventBus);
+    const missionRegistry = new MissionRegistry();
+    const timelineSelector = new TimelineSelector(eventBus, missionRegistry);
+    const analyticsTracker = new AnalyticsTracker(eventBus);
+    const resultsCard = new ResultsCard(eventBus, analyticsTracker);
+    const uiController = new UIController(eventBus, timelineSelector, missionRegistry, consequenceSystem, resultsCard, uiContent);
+    
+    // Register Pearl Harbor mission
+    missionRegistry.register(pearlHarborMission);
+    
+    const testOutput = document.getElementById('test-output');
+    
+    function log(message) {
+      const p = document.createElement('p');
+      p.textContent = message;
+      testOutput.appendChild(p);
+      console.log(message);
+    }
+    
+    function clearLog() {
+      testOutput.innerHTML = '';
+    }
+    
+    // Test controls
+    document.getElementById('complete-role-1').addEventListener('click', () => {
+      log('✓ Completing Japanese Aviator role...');
+      eventBus.emit('game:complete', { 
+        roleId: 'japanese-aviator',
+        missionId: 'pearl-harbor'
+      });
+      log(`  Completed roles: ${uiController.completedRoles.size}/3`);
+    });
+    
+    document.getElementById('complete-role-2').addEventListener('click', () => {
+      log('✓ Completing American Sailor role...');
+      eventBus.emit('game:complete', { 
+        roleId: 'american-sailor',
+        missionId: 'pearl-harbor'
+      });
+      log(`  Completed roles: ${uiController.completedRoles.size}/3`);
+    });
+    
+    document.getElementById('complete-role-3').addEventListener('click', () => {
+      log('✓ Completing American Civilian role...');
+      eventBus.emit('game:complete', { 
+        roleId: 'american-civilian',
+        missionId: 'pearl-harbor'
+      });
+      log(`  Completed roles: ${uiController.completedRoles.size}/3`);
+    });
+    
+    document.getElementById('reset-test').addEventListener('click', () => {
+      clearLog();
+      uiController.completedRoles.clear();
+      log('✓ Test reset - all completion tracking cleared');
+      log(`  Completed roles: ${uiController.completedRoles.size}/3`);
+    });
+    
+    document.getElementById('show-role-selection').addEventListener('click', () => {
+      log('✓ Showing role selection screen...');
+      eventBus.emit('mission:selected', { missionId: 'pearl-harbor' });
+      
+      // Check UI elements
+      setTimeout(() => {
+        const endingsCount = document.getElementById('endings-count');
+        const allRolesMessage = document.getElementById('all-roles-completed-message');
+        const badges = document.querySelectorAll('.completion-badge');
+        
+        log(`  Endings counter: ${endingsCount ? endingsCount.textContent : 'NOT FOUND'}`);
+        log(`  Completion badges: ${badges.length}`);
+        log(`  All roles message visible: ${allRolesMessage && !allRolesMessage.classList.contains('hidden')}`);
+        
+        if (uiController.completedRoles.size === 3) {
+          if (allRolesMessage && !allRolesMessage.classList.contains('hidden')) {
+            log('✅ SUCCESS: All roles completed message is visible!');
+          } else {
+            log('❌ FAIL: All roles completed message should be visible');
+          }
+        }
+      }, 100);
+    });
+    
+    // Initial log
+    log('Test initialized. Use the buttons above to test role completion tracking.');
+    log(`Current completed roles: ${uiController.completedRoles.size}/3`);
+  </script>
+</body>
+</html>
