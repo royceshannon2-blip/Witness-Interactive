@@ -45,7 +45,7 @@
     </style>
 </head>
 <body>
-    <h1>TypewriterEffect Test</h1>
+    <h1>TypewriterEffect Test Suite</h1>
     
     <div class="instructions">
         <h2>Instructions:</h2>
@@ -53,7 +53,8 @@
             <li>Open the browser's Developer Console (F12 or Cmd+Option+I)</li>
             <li>Look for the test output in the console</li>
             <li>Verify all tests show ✓ (checkmark) for success</li>
-            <li>Check that no JavaScript errors appear in the console</li>
+            <li>Check the test summary at the end</li>
+            <li>Verify no JavaScript errors appear in the console</li>
         </ol>
     </div>
 
@@ -66,12 +67,11 @@
 
     <h2>What This Test Verifies:</h2>
     <ul>
-        <li><strong>Initialization:</strong> TypewriterEffect loads with default and custom config</li>
-        <li><strong>Text Reveal:</strong> Character-by-character animation works</li>
-        <li><strong>Skip Functionality:</strong> Click-to-skip completes text immediately</li>
-        <li><strong>EventBus Integration:</strong> Emits typewriter:complete and typewriter:skipped events</li>
-        <li><strong>Cleanup:</strong> Properly cleans up on scene transitions</li>
-        <li><strong>Accessibility:</strong> Respects prefers-reduced-motion preference</li>
+        <li><strong>Character-by-character reveal:</strong> Text appears sequentially</li>
+        <li><strong>Skip-on-click functionality:</strong> Click completes animation</li>
+        <li><strong>prefers-reduced-motion handling:</strong> Instant text for accessibility</li>
+        <li><strong>EventBus integration:</strong> Events emitted correctly</li>
+        <li><strong>Cleanup:</strong> Animation state cleaned up properly</li>
     </ul>
 
     <!-- Load the test module -->

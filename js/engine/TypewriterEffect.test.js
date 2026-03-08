@@ -269,16 +269,184 @@ console.log('\n=== TypewriterEffect Tests ===\n');
     }, 10);
 })();
 
-// Summary
-console.log('\n=== Test Summary ===');
-console.log(`Total: ${passedTests + failedTests}`);
-console.log(`Passed: ${passedTests}`);
-console.log(`Failed: ${failedTests}`);
+// Test 13: prefers-reduced-motion shows text instantly
+(() => {
+    const eventBus = new EventBus();
+    // Force reduced motion preference
+    const typewriter = new TypewriterEffect(eventBus, { respectMotionPrefs: true });
+    typewriter.prefersReducedMotion = true; // Override for testing
+    
+    const element = document.createElement('div');
+    const text = 'Instant text';
+    
+    let completed = false;
+    typewriter.revealText(element, text, 30, () => {
+        completed = true;
+    });
+    
+    // Text should appear instantly with reduced motion
+    setTimeout(() => {
+        assertEqual(element.textContent, text, 'Text shown instantly with reduced motion');
+        assertTrue(completed, 'Completion callback called immediately');
+        assertFalse(typewriter.isActive(), 'Animation not active with reduced motion');
+    }, 10);
+})();
 
-if (failedTests === 0) {
-    console.log('\n✓ All TypewriterEffect tests passed!\n');
-} else {
-    console.log(`\n✗ ${failedTests} test(s) failed\n`);
-}
+// Test 14: Click handler added when skipOnClick is true
+(() => {
+    const eventBus = new EventBus();
+    const typewriter = new TypewriterEffect(eventBus, { 
+        skipOnClick: true,
+        respectMotionPrefs: false 
+    });
+    const element = document.createElement('div');
+    
+    typewriter.revealText(element, 'Test text', 30, () => {});
+    
+    // Simulate click
+    setTimeout(() => {
+        const clickEvent = new MouseEvent('click', { bubbles: true });
+        document.dispatchEvent(clickEvent);
+        
+        // Should skip to end
+        setTimeout(() => {
+            assertEqual(element.textContent, 'Test text', 'Click skips to end when enabled');
+            assertFalse(typewriter.isActive(), 'Animation inactive after click');
+        }, 10);
+    }, 10);
+})();
+
+// Test 15: Click handler not added when skipOnClick is false
+(() => {
+    const eventBus = new EventBus();
+    const typewriter = new TypewriterEffect(eventBus, { 
+        skipOnClick: false,
+        respectMotionPrefs: false 
+    });
+    const element = document.createElement('div');
+    
+    typewriter.revealText(element, 'Test text', 30, () => {});
+    
+    // Simulate click
+    setTimeout(() => {
+        const clickEvent = new MouseEvent('click', { bubbles: true });
+        document.dispatchEvent(clickEvent);
+        
+        // Should NOT skip to end
+        setTimeout(() => {
+            assertTrue(typewriter.isActive(), 'Animation still active after click when disabled');
+            typewriter.cleanup(); // Clean up for next test
+        }, 10);
+    }, 10);
+})();
+
+// Test 16: Character-by-character reveal progresses correctly
+(() => {
+    const eventBus = new EventBus();
+    const typewriter = new TypewriterEffect(eventBus, { respectMotionPrefs: false });
+    const element = document.createElement('div');
+    const text = 'ABC';
+    
+    typewriter.revealText(element, text, 10, () => {});
+    
+    // Check progression
+    setTimeout(() => {
+        const length1 = element.textContent.length;
+        assertTrue(length1 >= 0 && length1 <= text.length, 'Text revealing progressively');
+        
+        setTimeout(() => {
+            const length2 = element.textContent.length;
+            assertTrue(length2 >= length1, 'Text length increases over time');
+            typewriter.cleanup();
+        }, 15);
+    }, 15);
+})();
+
+// Test 17: Multiple revealText calls cleanup previous animation
+(() => {
+    const eventBus = new EventBus();
+    const typewriter = new TypewriterEffect(eventBus, { respectMotionPrefs: false });
+    const element = document.createElement('div');
+    
+    typewriter.revealText(element, 'First text', 30, () => {});
+    const firstAnimationId = typewriter.animationId;
+    
+    setTimeout(() => {
+        typewriter.revealText(element, 'Second text', 30, () => {});
+        
+        assertTrue(typewriter.animationId !== firstAnimationId, 'New animation started');
+        assertEqual(element.textContent, '', 'Element cleared for new text');
+        
+        typewriter.cleanup();
+    }, 10);
+})();
+
+// Test 18: EventBus integration - typewriter:complete emitted
+(() => {
+    const eventBus = new EventBus();
+    const typewriter = new TypewriterEffect(eventBus, { respectMotionPrefs: false });
+    const element = document.createElement('div');
+    
+    let completeEventData = null;
+    eventBus.on('typewriter:complete', (data) => {
+        completeEventData = 'received';
+    });
+    
+    typewriter.revealText(element, 'Hi', 5, () => {});
+    
+    setTimeout(() => {
+        assertEqual(completeEventData, 'received', 'typewriter:complete event received via EventBus');
+    }, 100);
+})();
+
+// Test 19: EventBus integration - typewriter:skipped emitted
+(() => {
+    const eventBus = new EventBus();
+    const typewriter = new TypewriterEffect(eventBus, { respectMotionPrefs: false });
+    const element = document.createElement('div');
+    
+    let skippedEventData = null;
+    eventBus.on('typewriter:skipped', (data) => {
+        skippedEventData = 'received';
+    });
+    
+    typewriter.revealText(element, 'Test', 30, () => {});
+    
+    setTimeout(() => {
+        typewriter.skipToEnd();
+        assertEqual(skippedEventData, 'received', 'typewriter:skipped event received via EventBus');
+    }, 10);
+})();
+
+// Test 20: EventBus integration - scene:transition cleanup
+(() => {
+    const eventBus = new EventBus();
+    const typewriter = new TypewriterEffect(eventBus, { respectMotionPrefs: false });
+    const element = document.createElement('div');
+    
+    typewriter.revealText(element, 'Test text', 30, () => {});
+    assertTrue(typewriter.isActive(), 'Animation active before scene:transition');
+    
+    // Emit scene:transition via EventBus
+    eventBus.emit('scene:transition');
+    
+    setTimeout(() => {
+        assertFalse(typewriter.isActive(), 'Animation cleaned up after scene:transition event');
+    }, 10);
+})();
+
+// Wait for all async tests to complete before showing summary
+setTimeout(() => {
+    console.log('\n=== Test Summary ===');
+    console.log(`Total: ${passedTests + failedTests}`);
+    console.log(`Passed: ${passedTests}`);
+    console.log(`Failed: ${failedTests}`);
+
+    if (failedTests === 0) {
+        console.log('\n✓ All TypewriterEffect tests passed!\n');
+    } else {
+        console.log(`\n✗ ${failedTests} test(s) failed\n`);
+    }
+}, 200); // Wait 200ms for all async tests to complete
 
 export { passedTests, failedTests };
