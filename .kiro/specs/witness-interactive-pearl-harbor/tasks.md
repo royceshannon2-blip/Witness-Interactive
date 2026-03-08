@@ -106,7 +106,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - _Requirements: 4.1, 4.3, 4.5, 23.1, 23.2, 23.3_
 
 - [ ] 10. Create Pearl Harbor narrative content
-  - [~] 10.1 Write Japanese Naval Aviator role scenes
+  - [x] 10.1 Write Japanese Naval Aviator role scenes
     - Create japanese-aviator.js with 4-5 scene objects
     - Each scene includes: id, narrative, apThemes array, choices array, atmosphericEffect
     - Tag scenes with AP themes: causation, continuity, perspective
@@ -114,7 +114,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Define nextScene for each choice
     - _Requirements: 5.1, 5.2, 5.3, 24.1, 24.2_
   
-  - [~] 10.2 Write American Sailor (USS Arizona) role scenes
+  - [x] 10.2 Write American Sailor (USS Arizona) role scenes
     - Create american-sailor.js with 4-5 scene objects
     - Tag scenes with AP themes
     - Define consequence flags and scene transitions
