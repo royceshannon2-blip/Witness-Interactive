@@ -139,7 +139,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Track completed roles in session state (no localStorage)
     - _Requirements: 4.1, 4.3, 4.5, 23.1, 23.2, 23.3_
 
-- [ ] 10. Create Pearl Harbor narrative content
+- [~] 10. Create Pearl Harbor narrative content
   - [x] 10.1 Write Japanese Naval Aviator role scenes
     - Create japanese-aviator.js with 4-5 scene objects
     - Each scene includes: id, narrative, apThemes array, choices array, atmosphericEffect
@@ -183,19 +183,19 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
   - Verify progress indicator updates
   - Ask user if questions arise
 
-- [ ] 13. Implement outcome calculation and display
+- [~] 13. Implement outcome calculation and display
   - [x] 13.1 Define outcome rules for each role
     - In each role file, define outcome objects with conditions and epilogues
     - Example: {survived: true, conditions: {avoided_aa_fire: true}, epilogue: "..."}
     - _Requirements: 6.3, 7.3, 7.4_
   
-  - [~] 13.2 Create outcome screen logic
+  - [x] 13.2 Create outcome screen logic
     - Calculate outcome based on consequence flags using ConsequenceSystem.calculateOutcome()
     - Populate outcome screen with survival status and epilogue
     - Add "Continue" button that emits event to proceed to historical ripple
     - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
 
-- [ ] 14. Implement Historical Ripple timeline
+- [~] 14. Implement Historical Ripple timeline
   - [~] 14.1 Create historical ripple event data
     - Define ripple events in pearl-harbor/mission.js historicalRipple array
     - Each event: id, date, title, description, apTheme, animationDelay
@@ -209,7 +209,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Add "Continue" button that emits event to proceed to knowledge checkpoint
     - _Requirements: 8.1, 8.4, 8.5, 24.3_
 
-- [ ] 15. Implement Knowledge Checkpoint
+- [~] 15. Implement Knowledge Checkpoint
   - [~] 15.1 Create knowledge questions for each role
     - Populate knowledge-questions.js with 3 questions per role (9 total)
     - Each question: id, roleSpecific, apSkill, question, options (4 choices), explanation
@@ -234,7 +234,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
   - Verify scoring works correctly
   - Ask user if questions arise
 
-- [ ] 17. Implement AnalyticsTracker and ResultsCard
+- [~] 17. Implement AnalyticsTracker and ResultsCard
   - [~] 17.1 Create AnalyticsTracker.js
     - Implement startSession(), logAction(), getSessionSummary(), exportSession() methods
     - Track session start/end times, choices, flags, checkpoint answers
@@ -250,7 +250,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Add "Copy Results" button that copies text to clipboard
     - _Requirements: 22.1, 22.2, 22.3, 22.4, 22.5, 27.1, 27.2, 27.4, 27.5, 24.5_
 
-- [ ] 18. Implement responsive design and mobile optimization
+- [~] 18. Implement responsive design and mobile optimization
   - [x] 18.1 Add responsive CSS breakpoints
     - Test at 320px (mobile), 768px (tablet), 1280px (desktop)
     - Ensure timeline scrolls horizontally on mobile
@@ -259,7 +259,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Use max-width centered layout
     - _Requirements: 12.1, 12.2, 12.3, 12.4, 12.5_
 
-- [ ] 19. Implement accessibility features
+- [~] 19. Implement accessibility features
   - [x] 19.1 Add keyboard navigation
     - Ensure all interactive elements are focusable with Tab
     - Add visible focus indicators (CSS :focus styles)
@@ -273,7 +273,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Add role attributes where appropriate
     - _Requirements: 25.3, 25.4_
 
-- [ ] 20. Polish UI and add atmospheric effects
+- [~] 20. Polish UI and add atmospheric effects
   - [x] 20.1 Refine dark cinematic theme
     - Implement CSS custom properties for all colors, fonts, spacing
     - Create aged parchment text panels with CSS
@@ -289,7 +289,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Verify no JavaScript animation libraries used
     - _Requirements: 11.1, 11.2, 11.3, 11.4, 11.5_
 
-- [ ] 21. Add UI controls and final touches
+- [~] 21. Add UI controls and final touches
   - [~] 21.1 Add sound toggle button (visual placeholder)
     - Display toggle button in UI (non-functional for MVP)
     - Style consistently with theme
@@ -307,7 +307,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Display special message when all 3 roles completed
     - _Requirements: 23.1, 23.2, 23.3, 23.4_
 
-- [ ] 22. Create documentation files
+- [~] 22. Create documentation files
   - [~] 22.1 Write README.md
     - Project description and educational value
     - How to play instructions
@@ -324,7 +324,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Targeted at teachers/students with basic coding knowledge
     - _Requirements: 17.4, 17.5_
 
-- [ ] 23. Final testing and deployment preparation
+- [~] 23. Final testing and deployment preparation
   - [~] 23.1 Manual playtesting
     - Play through all three roles with different choices
     - Verify outcomes reflect decisions
