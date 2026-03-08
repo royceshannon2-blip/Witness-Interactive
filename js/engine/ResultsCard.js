@@ -34,7 +34,7 @@ class ResultsCard {
 
   /**
    * Generate results card HTML with session data
-   * @param {object} sessionData - Session data from AnalyticsTracker
+   * @param {object} sessionData - Session data from AnalyticsTracker, including outcome
    * @returns {string} HTML string for results card
    */
   generateCard(sessionData) {
@@ -68,8 +68,8 @@ class ResultsCard {
       return '<p>Error: Role data not found.</p>';
     }
     
-    // Extract survival status from consequence flags
-    const survived = summary.consequenceFlags.survived !== false; // Default to true if not explicitly false
+    // Extract survival status from outcome data (passed from UIController)
+    const survived = sessionData.outcome ? sessionData.outcome.survived : true; // Default to true if outcome not provided
     
     // Get checkpoint score (from sessionData if provided, otherwise from summary)
     const checkpointScore = sessionData.score !== undefined ? sessionData.score : summary.checkpointScore;

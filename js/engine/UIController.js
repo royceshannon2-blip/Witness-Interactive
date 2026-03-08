@@ -139,7 +139,41 @@ class UIController {
       this.currentMissionId = data.missionId;
     }
     
+    // Calculate outcome immediately and store it
+    this.currentOutcome = this.calculateCurrentOutcome();
+    
     this.showScreen('outcome', data);
+  }
+  
+  /**
+   * Calculate the current outcome based on consequence flags
+   * @returns {object|null} Outcome object with survived and epilogue properties
+   * @private
+   */
+  calculateCurrentOutcome() {
+    if (!this.currentMissionId || !this.currentRoleId) {
+      return null;
+    }
+    
+    const mission = this.missionRegistry.getMission(this.currentMissionId);
+    if (!mission) {
+      return null;
+    }
+    
+    const role = mission.roles.find(r => r.id === this.currentRoleId);
+    if (!role || !role.outcomes) {
+      return null;
+    }
+    
+    // Calculate outcome using ConsequenceSystem
+    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes);
+    if (!outcomeId) {
+      return null;
+    }
+    
+    // Find the matching outcome object
+    const outcome = role.outcomes.find(o => o.id === outcomeId);
+    return outcome;
   }
 
   /**
@@ -431,8 +465,14 @@ class UIController {
   renderResultsCardScreen(data) {
     const c = this.content.resultsCard;
     
+    // Add outcome data to the session data for ResultsCard
+    const cardData = {
+      ...data,
+      outcome: this.currentOutcome
+    };
+    
     // Generate results card HTML using ResultsCard component
-    const cardHTML = this.resultsCard ? this.resultsCard.generateCard(data) : '<p>Error: Results card generator not available.</p>';
+    const cardHTML = this.resultsCard ? this.resultsCard.generateCard(cardData) : '<p>Error: Results card generator not available.</p>';
     
     return `
       <article class="results-content text-center" role="article" aria-labelledby="results-title">

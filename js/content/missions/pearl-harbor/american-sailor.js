@@ -215,7 +215,38 @@ You stand on Ford Island, covered in oil and ash, watching your ship burn. You t
 ];
 
 // Outcome rules based on consequence flags
+// Historical accuracy: 1,177 of 1,512 Arizona crew died (77% fatality rate)
 const americanSailorOutcomes = [
+  {
+    id: "as-outcome-died-trapped",
+    conditions: {
+      went_below: true,
+      stayed_aboard: true
+    },
+    survived: false,
+    epilogue: `You do not survive the attack on Pearl Harbor.
+
+When the armor-piercing bomb struck Arizona's forward magazine at 0806 hours, over a million pounds of gunpowder exploded. The blast lifted the 33,000-ton battleship out of the water. You were below deck when it happened. There was no time to escape, no chance to reach the ladders, no way out.
+
+You are one of 1,177 sailors who died aboard USS Arizona that morning. Your body will never be recovered. The ship will remain on the harbor bottom, a tomb for you and your shipmates. In 1962, a memorial will be built above the wreck. Millions will visit, will read your name on the marble wall, will remember that you were here, that you served, that you gave everything.
+
+December 7, 1941. You were 19 years old. The war you didn't start claimed you before you could fight in it. But your sacrifice will not be forgotten. Your death, and the deaths of 2,403 Americans that day, will unite a nation and change the course of history.`
+  },
+  {
+    id: "as-outcome-died-heroic",
+    conditions: {
+      saved_others: true,
+      fought_back: true
+    },
+    survived: false,
+    epilogue: `You do not survive the attack on Pearl Harbor.
+
+You died pulling men from the water. You died manning the guns. You died doing your duty while your ship burned and sank beneath you. In the final moments, you had a choice—save yourself or save others. You chose others. That choice cost you your life.
+
+The Navy will award you the Navy Cross posthumously. Your family will receive it at a ceremony they'll barely remember through their tears. Your name will be engraved on the USS Arizona Memorial, one of 1,177 sailors who never came home.
+
+But your heroism will be remembered. The men you saved will tell their children about you. They'll say you were the bravest person they ever knew. They'll say you gave them a future you'll never have. They'll make sure the world knows that on December 7, 1941, you stood and fought when you could have run, and that made all the difference.`
+  },
   {
     id: "as-outcome-survived-hero",
     conditions: {
@@ -232,8 +263,7 @@ After the war, you'll return to Pearl Harbor once. You'll stand at the Arizona M
   {
     id: "as-outcome-survived-fighter",
     conditions: {
-      fought_back: true,
-      stayed_aboard: true
+      fought_back: true
     },
     survived: true,
     epilogue: `You survive the attack on Pearl Harbor. When the bombs fell and the ship exploded, you didn't run. You manned the guns, fought back against impossible odds, stayed at your post even as Arizona died beneath you. The Navy will note your courage in the official reports.
@@ -245,8 +275,7 @@ You'll never forget December 7, 1941. The surprise. The fury. The helplessness o
   {
     id: "as-outcome-survived-survivor",
     conditions: {
-      survival_priority: true,
-      abandoned_ship: true
+      survival_priority: true
     },
     survived: true,
     epilogue: `You survive the attack on Pearl Harbor. When the magazine exploded and Arizona began to sink, you made the hardest choice a sailor can make—you abandoned ship. You jumped into burning water, swam through oil and debris, fought to stay alive. Some will call it cowardice. You know it was survival.

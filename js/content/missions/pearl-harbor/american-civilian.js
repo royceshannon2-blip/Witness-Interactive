@@ -214,7 +214,39 @@ You think about this morning—the coffee, the peaceful Sunday, the plans for ch
 ];
 
 // Outcome rules based on consequence flags
+// Historical accuracy: 49 civilians killed on Oahu, 35 wounded
+// Most deaths from American anti-aircraft shells falling on civilian areas
 const americanCivilianOutcomes = [
+  {
+    id: "ac-outcome-died-friendly-fire",
+    conditions: {
+      stayed_to_help: true,
+      rescued_victim: true
+    },
+    survived: false,
+    epilogue: `You do not survive the attack on Pearl Harbor.
+
+An American anti-aircraft shell—fired from the harbor defenses, meant to protect you—falls on your neighborhood. The shell was supposed to explode in the air, destroy a Japanese plane, save lives. Instead, it falls short, hits the ground, and detonates among the civilians you were trying to help.
+
+You are one of 49 civilians killed on Oahu that morning. Most of you died not from Japanese bombs, but from American shells. Friendly fire. The bitter irony of being killed by your own side's weapons will be documented in the official reports, though it won't be widely publicized. The military will quietly improve their anti-aircraft fuses after Pearl Harbor.
+
+Your family will receive condolences. Your neighbors will remember your heroism—how you stayed to help when you could have run, how you pulled people from burning buildings, how you died trying to save others. December 7, 1941. You were a civilian who became a casualty of war without ever leaving your neighborhood.`
+  },
+  {
+    id: "ac-outcome-died-in-fire",
+    conditions: {
+      rescued_victim: true,
+      went_to_harbor: true
+    },
+    survived: false,
+    epilogue: `You do not survive the attack on Pearl Harbor.
+
+You ran into the burning house. Someone was trapped inside, calling for help, and you couldn't just stand there. You made it inside, found them, started pulling them toward the door. Then the ceiling collapsed. The fire had weakened the structure. There was no time to escape.
+
+You are one of 49 civilians killed on Oahu during the attack. Your death will be recorded as "fire-related casualty, civilian sector." The person you tried to save will survive because of you. They'll tell your story for the rest of their life—how you ran into the flames when everyone else ran away, how you gave them a future you'll never have.
+
+Your sacrifice won't make the headlines. The newspapers will focus on the military casualties, the ships, the sailors. But your neighborhood will remember. They'll say you were the bravest person they knew. December 7, 1941. You died a hero, even if the history books won't record your name.`
+  },
   {
     id: "ac-outcome-survived-hero",
     conditions: {

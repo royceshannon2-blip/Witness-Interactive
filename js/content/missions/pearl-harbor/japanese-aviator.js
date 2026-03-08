@@ -213,7 +213,38 @@ You think about the burning ships, the men in the water, the carriers that weren
 ];
 
 // Outcome rules based on consequence flags
+// Historical accuracy: 29 Japanese aircraft lost, 64 Japanese killed
 const japaneseAviatorOutcomes = [
+  {
+    id: "ja-outcome-died-combat",
+    conditions: {
+      took_risks: true,
+      aggressive_attack: true
+    },
+    survived: false,
+    epilogue: `You do not survive the attack on Pearl Harbor.
+
+American anti-aircraft fire finds your Zero over the harbor. Perhaps you flew too low, pressed the attack too aggressively, stayed too long over the target. The tracers converge on your aircraft. Your engine catches fire. You try to gain altitude, to make it back to the carrier, but the controls don't respond.
+
+You are one of 64 Japanese servicemen who die in the attack. Your body will be recovered from the wreckage and buried at sea with military honors. Your family will receive notification that you died gloriously in service to the Emperor. They will never know the details—the fear, the pain, the regret in those final moments.
+
+The war you helped start will last four years and claim millions of lives. Japan will lose. The attack on Pearl Harbor, which seemed like such a brilliant victory, will be remembered as the beginning of Japan's defeat. You will not live to see it. You died believing you were winning a war. History will remember differently.`
+  },
+  {
+    id: "ja-outcome-died-heroic",
+    conditions: {
+      helped_comrade: true,
+      sacrificed_self: true
+    },
+    survived: false,
+    epilogue: `You do not survive the attack on Pearl Harbor.
+
+When your wingman's aircraft was hit by anti-aircraft fire, you could have continued your mission. You could have let him fall. Instead, you stayed with him, tried to escort him back to the carrier, drew enemy fire to protect him. It cost you your life.
+
+Your wingman will make it back to the Akagi. He will report your sacrifice. Your squadron will honor your memory. The Navy will commend your loyalty to your comrades. Your family will be told you died a hero's death.
+
+But you will not see the war that follows. You will not see Midway, where four Japanese carriers are sunk. You will not see the tide turn against Japan. You will not see the atomic bombs, the surrender, the occupation. You died on December 7, 1941, believing Japan would win this war. You were wrong. But you died with honor, and that is something.`
+  },
   {
     id: "ja-outcome-survived-conflicted",
     conditions: {
