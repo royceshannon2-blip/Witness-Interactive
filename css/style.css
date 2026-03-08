@@ -1436,3 +1436,72 @@ body.effect-shake #app {
         min-width: auto;
     }
 }
+
+/* ============================================
+   Scene Transition Animations
+   ============================================ */
+
+/* Block user input during transitions */
+.transition-active {
+    pointer-events: none;
+}
+
+/* Fade out animation */
+.scene-transition-fade-out {
+    animation: fadeOut 250ms ease-out forwards;
+}
+
+/* Fade in animation */
+.scene-transition-fade-in {
+    animation: fadeIn 250ms ease-in forwards;
+}
+
+/* Flash transition animation */
+.scene-transition-flash {
+    animation: flash 500ms ease-in-out forwards;
+}
+
+/* Keyframe definitions */
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes flash {
+    0% {
+        opacity: 1;
+        filter: brightness(1);
+    }
+    50% {
+        opacity: 0.8;
+        filter: brightness(2);
+    }
+    100% {
+        opacity: 1;
+        filter: brightness(1);
+    }
+}
+
+/* Respect reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .scene-transition-fade-out,
+    .scene-transition-fade-in,
+    .scene-transition-flash {
+        animation: none;
+        opacity: 1;
+        filter: none;
+    }
+}
