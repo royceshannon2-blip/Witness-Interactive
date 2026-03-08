@@ -120,7 +120,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Define consequence flags and scene transitions
     - _Requirements: 5.1, 5.2, 5.3, 24.1, 24.2_
   
-  - [~] 10.3 Write American Civilian role scenes
+  - [x] 10.3 Write American Civilian role scenes
     - Create american-civilian.js with 4-5 scene objects
     - Tag scenes with AP themes
     - Define consequence flags and scene transitions

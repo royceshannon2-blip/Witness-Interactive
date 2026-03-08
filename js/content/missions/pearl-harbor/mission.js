@@ -14,6 +14,8 @@
  */
 
 import japaneseAviator from './japanese-aviator.js';
+import americanSailor from './american-sailor.js';
+import americanCivilian from './american-civilian.js';
 
 /**
  * Pearl Harbor Mission Configuration
@@ -51,13 +53,15 @@ const pearlHarborMission = {
       id: 'american-sailor',
       name: 'American Sailor (USS Arizona)',
       description: 'Serve aboard the USS Arizona during the surprise attack',
-      scenes: [] // Will be populated in Task 10.2
+      scenes: americanSailor.scenes,
+      outcomes: americanSailor.outcomes
     },
     {
       id: 'american-civilian',
       name: 'American Civilian',
       description: 'Experience the attack as a civilian living near Pearl Harbor',
-      scenes: [] // Will be populated in Task 10.3
+      scenes: americanCivilian.scenes,
+      outcomes: americanCivilian.outcomes
     }
   ],
   
