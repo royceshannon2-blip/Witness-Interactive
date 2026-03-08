@@ -328,6 +328,10 @@ class UIController {
       <article class="role-selection-content" role="article" aria-labelledby="role-selection-title">
         <h2 id="role-selection-title" class="text-center text-gold">${c.title}</h2>
         <p class="text-center">${c.subtitle}</p>
+        <section id="all-roles-completed-message" class="panel panel-parchment mt-lg hidden" role="region" aria-live="polite">
+          <h3 class="text-gold text-center">${c.allRolesCompletedTitle}</h3>
+          <p class="text-center">${c.allRolesCompletedMessage}</p>
+        </section>
         <section id="role-cards-container" class="mt-lg" role="region" aria-label="Available roles">
           <!-- Role cards will be populated dynamically -->
         </section>
@@ -649,9 +653,8 @@ class UIController {
       const playAgainButton = screen.querySelector('#play-again');
       if (playAgainButton) {
         playAgainButton.addEventListener('click', () => {
-          // Get current mission ID from last mission:selected event
-          // For now, default to pearl-harbor
-          this.eventBus.emit('mission:selected', { missionId: 'pearl-harbor' });
+          // Emit mission:selected event with just the missionId string
+          this.eventBus.emit('mission:selected', 'pearl-harbor');
         });
       }
     }
@@ -665,6 +668,7 @@ class UIController {
   populateRoleCards(screen) {
     const roleCardsContainer = screen.querySelector('#role-cards-container');
     const endingsCountElement = screen.querySelector('#endings-count');
+    const allRolesCompletedMessage = screen.querySelector('#all-roles-completed-message');
     
     if (!roleCardsContainer) {
       console.error('UIController.populateRoleCards: #role-cards-container not found');
@@ -739,10 +743,16 @@ class UIController {
     });
     
     // Update endings counter
+    const totalRoles = mission.roles.length;
+    const completedCount = this.completedRoles.size;
+    
     if (endingsCountElement) {
-      const totalRoles = mission.roles.length;
-      const completedCount = this.completedRoles.size;
       endingsCountElement.textContent = `${completedCount}/${totalRoles}`;
+    }
+    
+    // Show special message if all roles completed
+    if (allRolesCompletedMessage && completedCount === totalRoles) {
+      allRolesCompletedMessage.classList.remove('hidden');
     }
   }
 

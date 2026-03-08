@@ -25,7 +25,9 @@ const uiContent = {
   roleSelection: {
     title: "Choose Your Perspective",
     subtitle: "Experience Pearl Harbor through different eyes",
-    endingsLabel: "Endings Discovered:"
+    endingsLabel: "Endings Discovered:",
+    allRolesCompletedTitle: "All Perspectives Witnessed",
+    allRolesCompletedMessage: "You have experienced Pearl Harbor from all three perspectives. You now understand the complexity of this historical moment from multiple viewpoints — a crucial skill in historical analysis."
   },
   
   outcome: {

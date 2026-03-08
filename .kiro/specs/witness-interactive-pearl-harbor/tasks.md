@@ -308,7 +308,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - _Requirements: 23.1, 23.2, 23.3, 23.4_
 
 - [ ] 22. Create documentation files
-  - [ ] 22.1 Write README.md
+  - [x] 22.1 Write README.md
     - Project description and educational value
     - How to play instructions
     - GitHub Pages deployment steps
@@ -316,7 +316,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Roadmap for future missions
     - _Requirements: 17.1, 17.2, 17.3_
   
-  - [ ] 22.2 Write CONTRIBUTING.md
+  - [x] 22.2 Write CONTRIBUTING.md
     - Step-by-step guide for adding new missions
     - Mission data structure template
     - Scene object template
@@ -325,7 +325,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - _Requirements: 17.4, 17.5_
 
 - [ ] 23. Final testing and deployment preparation
-  - [ ] 23.1 Manual playtesting
+  - [x] 23.1 Manual playtesting
     - Play through all three roles with different choices
     - Verify outcomes reflect decisions
     - Test on mobile (320px), tablet (768px), desktop (1280px)
@@ -333,12 +333,12 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Verify no console errors
     - _Requirements: All_
   
-  - [ ] 23.2 Verify offline functionality
+  - [x] 23.2 Verify offline functionality
     - Load game once, then disconnect internet
     - Verify game functions fully offline
     - _Requirements: 28.1, 28.2, 28.4_
   
-  - [ ] 23.3 Deploy to GitHub Pages
+  - [x] 23.3 Deploy to GitHub Pages
     - Push all code to main branch
     - Enable GitHub Pages in repository settings
     - Verify deployment is live and accessible

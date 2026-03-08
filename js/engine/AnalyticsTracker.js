@@ -35,13 +35,24 @@ class AnalyticsTracker {
     this.eventBus.on('game:start', () => this.startSession());
     
     // Track mission selection
-    this.eventBus.on('mission:selected', (data) => {
-      this.logAction('mission_selected', { missionId: data });
+    this.eventBus.on('mission:selected', (missionId) => {
+      // missionId is a simple string
+      this.sessionData.missionId = missionId;
+      this.logAction('mission_selected', { missionId: missionId });
     });
     
     // Track role selection
     this.eventBus.on('role:selected', (data) => {
-      this.logAction('role_selected', { roleId: data });
+      // data is an object with missionId and roleId
+      if (data && typeof data === 'object') {
+        this.sessionData.missionId = data.missionId;
+        this.sessionData.roleId = data.roleId;
+        this.logAction('role_selected', { missionId: data.missionId, roleId: data.roleId });
+      } else {
+        // Fallback for simple string roleId (for backwards compatibility with tests)
+        this.sessionData.roleId = data;
+        this.logAction('role_selected', { roleId: data });
+      }
     });
     
     // Track scene transitions

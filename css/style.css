@@ -931,6 +931,35 @@ body.effect-shake #app {
     font-weight: 700;
 }
 
+/* All roles completed message */
+#all-roles-completed-message {
+    background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(74, 123, 167, 0.1));
+    border: 2px solid var(--color-accent-gold);
+    animation: fadeInScale 0.5s ease-out;
+}
+
+#all-roles-completed-message h3 {
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-xlarge);
+}
+
+#all-roles-completed-message p {
+    font-size: var(--font-size-medium);
+    line-height: 1.6;
+    color: var(--color-text-secondary);
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 /* Responsive adjustments for role cards */
 @media (max-width: 768px) {
     #role-cards-container {
