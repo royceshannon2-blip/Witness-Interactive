@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AtmosphericEffects Test</title>
+    <link rel="stylesheet" href="css/atmospheric-effects.css">
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #1a1a1a;
+            color: #e0e0e0;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #d4af37;
+            border-bottom: 2px solid #d4af37;
+            padding-bottom: 10px;
+        }
+        .instructions {
+            background-color: #2a2a2a;
+            padding: 15px;
+            border-left: 4px solid #d4af37;
+            margin: 20px 0;
+        }
+        .console-output {
+            background-color: #0a0a0a;
+            padding: 15px;
+            border: 1px solid #333;
+            border-radius: 4px;
+            margin-top: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .success {
+            color: #4caf50;
+        }
+        .error {
+            color: #f44336;
+        }
+        .warning {
+            color: #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <h1>AtmosphericEffects Component Test</h1>
+    
+    <div class="instructions">
+        <h2>Instructions:</h2>
+        <ol>
+            <li>Open the browser's Developer Console (F12 or Cmd+Option+I)</li>
+            <li>Look for the test output in the console</li>
+            <li>Verify all tests show ✓ (checkmark) for success</li>
+            <li>Check that no JavaScript errors appear in the console</li>
+        </ol>
+    </div>
+
+    <div class="console-output">
+        <p><strong>Console Output:</strong></p>
+        <p>Open the browser console to see the test results.</p>
+        <p class="success">✓ = Test passed</p>
+        <p class="error">✗ = Test failed</p>
+    </div>
+
+    <h2>What This Test Verifies:</h2>
+    <ul>
+        <li><strong>Constructor:</strong> Validates EventBus requirement and config options</li>
+        <li><strong>applyEffect:</strong> Adds CSS classes, emits events, tracks active effects</li>
+        <li><strong>removeEffect:</strong> Removes CSS classes, clears timeouts, emits events</li>
+        <li><strong>clearAllEffects:</strong> Removes all effects and clears all timeouts</li>
+        <li><strong>EventBus Integration:</strong> Clears effects on scene:transition</li>
+        <li><strong>Multiple Effects:</strong> Supports multiple simultaneous effects</li>
+        <li><strong>Auto-removal:</strong> Effects auto-remove after duration</li>
+        <li><strong>All 9 Effects:</strong> smoke, fire, shake, dawn, explosion, aftermath, rain, ocean, ash</li>
+    </ul>
+
+    <!-- Load the test module -->
+    <script type="module" src="js/engine/AtmosphericEffects.test.js"></script>
+</body>
+</html>
