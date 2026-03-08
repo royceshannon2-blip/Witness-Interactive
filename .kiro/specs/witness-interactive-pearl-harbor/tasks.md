@@ -65,7 +65,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Render screens: landing, timeline, role-selection, scene, outcome, historical-ripple, knowledge-checkpoint, results-card
     - _Requirements: 5.2, 5.3, 5.5, 18.4_
   
-  - [~] 6.2 Create main.js application bootstrap
+  - [x] 6.2 Create main.js application bootstrap
     - Initialize EventBus, LoadingStateHandler, ConsequenceSystem, SceneStateMachine, UIController, MissionRegistry
     - Load Pearl Harbor mission
     - Show loading animation, then transition to landing screen

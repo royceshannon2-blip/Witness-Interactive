@@ -7,57 +7,99 @@
  * 
  * Architecture: ES6 modules with explicit imports, no global variables.
  * All components communicate via EventBus for loose coupling.
+ * 
+ * Task 6.2: Complete application bootstrap
+ * Requirements: 3.1, 18.3
  */
 
 // Engine imports
 import EventBus from './engine/EventBus.js';
 import LoadingStateHandler from './engine/LoadingStateHandler.js';
-// Additional imports will be added in subsequent tasks
-// import { ConsequenceSystem } from './engine/ConsequenceSystem.js';
-// import { SceneStateMachine } from './engine/SceneStateMachine.js';
-// import { UIController } from './engine/UIController.js';
-// import { MissionRegistry } from './content/MissionRegistry.js';
+import ConsequenceSystem from './engine/ConsequenceSystem.js';
+import SceneStateMachine from './engine/SceneStateMachine.js';
+import UIController from './engine/UIController.js';
+import MissionRegistry from './content/MissionRegistry.js';
+
+// Mission content imports
+import pearlHarborMission from './content/missions/pearl-harbor/mission.js';
 
 /**
  * Initialize the application
- * This function will be fully implemented in Task 6.2
+ * Bootstraps all engine components and loads mission content
  */
 async function initializeApp() {
     console.log('Witness Interactive: Pearl Harbor - Initializing...');
     
-    // Initialize EventBus
+    // 1. Initialize EventBus (central communication hub)
     const eventBus = new EventBus();
+    console.log('✓ EventBus initialized');
     
-    // Initialize LoadingStateHandler and subscribe to events
+    // 2. Initialize LoadingStateHandler and show loading animation
     const loadingHandler = new LoadingStateHandler();
     loadingHandler.subscribeToEvents(eventBus);
+    console.log('✓ LoadingStateHandler initialized');
     
     // Show loading screen
-    eventBus.emit('game:initializing', { message: 'Initializing game engine...' });
+    eventBus.emit('game:initializing', { message: 'Loading game engine...' });
     
-    // TODO: Task 6.2 - Initialize remaining engine components
-    // 3. Create ConsequenceSystem
-    // 4. Create SceneStateMachine
-    // 5. Create UIController
-    // 6. Create MissionRegistry
+    // 3. Initialize ConsequenceSystem (tracks player decisions)
+    const consequenceSystem = new ConsequenceSystem(eventBus);
+    console.log('✓ ConsequenceSystem initialized');
+    
+    // 4. Initialize SceneStateMachine (manages scene transitions)
+    const sceneStateMachine = new SceneStateMachine(eventBus);
+    console.log('✓ SceneStateMachine initialized');
+    
+    // 5. Initialize UIController (handles all DOM rendering)
+    const uiController = new UIController(eventBus);
+    console.log('✓ UIController initialized');
+    
+    // 6. Initialize MissionRegistry (mission catalog)
+    const missionRegistry = new MissionRegistry();
+    console.log('✓ MissionRegistry initialized');
+    
     // 7. Load Pearl Harbor mission
-    // 8. Emit game:start event
-    // 9. Transition to landing screen
+    missionRegistry.register(pearlHarborMission);
+    console.log('✓ Pearl Harbor mission loaded');
     
-    // Simulate module loading for demonstration
-    setTimeout(() => {
-        eventBus.emit('module:progress', { percent: 50 });
-    }, 500);
+    // Update loading progress
+    eventBus.emit('module:progress', { percent: 75 });
     
-    setTimeout(() => {
-        eventBus.emit('module:progress', { percent: 100 });
-    }, 1000);
+    // Verify no global variables from our engine components
+    const suspiciousGlobals = Object.keys(window).filter(key => {
+        const lowerKey = key.toLowerCase();
+        return (lowerKey.includes('eventbus') || 
+                lowerKey.includes('consequence') || 
+                lowerKey.includes('scenestatemachine') ||
+                lowerKey.includes('uicontroller') ||
+                lowerKey.includes('missionregistry') ||
+                lowerKey.includes('witness') ||
+                (lowerKey.includes('game') && !lowerKey.includes('gamepad')));
+    });
     
-    // Hide loading screen after initialization
+    if (suspiciousGlobals.length === 0) {
+        console.log('✓ No global variables detected from engine components');
+    } else {
+        console.warn('⚠ Engine global variables detected:', suspiciousGlobals);
+    }
+    
+    // Complete loading
+    eventBus.emit('module:progress', { percent: 100 });
+    
+    // Small delay to show loading animation, then transition to landing screen
     setTimeout(() => {
+        // 8. Emit game:start event (UIController will show landing screen)
+        eventBus.emit('game:start');
+        console.log('✓ Game started - landing screen displayed');
+        
+        // Hide loading screen
         eventBus.emit('game:ready');
-        console.log('Application initialized (LoadingStateHandler active)');
-    }, 1500);
+        
+        console.log('\n=== Application Bootstrap Complete ===');
+        console.log('All components initialized successfully.');
+        console.log('Pearl Harbor mission loaded and ready to play.');
+        console.log('Navigate to landing screen to begin.');
+    }, 800);
 }
 
 // Start the application when DOM is ready
