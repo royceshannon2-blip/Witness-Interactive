@@ -196,13 +196,13 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - _Requirements: 7.1, 7.2, 7.3, 7.4, 7.5_
 
 - [~] 14. Implement Historical Ripple timeline
-  - [~] 14.1 Create historical ripple event data
+  - [x] 14.1 Create historical ripple event data
     - Define ripple events in pearl-harbor/mission.js historicalRipple array
     - Each event: id, date, title, description, apTheme, animationDelay
     - Include events: Dec 8 1941 war declaration, internment, Pacific theater, Hiroshima/Nagasaki, post-war
     - _Requirements: 8.2, 8.3_
   
-  - [~] 14.2 Create historical ripple UI logic
+  - [x] 14.2 Create historical ripple UI logic
     - Populate ripple timeline container with events from mission data
     - Animate events progressively using CSS transitions based on animationDelay
     - Show AP theme tags for each event
@@ -210,7 +210,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - _Requirements: 8.1, 8.4, 8.5, 24.3_
 
 - [~] 15. Implement Knowledge Checkpoint
-  - [~] 15.1 Create knowledge questions for each role
+  - [x] 15.1 Create knowledge questions for each role
     - Populate knowledge-questions.js with 3 questions per role (9 total)
     - Each question: id, roleSpecific, apSkill, question, options (4 choices), explanation
     - Tag questions with AP reasoning skills
