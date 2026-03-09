@@ -23,7 +23,7 @@ class AmbientSoundManager {
       defaultVolume: config.defaultVolume || 0.6,
       crossfadeDuration: config.crossfadeDuration || 1000,
       preloadOnStart: config.preloadOnStart || true,
-      audioPath: config.audioPath || '/audio/ambient/'
+      audioPath: config.audioPath || './audio/ambient/'
     };
     
     // Audio elements storage: Map<soundId, HTMLAudioElement>

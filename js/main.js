@@ -114,7 +114,7 @@ async function initializeApp() {
         defaultVolume: 0.6,           // default volume level (0.0-1.0)
         crossfadeDuration: 1000,      // crossfade duration in ms
         preloadOnStart: true,         // preload audio files on start
-        audioPath: '/audio/ambient/'  // path to audio files
+        audioPath: './audio/ambient/'  // path to audio files
     });
     console.log('✓ AmbientSoundManager initialized');
     
