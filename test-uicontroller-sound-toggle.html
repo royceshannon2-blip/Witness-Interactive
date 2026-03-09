@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UIController Sound Toggle Unit Tests</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .pass { color: green; font-weight: bold; }
+        .fail { color: red; font-weight: bold; }
+        #sound-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(42, 47, 62, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>UIController Sound Toggle Unit Tests</h1>
+    <p>Testing Task 3.2 implementation in UIController</p>
+    
+    <div id="app"></div>
+    
+    <div class="test-section">
+        <h2>Test Results</h2>
+        <div id="test-results"></div>
+    </div>
+    
+    <script type="module">
+        import EventBus from './js/engine/EventBus.js';
+        import UIController from './js/engine/UIController.js';
+        
+        const results = [];
+        
+        function logResult(testName, passed, details = '') {
+            results.push({ testName, passed, details });
+            updateResults();
+        }
+        
+        function updateResults() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = results.map(r => 
+                `<div class="${r.passed ? 'pass' : 'fail'}">
+                    ${r.passed ? '✓' : '✗'} ${r.testName}
+                    ${r.details ? `<br><small>${r.details}</small>` : ''}
+                </div>`
+            ).join('');
+        }
+        
+        // Mock UI content
+        const mockUIContent = {
+            landing: { title: "Test", subtitle: "Test", tagline: "Test", context: "Test", buttonText: "Test" },
+            timeline: { title: "Test", subtitle: "Test" },
+            roleSelection: { title: "Test", subtitle: "Test", endingsLabel: "Test", allRolesCompletedTitle: "Test", allRolesCompletedMessage: "Test" },
+            outcome: { title: "Test", buttonText: "Test" },
+            historicalRipple: { title: "Test", subtitle: "Test", buttonText: "Test", apThemeLabel: "Test" },
+            knowledgeCheckpoint: { title: "Test", subtitle: "Test", buttonText: "Test" },
+            resultsCard: { title: "Test", copyButtonText: "Test", playAgainButtonText: "Test" },
+            progress: { sceneLabel: "Test" }
+        };
+        
+        // Run tests
+        async function runTests() {
+            console.log('Starting UIController sound toggle unit tests...');
+            
+            // Test 1: setupSoundToggle with AmbientSoundManager
+            {
+                // Create sound toggle button
+                const soundToggleButton = document.createElement('button');
+                soundToggleButton.id = 'sound-toggle';
+                soundToggleButton.disabled = true;
+                soundToggleButton.setAttribute('aria-label', 'Sound toggle (coming soon)');
+                
+                const soundIcon = document.createElement('span');
+                soundIcon.className = 'sound-icon';
+                soundIcon.textContent = '🔇';
+                soundToggleButton.appendChild(soundIcon);
+                
+                document.body.appendChild(soundToggleButton);
+                
+                const eventBus = new EventBus();
+                
+                // Mock AmbientSoundManager
+                const mockAmbientSoundManager = {
+                    muted: false,
+                    isMuted() { return this.muted; },
+                    toggleMute() {
+                        this.muted = !this.muted;
+                        eventBus.emit('sound:muted', { muted: this.muted });
+                    }
+                };
+                
+                // Listen for sound:toggle
+                let soundToggleEmitted = false;
+                eventBus.on('sound:toggle', () => {
+                    soundToggleEmitted = true;
+                    mockAmbientSoundManager.toggleMute();
+                });
+                
+                // Create UIController
+                const uiController = new UIController(
+                    eventBus,
+                    null, null, null, null,
+                    mockUIContent,
+                    { ambientSoundManager: mockAmbientSoundManager }
+                );
+                
+                await new Promise(resolve => setTimeout(resolve, 50));
+                
+                logResult('Button enabled with AmbientSoundManager', !soundToggleButton.disabled);
+                logResult('Initial icon is unmuted (🔊)', soundIcon.textContent === '🔊');
+                logResult('Initial aria-label correct', soundToggleButton.getAttribute('aria-label').includes('Sound is on'));
+                
+                // Click to mute
+                soundToggleButton.click();
+                await new Promise(resolve => setTimeout(resolve, 50));
+                
+                logResult('sound:toggle event emitted', soundToggleEmitted);
+                logResult('Icon changed to muted (🔇)', soundIcon.textContent === '🔇');
+                logResult('Aria-label updated for muted', soundToggleButton.getAttribute('aria-label').includes('muted'));
+                logResult('AmbientSoundManager.isMuted() is true', mockAmbientSoundManager.isMuted() === true);
+                
+                // Click to unmute
+                soundToggleEmitted = false;
+                soundToggleButton.click();
+                await new Promise(resolve => setTimeout(resolve, 50));
+                
+                logResult('sound:toggle event emitted (2nd)', soundToggleEmitted);
+                logResult('Icon changed back to unmuted (🔊)', soundIcon.textContent === '🔊');
+                logResult('Aria-label updated for unmuted', soundToggleButton.getAttribute('aria-label').includes('Sound is on'));
+                logResult('AmbientSoundManager.isMuted() is false', mockAmbientSoundManager.isMuted() === false);
+                
+                // Cleanup
+                document.body.removeChild(soundToggleButton);
+            }
+            
+            // Test 2: setupSoundToggle without AmbientSoundManager
+            {
+                const soundToggleButton = document.createElement('button');
+                soundToggleButton.id = 'sound-toggle';
+                soundToggleButton.disabled = true;
+                document.body.appendChild(soundToggleButton);
+                
+                const eventBus = new EventBus();
+                const uiController = new UIController(
+                    eventBus,
+                    null, null, null, null,
+                    mockUIContent,
+                    {} // No AmbientSoundManager
+                );
+                
+                await new Promise(resolve => setTimeout(resolve, 50));
+                
+                logResult('Button remains disabled without AmbientSoundManager', soundToggleButton.disabled === true);
+                
+                // Cleanup
+                document.body.removeChild(soundToggleButton);
+            }
+            
+            // Test 3: handleSoundMuted event handler
+            {
+                const soundToggleButton = document.createElement('button');
+                soundToggleButton.id = 'sound-toggle';
+                soundToggleButton.disabled = false;
+                
+                const soundIcon = document.createElement('span');
+                soundIcon.className = 'sound-icon';
+                soundIcon.textContent = '🔊';
+                soundToggleButton.appendChild(soundIcon);
+                
+                document.body.appendChild(soundToggleButton);
+                
+                const eventBus = new EventBus();
+                const mockAmbientSoundManager = {
+                    muted: false,
+                    isMuted() { return this.muted; }
+                };
+                
+                const uiController = new UIController(
+                    eventBus,
+                    null, null, null, null,
+                    mockUIContent,
+                    { ambientSoundManager: mockAmbientSoundManager }
+                );
+                
+                await new Promise(resolve => setTimeout(resolve, 50));
+                
+                // Emit sound:muted event directly
+                eventBus.emit('sound:muted', { muted: true });
+                await new Promise(resolve => setTimeout(resolve, 50));
+                
+                logResult('Icon updated via sound:muted event (muted)', soundIcon.textContent === '🔇');
+                
+                eventBus.emit('sound:muted', { muted: false });
+                await new Promise(resolve => setTimeout(resolve, 50));
+                
+                logResult('Icon updated via sound:muted event (unmuted)', soundIcon.textContent === '🔊');
+                
+                // Cleanup
+                document.body.removeChild(soundToggleButton);
+            }
+            
+            // Summary
+            const passedCount = results.filter(r => r.passed).length;
+            const totalCount = results.length;
+            console.log(`Tests complete: ${passedCount}/${totalCount} passed`);
+            
+            if (passedCount === totalCount) {
+                console.log('✓ All UIController sound toggle tests passed!');
+            } else {
+                console.log('✗ Some tests failed.');
+            }
+        }
+        
+        runTests().catch(error => {
+            console.error('Test error:', error);
+            logResult('Test execution', false, error.message);
+        });
+    </script>
+</body>
+</html>

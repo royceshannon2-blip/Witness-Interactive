@@ -559,3 +559,142 @@ const outputDiv = document.getElementById('test-output');
 if (outputDiv) {
   outputDiv.textContent = testOutput.join('\n');
 }
+
+// Test: Sound toggle button integration
+function testSoundToggleIntegration() {
+  log('\nTest: Sound toggle button integration');
+  
+  const appContainer = setupTestDOM();
+  
+  // Create sound toggle button in DOM
+  const soundToggleButton = document.createElement('button');
+  soundToggleButton.id = 'sound-toggle';
+  soundToggleButton.disabled = true;
+  soundToggleButton.setAttribute('aria-label', 'Sound toggle (coming soon)');
+  
+  const soundIcon = document.createElement('span');
+  soundIcon.className = 'sound-icon';
+  soundIcon.textContent = '🔇';
+  soundToggleButton.appendChild(soundIcon);
+  
+  document.body.appendChild(soundToggleButton);
+  
+  const eventBus = new EventBus();
+  
+  // Create mock AmbientSoundManager
+  const mockAmbientSoundManager = {
+    muted: false,
+    isMuted() {
+      return this.muted;
+    },
+    toggleMute() {
+      this.muted = !this.muted;
+      eventBus.emit('sound:muted', { muted: this.muted });
+    }
+  };
+  
+  // Listen for sound:toggle event
+  let soundToggleEmitted = false;
+  eventBus.on('sound:toggle', () => {
+    soundToggleEmitted = true;
+    mockAmbientSoundManager.toggleMute();
+  });
+  
+  // Create UIController with AmbientSoundManager
+  const uiController = new UIController(
+    eventBus,
+    null,
+    null,
+    null,
+    null,
+    mockUIContent,
+    { ambientSoundManager: mockAmbientSoundManager }
+  );
+  
+  // Test 1: Button should be enabled
+  if (!soundToggleButton.disabled) {
+    log('✓ Sound toggle button enabled when AmbientSoundManager provided');
+  } else {
+    log('✗ Sound toggle button not enabled');
+  }
+  
+  // Test 2: Initial icon should be unmuted
+  if (soundIcon.textContent === '🔊') {
+    log('✓ Initial icon is unmuted (🔊)');
+  } else {
+    log('✗ Initial icon incorrect: ' + soundIcon.textContent);
+  }
+  
+  // Test 3: Click button to mute
+  soundToggleButton.click();
+  
+  if (soundToggleEmitted) {
+    log('✓ sound:toggle event emitted on button click');
+  } else {
+    log('✗ sound:toggle event not emitted');
+  }
+  
+  // Test 4: Icon should change to muted
+  if (soundIcon.textContent === '🔇') {
+    log('✓ Icon changed to muted (🔇) after click');
+  } else {
+    log('✗ Icon not changed: ' + soundIcon.textContent);
+  }
+  
+  // Test 5: Aria-label should update
+  const ariaLabel = soundToggleButton.getAttribute('aria-label');
+  if (ariaLabel.includes('muted')) {
+    log('✓ Aria-label updated to indicate muted state');
+  } else {
+    log('✗ Aria-label not updated: ' + ariaLabel);
+  }
+  
+  // Test 6: Click again to unmute
+  soundToggleEmitted = false;
+  soundToggleButton.click();
+  
+  if (soundToggleEmitted) {
+    log('✓ sound:toggle event emitted on second click');
+  } else {
+    log('✗ sound:toggle event not emitted on second click');
+  }
+  
+  // Test 7: Icon should change back to unmuted
+  if (soundIcon.textContent === '🔊') {
+    log('✓ Icon changed back to unmuted (🔊)');
+  } else {
+    log('✗ Icon not changed back: ' + soundIcon.textContent);
+  }
+  
+  // Test 8: Button remains disabled without AmbientSoundManager
+  document.body.removeChild(soundToggleButton);
+  
+  const soundToggleButton2 = document.createElement('button');
+  soundToggleButton2.id = 'sound-toggle';
+  soundToggleButton2.disabled = true;
+  document.body.appendChild(soundToggleButton2);
+  
+  const uiController2 = new UIController(
+    new EventBus(),
+    null,
+    null,
+    null,
+    null,
+    mockUIContent,
+    {} // No AmbientSoundManager
+  );
+  
+  if (soundToggleButton2.disabled) {
+    log('✓ Button remains disabled without AmbientSoundManager');
+  } else {
+    log('✗ Button should remain disabled without AmbientSoundManager');
+  }
+  
+  // Cleanup
+  document.body.removeChild(soundToggleButton2);
+  
+  log('Sound toggle integration tests complete\n');
+}
+
+// Run the new test
+testSoundToggleIntegration();
