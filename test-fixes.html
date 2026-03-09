@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Fixes - Witness Interactive</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/atmospheric-effects.css">
+    <style>
+        body {
+            padding: 20px;
+        }
+        .test-section {
+            margin: 40px 0;
+            padding: 20px;
+            border: 2px solid var(--color-accent-gold);
+            border-radius: var(--border-radius-md);
+        }
+        .test-button {
+            margin: 10px;
+        }
+        #haptic-log {
+            margin-top: 10px;
+            padding: 10px;
+            background: var(--color-bg-secondary);
+            border-radius: var(--border-radius-sm);
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1 class="text-gold text-center">Fix Verification Tests</h1>
+    
+    <!-- Test 1: Audio Unlock -->
+    <div class="test-section">
+        <h2 class="text-gold">Test 1: Audio Unlock</h2>
+        <p>Click the button to test if audio context is unlocked:</p>
+        <button id="test-audio" class="test-button">Test Audio Unlock</button>
+        <p id="audio-status">Status: Not tested</p>
+    </div>
+    
+    <!-- Test 2: Atmospheric Effects -->
+    <div class="test-section">
+        <h2 class="text-gold">Test 2: Atmospheric Effects</h2>
+        <p>Click buttons to apply different atmospheric effects:</p>
+        <button id="test-smoke" class="test-button">Apply Smoke</button>
+        <button id="test-fire" class="test-button">Apply Fire</button>
+        <button id="test-shake" class="test-button">Apply Shake</button>
+        <button id="test-explosion" class="test-button">Apply Explosion</button>
+        <button id="clear-effects" class="test-button">Clear All Effects</button>
+        <p id="effects-status">Active effects: None</p>
+    </div>
+    
+    <!-- Test 3: Haptics -->
+    <div class="test-section">
+        <h2 class="text-gold">Test 3: Haptic Feedback</h2>
+        <p>Click buttons to test haptic patterns (mobile only):</p>
+        <button id="test-light" class="test-button">Light</button>
+        <button id="test-medium" class="test-button">Medium</button>
+        <button id="test-heavy" class="test-button">Heavy</button>
+        <button id="test-success" class="test-button">Success</button>
+        <button id="test-error" class="test-button">Error</button>
+        <button id="test-selection" class="test-button">Selection</button>
+        <div id="haptic-log"></div>
+    </div>
+    
+    <!-- Test 4: Role Selection Layout -->
+    <div class="test-section">
+        <h2 class="text-gold">Test 4: Role Selection Layout</h2>
+        <div id="role-cards-container">
+            <article class="role-card">
+                <h3 class="role-title">Japanese Aviator</h3>
+                <p class="role-description">Experience the attack from the cockpit of a Zero fighter.</p>
+                <button class="role-select-button">Select Role</button>
+            </article>
+            <article class="role-card completed">
+                <span class="completion-badge">Completed</span>
+                <h3 class="role-title">American Sailor</h3>
+                <p class="role-description">Survive the chaos aboard USS Arizona.</p>
+                <button class="role-select-button">Play Again</button>
+            </article>
+            <article class="role-card">
+                <h3 class="role-title">American Civilian</h3>
+                <p class="role-description">Witness the attack from Honolulu.</p>
+                <button class="role-select-button">Select Role</button>
+            </article>
+        </div>
+    </div>
+
+    <script type="module">
+        import { HapticFeedback } from './js/engine/HapticFeedback.js';
+        import EventBus from './js/engine/EventBus.js';
+        import AtmosphericEffects from './js/engine/AtmosphericEffects.js';
+        
+        // Initialize components
+        const eventBus = new EventBus();
+        const haptics = new HapticFeedback();
+        const atmosphericEffects = new AtmosphericEffects(eventBus);
+        
+        // Test 1: Audio Unlock
+        document.getElementById('test-audio').addEventListener('click', () => {
+            const silentAudio = new Audio();
+            silentAudio.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+            silentAudio.play()
+                .then(() => {
+                    document.getElementById('audio-status').textContent = 'Status: ✓ Audio unlocked successfully';
+                    document.getElementById('audio-status').style.color = 'var(--color-accent-gold)';
+                })
+                .catch((err) => {
+                    document.getElementById('audio-status').textContent = `Status: ✗ Failed - ${err.message}`;
+                    document.getElementById('audio-status').style.color = 'var(--color-accent-red)';
+                });
+        });
+        
+        // Test 2: Atmospheric Effects
+        document.getElementById('test-smoke').addEventListener('click', () => {
+            atmosphericEffects.applyEffect('smoke', 5000);
+            updateEffectsStatus();
+        });
+        
+        document.getElementById('test-fire').addEventListener('click', () => {
+            atmosphericEffects.applyEffect('fire', 5000);
+            updateEffectsStatus();
+        });
+        
+        document.getElementById('test-shake').addEventListener('click', () => {
+            atmosphericEffects.applyEffect('shake', 1000);
+            updateEffectsStatus();
+        });
+        
+        document.getElementById('test-explosion').addEventListener('click', () => {
+            atmosphericEffects.applyEffect('explosion', 2000);
+            updateEffectsStatus();
+        });
+        
+        document.getElementById('clear-effects').addEventListener('click', () => {
+            atmosphericEffects.clearAllEffects();
+            updateEffectsStatus();
+        });
+        
+        function updateEffectsStatus() {
+            const active = atmosphericEffects.getActiveEffects();
+            const status = active.length > 0 ? active.join(', ') : 'None';
+            document.getElementById('effects-status').textContent = `Active effects: ${status}`;
+            
+            // Also log body classes
+            console.log('Body classes:', document.body.className);
+        }
+        
+        // Test 3: Haptics
+        const hapticLog = document.getElementById('haptic-log');
+        
+        function logHaptic(type, supported) {
+            const timestamp = new Date().toLocaleTimeString();
+            const status = supported ? '✓' : '✗ Not supported';
+            hapticLog.innerHTML += `<div>[${timestamp}] ${type}: ${status}</div>`;
+            hapticLog.scrollTop = hapticLog.scrollHeight;
+        }
+        
+        document.getElementById('test-light').addEventListener('click', () => {
+            haptics.light();
+            logHaptic('Light', haptics.isSupported);
+        });
+        
+        document.getElementById('test-medium').addEventListener('click', () => {
+            haptics.medium();
+            logHaptic('Medium', haptics.isSupported);
+        });
+        
+        document.getElementById('test-heavy').addEventListener('click', () => {
+            haptics.heavy();
+            logHaptic('Heavy', haptics.isSupported);
+        });
+        
+        document.getElementById('test-success').addEventListener('click', () => {
+            haptics.success();
+            logHaptic('Success', haptics.isSupported);
+        });
+        
+        document.getElementById('test-error').addEventListener('click', () => {
+            haptics.error();
+            logHaptic('Error', haptics.isSupported);
+        });
+        
+        document.getElementById('test-selection').addEventListener('click', () => {
+            haptics.selection();
+            logHaptic('Selection', haptics.isSupported);
+        });
+        
+        // Initial status
+        logHaptic('Vibration API', haptics.isSupported);
+    </script>
+</body>
+</html>

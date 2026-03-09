@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Extension Fallback Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .pass { background: #2d5016; }
+        .fail { background: #5c1616; }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Audio Extension Fallback Test</h1>
+    <p>Testing if AmbientSoundManager can load .flac and .wav files when .mp3 is not available.</p>
+    
+    <button onclick="testOceanWaves()">Test Ocean Waves (FLAC)</button>
+    <button onclick="testAircraft()">Test Aircraft (WAV)</button>
+    <button onclick="testExplosion()">Test Explosion (WAV)</button>
+    
+    <div id="results"></div>
+
+    <script type="module">
+        import EventBus from './js/engine/EventBus.js';
+        import AmbientSoundManager from './js/engine/AmbientSoundManager.js';
+
+        const eventBus = new EventBus();
+        const soundManager = new AmbientSoundManager(eventBus, {
+            audioPath: './audio/ambient/'
+        });
+
+        let testResults = [];
+
+        function addResult(test, passed, message) {
+            const div = document.createElement('div');
+            div.className = `test-result ${passed ? 'pass' : 'fail'}`;
+            div.textContent = `${passed ? '✓' : '✗'} ${test}: ${message}`;
+            document.getElementById('results').appendChild(div);
+        }
+
+        window.testOceanWaves = function() {
+            console.log('Testing ocean waves (FLAC file)...');
+            soundManager.playSound('578524__samsterbirdies__calm-ocean-waves', false, 0.3);
+            
+            setTimeout(() => {
+                const isPlaying = soundManager.activeSounds.has('578524__samsterbirdies__calm-ocean-waves');
+                addResult('Ocean Waves (FLAC)', isPlaying, isPlaying ? 'Audio loaded and playing' : 'Failed to load');
+            }, 2000);
+        };
+
+        window.testAircraft = function() {
+            console.log('Testing aircraft (WAV file)...');
+            soundManager.playSound('161120__fight2flyphoto__a6m-zero-chasing-p-51d-mustang', false, 0.3);
+            
+            setTimeout(() => {
+                const isPlaying = soundManager.activeSounds.has('161120__fight2flyphoto__a6m-zero-chasing-p-51d-mustang');
+                addResult('Aircraft (WAV)', isPlaying, isPlaying ? 'Audio loaded and playing' : 'Failed to load');
+            }, 2000);
+        };
+
+        window.testExplosion = function() {
+            console.log('Testing explosion (WAV file)...');
+            soundManager.playSound('149966__nenadsimic__muffled-distant-explosion', false, 0.3);
+            
+            setTimeout(() => {
+                const isPlaying = soundManager.activeSounds.has('149966__nenadsimic__muffled-distant-explosion');
+                addResult('Explosion (WAV)', isPlaying, isPlaying ? 'Audio loaded and playing' : 'Failed to load');
+            }, 2000);
+        };
+
+        // Listen for sound events
+        eventBus.on('sound:playing', (data) => {
+            console.log('✓ Sound playing:', data.soundId);
+        });
+
+        eventBus.on('sound:error', (data) => {
+            console.error('✗ Sound error:', data.soundId, data.error);
+        });
+    </script>
+</body>
+</html>

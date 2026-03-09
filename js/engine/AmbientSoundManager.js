@@ -243,22 +243,52 @@ class AmbientSoundManager {
   createAudioElement(soundId) {
     const audio = new Audio();
     
-    // Try common audio extensions if soundId doesn't include one
+    // If soundId already has an extension, use it directly
     const extensions = ['.mp3', '.wav', '.flac', '.ogg', '.m4a'];
     const hasExtension = extensions.some(ext => soundId.toLowerCase().endsWith(ext));
-    const audioPath = hasExtension 
-      ? `${this.config.audioPath}${soundId}`
-      : `${this.config.audioPath}${soundId}.mp3`;
     
-    audio.src = audioPath;
-    audio.preload = 'auto';
-    
-    // Handle load errors gracefully
-    audio.addEventListener('error', (e) => {
-      console.warn(`AmbientSoundManager: Audio file not found or failed to load: ${audioPath}`);
-      console.warn('Game will continue without this audio. This is expected if audio files have not been provided yet.');
-      this.eventBus.emit('sound:error', { soundId, error: 'Failed to load audio file' });
-    });
+    if (hasExtension) {
+      audio.src = `${this.config.audioPath}${soundId}`;
+      audio.preload = 'auto';
+      
+      // Handle load errors gracefully
+      audio.addEventListener('error', () => {
+        console.warn(`AmbientSoundManager: Audio file not found or failed to load: ${audio.src}`);
+        console.warn('Game will continue without this audio. This is expected if audio files have not been provided yet.');
+        this.eventBus.emit('sound:error', { soundId, error: 'Failed to load audio file' });
+      });
+    } else {
+      // Try multiple extensions in order of browser support
+      // .flac first since that's what we have, then .wav, then others
+      const tryExtensions = ['.flac', '.wav', '.mp3', '.ogg', '.m4a'];
+      let extensionIndex = 0;
+      
+      const tryNextExtension = () => {
+        // Remove previous error listener to prevent stacking
+        audio.removeEventListener('error', tryNextExtension);
+        
+        extensionIndex++;
+        
+        if (extensionIndex < tryExtensions.length) {
+          // Try next extension
+          audio.src = `${this.config.audioPath}${soundId}${tryExtensions[extensionIndex]}`;
+          audio.addEventListener('error', tryNextExtension, { once: true });
+          audio.load();
+        } else {
+          // All extensions failed
+          console.warn(`AmbientSoundManager: Audio file not found after trying all extensions: ${soundId}`);
+          console.warn('Tried extensions:', tryExtensions.join(', '));
+          console.warn('Game will continue without this audio.');
+          this.eventBus.emit('sound:error', { soundId, error: 'Failed to load audio file' });
+        }
+      };
+      
+      // Set initial source and add error handler
+      audio.src = `${this.config.audioPath}${soundId}${tryExtensions[0]}`;
+      audio.preload = 'auto';
+      audio.addEventListener('error', tryNextExtension, { once: true });
+      audio.load(); // Explicitly trigger load to catch errors
+    }
     
     return audio;
   }

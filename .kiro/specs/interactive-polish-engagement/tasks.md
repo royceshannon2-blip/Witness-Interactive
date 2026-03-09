@@ -268,7 +268,7 @@
 - [x] Import all new components in `js/main.js`
 - [x] Initialize TypewriterEffect with inline config
 - [x] Initialize TimedChoiceSystem with inline config
-- [ ] Initialize AmbientSoundManager with inline config (blocked by Task 3 - not implemented)
+- [x] Initialize AmbientSoundManager with inline config (blocked by Task 3 - not implemented)
 - [x] Initialize AtmosphericEffects with inline config
 - [x] Initialize SceneTransition with inline config
 - [x] Pass components object to UIController constructor

@@ -27,7 +27,13 @@ const uiContent = {
     subtitle: "Experience Pearl Harbor through different eyes",
     endingsLabel: "Endings Discovered:",
     allRolesCompletedTitle: "All Perspectives Witnessed",
-    allRolesCompletedMessage: "You have experienced Pearl Harbor from all three perspectives. You now understand the complexity of this historical moment from multiple viewpoints — a crucial skill in historical analysis."
+    allRolesCompletedMessage: "You have experienced Pearl Harbor from all three perspectives. You now understand the complexity of this historical moment from multiple viewpoints — a crucial skill in historical analysis.",
+    selectRoleButton: "Select Role",
+    playAgainButton: "Play Again",
+    selectRoleAriaLabel: "Select role",
+    playAgainAriaLabel: "Play again as",
+    completionBadge: "✓ Completed",
+    completionBadgeAriaLabel: "Role completed"
   },
   
   outcome: {

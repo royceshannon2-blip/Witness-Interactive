@@ -25,6 +25,7 @@ test.describe('Accessibility Tests', () => {
       const page = await context.newPage();
       
       await page.goto(BASE_URL);
+      await page.click('button:has-text("Begin")');
       await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 10000 });
       
       // Select a role

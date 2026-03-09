@@ -19,6 +19,8 @@ test.describe('Interactive Polish Integration Tests', () => {
   
   test.beforeEach(async ({ page }) => {
     await page.goto(BASE_URL);
+    // Click Begin Experience button
+    await page.click('button:has-text("Begin")');
     // Wait for game to load
     await page.waitForSelector('#loading-screen', { state: 'hidden', timeout: 10000 });
   });

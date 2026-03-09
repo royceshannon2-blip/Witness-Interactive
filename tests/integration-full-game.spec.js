@@ -19,6 +19,9 @@ test.describe('Interactive Polish & Engagement - Full Game Integration', () => {
     // Navigate to the game
     await page.goto('/');
     
+    // Click Begin Experience button
+    await page.click('button:has-text("Begin")');
+    
     // Wait for game to load
     await page.waitForSelector('#timeline-selector', { timeout: 10000 });
   });
