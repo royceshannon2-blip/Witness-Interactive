@@ -35,6 +35,7 @@ Below deck, you know some men are writing letters they hope they'll never need t
       volume: 0.6,
       fadeIn: 1000
     },
+    narratorAudio: "./audio/narration/japanese-aviator/ja-scene-01.mp3",
     choices: [
       {
         id: "ja-choice-01-a",
@@ -81,6 +82,19 @@ Below, you can see Wheeler Field. Rows of aircraft parked wingtip to wingtip, gl
       volume: 0.6,
       fadeIn: 1000
     },
+    narratorAudio: "./audio/narration/japanese-aviator/ja-scene-02.mp3",
+    radioClips: [
+      {
+        id: "tora-signal",
+        src: "./audio/narration/japanese-aviator/ja-radio-tora.mp3",
+        triggerAfterMs: 8000
+      },
+      {
+        id: "all-units",
+        src: "./audio/narration/japanese-aviator/ja-radio-all-units-01.mp3",
+        triggerAfterMs: 15000
+      }
+    ],
     choices: [
       {
         id: "ja-choice-02-a",
@@ -127,6 +141,19 @@ Your fuel gauge shows three-quarters remaining. Your ammunition counter reads fu
       volume: 0.6,
       fadeIn: 1000
     },
+    narratorAudio: "./audio/narration/japanese-aviator/ja-scene-03.mp3",
+    radioClips: [
+      {
+        id: "second-wave",
+        src: "./audio/narration/japanese-aviator/ja-radio-second-wave.mp3",
+        triggerAfterMs: 12000
+      },
+      {
+        id: "soryu-five",
+        src: "./audio/narration/japanese-aviator/ja-radio-soryu-five.mp3",
+        triggerAfterMs: 18000
+      }
+    ],
     timedChoice: {
       enabled: true,
       duration: 10000,
@@ -178,6 +205,14 @@ Your fuel gauge reads half. Enough to escort him partway, maybe. Or enough to ma
       volume: 0.6,
       fadeIn: 1000
     },
+    narratorAudio: "./audio/narration/japanese-aviator/ja-scene-04.mp3",
+    radioClips: [
+      {
+        id: "withdrawal",
+        src: "./audio/narration/japanese-aviator/ja-radio-withdrawal.mp3",
+        triggerAfterMs: 15000
+      }
+    ],
     timedChoice: {
       enabled: true,
       duration: 12000,
@@ -234,6 +269,7 @@ You think about the burning ships, the men in the water, the carriers that weren
       volume: 0.6,
       fadeIn: 1000
     },
+    narratorAudio: "./audio/narration/japanese-aviator/ja-scene-05.mp3",
     choices: [
       {
         id: "ja-choice-05-final",

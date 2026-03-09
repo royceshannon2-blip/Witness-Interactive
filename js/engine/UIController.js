@@ -22,6 +22,7 @@ import TypewriterEffect from './TypewriterEffect.js';
 import SceneTransition from './SceneTransition.js';
 import AtmosphericEffects from './AtmosphericEffects.js';
 import TimedChoiceSystem from './TimedChoiceSystem.js';
+import { HapticFeedback } from './HapticFeedback.js';
 
 class UIController {
   /**
@@ -64,6 +65,10 @@ class UIController {
     this.atmosphericEffects = components.atmosphericEffects || null;
     this.timedChoiceSystem = components.timedChoiceSystem || null;
     this.ambientSoundManager = components.ambientSoundManager || null;
+    this.narratorAudioManager = components.narratorAudioManager || null;
+    
+    // Initialize haptic feedback for mobile
+    this.haptics = new HapticFeedback();
     
     // Get reference to app container
     this.appContainer = document.getElementById('app');
@@ -94,6 +99,9 @@ class UIController {
     
     // Setup sound toggle button
     this.setupSoundToggle();
+    
+    // Setup narrator toggle button
+    this.setupNarratorToggle();
   }
 
   /**
@@ -127,6 +135,9 @@ class UIController {
     
     // Sound events - update sound toggle button UI
     this.eventBus.on('sound:muted', this.handleSoundMuted.bind(this));
+    
+    // Narrator events - update narrator toggle button UI
+    this.eventBus.on('narrator:muted', this.handleNarratorMuted.bind(this));
   }
 
   /**
@@ -160,6 +171,52 @@ class UIController {
   }
 
   /**
+   * Setup narrator toggle button
+   * Creates and connects narrator toggle button to NarratorAudioManager
+   * @private
+   */
+  setupNarratorToggle() {
+    // Only create narrator toggle if NarratorAudioManager is available
+    if (!this.narratorAudioManager) {
+      return;
+    }
+    
+    // Check if button already exists
+    let narratorToggleButton = document.getElementById('narrator-toggle');
+    
+    if (!narratorToggleButton) {
+      // Create narrator toggle button
+      narratorToggleButton = document.createElement('button');
+      narratorToggleButton.id = 'narrator-toggle';
+      narratorToggleButton.className = 'narrator-toggle';
+      narratorToggleButton.setAttribute('aria-label', 'Toggle narrator audio on/off');
+      
+      const narratorIcon = document.createElement('span');
+      narratorIcon.className = 'narrator-icon';
+      narratorIcon.textContent = '🎙️';
+      narratorToggleButton.appendChild(narratorIcon);
+      
+      // Insert after sound toggle button
+      const soundToggleButton = document.getElementById('sound-toggle');
+      if (soundToggleButton && soundToggleButton.parentNode) {
+        soundToggleButton.parentNode.insertBefore(narratorToggleButton, soundToggleButton.nextSibling);
+      } else {
+        // Fallback: append to body
+        document.body.appendChild(narratorToggleButton);
+      }
+    }
+    
+    // Add click event listener
+    narratorToggleButton.addEventListener('click', () => {
+      this.haptics.light();
+      this.eventBus.emit('narrator:toggle');
+    });
+    
+    // Set initial icon based on mute state
+    this.updateNarratorToggleIcon(this.narratorAudioManager.isMuted());
+  }
+
+  /**
    * Handle sound:muted event - update button icon
    * @param {object} data - Event data with muted state
    * @private
@@ -167,6 +224,17 @@ class UIController {
   handleSoundMuted(data) {
     if (data && typeof data.muted === 'boolean') {
       this.updateSoundToggleIcon(data.muted);
+    }
+  }
+
+  /**
+   * Handle narrator:muted event - update button icon
+   * @param {object} data - Event data with muted state
+   * @private
+   */
+  handleNarratorMuted(data) {
+    if (data && typeof data.muted === 'boolean') {
+      this.updateNarratorToggleIcon(data.muted);
     }
   }
 
@@ -195,6 +263,36 @@ class UIController {
     } else {
       soundIcon.textContent = '🔊';
       soundToggleButton.setAttribute('aria-label', 'Sound is on. Click to mute.');
+    }
+  }
+
+  /**
+   * Update narrator toggle button icon based on mute state
+   * @param {boolean} muted - Whether narrator is muted
+   * @private
+   */
+  updateNarratorToggleIcon(muted) {
+    const narratorToggleButton = document.getElementById('narrator-toggle');
+    
+    if (!narratorToggleButton) {
+      return;
+    }
+    
+    const narratorIcon = narratorToggleButton.querySelector('.narrator-icon');
+    
+    if (!narratorIcon) {
+      return;
+    }
+    
+    // Update icon and aria-label based on mute state
+    if (muted) {
+      narratorIcon.textContent = '🔇';
+      narratorToggleButton.setAttribute('aria-label', 'Narrator is muted. Click to unmute.');
+      narratorToggleButton.classList.add('muted');
+    } else {
+      narratorIcon.textContent = '🎙️';
+      narratorToggleButton.setAttribute('aria-label', 'Narrator is on. Click to mute.');
+      narratorToggleButton.classList.remove('muted');
     }
   }
 
@@ -646,6 +744,7 @@ class UIController {
       
       // Add click handler
       choiceButton.addEventListener('click', () => {
+        this.haptics.selection();
         this.handleChoiceClick(choice);
       });
       
@@ -699,6 +798,9 @@ class UIController {
     if (scene.atmosphericEffect && this.atmosphericEffects) {
       this.atmosphericEffects.applyEffect(scene.atmosphericEffect);
     }
+    
+    // Emit scene:rendered event for narrator audio
+    this.eventBus.emit('scene:rendered', { scene });
     
     // Change ambient sound if specified (Task 7.2)
     if (scene.ambientSound && this.ambientSoundManager) {
@@ -839,6 +941,7 @@ class UIController {
       const beginButton = screen.querySelector('#begin-button');
       if (beginButton) {
         beginButton.addEventListener('click', () => {
+          this.haptics.light();
           this.showScreen('timeline');
         });
       }
@@ -971,21 +1074,22 @@ class UIController {
       
       const selectButton = document.createElement('button');
       selectButton.className = 'role-select-button';
-      selectButton.textContent = isCompleted ? 'Play Again' : 'Select Role';
+      selectButton.textContent = isCompleted ? this.content.roleSelection.playAgainButton : this.content.roleSelection.selectRoleButton;
       selectButton.dataset.roleId = role.id;
-      selectButton.setAttribute('aria-label', `${isCompleted ? 'Play again as' : 'Select role'}: ${role.name}`);
+      selectButton.setAttribute('aria-label', `${isCompleted ? this.content.roleSelection.playAgainAriaLabel : this.content.roleSelection.selectRoleAriaLabel}: ${role.name}`);
       
       // Add completion indicator if completed
       if (isCompleted) {
         const completionBadge = document.createElement('span');
         completionBadge.className = 'completion-badge';
-        completionBadge.textContent = '✓ Completed';
-        completionBadge.setAttribute('aria-label', 'Role completed');
+        completionBadge.textContent = this.content.roleSelection.completionBadge;
+        completionBadge.setAttribute('aria-label', this.content.roleSelection.completionBadgeAriaLabel);
         roleCard.appendChild(completionBadge);
       }
       
       // Add click handler
       selectButton.addEventListener('click', () => {
+        this.haptics.medium();
         this.handleRoleSelection(role.id);
       });
       
@@ -1286,6 +1390,7 @@ class UIController {
         
         // Add click handler for answer selection
         optionButton.addEventListener('click', () => {
+          this.haptics.light();
           this.handleAnswerSelection(question, option, questionElement, optionsContainer);
         });
         

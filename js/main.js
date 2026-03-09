@@ -27,6 +27,7 @@ import SceneTransition from './engine/SceneTransition.js';
 import AtmosphericEffects from './engine/AtmosphericEffects.js';
 import TimedChoiceSystem from './engine/TimedChoiceSystem.js';
 import AmbientSoundManager from './engine/AmbientSoundManager.js';
+import NarratorAudioManager from './engine/NarratorAudioManager.js';
 
 // Content imports
 import pearlHarborMission from './content/missions/pearl-harbor/mission.js';
@@ -118,14 +119,22 @@ async function initializeApp() {
     });
     console.log('✓ AmbientSoundManager initialized');
     
-    // 15. Initialize UIController (handles all DOM rendering)
+    // 15. Initialize NarratorAudioManager (narrator voice playback)
+    const narratorAudioManager = new NarratorAudioManager(eventBus, {
+        defaultVolume: 0.8,           // narrator volume level (0.0-1.0)
+        audioPath: './audio/narration/' // path to narration files
+    });
+    console.log('✓ NarratorAudioManager initialized');
+    
+    // 16. Initialize UIController (handles all DOM rendering)
     // Pass components object with interactive polish features
     const components = {
         typewriterEffect,
         sceneTransition,
         atmosphericEffects,
         timedChoiceSystem,
-        ambientSoundManager
+        ambientSoundManager,
+        narratorAudioManager
     };
     const uiController = new UIController(
         eventBus, 

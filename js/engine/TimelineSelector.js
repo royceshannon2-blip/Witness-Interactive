@@ -162,8 +162,13 @@ class TimelineSelector {
 
       // Touch handlers for mobile
       node.addEventListener('touchstart', (event) => {
-        event.preventDefault();
+        // Don't prevent default - let click event fire naturally
         this.showTooltip(missionId, event);
+      });
+      
+      node.addEventListener('touchend', () => {
+        // Hide tooltip after a delay on mobile
+        setTimeout(() => this.hideTooltip(), 2000);
       });
 
       // Keyboard accessibility - already a button element, no need for tabindex/role
@@ -190,9 +195,17 @@ class TimelineSelector {
    */
   onNodeClick(missionId, isUnlocked) {
     if (isUnlocked) {
+      // Haptic feedback for selection
+      if ('vibrate' in navigator) {
+        navigator.vibrate(20);
+      }
       // Emit mission:selected event for unlocked missions
       this.eventBus.emit('mission:selected', { missionId });
     } else {
+      // Haptic feedback for error
+      if ('vibrate' in navigator) {
+        navigator.vibrate([20, 100, 20]);
+      }
       // Show "Coming Soon" message for locked missions
       this.showComingSoonMessage();
     }
