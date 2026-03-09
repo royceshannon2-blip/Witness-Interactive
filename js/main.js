@@ -210,6 +210,42 @@ async function initializeApp() {
     // Complete loading
     eventBus.emit('module:progress', { percent: 100 });
     
+    // Setup audio resume on first user interaction (required by browsers)
+    let audioResumed = false;
+    const resumeAudio = () => {
+        if (audioResumed) return;
+        audioResumed = true;
+        
+        // Create a silent audio element and play it to unlock audio
+        const silentAudio = new Audio();
+        silentAudio.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
+        silentAudio.volume = 0.01; // Very quiet
+        const playPromise = silentAudio.play();
+        
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                console.log('✓ Audio unlocked after user gesture');
+                // Emit event to notify audio managers
+                eventBus.emit('audio:unlocked');
+            }).catch((err) => {
+                console.warn('Audio unlock failed:', err.message);
+                // Try again on next interaction
+                audioResumed = false;
+            });
+        }
+        
+        // Remove listeners after first successful interaction
+        if (audioResumed) {
+            document.removeEventListener('click', resumeAudio);
+            document.removeEventListener('touchstart', resumeAudio);
+            document.removeEventListener('keydown', resumeAudio);
+        }
+    };
+    
+    document.addEventListener('click', resumeAudio, { passive: true });
+    document.addEventListener('touchstart', resumeAudio, { passive: true });
+    document.addEventListener('keydown', resumeAudio);
+    
     // Small delay to show loading animation, then transition to landing screen
     setTimeout(() => {
         // 18. Emit game:start event (UIController will show landing screen)

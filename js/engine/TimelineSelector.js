@@ -8,6 +8,8 @@
  * Requirements: 3A.1, 3A.2, 3A.3, 3A.4, 3A.5, 3A.6, 3A.7, 3A.9, 3A.10
  */
 
+import { HapticFeedback } from './HapticFeedback.js';
+
 class TimelineSelector {
   /**
    * Initialize the TimelineSelector
@@ -17,6 +19,9 @@ class TimelineSelector {
   constructor(eventBus, missionRegistry) {
     this.eventBus = eventBus;
     this.missionRegistry = missionRegistry;
+    
+    // Initialize haptic feedback
+    this.haptics = new HapticFeedback();
     
     // Track current tooltip state
     this.currentTooltip = null;
@@ -196,16 +201,12 @@ class TimelineSelector {
   onNodeClick(missionId, isUnlocked) {
     if (isUnlocked) {
       // Haptic feedback for selection
-      if ('vibrate' in navigator) {
-        navigator.vibrate(20);
-      }
+      this.haptics.medium();
       // Emit mission:selected event for unlocked missions
       this.eventBus.emit('mission:selected', { missionId });
     } else {
       // Haptic feedback for error
-      if ('vibrate' in navigator) {
-        navigator.vibrate([20, 100, 20]);
-      }
+      this.haptics.error();
       // Show "Coming Soon" message for locked missions
       this.showComingSoonMessage();
     }

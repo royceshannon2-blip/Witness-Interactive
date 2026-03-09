@@ -1059,6 +1059,25 @@ body.effect-shake #app {
     }
 }
 
+@media (max-width: 320px) {
+    #role-cards-container {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .role-card {
+        padding: var(--spacing-sm);
+    }
+    
+    .role-title {
+        font-size: var(--font-size-base);
+    }
+    
+    .role-description {
+        font-size: var(--font-size-small);
+    }
+}
+
 /* ============================================
    Historical Ripple Timeline
    ============================================ */
