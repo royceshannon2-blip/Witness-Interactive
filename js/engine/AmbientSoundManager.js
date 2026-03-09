@@ -242,7 +242,13 @@ class AmbientSoundManager {
    */
   createAudioElement(soundId) {
     const audio = new Audio();
-    const audioPath = `${this.config.audioPath}${soundId}.mp3`;
+    
+    // Try common audio extensions if soundId doesn't include one
+    const extensions = ['.mp3', '.wav', '.flac', '.ogg', '.m4a'];
+    const hasExtension = extensions.some(ext => soundId.toLowerCase().endsWith(ext));
+    const audioPath = hasExtension 
+      ? `${this.config.audioPath}${soundId}`
+      : `${this.config.audioPath}${soundId}.mp3`;
     
     audio.src = audioPath;
     audio.preload = 'auto';

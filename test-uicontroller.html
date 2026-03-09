@@ -1,30 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UIController Tests</title>
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        body {
-            padding: 20px;
-            font-family: monospace;
-        }
-        #test-output {
-            background: #1a1f2e;
-            color: #e8dcc4;
-            padding: 20px;
-            border-radius: 8px;
-            white-space: pre-wrap;
-            margin-bottom: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UIController Tests - Task 7.3</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #00ff00;
+    }
+    h1 {
+      color: #ffaa00;
+    }
+    #test-output {
+      white-space: pre-wrap;
+      background: #000;
+      padding: 15px;
+      border: 1px solid #00ff00;
+      margin-top: 20px;
+    }
+    .pass {
+      color: #00ff00;
+    }
+    .fail {
+      color: #ff0000;
+    }
+  </style>
 </head>
 <body>
-    <h1>UIController Tests</h1>
-    <div id="test-output"></div>
-    <div id="app"></div>
-    
-    <script type="module" src="js/engine/UIController.test.js"></script>
+  <h1>UIController Tests - Task 7.3: enableChoices/disableChoices</h1>
+  <p>Testing the new choice enable/disable functionality...</p>
+  <div id="test-output">Running tests...</div>
+  <div id="app"></div>
+  
+  <script type="module" src="js/engine/UIController.test.js"></script>
 </body>
 </html>

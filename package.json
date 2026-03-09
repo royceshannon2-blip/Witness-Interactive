@@ -1,0 +1,25 @@
+{
+  "name": "witness-interactive",
+  "version": "1.0.0",
+  "description": "Witness Interactive: Pearl Harbor - Educational history game",
+  "type": "module",
+  "scripts": {
+    "test:integration": "playwright test",
+    "test:integration:ui": "playwright test --ui",
+    "test:integration:headed": "playwright test --headed",
+    "test:integration:debug": "playwright test --debug",
+    "test:report": "playwright show-report test-results/html",
+    "serve": "python -m http.server 8000"
+  },
+  "keywords": [
+    "education",
+    "history",
+    "pearl-harbor",
+    "interactive"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  }
+}

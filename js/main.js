@@ -26,6 +26,7 @@ import TypewriterEffect from './engine/TypewriterEffect.js';
 import SceneTransition from './engine/SceneTransition.js';
 import AtmosphericEffects from './engine/AtmosphericEffects.js';
 import TimedChoiceSystem from './engine/TimedChoiceSystem.js';
+import AmbientSoundManager from './engine/AmbientSoundManager.js';
 
 // Content imports
 import pearlHarborMission from './content/missions/pearl-harbor/mission.js';
@@ -108,13 +109,23 @@ async function initializeApp() {
     });
     console.log('✓ TimedChoiceSystem initialized');
     
-    // 14. Initialize UIController (handles all DOM rendering)
+    // 14. Initialize AmbientSoundManager (background audio system)
+    const ambientSoundManager = new AmbientSoundManager(eventBus, {
+        defaultVolume: 0.6,           // default volume level (0.0-1.0)
+        crossfadeDuration: 1000,      // crossfade duration in ms
+        preloadOnStart: true,         // preload audio files on start
+        audioPath: '/audio/ambient/'  // path to audio files
+    });
+    console.log('✓ AmbientSoundManager initialized');
+    
+    // 15. Initialize UIController (handles all DOM rendering)
     // Pass components object with interactive polish features
     const components = {
         typewriterEffect,
         sceneTransition,
         atmosphericEffects,
-        timedChoiceSystem
+        timedChoiceSystem,
+        ambientSoundManager
     };
     const uiController = new UIController(
         eventBus, 
@@ -127,7 +138,7 @@ async function initializeApp() {
     );
     console.log('✓ UIController initialized');
     
-    // 15. Set up role:selected handler to load scenes into SceneStateMachine
+    // 16. Set up role:selected handler to load scenes into SceneStateMachine
     eventBus.on('role:selected', (data) => {
         const { missionId, roleId } = data;
         const mission = missionRegistry.getMission(missionId);
@@ -149,7 +160,7 @@ async function initializeApp() {
         console.log(`✓ Loaded role "${roleId}" with ${role.scenes.length} scenes`);
     });
     
-    // 16. Set up choice:made handler to transition scenes
+    // 17. Set up choice:made handler to transition scenes
     eventBus.on('choice:made', (data) => {
         const { nextSceneId, consequences } = data;
         
@@ -176,6 +187,7 @@ async function initializeApp() {
                 lowerKey.includes('scenetransition') ||
                 lowerKey.includes('atmospheric') ||
                 lowerKey.includes('timedchoice') ||
+                lowerKey.includes('ambientsound') ||
                 lowerKey.includes('witness') ||
                 (lowerKey.includes('game') && !lowerKey.includes('gamepad')));
     });
@@ -191,7 +203,7 @@ async function initializeApp() {
     
     // Small delay to show loading animation, then transition to landing screen
     setTimeout(() => {
-        // 17. Emit game:start event (UIController will show landing screen)
+        // 18. Emit game:start event (UIController will show landing screen)
         eventBus.emit('game:start');
         console.log('✓ Game started - landing screen displayed');
         

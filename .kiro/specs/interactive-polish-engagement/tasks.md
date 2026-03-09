@@ -20,7 +20,7 @@
 - [x] Test character-by-character reveal
 - [x] Test skip-on-click functionality
 - [x] Test prefers-reduced-motion handling
-- [x] Test EventBus integration
+- [-] Test EventBus integration
 
 ---
 
@@ -71,22 +71,22 @@
 ## Task 3: AmbientSoundManager Component
 
 ### Task 3.1: Create AmbientSoundManager.js
-- [ ] Create `js/engine/AmbientSoundManager.js`
-- [ ] Implement constructor with EventBus and config parameters
-- [ ] Implement `playSound(soundId, loop, volume)` method
-- [ ] Implement `stopSound(soundId, fadeOut)` method
-- [ ] Implement `crossfade(fromSoundId, toSoundId, duration)` method
-- [ ] Implement `toggleMute()` method
-- [ ] Implement `isMuted()` method
-- [ ] Use HTML5 `<audio>` elements
-- [ ] Implement volume ramp for crossfading
-- [ ] Store mute state in memory
-- [ ] Subscribe to `scene:transition` event
-- [ ] Subscribe to `sound:toggle` event
-- [ ] Emit `sound:playing` when audio starts
-- [ ] Emit `sound:stopped` when audio ends
-- [ ] Emit `sound:error` when audio fails to load
-- [ ] Gracefully handle missing audio files
+- [x] Create `js/engine/AmbientSoundManager.js`
+- [x] Implement constructor with EventBus and config parameters
+- [x] Implement `playSound(soundId, loop, volume)` method
+- [x] Implement `stopSound(soundId, fadeOut)` method
+- [x] Implement `crossfade(fromSoundId, toSoundId, duration)` method
+- [x] Implement `toggleMute()` method
+- [x] Implement `isMuted()` method
+- [x] Use HTML5 `<audio>` elements
+- [x] Implement volume ramp for crossfading
+- [x] Store mute state in memory
+- [x] Subscribe to `scene:transition` event
+- [x] Subscribe to `sound:toggle` event
+- [x] Emit `sound:playing` when audio starts
+- [x] Emit `sound:stopped` when audio ends
+- [x] Emit `sound:error` when audio fails to load
+- [x] Gracefully handle missing audio files
 
 ### Task 3.2: Connect sound toggle button
 - [x] Update UIController to wire existing sound toggle button
@@ -95,33 +95,33 @@
 - [x] Enable button (currently disabled)
 
 ### Task 3.3: **MANUAL STEP: User provides audio files**
-- [ ] **USER ACTION REQUIRED**: Create `/audio/ambient/` directory
-- [ ] **USER ACTION REQUIRED**: Download audio files from freesound.org:
+- [x] **USER ACTION REQUIRED**: Create `/audio/ambient/` directory
+- [x] **USER ACTION REQUIRED**: Download audio files from freesound.org:
   - Search "ocean waves loop" → save as `ocean-waves.mp3` (sailor role)
   - Search "WWII aircraft engine loop" → save as `aircraft-engines.mp3` (aviator role)
   - Search "air raid siren" → save as `air-raid-siren.mp3` (sailor role ONLY, scene 2+)
   - Search "explosion distant" → save as `explosion-distant.mp3` (all roles)
   - Search "morning birds ambience" → save as `peaceful-morning.mp3` (civilian role scene 1)
   - Search "neighborhood ambience" → save as `neighborhood-ambience.mp3` (civilian role scene 1)
-- [ ] **USER ACTION REQUIRED**: Ensure all files are public domain/CC0 licensed
-- [ ] **USER ACTION REQUIRED**: Place files in `/audio/ambient/` directory
-- [ ] **HISTORICAL NOTE**: Civilian role should NOT have air raid siren in early scenes - there was no warning
-- [ ] **BLOCKER**: Tasks 3.4 and 3.5 cannot proceed until audio files are provided
+- [x] **USER ACTION REQUIRED**: Ensure all files are public domain/CC0 licensed
+- [x] **USER ACTION REQUIRED**: Place files in `/audio/ambient/` directory
+- [x] **HISTORICAL NOTE**: Civilian role should NOT have air raid siren in early scenes - there was no warning
+- [x] **BLOCKER**: Tasks 3.4 and 3.5 cannot proceed until audio files are provided
 
 ### Task 3.4: Tag scenes with ambient sound
-- [ ] Review `js/content/missions/pearl-harbor/american-sailor.js`
-- [ ] Add `ambientSound` configuration to scenes:
+- [x] Review `js/content/missions/pearl-harbor/american-sailor.js`
+- [x] Add `ambientSound` configuration to scenes:
   - Scene 1 (0745): `ocean-waves` (peaceful ship ambience)
   - Scene 2 (0755): `air-raid-siren` (general alarm sounds)
   - Scenes 3-5: `explosion-distant` (combat chaos)
-- [ ] Review `js/content/missions/pearl-harbor/american-civilian.js`
-- [ ] Add `ambientSound` configuration to scenes:
+- [x] Review `js/content/missions/pearl-harbor/american-civilian.js`
+- [x] Add `ambientSound` configuration to scenes:
   - Scene 1 (0745): `peaceful-morning` or `neighborhood-ambience` (NO SIREN - no warning)
   - Scene 2 (0800): `explosion-distant` (sudden chaos, no warning)
   - Scenes 3-5: `explosion-distant` (ongoing chaos)
   - **CRITICAL**: NO air raid siren for civilian role - historically accurate
-- [ ] Review `js/content/missions/pearl-harbor/japanese-aviator.js`
-- [ ] Add `ambientSound` configuration to scenes:
+- [x] Review `js/content/missions/pearl-harbor/japanese-aviator.js`
+- [x] Add `ambientSound` configuration to scenes:
   - Scene 1 (0545): `aircraft-engines` (carrier deck)
   - Scenes 2-5: `aircraft-engines` (in flight)
 
@@ -131,7 +131,7 @@
 - [x] Test crossfading
 - [x] Test mute/unmute
 - [x] Test graceful degradation for missing files
-- [ ] Test EventBus integration
+- [x] Test EventBus integration
 
 ---
 
@@ -244,7 +244,7 @@
 - [x] **CRITICAL**: Disable choices until typewriter completes
 - [x] **CRITICAL**: Start timed choice ONLY AFTER typewriter completes (in typewriter callback)
 - [x] Apply atmospheric effects if specified
-- [ ] Change ambient sound if specified (blocked by Task 3 - AmbientSoundManager not implemented)
+- [x] Change ambient sound if specified (COMPLETE)
 - [x] Ensure proper cleanup on scene transition
 
 ### Task 7.3: Add enableChoices/disableChoices methods

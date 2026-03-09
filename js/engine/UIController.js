@@ -37,6 +37,7 @@ class UIController {
    * @param {SceneTransition} components.sceneTransition - Scene transition animation component
    * @param {AtmosphericEffects} components.atmosphericEffects - Atmospheric effects component
    * @param {TimedChoiceSystem} components.timedChoiceSystem - Timed choice system component
+   * @param {AmbientSoundManager} components.ambientSoundManager - Ambient sound manager component
    */
   constructor(eventBus, timelineSelector, missionRegistry, consequenceSystem, resultsCard, uiContent, components = {}) {
     // Store reference to event bus
@@ -62,6 +63,7 @@ class UIController {
     this.sceneTransition = components.sceneTransition || null;
     this.atmosphericEffects = components.atmosphericEffects || null;
     this.timedChoiceSystem = components.timedChoiceSystem || null;
+    this.ambientSoundManager = components.ambientSoundManager || null;
     
     // Get reference to app container
     this.appContainer = document.getElementById('app');
@@ -89,6 +91,9 @@ class UIController {
     
     // Subscribe to EventBus events
     this.subscribeToEvents();
+    
+    // Setup sound toggle button
+    this.setupSoundToggle();
   }
 
   /**
@@ -119,6 +124,78 @@ class UIController {
     this.eventBus.on('timer:update', this.handleTimerUpdate.bind(this));
     this.eventBus.on('timer:expired', this.handleTimerExpired.bind(this));
     this.eventBus.on('timer:cancelled', this.handleTimerCancelled.bind(this));
+    
+    // Sound events - update sound toggle button UI
+    this.eventBus.on('sound:muted', this.handleSoundMuted.bind(this));
+  }
+
+  /**
+   * Setup sound toggle button
+   * Connects the existing sound toggle button to the AmbientSoundManager
+   * @private
+   */
+  setupSoundToggle() {
+    const soundToggleButton = document.getElementById('sound-toggle');
+    
+    if (!soundToggleButton) {
+      console.warn('UIController.setupSoundToggle: #sound-toggle button not found in DOM');
+      return;
+    }
+    
+    // Enable the button if AmbientSoundManager is available
+    if (this.ambientSoundManager) {
+      soundToggleButton.disabled = false;
+      soundToggleButton.setAttribute('aria-label', 'Toggle sound on/off');
+      
+      // Add click event listener
+      soundToggleButton.addEventListener('click', () => {
+        this.eventBus.emit('sound:toggle');
+      });
+      
+      // Set initial icon based on mute state
+      this.updateSoundToggleIcon(this.ambientSoundManager.isMuted());
+    } else {
+      console.warn('UIController.setupSoundToggle: AmbientSoundManager not available, button remains disabled');
+    }
+  }
+
+  /**
+   * Handle sound:muted event - update button icon
+   * @param {object} data - Event data with muted state
+   * @private
+   */
+  handleSoundMuted(data) {
+    if (data && typeof data.muted === 'boolean') {
+      this.updateSoundToggleIcon(data.muted);
+    }
+  }
+
+  /**
+   * Update sound toggle button icon based on mute state
+   * @param {boolean} muted - Whether sound is muted
+   * @private
+   */
+  updateSoundToggleIcon(muted) {
+    const soundToggleButton = document.getElementById('sound-toggle');
+    
+    if (!soundToggleButton) {
+      return;
+    }
+    
+    const soundIcon = soundToggleButton.querySelector('.sound-icon');
+    
+    if (!soundIcon) {
+      return;
+    }
+    
+    // Update icon and aria-label based on mute state
+    if (muted) {
+      soundIcon.textContent = '🔇';
+      soundToggleButton.setAttribute('aria-label', 'Sound is muted. Click to unmute.');
+    } else {
+      soundIcon.textContent = '🔊';
+      soundToggleButton.setAttribute('aria-label', 'Sound is on. Click to mute.');
+    }
   }
 
   /**
@@ -621,6 +698,15 @@ class UIController {
     // Apply atmospheric effect if specified (using AtmosphericEffects component)
     if (scene.atmosphericEffect && this.atmosphericEffects) {
       this.atmosphericEffects.applyEffect(scene.atmosphericEffect);
+    }
+    
+    // Change ambient sound if specified (Task 7.2)
+    if (scene.ambientSound && this.ambientSoundManager) {
+      this.ambientSoundManager.playSound(
+        scene.ambientSound.id,
+        true, // loop
+        scene.ambientSound.volume || 0.6
+      );
     }
   }
 

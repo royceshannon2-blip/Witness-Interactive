@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AmbientSoundManager Tests</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: #1a1a1a;
+      color: #00ff00;
+      padding: 20px;
+      margin: 0;
+    }
+    
+    h1 {
+      color: #00ff00;
+      border-bottom: 2px solid #00ff00;
+      padding-bottom: 10px;
+    }
+    
+    #test-output {
+      white-space: pre-wrap;
+      background-color: #0a0a0a;
+      padding: 20px;
+      border: 1px solid #00ff00;
+      border-radius: 5px;
+      max-height: 80vh;
+      overflow-y: auto;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    
+    .pass {
+      color: #00ff00;
+    }
+    
+    .fail {
+      color: #ff0000;
+    }
+    
+    .section {
+      color: #ffff00;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>AmbientSoundManager Unit Tests</h1>
+  <div id="test-output">Running tests...</div>
+
+  <script type="module">
+    import './js/engine/AmbientSoundManager.test.js';
+  </script>
+</body>
+</html>

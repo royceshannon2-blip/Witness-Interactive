@@ -33,7 +33,11 @@ Your buddy nudges you, points at the sky. "Aircraft. Lot of 'em." You squint int
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: null,
-    ambientSound: "ocean-waves",
+    ambientSound: {
+      id: "578524__samsterbirdies__calm-ocean-waves",
+      volume: 0.6,
+      fadeIn: 1000
+    },
     timedChoice: {
       enabled: true,
       duration: 8000,
@@ -80,7 +84,11 @@ A torpedo bomber roars past Arizona's bow, missing by yards. You're moored outbo
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "shake",
-    ambientSound: "air-raid-siren",
+    ambientSound: {
+      id: "161120__fight2flyphoto__a6m-zero-chasing-p-51d-mustang",
+      volume: 0.6,
+      fadeIn: 1000
+    },
     timedChoice: {
       enabled: true,
       duration: 10000,
@@ -129,7 +137,11 @@ Your ears ring. You can't hear anything. Smoke, fire, chaos. The forward part of
     apThemes: ["perspective", "continuity"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "fire",
-    ambientSound: "explosion-distant",
+    ambientSound: {
+      id: "149966__nenadsimic__muffled-distant-explosion",
+      volume: 0.6,
+      fadeIn: 1000
+    },
     timedChoice: {
       enabled: true,
       duration: 12000,
@@ -176,7 +188,11 @@ You see sailors in the water, some swimming, some floating face-down. Oil fires 
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "smoke",
-    ambientSound: "explosion-distant",
+    ambientSound: {
+      id: "149966__nenadsimic__muffled-distant-explosion",
+      volume: 0.6,
+      fadeIn: 1000
+    },
     timedChoice: {
       enabled: true,
       duration: 10000,
@@ -225,7 +241,11 @@ You stand on Ford Island, covered in oil and ash, watching your ship burn. You t
     apThemes: ["causation", "continuity", "argumentation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: null,
-    ambientSound: "explosion-distant",
+    ambientSound: {
+      id: "149966__nenadsimic__muffled-distant-explosion",
+      volume: 0.6,
+      fadeIn: 1000
+    },
     choices: [
       {
         id: "as-choice-05-final",
