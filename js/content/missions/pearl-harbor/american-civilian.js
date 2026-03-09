@@ -34,6 +34,7 @@ Then you hear it. A low rumble, growing louder. Aircraft engines, lots of them. 
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: null,
+    ambientSound: "peaceful-morning",
     choices: [
       {
         id: "ac-choice-01-a",
@@ -75,6 +76,7 @@ Then you hear a different sound—a whistling, getting louder. Something is fall
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "shake",
+    ambientSound: "explosion-distant",
     timedChoice: {
       enabled: true,
       duration: 6000,
@@ -121,6 +123,7 @@ You can hear sirens now, but they're all heading toward Pearl Harbor and the mil
     apThemes: ["perspective", "continuity"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "smoke",
+    ambientSound: "explosion-distant",
     timedChoice: {
       enabled: true,
       duration: 8000,
@@ -167,6 +170,7 @@ You see a family—mother, two small children—standing in the street, paralyze
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "fire",
+    ambientSound: "explosion-distant",
     choices: [
       {
         id: "ac-choice-04-a",
@@ -210,6 +214,7 @@ You think about this morning—the coffee, the peaceful Sunday, the plans for ch
     apThemes: ["causation", "continuity", "argumentation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: null,
+    ambientSound: "explosion-distant",
     choices: [
       {
         id: "ac-choice-05-final",

@@ -33,6 +33,7 @@ Your buddy nudges you, points at the sky. "Aircraft. Lot of 'em." You squint int
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: null,
+    ambientSound: "ocean-waves",
     timedChoice: {
       enabled: true,
       duration: 8000,
@@ -79,6 +80,7 @@ A torpedo bomber roars past Arizona's bow, missing by yards. You're moored outbo
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "shake",
+    ambientSound: "air-raid-siren",
     timedChoice: {
       enabled: true,
       duration: 10000,
@@ -127,6 +129,7 @@ Your ears ring. You can't hear anything. Smoke, fire, chaos. The forward part of
     apThemes: ["perspective", "continuity"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "fire",
+    ambientSound: "explosion-distant",
     timedChoice: {
       enabled: true,
       duration: 12000,
@@ -173,6 +176,7 @@ You see sailors in the water, some swimming, some floating face-down. Oil fires 
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "smoke",
+    ambientSound: "explosion-distant",
     timedChoice: {
       enabled: true,
       duration: 10000,
@@ -221,6 +225,7 @@ You stand on Ford Island, covered in oil and ash, watching your ship burn. You t
     apThemes: ["causation", "continuity", "argumentation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: null,
+    ambientSound: "explosion-distant",
     choices: [
       {
         id: "as-choice-05-final",

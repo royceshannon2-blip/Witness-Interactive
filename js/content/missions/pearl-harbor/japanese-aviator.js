@@ -30,6 +30,7 @@ Below deck, you know some men are writing letters they hope they'll never need t
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.1.I",
     atmosphericEffect: null,
+    ambientSound: "aircraft-engines",
     choices: [
       {
         id: "ja-choice-01-a",
@@ -71,6 +72,7 @@ Below, you can see Wheeler Field. Rows of aircraft parked wingtip to wingtip, gl
     apThemes: ["causation", "perspective"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: null,
+    ambientSound: "aircraft-engines",
     choices: [
       {
         id: "ja-choice-02-a",
@@ -112,6 +114,7 @@ Your fuel gauge shows three-quarters remaining. Your ammunition counter reads fu
     apThemes: ["perspective", "continuity"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "smoke",
+    ambientSound: "aircraft-engines",
     timedChoice: {
       enabled: true,
       duration: 10000,
@@ -158,6 +161,7 @@ Your fuel gauge reads half. Enough to escort him partway, maybe. Or enough to ma
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "shake",
+    ambientSound: "aircraft-engines",
     timedChoice: {
       enabled: true,
       duration: 12000,
@@ -209,6 +213,7 @@ You think about the burning ships, the men in the water, the carriers that weren
     apThemes: ["causation", "continuity", "argumentation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: null,
+    ambientSound: "aircraft-engines",
     choices: [
       {
         id: "ja-choice-05-final",
