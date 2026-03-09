@@ -89,10 +89,10 @@
 - [ ] Gracefully handle missing audio files
 
 ### Task 3.2: Connect sound toggle button
-- [ ] Update UIController to wire existing sound toggle button
-- [ ] Emit `sound:toggle` event on button click
-- [ ] Update button icon based on mute state
-- [ ] Enable button (currently disabled)
+- [x] Update UIController to wire existing sound toggle button
+- [x] Emit `sound:toggle` event on button click
+- [x] Update button icon based on mute state
+- [x] Enable button (currently disabled)
 
 ### Task 3.3: **MANUAL STEP: User provides audio files**
 - [ ] **USER ACTION REQUIRED**: Create `/audio/ambient/` directory
@@ -126,11 +126,11 @@
   - Scenes 2-5: `aircraft-engines` (in flight)
 
 ### Task 3.5: Write AmbientSoundManager tests
-- [ ] Create `js/engine/AmbientSoundManager.test.js`
-- [ ] Test audio playback
-- [ ] Test crossfading
-- [ ] Test mute/unmute
-- [ ] Test graceful degradation for missing files
+- [x] Create `js/engine/AmbientSoundManager.test.js`
+- [x] Test audio playback
+- [x] Test crossfading
+- [x] Test mute/unmute
+- [x] Test graceful degradation for missing files
 - [ ] Test EventBus integration
 
 ---
@@ -309,7 +309,7 @@
 - [ ] Test ambient sound crossfading (if audio files provided)
 
 ### Task 10.2: Accessibility testing
-- [ ] Test with prefers-reduced-motion enabled
+- [-] Test with prefers-reduced-motion enabled
 - [ ] Test keyboard navigation
 - [ ] Test screen reader announcements
 - [ ] Test color contrast for all effects
