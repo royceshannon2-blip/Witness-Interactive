@@ -45,6 +45,9 @@ class NarratorAudioManager {
     // Track if audio is ready to play
     this.audioReady = false;
     
+    // Queue for pending scene audio (played when audio unlocks)
+    this.pendingSceneAudio = null;
+    
     // Current scene ID for tracking
     this.currentSceneId = null;
     
@@ -60,6 +63,13 @@ class NarratorAudioManager {
     this.eventBus.on('audio:unlocked', () => {
       this.audioReady = true;
       console.log('[Audio] NarratorAudioManager ready');
+      
+      // Play any pending scene audio
+      if (this.pendingSceneAudio) {
+        console.log('[Audio] Playing pending scene audio');
+        this.playSceneAudio(this.pendingSceneAudio);
+        this.pendingSceneAudio = null;
+      }
     });
     
     // Listen for scene rendering to start narration
@@ -95,9 +105,10 @@ class NarratorAudioManager {
       return;
     }
 
-    // Wait for audio to be ready
+    // If audio not ready, queue the scene audio
     if (!this.audioReady) {
-      console.log('[Audio] Waiting for user gesture to unlock audio...');
+      console.log(`[Audio] Queueing scene audio for ${scene.id} (audio not unlocked yet)`);
+      this.pendingSceneAudio = scene;
       return;
     }
 

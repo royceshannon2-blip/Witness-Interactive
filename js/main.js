@@ -112,6 +112,7 @@ async function initializeApp() {
     
     // 14. Create shared AudioContext for all audio playback
     // CRITICAL: Create in suspended state, will be resumed after user gesture
+    // Audio unlock does NOT block game initialization - game starts immediately
     const audioContext = new (window.AudioContext || window.webkitAudioContext)();
     console.log('[Audio] AudioContext created, state:', audioContext.state);
     
@@ -215,37 +216,42 @@ async function initializeApp() {
     // Complete loading
     eventBus.emit('module:progress', { percent: 100 });
     
-    // Setup audio resume on first user interaction (required by browsers)
-    let audioResumed = false;
-    const resumeAudio = async () => {
-        if (audioResumed) return;
-        
+    // Setup audio unlock - runs opportunistically, does NOT block game initialization
+    // Audio plays when it can - if AudioContext is suspended, sounds are queued
+    const unlockAudio = async () => {
         try {
-            // Resume AudioContext
             if (audioContext.state === 'suspended') {
                 await audioContext.resume();
                 console.log('[Audio] AudioContext resumed, state:', audioContext.state);
             }
             
-            audioResumed = true;
-            
             // Emit event to notify audio managers
             eventBus.emit('audio:unlocked');
             
-            // Remove listeners after first successful interaction
-            document.removeEventListener('click', resumeAudio);
-            document.removeEventListener('touchstart', resumeAudio);
-            document.removeEventListener('keydown', resumeAudio);
+            // Remove listeners after first successful unlock
+            document.removeEventListener('click', unlockAudio);
+            document.removeEventListener('touchstart', unlockAudio);
+            document.removeEventListener('keydown', unlockAudio);
         } catch (err) {
             console.warn('[Audio] AudioContext resume failed:', err.message);
-            // Try again on next interaction
-            audioResumed = false;
         }
     };
     
-    document.addEventListener('click', resumeAudio, { passive: true });
-    document.addEventListener('touchstart', resumeAudio, { passive: true });
-    document.addEventListener('keydown', resumeAudio);
+    document.addEventListener('click', unlockAudio, { passive: true });
+    document.addEventListener('touchstart', unlockAudio, { passive: true });
+    document.addEventListener('keydown', unlockAudio);
+    
+    // Test hook - allows Playwright to unlock audio without needing a real gesture
+    // Only available on localhost for testing
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        window.__unlockAudioForTesting = async () => {
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+                eventBus.emit('audio:unlocked');
+                console.log('[Audio] Audio unlocked via test hook');
+            }
+        };
+    }
     
     // Small delay to show loading animation, then transition to landing screen
     setTimeout(() => {

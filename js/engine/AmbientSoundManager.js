@@ -42,6 +42,9 @@ class AmbientSoundManager {
     // Track if audio is ready to play
     this.audioReady = false;
     
+    // Queue for pending sounds (played when audio unlocks)
+    this.pendingSounds = [];
+    
     // Subscribe to EventBus events
     this.setupEventListeners();
     
@@ -57,12 +60,36 @@ class AmbientSoundManager {
     this.eventBus.on('audio:unlocked', () => {
       this.audioReady = true;
       console.log('[Audio] AmbientSoundManager ready');
+      
+      // Play any pending sounds
+      this.playPendingSounds();
     });
     
     // Listen for sound toggle from UI
     this.eventBus.on('sound:toggle', () => {
       this.toggleMute();
     });
+  }
+
+  /**
+   * Play any sounds that were queued while audio was locked
+   */
+  async playPendingSounds() {
+    if (this.pendingSounds.length === 0) {
+      return;
+    }
+    
+    console.log(`[Audio] Playing ${this.pendingSounds.length} pending ambient sounds`);
+    
+    for (const pending of this.pendingSounds) {
+      if (pending.type === 'fadeIn') {
+        await this.fadeIn(pending.filename, pending.duration);
+      } else if (pending.type === 'crossfade') {
+        await this.crossfade(pending.from, pending.to, pending.duration);
+      }
+    }
+    
+    this.pendingSounds = [];
   }
 
   /**
@@ -250,9 +277,10 @@ class AmbientSoundManager {
       return;
     }
 
-    // Wait for audio to be ready
+    // If audio not ready, queue the sound
     if (!this.audioReady) {
-      console.log('[Audio] Waiting for user gesture to unlock audio...');
+      console.log(`[Audio] Queueing fadeIn: ${filename} (audio not unlocked yet)`);
+      this.pendingSounds.push({ type: 'fadeIn', filename, duration });
       return;
     }
 
@@ -308,6 +336,13 @@ class AmbientSoundManager {
    */
   async crossfade(fromFilename, toFilename, duration = null) {
     const crossfadeDuration = duration !== null ? duration : this.config.crossfadeDuration;
+    
+    // If audio not ready, queue the crossfade
+    if (!this.audioReady) {
+      console.log(`[Audio] Queueing crossfade: ${fromFilename} -> ${toFilename} (audio not unlocked yet)`);
+      this.pendingSounds.push({ type: 'crossfade', from: fromFilename, to: toFilename, duration: crossfadeDuration });
+      return;
+    }
     
     // If no fromSound, just fade in the new sound
     if (!fromFilename || !this.activeSounds.has(fromFilename)) {

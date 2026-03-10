@@ -19,6 +19,11 @@ test.describe('Interactive Polish Integration Tests', () => {
   
   test.beforeEach(async ({ page }) => {
     await page.goto(BASE_URL);
+    
+    // CRITICAL: Unlock audio context so game initializes fully
+    // This prevents tests from timing out waiting for user gesture
+    await page.evaluate(() => window.__unlockAudioForTesting?.());
+    
     // Click Begin Experience button
     await page.click('button:has-text("Begin")');
     // Wait for game to load
