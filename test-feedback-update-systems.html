@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback & Update Systems Test</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/atmospheric-effects.css">
+    <link rel="stylesheet" href="css/update-notes.css">
+    <link rel="stylesheet" href="css/feedback-survey.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+        .test-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border: 2px solid #4a4a4a;
+            border-radius: 8px;
+        }
+        .test-section h2 {
+            margin-top: 0;
+            color: #d4af37;
+        }
+        .test-btn {
+            padding: 0.75rem 1.5rem;
+            margin: 0.5rem;
+            background: #d4af37;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .test-btn:hover {
+            background: #e5c047;
+        }
+        .test-output {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #2a2a2a;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Feedback & Update Systems Test</h1>
+    
+    <div class="test-section">
+        <h2>1. Update Notes Panel</h2>
+        <p>Test the pre-game "What's New" panel that shows latest updates.</p>
+        <button class="test-btn" id="test-update-panel">Show Update Panel</button>
+        <div class="test-output" id="update-output">Ready to test...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>2. Feedback Survey Panel</h2>
+        <p>Test the post-mission feedback survey with mock data.</p>
+        <button class="test-btn" id="test-feedback-panel">Show Feedback Survey</button>
+        <button class="test-btn" id="test-feedback-with-data">Show Survey (with mock gameplay data)</button>
+        <div class="test-output" id="feedback-output">Ready to test...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>3. Feedback Transport</h2>
+        <p>Test sending feedback data (console mode).</p>
+        <button class="test-btn" id="test-transport">Test Transport</button>
+        <div class="test-output" id="transport-output">Ready to test...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>4. Session Store</h2>
+        <p>Test survey frequency logic.</p>
+        <button class="test-btn" id="test-session-store">Test Frequency Logic</button>
+        <div class="test-output" id="session-output">Ready to test...</div>
+    </div>
+    
+    <div class="test-section">
+        <h2>5. Full Integration Test</h2>
+        <p>Simulate complete mission flow with game:complete event.</p>
+        <button class="test-btn" id="test-integration">Simulate Mission Complete</button>
+        <div class="test-output" id="integration-output">Ready to test...</div>
+    </div>
+
+    <script type="module">
+        import EventBus from './js/engine/EventBus.js';
+        import ConsequenceSystem from './js/engine/ConsequenceSystem.js';
+        import FeedbackSurveyPanel from './js/ui/FeedbackSurveyPanel.js';
+        import UpdateNotesPanel from './js/ui/UpdateNotesPanel.js';
+        import FeedbackTransport from './js/services/FeedbackTransport.js';
+        import FeedbackSessionStore from './js/services/FeedbackSessionStore.js';
+
+        // Initialize components
+        const eventBus = new EventBus();
+        const consequenceSystem = new ConsequenceSystem(eventBus);
+        const feedbackPanel = new FeedbackSurveyPanel(eventBus, consequenceSystem);
+        const updatePanel = new UpdateNotesPanel();
+        const transport = new FeedbackTransport();
+        const sessionStore = new FeedbackSessionStore();
+
+        // Helper to log output
+        function log(elementId, message) {
+            const output = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            output.innerHTML += `[${timestamp}] ${message}<br>`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Test 1: Update Panel
+        document.getElementById('test-update-panel').addEventListener('click', async () => {
+            log('update-output', 'Showing update panel...');
+            try {
+                await updatePanel.show();
+                log('update-output', '✓ Update panel displayed successfully');
+            } catch (error) {
+                log('update-output', `✗ Error: ${error.message}`);
+            }
+        });
+
+        // Test 2: Feedback Panel (basic)
+        document.getElementById('test-feedback-panel').addEventListener('click', () => {
+            log('feedback-output', 'Showing feedback survey...');
+            try {
+                feedbackPanel.show('pearl-harbor', 'american-sailor');
+                log('feedback-output', '✓ Feedback survey displayed successfully');
+            } catch (error) {
+                log('feedback-output', `✗ Error: ${error.message}`);
+            }
+        });
+
+        // Test 2b: Feedback Panel (with mock data)
+        document.getElementById('test-feedback-with-data').addEventListener('click', () => {
+            log('feedback-output', 'Setting up mock gameplay data...');
+            
+            // Set mock flags
+            consequenceSystem.setFlag('abandoned_ship', true);
+            consequenceSystem.setFlag('helped_wounded', true);
+            consequenceSystem.setFlag('quick_reaction', true);
+            consequenceSystem.setCurrentRole('american-sailor');
+            
+            log('feedback-output', 'Mock flags set: abandoned_ship, helped_wounded, quick_reaction');
+            log('feedback-output', 'Showing feedback survey with mock data...');
+            
+            try {
+                feedbackPanel.show('pearl-harbor', 'american-sailor');
+                log('feedback-output', '✓ Feedback survey displayed with gameplay data');
+            } catch (error) {
+                log('feedback-output', `✗ Error: ${error.message}`);
+            }
+        });
+
+        // Test 3: Transport
+        document.getElementById('test-transport').addEventListener('click', async () => {
+            log('transport-output', 'Creating mock feedback payload...');
+            
+            const mockPayload = {
+                sessionId: 'test_session_123',
+                timestamp: new Date().toISOString(),
+                missionId: 'pearl-harbor',
+                roleId: 'american-sailor',
+                flags: {
+                    abandoned_ship: true,
+                    helped_wounded: true
+                },
+                survival: {
+                    survived: true,
+                    deathChance: 0.48,
+                    modifiers: {
+                        abandoned_ship: '-30%',
+                        helped_wounded: '-8%'
+                    }
+                },
+                rating: 5,
+                liked: 'Great historical accuracy!',
+                issues: 'None'
+            };
+            
+            log('transport-output', 'Sending payload via transport...');
+            
+            try {
+                const success = await transport.send(mockPayload);
+                if (success) {
+                    log('transport-output', '✓ Transport successful (check console for payload)');
+                } else {
+                    log('transport-output', '✗ Transport failed');
+                }
+            } catch (error) {
+                log('transport-output', `✗ Error: ${error.message}`);
+            }
+        });
+
+        // Test 4: Session Store
+        document.getElementById('test-session-store').addEventListener('click', () => {
+            log('session-output', 'Testing frequency logic...');
+            
+            const missionId = 'pearl-harbor';
+            const roleId = 'american-sailor';
+            
+            // Test first completion
+            log('session-output', `Should show (first): ${sessionStore.shouldShowSurvey(missionId, roleId, 2)}`);
+            sessionStore.recordCompletion(missionId, roleId);
+            sessionStore.markSurveyShown(missionId, roleId);
+            
+            // Test second completion (frequency = 2)
+            log('session-output', `Should NOT show (2nd, freq=2): ${sessionStore.shouldShowSurvey(missionId, roleId, 2)}`);
+            sessionStore.recordCompletion(missionId, roleId);
+            
+            // Test third completion (should show)
+            log('session-output', `Should show (3rd, freq=2): ${sessionStore.shouldShowSurvey(missionId, roleId, 2)}`);
+            sessionStore.recordCompletion(missionId, roleId);
+            
+            // Test with frequency = 1 (always show)
+            log('session-output', `Should show (freq=1): ${sessionStore.shouldShowSurvey(missionId, roleId, 1)}`);
+            
+            log('session-output', '✓ Frequency logic test complete');
+        });
+
+        // Test 5: Full Integration
+        document.getElementById('test-integration').addEventListener('click', () => {
+            log('integration-output', 'Simulating full mission completion...');
+            
+            // Set up mock gameplay state
+            consequenceSystem.setFlag('abandoned_ship', true);
+            consequenceSystem.setFlag('helped_wounded', true);
+            consequenceSystem.setFlag('quick_reaction', true);
+            consequenceSystem.setCurrentRole('american-sailor');
+            
+            log('integration-output', 'Mock gameplay state configured');
+            log('integration-output', 'Emitting game:complete event...');
+            
+            // Emit game:complete event
+            eventBus.emit('game:complete', {
+                missionId: 'pearl-harbor',
+                roleId: 'american-sailor'
+            });
+            
+            log('integration-output', '✓ Event emitted - feedback survey should appear in 1.5s');
+            log('integration-output', 'Check that survey contains all gameplay data');
+        });
+
+        // Listen for events
+        eventBus.on('game:complete', (data) => {
+            console.log('[Test] game:complete event received:', data);
+        });
+
+        console.log('Test page initialized');
+        console.log('Components:', {
+            eventBus,
+            consequenceSystem,
+            feedbackPanel,
+            updatePanel,
+            transport,
+            sessionStore
+        });
+    </script>
+</body>
+</html>

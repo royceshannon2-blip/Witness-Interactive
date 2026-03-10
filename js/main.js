@@ -29,6 +29,10 @@ import TimedChoiceSystem from './engine/TimedChoiceSystem.js';
 import AmbientSoundManager from './engine/AmbientSoundManager.js';
 import NarratorAudioManager from './engine/NarratorAudioManager.js';
 
+// UI imports
+import FeedbackSurveyPanel from './ui/FeedbackSurveyPanel.js';
+import UpdateNotesPanel from './ui/UpdateNotesPanel.js';
+
 // Content imports
 import pearlHarborMission from './content/missions/pearl-harbor/mission.js';
 import uiContent from './content/ui-content.js';
@@ -152,6 +156,14 @@ async function initializeApp() {
         components
     );
     console.log('✓ UIController initialized');
+    
+    // 17. Initialize FeedbackSurveyPanel (post-mission feedback)
+    const feedbackSurveyPanel = new FeedbackSurveyPanel(eventBus, consequenceSystem);
+    console.log('✓ FeedbackSurveyPanel initialized');
+    
+    // 18. Initialize UpdateNotesPanel (pre-game "What's New")
+    const updateNotesPanel = new UpdateNotesPanel();
+    console.log('✓ UpdateNotesPanel initialized');
     
     // 16. Set up role:selected handler to load scenes into SceneStateMachine
     eventBus.on('role:selected', (data) => {
@@ -297,8 +309,11 @@ async function initializeApp() {
     window.addEventListener('pagehide', handlePageUnload);
     
     // Small delay to show loading animation, then transition to landing screen
-    setTimeout(() => {
-        // 18. Emit game:start event (UIController will show landing screen)
+    setTimeout(async () => {
+        // Show "What's New" panel before game starts
+        await updateNotesPanel.show();
+        
+        // 19. Emit game:start event (UIController will show landing screen)
         eventBus.emit('game:start');
         console.log('✓ Game started - landing screen displayed');
         

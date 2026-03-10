@@ -1,0 +1,184 @@
+/**
+ * update-notes.css - Styles for pre-game "What's New" panel
+ *
+ * Z-index hierarchy:
+ * - Atmospheric effects: 8-15
+ * - Narrative text/choices: 100
+ * - Update notes: 150
+ */
+
+.update-notes-panel {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.9);
+  backdrop-filter: blur(10px);
+  z-index: 150;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.update-notes-panel.visible {
+  opacity: 1;
+}
+
+.update-notes-content {
+  background: var(--color-bg-primary, #1a1a1a);
+  border: 2px solid var(--color-border-primary, #4a4a4a);
+  border-radius: 8px;
+  padding: 2rem;
+  max-width: 700px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+.update-notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border-secondary, #3a3a3a);
+}
+
+.update-notes-title {
+  font-family: var(--font-heading, 'Georgia', serif);
+  font-size: 1.75rem;
+  color: var(--color-text-primary, #e0e0e0);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.update-notes-version {
+  font-family: var(--font-body, 'Arial', sans-serif);
+  font-size: 0.9rem;
+  color: var(--color-accent, #d4af37);
+  background: var(--color-bg-accent, #3a3020);
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.update-notes-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.update-notes-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.update-notes-section-title {
+  font-family: var(--font-heading, 'Georgia', serif);
+  font-size: 1.25rem;
+  color: var(--color-accent, #d4af37);
+  margin: 0;
+  font-weight: 600;
+}
+
+.update-notes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.update-notes-list li {
+  font-family: var(--font-body, 'Arial', sans-serif);
+  font-size: 1rem;
+  color: var(--color-text-primary, #e0e0e0);
+  line-height: 1.5;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.update-notes-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0.5rem;
+  color: var(--color-accent, #d4af37);
+  font-weight: bold;
+}
+
+.update-notes-actions {
+  display: flex;
+  justify-content: center;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-border-secondary, #3a3a3a);
+}
+
+.update-notes-btn {
+  font-family: var(--font-body, 'Arial', sans-serif);
+  font-size: 1.1rem;
+  padding: 0.875rem 2.5rem;
+  background: var(--color-accent, #d4af37);
+  color: var(--color-bg-primary, #1a1a1a);
+  border: 2px solid var(--color-accent, #d4af37);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.update-notes-btn:hover {
+  background: var(--color-accent-hover, #e5c047);
+  border-color: var(--color-accent-hover, #e5c047);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+}
+
+.update-notes-btn:focus {
+  outline: 2px solid var(--color-accent, #d4af37);
+  outline-offset: 2px;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+  .update-notes-content {
+    padding: 1.5rem;
+  }
+  
+  .update-notes-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  
+  .update-notes-title {
+    font-size: 1.5rem;
+  }
+  
+  .update-notes-section-title {
+    font-size: 1.1rem;
+  }
+  
+  .update-notes-list li {
+    font-size: 0.95rem;
+  }
+  
+  .update-notes-btn {
+    width: 100%;
+    padding: 0.875rem 1.5rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .update-notes-content {
+    padding: 1rem;
+  }
+  
+  .update-notes-title {
+    font-size: 1.25rem;
+  }
+}

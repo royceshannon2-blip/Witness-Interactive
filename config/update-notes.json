@@ -1,0 +1,16 @@
+{
+  "version": "1.3.0",
+  "date": "2026-03-10",
+  "new": [
+    "Post-mission feedback system to help improve your experience",
+    "What's New panel shows latest updates when you start",
+    "Enhanced atmospheric effects with smoother transitions",
+    "Improved narrator audio synchronization"
+  ],
+  "fixed": [
+    "Scene transitions now flow more smoothly",
+    "Audio no longer overlaps between scenes",
+    "Choices always save correctly",
+    "Better mobile touch response"
+  ]
+}
