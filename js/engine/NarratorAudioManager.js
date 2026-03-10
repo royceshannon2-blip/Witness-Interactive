@@ -1,388 +1,260 @@
 /**
- * NarratorAudioManager - Narrator Voice Playback System with Web Audio API
- * 
- * Manages narrator voice audio playback for scenes with narration.
- * Implements sequential audio queue to prevent overlapping narration and radio clips.
- * 
- * Features:
- * - Web Audio API (AudioContext) for playback
- * - Sequential audio queue (narrator first, then radio clips in order)
- * - Radio clip filtering with bandpass filter
- * - Respects global mute state
- * - EventBus integration for scene transitions
- * - Graceful handling of missing audio files
- * 
- * Architecture: Engine logic only, zero content strings
+ * NarratorAudioManager - Narrator Voice Playback System
+ *
+ * Session token architecture:
+ * Every async operation captures `this.sessionToken` at birth.
+ * `_hardStop()` increments the token, invalidating ALL in-flight operations.
+ * This permanently prevents audio overlap across scene transitions.
+ *
+ * Architecture: Engine logic only, zero content strings.
  */
 
 class NarratorAudioManager {
   constructor(eventBus, audioContext, config = {}) {
-    this.eventBus = eventBus;
+    this.eventBus    = eventBus;
     this.audioContext = audioContext;
-    
-    // Configuration with defaults
+
     this.config = {
-      narratorVolume: config.narratorVolume || 1.0, // 100% volume for narrator
-      radioVolume: config.radioVolume || 0.8, // 80% volume for radio clips
-      audioPath: config.audioPath || 'audio/narration/'
+      narratorVolume : config.narratorVolume ?? 1.0,
+      radioVolume    : config.radioVolume    ?? 0.8,
+      audioPath      : config.audioPath      || 'audio/narration/'
     };
-    
-    // Audio buffers storage: Map<filename, AudioBuffer>
+
+    // Cached decoded buffers
     this.audioBuffers = new Map();
-    
-    // Currently playing source and gain node
-    this.currentSource = null;
+
+    // Currently playing narrator source (radio clips are fire-and-forget)
+    this.currentSource   = null;
     this.currentGainNode = null;
-    
-    // Audio queue for sequential playback
-    this.audioQueue = [];
-    this.isPlaying = false;
-    
-    // Mute state
-    this.muted = false;
+
+    // Mute states
+    this.muted       = false;
     this.globalMuted = false;
-    
-    // Track if audio is ready to play
-    this.audioReady = false;
-    
-    // Queue for pending scene audio (played when audio unlocks)
+
+    // Audio must be unlocked by a user gesture before playing
+    this.audioReady       = false;
     this.pendingSceneAudio = null;
-    
-    // Current scene ID for tracking
-    this.currentSceneId = null;
-    
-    // Subscribe to EventBus events
-    this.setupEventListeners();
+
+    // Session token — incremented on every hard stop.
+    // Async ops capture their token; if it changes they self-abort.
+    this.sessionToken = 0;
+
+    // Timer handle for the 300 ms start-delay (cancelled on hard stop)
+    this.pendingStartTimer = null;
+
+    // Handles for scheduled radio-clip timeouts
+    this.radioTimers = [];
+
+    this._setupEventListeners();
   }
 
-  /**
-   * Setup EventBus event listeners
-   */
-  setupEventListeners() {
-    // Listen for audio unlock after user gesture
+  // ─── SETUP ─────────────────────────────────────────────────────────────────
+
+  _setupEventListeners() {
     this.eventBus.on('audio:unlocked', () => {
       this.audioReady = true;
-      console.log('[Audio] NarratorAudioManager ready');
-      
-      // Play any pending scene audio
       if (this.pendingSceneAudio) {
-        console.log('[Audio] Playing pending scene audio');
-        this.playSceneAudio(this.pendingSceneAudio);
+        const pending = this.pendingSceneAudio;
         this.pendingSceneAudio = null;
+        this._scheduleScene(pending);
       }
     });
-    
-    // Listen for scene rendering to start narration
-    this.eventBus.on('scene:rendered', (data) => {
-      if (data && data.scene) {
-        this.playSceneAudio(data.scene);
+
+    // scene:transition hard-stops everything first, then schedules new audio
+    this.eventBus.on('scene:transition', (data) => {
+      this._hardStop();
+      if (data?.scene) {
+        this._scheduleScene(data.scene);
       }
     });
-    
-    // Listen for scene transitions to stop narration BEFORE new scene loads
-    this.eventBus.on('scene:transition', () => {
-      console.log('[Audio] Scene transition detected - stopping all narrator audio');
-      this.stopAll();
+
+    // Role transitions - stop all audio
+    this.eventBus.on('game:complete', () => {
+      this._hardStop();
     });
-    
-    // Listen for global mute state changes
+
+    this.eventBus.on('role:selected', () => {
+      this._hardStop();
+    });
+
     this.eventBus.on('sound:muted', (data) => {
       this.globalMuted = data.muted;
-      this.updateVolume();
+      this._updateVolume();
     });
-    
-    // Listen for narrator toggle
+
     this.eventBus.on('narrator:toggle', () => {
-      this.toggleNarrator();
+      this.muted = !this.muted;
+      this._updateVolume();
+      this.eventBus.emit('narrator:muted', { muted: this.muted });
     });
   }
 
+  // ─── HARD STOP ─────────────────────────────────────────────────────────────
+
   /**
-   * Play scene audio (narrator + radio clips in sequence)
-   * @param {Object} scene - Scene object with narratorAudio and radioClips
+   * Cancel everything immediately and invalidate all in-flight async work.
+   * Called synchronously on every scene:transition.
    */
-  async playSceneAudio(scene) {
-    if (!scene) {
-      return;
+  _hardStop() {
+    // Invalidate all in-flight async operations
+    this.sessionToken++;
+
+    // Cancel the pending 300 ms start delay
+    if (this.pendingStartTimer !== null) {
+      clearTimeout(this.pendingStartTimer);
+      this.pendingStartTimer = null;
     }
 
-    // If audio not ready, queue the scene audio
+    // Cancel all scheduled radio clip timers
+    for (const id of this.radioTimers) clearTimeout(id);
+    this.radioTimers = [];
+
+    // Stop the currently playing narrator track
+    if (this.currentSource) {
+      try { this.currentSource.stop(); }    catch (_) {}
+      try { this.currentSource.disconnect(); } catch (_) {}
+      this.currentSource = null;
+    }
+    if (this.currentGainNode) {
+      try { this.currentGainNode.disconnect(); } catch (_) {}
+      this.currentGainNode = null;
+    }
+  }
+
+  // ─── SCHEDULE / PLAY ────────────────────────────────────────────────────────
+
+  /**
+   * Schedule playback 300 ms after the scene transition.
+   * The token guard ensures only the most-recent call ever fires.
+   */
+  _scheduleScene(scene) {
     if (!this.audioReady) {
-      console.log(`[Audio] Queueing scene audio for ${scene.id} (audio not unlocked yet)`);
       this.pendingSceneAudio = scene;
       return;
     }
 
-    // Stop anything currently playing
-    this.stopAll();
-    
-    this.currentSceneId = scene.id;
-    
-    // Build the queue: narrator first, then radio clips in order
-    this.audioQueue = [];
-    
+    const token = this.sessionToken;
+
+    this.pendingStartTimer = setTimeout(() => {
+      this.pendingStartTimer = null;
+      if (this.sessionToken !== token) return; // scene changed again
+      this._playScene(scene, token);
+    }, 300);
+  }
+
+  async _playScene(scene, token) {
+    if (!scene?.narratorAudio && !scene?.radioClips?.length) return;
+
+    // Play narrator track
     if (scene.narratorAudio) {
-      this.audioQueue.push({ 
-        src: scene.narratorAudio, 
-        type: 'narrator' 
-      });
+      await this._playFile(scene.narratorAudio, 'narrator', token);
+      if (this.sessionToken !== token) return;
+      this.eventBus.emit('narrator:complete', { sceneId: scene.id });
     }
-    
-    if (scene.radioClips && scene.radioClips.length > 0) {
-      // Sort radio clips by triggerAfterMs so they play in intended order
-      const sorted = [...scene.radioClips].sort((a, b) => a.triggerAfterMs - b.triggerAfterMs);
-      sorted.forEach(clip => this.audioQueue.push({ 
-        src: clip.src, 
-        type: 'radio' 
-      }));
-    }
-    
-    // If queue is empty, nothing to play
-    if (this.audioQueue.length === 0) {
-      return;
-    }
-    
-    console.log(`[Audio] Playing scene audio for ${scene.id}: ${this.audioQueue.length} items in queue`);
-    
-    // Play each item in the queue sequentially
-    this.isPlaying = true;
-    try {
-      for (const item of this.audioQueue) {
-        // Check if we should stop (scene transition occurred)
-        if (!this.isPlaying) {
-          console.log('[Audio] Playback interrupted by scene transition');
-          break;
-        }
-        
-        await this.playAudioFile(item.src, item.type);
+
+    // Schedule radio clips (fire-and-forget, token-guarded)
+    if (scene.radioClips?.length) {
+      for (const clip of scene.radioClips) {
+        const delay = clip.triggerAfterMs || 0;
+        const id = setTimeout(() => {
+          if (this.sessionToken !== token) return;
+          this._playFile(clip.src, 'radio', token).catch(() => {});
+        }, delay);
+        this.radioTimers.push(id);
       }
-      
-      // All audio complete (only if not interrupted)
-      if (this.isPlaying) {
-        this.eventBus.emit('narrator:complete', { sceneId: scene.id });
-        console.log(`[Audio] Scene audio complete for ${scene.id}`);
-      }
-    } catch (error) {
-      console.error(`[Audio] Error playing scene audio:`, error);
-    } finally {
-      this.isPlaying = false;
     }
   }
 
   /**
-   * Play a single audio file and wait for it to complete
-   * @param {string} src - Audio file path
-   * @param {string} type - 'narrator' or 'radio'
-   * @returns {Promise} Resolves when audio finishes playing
+   * Decode and play one audio file.
+   * Checks the session token at every async boundary.
    */
-  playAudioFile(src, type) {
+  _playFile(src, type, token) {
     return new Promise(async (resolve) => {
-      if (!src) {
-        resolve();
-        return;
-      }
-
-      // Check if playback was stopped
-      if (!this.isPlaying) {
-        resolve();
-        return;
-      }
+      if (!src || this.sessionToken !== token) { resolve(); return; }
 
       try {
-        // Load audio buffer
-        const audioBuffer = await this.loadAudioFile(src);
-        
-        // Check again if playback was stopped while loading
-        if (!this.isPlaying) {
-          resolve();
-          return;
-        }
-        
-        // Create audio source
-        const source = this.audioContext.createBufferSource();
-        source.buffer = audioBuffer;
-        source.loop = false; // One-shot playback
-        
-        // Create gain node for volume control
+        const buffer = await this._loadFile(src);
+        if (this.sessionToken !== token) { resolve(); return; }
+
+        const source   = this.audioContext.createBufferSource();
         const gainNode = this.audioContext.createGain();
-        const volume = type === 'radio' ? this.config.radioVolume : this.config.narratorVolume;
-        gainNode.gain.value = this.getEffectiveVolume(volume);
-        
-        // Apply radio filter if this is a radio clip
+        source.buffer = buffer;
+        source.loop   = false;
+
+        const baseVol  = type === 'radio' ? this.config.radioVolume : this.config.narratorVolume;
+        gainNode.gain.value = this._effectiveVolume(baseVol);
+
         if (type === 'radio') {
-          // Create bandpass filter to simulate radio transmission
-          const filter = this.audioContext.createBiquadFilter();
-          filter.type = 'bandpass';
-          filter.frequency.value = 1800; // Center frequency in Hz
-          filter.Q.value = 0.8; // Quality factor
-          
-          // Connect: source -> filter -> gain -> destination
+          const filter       = this.audioContext.createBiquadFilter();
+          filter.type        = 'bandpass';
+          filter.frequency.value = 1800;
+          filter.Q.value     = 0.8;
           source.connect(filter);
           filter.connect(gainNode);
-          gainNode.connect(this.audioContext.destination);
         } else {
-          // Connect: source -> gain -> destination
           source.connect(gainNode);
-          gainNode.connect(this.audioContext.destination);
+          // Only narrator tracks are tracked for hard-stop
+          this.currentSource   = source;
+          this.currentGainNode = gainNode;
         }
-        
-        // Store current source and gain node
-        this.currentSource = source;
-        this.currentGainNode = gainNode;
-        
-        // Set up completion handler
+        gainNode.connect(this.audioContext.destination);
+
         source.onended = () => {
-          this.currentSource = null;
-          this.currentGainNode = null;
-          
-          // Disconnect nodes
-          try {
-            source.disconnect();
-            gainNode.disconnect();
-          } catch (e) {
-            // Already disconnected
+          if (type === 'narrator') {
+            this.currentSource   = null;
+            this.currentGainNode = null;
           }
-          
-          console.log(`[Audio] Finished playing: ${src}`);
+          try { source.disconnect(); }   catch (_) {}
+          try { gainNode.disconnect(); } catch (_) {}
           resolve();
         };
-        
-        // Start playback
+
         source.start(0);
-        
-        const typeLabel = type === 'radio' ? 'Radio clip' : 'Narrator';
-        console.log(`[Audio] ${typeLabel} playing: ${src}`);
         this.eventBus.emit('narrator:playing', { src, type });
-        
-      } catch (error) {
-        console.error(`[Audio] Failed to play ${src}:`, error);
-        this.eventBus.emit('narrator:error', { src, error: error.message });
-        resolve(); // Continue to next item in queue even if this one fails
+
+      } catch (err) {
+        console.warn(`[NarratorAudio] Failed to play ${src}:`, err.message);
+        this.eventBus.emit('narrator:error', { src, error: err.message });
+        resolve();
       }
     });
   }
 
-  /**
-   * Load and decode an audio file
-   * @param {string} src - Audio file path
-   * @returns {Promise<AudioBuffer>}
-   */
-  async loadAudioFile(src) {
-    // Check if already loaded
-    if (this.audioBuffers.has(src)) {
-      return this.audioBuffers.get(src);
-    }
-
-    try {
-      const response = await fetch(src);
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-      }
-      
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-      
-      this.audioBuffers.set(src, audioBuffer);
-      console.log(`[Audio] Loaded: ${src}`);
-      
-      return audioBuffer;
-    } catch (error) {
-      console.warn(`[Audio] Failed to load ${src}:`, error.message);
-      throw error;
-    }
+  async _loadFile(src) {
+    if (this.audioBuffers.has(src)) return this.audioBuffers.get(src);
+    const res = await fetch(src);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const arr    = await res.arrayBuffer();
+    const buffer = await this.audioContext.decodeAudioData(arr);
+    this.audioBuffers.set(src, buffer);
+    return buffer;
   }
 
-  /**
-   * Stop all narration and clear queue
-   */
-  stopAll() {
-    // Stop current playback
-    if (this.currentSource) {
-      try {
-        this.currentSource.stop();
-        this.currentSource.disconnect();
-      } catch (e) {
-        // Already stopped
-      }
-      this.currentSource = null;
-    }
-    
+  // ─── VOLUME ─────────────────────────────────────────────────────────────────
+
+  _effectiveVolume(base) {
+    return (this.globalMuted || this.muted) ? 0 : base;
+  }
+
+  _updateVolume() {
     if (this.currentGainNode) {
-      try {
-        this.currentGainNode.disconnect();
-      } catch (e) {
-        // Already disconnected
-      }
-      this.currentGainNode = null;
-    }
-    
-    // Clear queue
-    this.audioQueue = [];
-    this.isPlaying = false;
-    this.currentSceneId = null;
-    
-    console.log('[Audio] Stopped all narrator audio');
-  }
-
-  /**
-   * Toggle narrator mute
-   */
-  toggleNarrator() {
-    this.muted = !this.muted;
-    this.updateVolume();
-    
-    // Emit state change
-    this.eventBus.emit('narrator:muted', { muted: this.muted });
-    console.log(`[Audio] Narrator ${this.muted ? 'muted' : 'unmuted'}`);
-  }
-
-  /**
-   * Update volume for current audio
-   */
-  updateVolume() {
-    if (this.currentGainNode) {
-      const volume = this.currentGainNode.gain.value > 0.9 ? 
-        this.config.narratorVolume : this.config.radioVolume;
-      this.currentGainNode.gain.value = this.getEffectiveVolume(volume);
+      // Narrator is always at narratorVolume
+      this.currentGainNode.gain.value = this._effectiveVolume(this.config.narratorVolume);
     }
   }
 
-  /**
-   * Get effective volume based on mute states
-   * @param {number} baseVolume - Base volume level
-   * @returns {number} Volume level 0.0-1.0
-   */
-  getEffectiveVolume(baseVolume) {
-    if (this.globalMuted || this.muted) {
-      return 0;
-    }
-    return baseVolume;
-  }
+  // ─── PUBLIC API ─────────────────────────────────────────────────────────────
 
-  /**
-   * Check if narrator is muted
-   * @returns {boolean} True if muted
-   */
-  isMuted() {
-    return this.muted;
-  }
+  isMuted()          { return this.muted; }
+  isNarratorPlaying(){ return !!this.currentSource; }
 
-  /**
-   * Check if narrator is currently playing
-   * @returns {boolean} True if playing
-   */
-  isNarratorPlaying() {
-    return this.isPlaying;
-  }
+  stopAll() { this._hardStop(); }
 
-  /**
-   * Cleanup method - stop all audio and clear resources
-   */
   destroy() {
-    this.stopAll();
+    this._hardStop();
     this.audioBuffers.clear();
   }
 }
 
-// ES6 module export - no global variables
 export default NarratorAudioManager;

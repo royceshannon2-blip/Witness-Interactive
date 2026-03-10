@@ -33,6 +33,7 @@ class TypewriterEffect {
     this.onCompleteCallback = null;
     this.lastFrameTime = 0;
     this.speed = this.config.defaultSpeed;
+    this.currentSceneId = null;
 
     // Check for reduced motion preference
     this.prefersReducedMotion = this.config.respectMotionPrefs && 
@@ -51,8 +52,9 @@ class TypewriterEffect {
    * @param {string} text - Full text to reveal
    * @param {number} speed - Milliseconds per character (optional, uses default if not provided)
    * @param {Function} onComplete - Callback when animation finishes
+   * @param {string} sceneId - Scene ID for event emission (optional)
    */
-  revealText(element, text, speed, onComplete) {
+  revealText(element, text, speed, onComplete, sceneId) {
     // Cleanup any existing animation
     this.cleanup();
 
@@ -61,6 +63,7 @@ class TypewriterEffect {
     this.fullText = text;
     this.speed = speed || this.config.defaultSpeed;
     this.onCompleteCallback = onComplete;
+    this.currentSceneId = sceneId || null;
     this.currentIndex = 0;
     this.active = true;
 
@@ -138,7 +141,7 @@ class TypewriterEffect {
     // Emit skipped event
     this.eventBus.emit('typewriter:skipped');
 
-    // Complete animation
+    // Complete animation (this will emit typewriter:complete with sceneId)
     this.complete();
   }
 
@@ -160,8 +163,8 @@ class TypewriterEffect {
     // Mark as inactive
     this.active = false;
 
-    // Emit complete event
-    this.eventBus.emit('typewriter:complete');
+    // Emit complete event with sceneId
+    this.eventBus.emit('typewriter:complete', { sceneId: this.currentSceneId });
 
     // Call completion callback
     if (this.onCompleteCallback) {
@@ -187,6 +190,7 @@ class TypewriterEffect {
     this.fullText = '';
     this.currentIndex = 0;
     this.onCompleteCallback = null;
+    this.currentSceneId = null;
   }
 
   /**

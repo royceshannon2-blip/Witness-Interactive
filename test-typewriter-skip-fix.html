@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Typewriter Skip Fix</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-container {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .narrative {
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 20px 0;
+            min-height: 100px;
+            border: 1px solid #eee;
+            padding: 15px;
+            background: #f9f9f9;
+        }
+        .controls {
+            margin: 20px 0;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .events {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .event {
+            margin: 2px 0;
+            padding: 2px 5px;
+        }
+        .event.complete {
+            background: #d4edda;
+            color: #155724;
+        }
+        .event.skipped {
+            background: #fff3cd;
+            color: #856404;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test Typewriter Skip Fix - Task 0.7</h1>
+    
+    <div class="test-container">
+        <h2>Test: Typewriter Skip Emits Complete Event with SceneId</h2>
+        <p>This test verifies that TypewriterEffect.js emits 'typewriter:complete' with sceneId on both natural completion and skip.</p>
+        
+        <div class="narrative" id="narrative">
+            <!-- Text will appear here -->
+        </div>
+        
+        <div class="controls">
+            <button onclick="startTypewriter()">Start Typewriter (Scene: test-scene-01)</button>
+            <button onclick="skipTypewriter()">Skip Typewriter</button>
+            <button onclick="clearEvents()">Clear Events</button>
+        </div>
+        
+        <div class="events" id="events">
+            <div>Event log will appear here...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import EventBus from './js/engine/EventBus.js';
+        import TypewriterEffect from './js/engine/TypewriterEffect.js';
+
+        // Initialize components
+        const eventBus = new EventBus();
+        const typewriterEffect = new TypewriterEffect(eventBus, {
+            defaultSpeed: 50, // Slower for testing
+            skipOnClick: true,
+            respectMotionPrefs: false // Force animation for testing
+        });
+
+        // Event logging
+        const eventsContainer = document.getElementById('events');
+        
+        function logEvent(eventName, data = null) {
+            const eventDiv = document.createElement('div');
+            eventDiv.className = `event ${eventName.replace(':', '-')}`;
+            const timestamp = new Date().toLocaleTimeString();
+            const dataStr = data ? ` | Data: ${JSON.stringify(data)}` : '';
+            eventDiv.textContent = `[${timestamp}] ${eventName}${dataStr}`;
+            eventsContainer.appendChild(eventDiv);
+            eventsContainer.scrollTop = eventsContainer.scrollHeight;
+        }
+
+        // Listen for typewriter events
+        eventBus.on('typewriter:complete', (data) => {
+            logEvent('typewriter:complete', data);
+            console.log('✓ typewriter:complete event received with data:', data);
+        });
+
+        eventBus.on('typewriter:skipped', () => {
+            logEvent('typewriter:skipped');
+            console.log('✓ typewriter:skipped event received');
+        });
+
+        // Test functions
+        window.startTypewriter = function() {
+            const narrativeElement = document.getElementById('narrative');
+            const testText = "0755 hours. You're in the cockpit of your Nakajima B5N Kate torpedo bomber, approaching Pearl Harbor. The morning sun glints off the water below as you see the American fleet anchored peacefully in the harbor. Your heart pounds as you realize this moment will change everything.";
+            const sceneId = "test-scene-01";
+            
+            logEvent('test:starting', { sceneId, textLength: testText.length });
+            
+            typewriterEffect.revealText(
+                narrativeElement,
+                testText,
+                50, // 50ms per character
+                () => {
+                    logEvent('test:callback-executed');
+                    console.log('✓ Completion callback executed');
+                },
+                sceneId
+            );
+        };
+
+        window.skipTypewriter = function() {
+            if (typewriterEffect.isActive()) {
+                logEvent('test:skip-requested');
+                typewriterEffect.skipToEnd();
+            } else {
+                logEvent('test:skip-ignored', { reason: 'not active' });
+            }
+        };
+
+        window.clearEvents = function() {
+            eventsContainer.innerHTML = '<div>Event log cleared...</div>';
+        };
+
+        // Initial log
+        logEvent('test:initialized');
+        console.log('Test initialized. Click "Start Typewriter" to begin test.');
+    </script>
+</body>
+</html>

@@ -35,10 +35,15 @@ class TimedChoiceSystem {
     this.defaultChoiceId = null;
     this.onExpireCallback = null;
     this.isActive = false;
+    this.isPaused = false;
+    this.pausedTime = null;
 
     // Subscribe to events
     this.eventBus.on('scene:transition', () => this.cancelTimer());
     this.eventBus.on('choice:made', () => this.cancelTimer());
+    
+    // Handle page visibility changes
+    document.addEventListener('visibilitychange', () => this.handleVisibilityChange());
   }
 
   /**
@@ -46,8 +51,9 @@ class TimedChoiceSystem {
    * @param {number} duration - Timer duration in milliseconds
    * @param {string} defaultChoiceId - Choice ID to auto-select on expiration
    * @param {Function} onExpire - Callback to invoke when timer expires
+   * @param {Array} choices - Array of available choices (for validation)
    */
-  startTimer(duration, defaultChoiceId, onExpire) {
+  startTimer(duration, defaultChoiceId, onExpire, choices = []) {
     // Cancel any existing timer
     this.cancelTimer();
 
@@ -57,13 +63,50 @@ class TimedChoiceSystem {
       return;
     }
 
-    if (typeof defaultChoiceId !== 'string' || !defaultChoiceId) {
-      console.error('TimedChoiceSystem: defaultChoiceId must be a non-empty string');
+    if (typeof onExpire !== 'function') {
+      console.error('TimedChoiceSystem: onExpire must be a function');
       return;
     }
 
-    if (typeof onExpire !== 'function') {
-      console.error('TimedChoiceSystem: onExpire must be a function');
+    // Defensive check: handle empty choices array
+    if (!Array.isArray(choices) || choices.length === 0) {
+      console.error('TimedChoiceSystem: choices array is empty or invalid, cannot start timer');
+      return;
+    }
+
+    // Defensive check: handle missing or invalid defaultChoiceId
+    if (!defaultChoiceId || typeof defaultChoiceId !== 'string') {
+      console.warn('TimedChoiceSystem: defaultChoiceId is missing or invalid');
+      
+      // Fall back to first valid choice
+      const firstValidChoice = choices.find(choice => choice && choice.id);
+      if (firstValidChoice) {
+        defaultChoiceId = firstValidChoice.id;
+        console.warn(`TimedChoiceSystem: Falling back to first valid choice: ${defaultChoiceId}`);
+      } else {
+        console.error('TimedChoiceSystem: No valid choices found, cannot start timer');
+        return;
+      }
+    }
+
+    // Defensive check: validate defaultChoiceId exists in choices array
+    const validChoice = choices.find(choice => choice && choice.id === defaultChoiceId);
+    if (!validChoice) {
+      console.warn(`TimedChoiceSystem: defaultChoiceId "${defaultChoiceId}" not found in choices`);
+      // Fall back to first valid choice
+      const firstValidChoice = choices.find(choice => choice && choice.id);
+      if (firstValidChoice) {
+        defaultChoiceId = firstValidChoice.id;
+        console.warn(`TimedChoiceSystem: Falling back to first valid choice: ${defaultChoiceId}`);
+      } else {
+        console.error('TimedChoiceSystem: No valid choices found, cannot start timer');
+        return;
+      }
+    }
+
+    // Final validation: ensure we have a valid choice ID
+    if (!defaultChoiceId) {
+      console.error('TimedChoiceSystem: Unable to determine valid default choice, cannot start timer');
       return;
     }
 
@@ -146,9 +189,22 @@ class TimedChoiceSystem {
       return; // Already handled
     }
 
-    // Store callback before clearing state
+    // Store callback and choice ID before clearing state
     const callback = this.onExpireCallback;
     const choiceId = this.defaultChoiceId;
+
+    // Defensive check: ensure we have valid callback and choice ID
+    if (!callback || typeof callback !== 'function') {
+      console.error('TimedChoiceSystem: onExpireCallback is invalid, cannot handle expiration');
+      this.cancelTimer();
+      return;
+    }
+
+    if (!choiceId || typeof choiceId !== 'string') {
+      console.error('TimedChoiceSystem: defaultChoiceId is invalid, cannot handle expiration');
+      this.cancelTimer();
+      return;
+    }
 
     // Emit expired event
     this.eventBus.emit('timer:expired', {
@@ -159,8 +215,38 @@ class TimedChoiceSystem {
     this.cancelTimer();
 
     // Invoke callback to auto-select default choice
-    if (callback) {
+    try {
       callback(choiceId);
+    } catch (error) {
+      console.error('TimedChoiceSystem: Error in onExpire callback:', error);
+    }
+  }
+
+  /**
+   * Handle page visibility changes - pause/resume timer
+   * @private
+   */
+  handleVisibilityChange() {
+    if (!this.isActive) {
+      return; // No active timer
+    }
+
+    if (document.hidden) {
+      // Page is hidden - pause timer
+      if (!this.isPaused) {
+        this.isPaused = true;
+        this.pausedTime = Date.now();
+        console.log('[Timer] Paused on page hide');
+      }
+    } else {
+      // Page is visible - resume timer
+      if (this.isPaused && this.pausedTime !== null) {
+        const pausedDuration = Date.now() - this.pausedTime;
+        this.startTime += pausedDuration; // Shift start time forward
+        this.isPaused = false;
+        this.pausedTime = null;
+        console.log('[Timer] Resumed on page show');
+      }
     }
   }
 }

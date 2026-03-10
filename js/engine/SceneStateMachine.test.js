@@ -197,14 +197,14 @@ stateMachine7.transitionTo('scene-2');
 console.assert(stateMachine7.isComplete(), 'Should be complete on last scene');
 console.log('✓ Test 7 passed');
 
-// Test 8: transitionTo() emits game:complete on last scene
-console.log('\nTest 8: transitionTo() emits game:complete on last scene');
+// Test 8: transitionTo() emits role:complete on last scene
+console.log('\nTest 8: transitionTo() emits role:complete on last scene');
 const eventBus8 = new EventBus();
 const stateMachine8 = new SceneStateMachine(eventBus8);
-let gameCompleteEventFired = false;
+let roleCompleteEventFired = false;
 
-eventBus8.on('game:complete', (data) => {
-  gameCompleteEventFired = true;
+eventBus8.on('role:complete', (data) => {
+  roleCompleteEventFired = true;
   console.assert(data.missionId === 'test-mission', 'Should emit correct mission ID');
   console.assert(data.roleId === 'test-role', 'Should emit correct role ID');
 });
@@ -216,17 +216,17 @@ const scenes8 = [
 stateMachine8.loadRole('test-mission', 'test-role', scenes8);
 stateMachine8.transitionTo('scene-2');
 
-console.assert(gameCompleteEventFired, 'game:complete event should fire on last scene');
+console.assert(roleCompleteEventFired, 'role:complete event should fire on last scene');
 console.log('✓ Test 8 passed');
 
 // Test 9: transitionTo() handles non-existent scene gracefully
 console.log('\nTest 9: transitionTo() handles non-existent scene gracefully');
 const eventBus9 = new EventBus();
 const stateMachine9 = new SceneStateMachine(eventBus9);
-let gameCompleteEventFired9 = false;
+let roleCompleteEventFired9 = false;
 
-eventBus9.on('game:complete', () => {
-  gameCompleteEventFired9 = true;
+eventBus9.on('role:complete', () => {
+  roleCompleteEventFired9 = true;
 });
 
 const scenes9 = [
@@ -236,9 +236,50 @@ const scenes9 = [
 stateMachine9.loadRole('test-mission', 'test-role', scenes9);
 stateMachine9.transitionTo('non-existent-scene');
 
-console.assert(gameCompleteEventFired9, 'Should emit game:complete when scene not found');
+console.assert(roleCompleteEventFired9, 'Should emit role:complete when scene not found');
 console.assert(stateMachine9.currentSceneIndex === 0, 'Should remain on current scene');
 console.log('✓ Test 9 passed');
+
+// Test 9.5: transitionTo() handles "outcome" signal correctly
+console.log('\nTest 9.5: transitionTo() handles "outcome" signal correctly');
+const eventBus9_5 = new EventBus();
+const stateMachine9_5 = new SceneStateMachine(eventBus9_5);
+let roleCompleteEventFired9_5 = false;
+
+eventBus9_5.on('role:complete', (data) => {
+  roleCompleteEventFired9_5 = true;
+  console.assert(data.missionId === 'test-mission', 'Should emit correct mission ID');
+  console.assert(data.roleId === 'test-role', 'Should emit correct role ID');
+});
+
+const scenes9_5 = [
+  createValidScene('scene-1', 'scene-2'),
+  createValidScene('scene-2', 'scene-3')
+];
+stateMachine9_5.loadRole('test-mission', 'test-role', scenes9_5);
+stateMachine9_5.transitionTo('outcome');
+
+console.assert(roleCompleteEventFired9_5, 'Should emit role:complete when nextScene is "outcome"');
+console.assert(stateMachine9_5.currentSceneIndex === 0, 'Should remain on current scene');
+console.log('✓ Test 9.5 passed');
+
+// Test 9.6: transitionTo() handles null nextScene (terminal)
+console.log('\nTest 9.6: transitionTo() handles null nextScene (terminal)');
+const eventBus9_6 = new EventBus();
+const stateMachine9_6 = new SceneStateMachine(eventBus9_6);
+
+let roleCompleteEventFired9_6 = false;
+eventBus9_6.on('role:complete', () => {
+  roleCompleteEventFired9_6 = true;
+});
+
+const testSceneForNull = createValidScene('test-scene-null');
+stateMachine9_6.loadRole('test-mission', 'test-role', [testSceneForNull]);
+stateMachine9_6.transitionTo(null);
+
+console.assert(roleCompleteEventFired9_6, 'Should emit role:complete when nextScene is null');
+console.assert(stateMachine9_6.currentSceneIndex === 0, 'Should remain on current scene');
+console.log('✓ Test 9.6 passed');
 
 // Test 10: validateChoice() validates choice structure
 console.log('\nTest 10: validateChoice() validates choice structure');

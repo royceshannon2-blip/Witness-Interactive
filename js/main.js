@@ -170,6 +170,20 @@ async function initializeApp() {
             return;
         }
         
+        // Stop all audio from previous role
+        if (ambientSoundManager) {
+            ambientSoundManager.stopAll();
+        }
+        if (narratorAudioManager) {
+            narratorAudioManager.stopAll();
+        }
+        
+        // Set current role in ConsequenceSystem for survival calculation
+        consequenceSystem.setCurrentRole(roleId);
+        
+        // Reset consequence flags for new role playthrough
+        consequenceSystem.reset();
+        
         // Load the role's scenes into the SceneStateMachine
         sceneStateMachine.loadRole(missionId, roleId, role.scenes);
         console.log(`✓ Loaded role "${roleId}" with ${role.scenes.length} scenes`);
@@ -241,7 +255,7 @@ async function initializeApp() {
     document.addEventListener('touchstart', unlockAudio, { passive: true });
     document.addEventListener('keydown', unlockAudio);
     
-    // Test hook - allows Playwright to unlock audio without needing a real gesture
+    // Test hooks - allows Playwright to unlock audio and check game state
     // Only available on localhost for testing
     if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
         window.__unlockAudioForTesting = async () => {
@@ -251,7 +265,36 @@ async function initializeApp() {
                 console.log('[Audio] Audio unlocked via test hook');
             }
         };
+        
+        window.__getGameState = () => {
+            return {
+                audioContextState: audioContext ? audioContext.state : 'none',
+                currentScene: window.__currentScene || null,
+                initialized: window.__gameInitialized || false
+            };
+        };
     }
+    
+    // Handle browser navigation - cleanup on page unload
+    const handlePageUnload = () => {
+        console.log('[Cleanup] Page unload detected - stopping all audio and effects');
+        
+        // Stop all audio
+        if (ambientSoundManager) {
+            ambientSoundManager.stopAll();
+        }
+        if (narratorAudioManager) {
+            narratorAudioManager.stopAll();
+        }
+        
+        // Clear all effects
+        if (atmosphericEffects) {
+            atmosphericEffects.clearAllEffects();
+        }
+    };
+    
+    window.addEventListener('beforeunload', handlePageUnload);
+    window.addEventListener('pagehide', handlePageUnload);
     
     // Small delay to show loading animation, then transition to landing screen
     setTimeout(() => {
@@ -261,6 +304,9 @@ async function initializeApp() {
         
         // Hide loading screen
         eventBus.emit('game:ready');
+        
+        // Mark game as initialized for tests
+        window.__gameInitialized = true;
         
         console.log('\n=== Application Bootstrap Complete ===');
         console.log('All components initialized successfully.');

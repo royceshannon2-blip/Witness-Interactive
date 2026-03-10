@@ -33,6 +33,9 @@ class AmbientSoundManager {
     // Currently playing sounds: Map<soundId, {source, gainNode, startTime}>
     this.activeSounds = new Map();
     
+    // Track current ambient track
+    this.currentAmbientTrack = null;
+    
     // Mute state (stored in memory, not localStorage per requirements)
     this.muted = false;
     
@@ -73,6 +76,31 @@ class AmbientSoundManager {
     // Listen for ambient crossfade requests from SceneStateMachine
     this.eventBus.on('ambient:crossfade', (data) => {
       this.crossfade(data.from, data.to, data.duration);
+    });
+    
+    // Listen for role transitions - stop all audio
+    this.eventBus.on('game:complete', () => {
+      this.stopAll();
+    });
+    
+    this.eventBus.on('role:selected', () => {
+      this.stopAll();
+      this.currentAmbientTrack = null;
+    });
+    
+    // Handle page visibility changes - mute/unmute on hide/show
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) {
+        // Page is hidden - mute ambient sound
+        if (!this.muted) {
+          this.toggleMute();
+        }
+      } else {
+        // Page is visible - unmute ambient sound
+        if (this.muted) {
+          this.toggleMute();
+        }
+      }
     });
   }
 
@@ -165,6 +193,18 @@ class AmbientSoundManager {
     if (!filename) {
       console.error('[Audio] AmbientSoundManager.playSound: filename is required');
       return;
+    }
+
+    // Check AudioContext state
+    if (this.audioContext.state === 'suspended') {
+      console.log('[Audio] AudioContext suspended, resuming...');
+      try {
+        await this.audioContext.resume();
+        this.eventBus.emit('audio:unlocked');
+      } catch (error) {
+        console.error('[Audio] Failed to resume AudioContext:', error);
+        return;
+      }
     }
 
     // Wait for audio to be ready
@@ -280,6 +320,18 @@ class AmbientSoundManager {
   async fadeIn(filename, duration = 1500) {
     if (!filename) {
       return;
+    }
+
+    // Check AudioContext state
+    if (this.audioContext.state === 'suspended') {
+      console.log('[Audio] AudioContext suspended, resuming...');
+      try {
+        await this.audioContext.resume();
+        this.eventBus.emit('audio:unlocked');
+      } catch (error) {
+        console.error('[Audio] Failed to resume AudioContext:', error);
+        return;
+      }
     }
 
     // If audio not ready, queue the sound

@@ -521,6 +521,24 @@ body.effect-shake #app {
     outline-offset: 2px;
 }
 
+/* Disabled state during transitions */
+.choice-button:disabled,
+.choice-button.choices-disabled {
+    pointer-events: none;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Disable all choices during transitions */
+.choices-disabled {
+    pointer-events: none;
+}
+
+.choices-disabled .choice-button {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 @media (prefers-reduced-motion: reduce) {
     .choice-button {
         transition: none;

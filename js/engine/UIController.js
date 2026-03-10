@@ -141,6 +141,17 @@ class UIController {
     
     // Narrator events - update narrator toggle button UI
     this.eventBus.on('narrator:muted', this.handleNarratorMuted.bind(this));
+    // Scene error fallback - prevents white screen on missing scene
+    this.eventBus.on('scene:error', () => {
+      console.warn('UIController: scene:error received — re-rendering current scene');
+  if (this.currentSceneData && this.currentSceneData.scene) {
+    this.renderScene(
+      this.currentSceneData.scene,
+      this.currentSceneData.sceneIndex,
+      this.currentSceneData.totalScenes
+    );
+  }
+});
   }
 
   /**
@@ -371,14 +382,24 @@ class UIController {
       return null;
     }
     
-    // Calculate outcome using ConsequenceSystem
-    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes);
+    // Two-step outcome calculation:
+    // 1. Determine survival based on historical probability + player choices
+    const survival = this.consequenceSystem.determineSurvival(this.currentRoleId);
+    
+    // 2. Select best narrative match within the survived/died bucket
+    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes, survival.survived);
     if (!outcomeId) {
       return null;
     }
     
     // Find the matching outcome object
     const outcome = role.outcomes.find(o => o.id === outcomeId);
+    
+    // Attach survival data for results display
+    if (outcome) {
+      outcome.survivalData = survival;
+    }
+    
     return outcome;
   }
 
@@ -818,7 +839,7 @@ class UIController {
     }
     
     // Emit scene:rendered event for narrator audio
-    this.eventBus.emit('scene:rendered', { scene });
+
     
     // Change ambient sound if specified (Task 7.2)
     // Use crossfade for smooth transitions between ambient tracks
@@ -912,6 +933,26 @@ class UIController {
    * @private
    */
   handleChoiceClick(choice) {
+    // If typewriter is still running, force-complete it first
+    if (this.typewriterEffect && this.typewriterEffect.isActive()) {
+      this.typewriterEffect.skipToEnd();
+      
+      // Add 50ms delay after completion before transition
+      setTimeout(() => {
+        this.emitChoiceMade(choice);
+      }, 50);
+    } else {
+      // Typewriter already complete, emit immediately
+      this.emitChoiceMade(choice);
+    }
+  }
+
+  /**
+   * Emit choice:made event
+   * @param {object} choice - Choice object
+   * @private
+   */
+  emitChoiceMade(choice) {
     // Emit choice:made event (ConsequenceSystem will handle flag setting)
     // SceneStateMachine will handle transition
     this.eventBus.emit('choice:made', {
@@ -1188,8 +1229,12 @@ class UIController {
       return;
     }
     
-    // Calculate outcome using ConsequenceSystem
-    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes);
+    // Two-step outcome calculation:
+    // 1. Determine survival based on historical probability + player choices
+    const survival = this.consequenceSystem.determineSurvival(this.currentRoleId);
+    
+    // 2. Select best narrative match within the survived/died bucket
+    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes, survival.survived);
     
     if (!outcomeId) {
       console.error('UIController.populateOutcomeScreen: No matching outcome found for current flags');
@@ -1206,16 +1251,33 @@ class UIController {
       return;
     }
     
+    // Store survival data for results card
+    this.currentSurvival = survival;
+    
     // Populate the outcome screen
     const survivalStatus = outcome.survived ? 'You Survived' : 'You Did Not Survive';
     const survivalClass = outcome.survived ? 'text-success' : 'text-danger';
     
-    outcomeResultContainer.innerHTML = `
+    let outcomeHTML = `
       <h3 class="${survivalClass}">${survivalStatus}</h3>
       <div class="outcome-epilogue mt-md">
         ${this.formatEpilogue(outcome.epilogue)}
       </div>
     `;
+    
+    // Add death context panel if player died
+    if (outcome.deathContext) {
+      outcomeHTML += `
+        <div class="death-context panel panel-parchment mt-md">
+          <h4>What Happened</h4>
+          <p><strong>Cause:</strong> ${outcome.deathContext.cause}</p>
+          <p><strong>Historical rate:</strong> ${outcome.deathContext.historicalRate}</p>
+          <p><strong>Your choices:</strong> ${outcome.deathContext.yourChoices}</p>
+        </div>
+      `;
+    }
+    
+    outcomeResultContainer.innerHTML = outcomeHTML;
   }
 
   /**

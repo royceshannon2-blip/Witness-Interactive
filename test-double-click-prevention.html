@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Double-Click Prevention Test</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .log {
+            background: #f5f5f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            font-family: monospace;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Double-Click Prevention Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: isTransitioning Flag</h2>
+        <p>This test verifies that choice clicks are blocked when isTransitioning is true.</p>
+        <div id="scene-choices">
+            <button class="choice-button" data-choice-id="test1">Test Choice 1</button>
+            <button class="choice-button" data-choice-id="test2">Test Choice 2</button>
+        </div>
+        <button id="toggle-transition">Toggle Transition State</button>
+        <div class="log" id="log1"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Test 2: CSS Disabled State</h2>
+        <p>This test verifies that the choices-disabled CSS class works correctly.</p>
+        <div id="scene-choices-2">
+            <button class="choice-button" data-choice-id="css1">CSS Test Choice 1</button>
+            <button class="choice-button" data-choice-id="css2">CSS Test Choice 2</button>
+        </div>
+        <button id="toggle-css-disabled">Toggle CSS Disabled</button>
+        <div class="log" id="log2"></div>
+    </div>
+
+    <script type="module">
+        import EventBus from './js/engine/EventBus.js';
+        import UIController from './js/engine/UIController.js';
+
+        // Create test EventBus
+        const eventBus = new EventBus();
+        
+        // Mock dependencies for UIController
+        const mockTimelineSelector = {};
+        const mockMissionRegistry = {};
+        const mockConsequenceSystem = {};
+        const mockResultsCard = {};
+        const mockUIContent = {
+            landing: { title: 'Test', subtitle: 'Test', tagline: 'Test', context: 'Test', buttonText: 'Test' }
+        };
+
+        // Create UIController instance
+        const uiController = new UIController(
+            eventBus,
+            mockTimelineSelector,
+            mockMissionRegistry,
+            mockConsequenceSystem,
+            mockResultsCard,
+            mockUIContent
+        );
+
+        // Test 1: isTransitioning flag
+        const log1 = document.getElementById('log1');
+        const toggleTransitionBtn = document.getElementById('toggle-transition');
+        
+        let clickCount = 0;
+        
+        // Mock handleChoiceClick to test the guard
+        const originalHandleChoiceClick = uiController.handleChoiceClick.bind(uiController);
+        uiController.handleChoiceClick = function(choice) {
+            clickCount++;
+            log1.innerHTML += `Click ${clickCount}: Choice ${choice.id} - isTransitioning: ${this.isTransitioning}<br>`;
+            
+            if (this.isTransitioning) {
+                log1.innerHTML += `  → BLOCKED (transition in progress)<br>`;
+                return;
+            }
+            
+            log1.innerHTML += `  → ALLOWED (processing choice)<br>`;
+            log1.scrollTop = log1.scrollHeight;
+        };
+
+        // Add click handlers to test buttons
+        document.querySelectorAll('#scene-choices .choice-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const choice = { id: button.dataset.choiceId };
+                uiController.handleChoiceClick(choice);
+            });
+        });
+
+        // Toggle transition state
+        toggleTransitionBtn.addEventListener('click', () => {
+            uiController.isTransitioning = !uiController.isTransitioning;
+            toggleTransitionBtn.textContent = `Transition State: ${uiController.isTransitioning ? 'ON' : 'OFF'}`;
+            log1.innerHTML += `<strong>Transition state changed to: ${uiController.isTransitioning}</strong><br>`;
+            log1.scrollTop = log1.scrollHeight;
+        });
+
+        // Test 2: CSS disabled state
+        const log2 = document.getElementById('log2');
+        const toggleCSSBtn = document.getElementById('toggle-css-disabled');
+        const choicesContainer2 = document.getElementById('scene-choices-2');
+        
+        let cssDisabled = false;
+        
+        document.querySelectorAll('#scene-choices-2 .choice-button').forEach(button => {
+            button.addEventListener('click', () => {
+                log2.innerHTML += `CSS Test: Choice ${button.dataset.choiceId} clicked<br>`;
+                log2.scrollTop = log2.scrollHeight;
+            });
+        });
+
+        toggleCSSBtn.addEventListener('click', () => {
+            cssDisabled = !cssDisabled;
+            if (cssDisabled) {
+                choicesContainer2.classList.add('choices-disabled');
+                toggleCSSBtn.textContent = 'CSS Disabled: ON';
+                log2.innerHTML += '<strong>CSS disabled class added</strong><br>';
+            } else {
+                choicesContainer2.classList.remove('choices-disabled');
+                toggleCSSBtn.textContent = 'CSS Disabled: OFF';
+                log2.innerHTML += '<strong>CSS disabled class removed</strong><br>';
+            }
+            log2.scrollTop = log2.scrollHeight;
+        });
+
+        // Initialize button states
+        toggleTransitionBtn.textContent = `Transition State: ${uiController.isTransitioning ? 'ON' : 'OFF'}`;
+        toggleCSSBtn.textContent = 'CSS Disabled: OFF';
+        
+        log1.innerHTML = 'Test initialized. Try clicking choices with different transition states.<br>';
+        log2.innerHTML = 'Test initialized. Try clicking choices with CSS disabled on/off.<br>';
+    </script>
+</body>
+</html>

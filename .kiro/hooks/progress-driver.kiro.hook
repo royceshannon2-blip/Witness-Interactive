@@ -1,0 +1,15 @@
+{
+  "enabled": true,
+  "name": "Progress Driver",
+  "description": "Automatically advances through tasks.md after each completion, handling checkpoints, smoke tests, and content writing without stopping for permission unless a genuine blocker is encountered",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "CRITICAL: Never mark a task complete by updating the checkbox without \nhaving made real file edits or run real validation for that task. \nMarking tasks complete without doing the work is a spec failure, not \na completion.\nCheck tasks.md for the next unchecked task. If found, begin it immediately without asking permission or summarizing previous work. Follow all rules from the Progress Driver specification:\n\n- Auto-advance: Start next task without waiting for user input\n- Checkpoints: Run validation, fix failures if needed, continue\n- Smoke tests: Run test, fix failures, continue when passing\n- Content writing: Complete full content with no placeholders or TODOs\n- Historical verification: Use Fetch MCP to verify facts before finalizing\n- Commits: Only commit when tests pass, use specified format\n- Quality gates: Never skip scene quality checks or engine component validation\n- Task tracking: Update checkboxes and add completion notes\n\nOnly stop for genuine blockers:\n- Missing files that cannot be created from available info\n- Genuinely ambiguous requirements with different architectural consequences\n- Checkpoint/smoke test failed twice after two fix attempts\n- Git push authentication failures\n\nFor everything else, make a reasonable decision and continue.\n\nWhen all tasks are complete and final checkpoint passes, output: \"Implementation complete. All tasks in tasks.md are finished. Live URL: https://royceshannon2-blip.github.io/Witness-Interactive Run a full manual playthrough to verify before recording your pitch video.\""
+  },
+  "workspaceFolderName": "Witness-Interactive",
+  "shortName": "progress-driver"
+}

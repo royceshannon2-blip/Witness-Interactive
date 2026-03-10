@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atmospheric Effects Timing Fix Test</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/atmospheric-effects.css">
+    <style>
+        body {
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .log {
+            background: #f5f5f5;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 3px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #scene-narrative {
+            background: #fff8dc;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        #scene-choices {
+            margin: 10px 0;
+        }
+        .choice-button {
+            display: block;
+            width: 100%;
+            margin: 5px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .choice-button:hover {
+            background: #e9ecef;
+        }
+        .choice-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Atmospheric Effects Timing Fix Test</h1>
+    <p>This test verifies that atmospheric effects only trigger after the scene HTML is rendered in the DOM.</p>
+
+    <div class="test-section">
+        <h2>Test Scene</h2>
+        <div id="app">
+            <div id="scene-screen" class="screen active">
+                <article class="scene-content">
+                    <section id="scene-narrative" class="panel panel-parchment">
+                        <p>Loading scene...</p>
+                    </section>
+                    <nav id="scene-choices" class="mt-md">
+                        <!-- Choices will be rendered here -->
+                    </nav>
+                </article>
+            </div>
+        </div>
+        
+        <button onclick="testSceneTransition()">Test Scene Transition</button>
+        <button onclick="clearLog()">Clear Log</button>
+        
+        <div class="log" id="event-log">
+            <div>Event log will appear here...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import EventBus from './js/engine/EventBus.js';
+        import AtmosphericEffects from './js/engine/AtmosphericEffects.js';
+        import UIController from './js/engine/UIController.js';
+
+        // Initialize components
+        const eventBus = new EventBus();
+        const atmosphericEffects = new AtmosphericEffects(eventBus, {
+            respectMotionPrefs: false // Force effects for testing
+        });
+
+        // Mock UIContent for UIController
+        const mockUIContent = {
+            progress: {
+                sceneLabel: 'Scene'
+            }
+        };
+
+        // Create minimal UIController for testing
+        const uiController = new UIController(
+            eventBus,
+            null, // timelineSelector
+            null, // missionRegistry
+            null, // consequenceSystem
+            null, // resultsCard
+            mockUIContent,
+            { atmosphericEffects } // components
+        );
+
+        // Event logging
+        const eventLog = document.getElementById('event-log');
+        
+        function logEvent(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.textContent = `[${timestamp}] ${message}`;
+            eventLog.appendChild(logEntry);
+            eventLog.scrollTop = eventLog.scrollHeight;
+        }
+
+        // Monitor key events
+        eventBus.on('scene:transition', (data) => {
+            logEvent('🔄 scene:transition fired - fadeOutAllEffects should be called');
+        });
+
+        eventBus.on('scene:rendered', (data) => {
+            logEvent('✅ scene:rendered fired - applyImmediateEffects should be called');
+            if (data && data.scene && data.scene.id) {
+                logEvent(`   Scene ID: ${data.scene.id}`);
+            }
+        });
+
+        eventBus.on('effect:applied', (data) => {
+            logEvent(`🎭 effect:applied - ${data.effectName}`);
+        });
+
+        // Test scene data
+        const testScene = {
+            id: 'as-scene-02',
+            narrative: 'You hear a tremendous explosion from the harbor. The ground shakes beneath your feet.',
+            choices: [
+                {
+                    id: 'choice-1',
+                    text: 'Run toward the harbor to help',
+                    nextScene: 'as-scene-03',
+                    consequences: { heroic: true }
+                },
+                {
+                    id: 'choice-2', 
+                    text: 'Take cover and assess the situation',
+                    nextScene: 'as-scene-03',
+                    consequences: { cautious: true }
+                }
+            ]
+        };
+
+        // Test function
+        window.testSceneTransition = function() {
+            logEvent('🚀 Starting scene transition test...');
+            
+            // Simulate scene transition
+            eventBus.emit('scene:transition', { 
+                scene: testScene,
+                sceneIndex: 1,
+                totalScenes: 5
+            });
+            
+            // Simulate DOM update (this would normally be done by UIController.renderScene)
+            setTimeout(() => {
+                const narrativeContainer = document.getElementById('scene-narrative');
+                const choicesContainer = document.getElementById('scene-choices');
+                
+                if (narrativeContainer && choicesContainer) {
+                    // Update DOM content
+                    narrativeContainer.innerHTML = `<p>${testScene.narrative}</p>`;
+                    
+                    choicesContainer.innerHTML = '';
+                    testScene.choices.forEach((choice, index) => {
+                        const button = document.createElement('button');
+                        button.className = 'choice-button';
+                        button.textContent = choice.text;
+                        choicesContainer.appendChild(button);
+                    });
+                    
+                    logEvent('📝 DOM updated with scene content');
+                    
+                    // Now emit scene:rendered (this should trigger atmospheric effects)
+                    setTimeout(() => {
+                        eventBus.emit('scene:rendered', { scene: testScene });
+                        logEvent('✨ Test complete - check if effects appeared AFTER DOM update');
+                    }, 50);
+                }
+            }, 100);
+        };
+
+        window.clearLog = function() {
+            eventLog.innerHTML = '<div>Event log cleared...</div>';
+        };
+
+        // Initial log
+        logEvent('🎮 Test initialized - AtmosphericEffects and UIController loaded');
+        logEvent('📋 Test scene: as-scene-02 (should trigger shake effect immediately)');
+    </script>
+</body>
+</html>

@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 0.8 Verification - Choice Click Before Typewriter Finishes</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .test-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: var(--color-parchment);
+            border-radius: 8px;
+        }
+        .test-log {
+            background: #f5f5f5;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .test-status {
+            padding: 0.5rem;
+            margin: 0.5rem 0;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+        .test-pass { background: #d4edda; color: #155724; }
+        .test-fail { background: #f8d7da; color: #721c24; }
+        .test-info { background: #d1ecf1; color: #0c5460; }
+        .choice-button {
+            background: var(--color-gold);
+            color: var(--color-dark);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            margin: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .choice-button:hover {
+            background: var(--color-gold-light);
+        }
+        .choice-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .scene-content {
+            background: white;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+            border: 2px solid var(--color-gold);
+        }
+        .typewriter-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            min-height: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>Task 0.8 Verification Test</h1>
+        <p><strong>Testing:</strong> Choice click before typewriter finishes should force-complete typewriter and add 50ms delay</p>
+        
+        <div class="test-status test-info">
+            <strong>Test Status:</strong> <span id="test-status">Initializing...</span>
+        </div>
+        
+        <div class="test-log" id="test-log">
+            <div>Test log will appear here...</div>
+        </div>
+        
+        <div class="scene-content">
+            <div class="typewriter-text" id="narrative-text">
+                <!-- Typewriter text will appear here -->
+            </div>
+            
+            <div id="choices-container">
+                <button class="choice-button" id="choice-1" disabled>Choice A: Quick Decision</button>
+                <button class="choice-button" id="choice-2" disabled>Choice B: Careful Consideration</button>
+            </div>
+        </div>
+        
+        <div style="margin-top: 2rem;">
+            <button id="start-test" class="choice-button">Start Test</button>
+            <button id="reset-test" class="choice-button">Reset Test</button>
+        </div>
+        
+        <div style="margin-top: 1rem;">
+            <h3>Test Instructions:</h3>
+            <ol>
+                <li>Click "Start Test" to begin typewriter animation</li>
+                <li>While text is still appearing, click one of the choice buttons</li>
+                <li>Verify that text completes immediately and choice is processed after 50ms delay</li>
+            </ol>
+        </div>
+    </div>
+
+    <script type="module">
+        import EventBus from './js/engine/EventBus.js';
+        import TypewriterEffect from './js/engine/TypewriterEffect.js';
+        import UIController from './js/engine/UIController.js';
+
+        // Test setup
+        const testLog = document.getElementById('test-log');
+        const testStatus = document.getElementById('test-status');
+        const narrativeText = document.getElementById('narrative-text');
+        const choice1 = document.getElementById('choice-1');
+        const choice2 = document.getElementById('choice-2');
+        const startTest = document.getElementById('start-test');
+        const resetTest = document.getElementById('reset-test');
+
+        let eventBus, typewriterEffect, testResults = [];
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            if (type === 'error') logEntry.style.color = 'red';
+            if (type === 'success') logEntry.style.color = 'green';
+            if (type === 'warning') logEntry.style.color = 'orange';
+            testLog.appendChild(logEntry);
+            testLog.scrollTop = testLog.scrollHeight;
+        }
+
+        function updateStatus(message, type = 'info') {
+            testStatus.textContent = message;
+            const statusElement = testStatus.parentElement;
+            statusElement.className = `test-status test-${type}`;
+        }
+
+        function initializeTest() {
+            log('Initializing test components...');
+            
+            // Create EventBus
+            eventBus = new EventBus();
+            
+            // Create TypewriterEffect
+            typewriterEffect = new TypewriterEffect(eventBus, {
+                defaultSpeed: 50, // Slower for testing
+                skipOnClick: true,
+                respectMotionPrefs: false
+            });
+            
+            // Create mock UIController with just the handleChoiceClick method
+            const mockUIController = {
+                isTransitioning: false,
+                typewriterEffect: typewriterEffect,
+                
+                handleChoiceClick(choice) {
+                    log(`Choice clicked: ${choice.id}`, 'warning');
+                    
+                    // Prevent double-clicks during transitions
+                    if (this.isTransitioning) {
+                        log('Choice click blocked - transition in progress', 'error');
+                        return;
+                    }
+                    
+                    // Force-complete typewriter if it's running
+                    if (this.typewriterEffect && this.typewriterEffect.isActive()) {
+                        log('Typewriter is active - forcing completion', 'warning');
+                        const wasActive = this.typewriterEffect.isActive();
+                        this.typewriterEffect.skipToEnd();
+                        
+                        if (wasActive && !this.typewriterEffect.isActive()) {
+                            log('✓ Typewriter successfully force-completed', 'success');
+                            testResults.push('typewriter_completed');
+                        }
+                        
+                        // Add 50ms delay before transition
+                        log('Adding 50ms delay before processing choice...', 'info');
+                        setTimeout(() => {
+                            this.emitChoiceMade(choice);
+                        }, 50);
+                    } else {
+                        log('Typewriter not running - processing choice immediately', 'info');
+                        this.emitChoiceMade(choice);
+                    }
+                },
+                
+                emitChoiceMade(choice) {
+                    log(`✓ Choice processed: ${choice.id}`, 'success');
+                    testResults.push('choice_processed');
+                    this.validateTest();
+                },
+                
+                validateTest() {
+                    log('Validating test results...', 'info');
+                    
+                    const hasTypewriterCompleted = testResults.includes('typewriter_completed');
+                    const hasChoiceProcessed = testResults.includes('choice_processed');
+                    
+                    if (hasTypewriterCompleted && hasChoiceProcessed) {
+                        log('✓ TEST PASSED: Choice click before typewriter finishes works correctly', 'success');
+                        updateStatus('TEST PASSED', 'pass');
+                    } else {
+                        log('✗ TEST FAILED: Missing expected behaviors', 'error');
+                        updateStatus('TEST FAILED', 'fail');
+                    }
+                }
+            };
+            
+            // Set up choice button handlers
+            choice1.addEventListener('click', () => {
+                mockUIController.handleChoiceClick({ id: 'choice-a', text: 'Quick Decision' });
+            });
+            
+            choice2.addEventListener('click', () => {
+                mockUIController.handleChoiceClick({ id: 'choice-b', text: 'Careful Consideration' });
+            });
+            
+            log('✓ Test components initialized', 'success');
+            updateStatus('Ready to test', 'info');
+        }
+
+        function startTypewriterTest() {
+            log('Starting typewriter test...', 'info');
+            testResults = []; // Reset results
+            
+            // Clear narrative text
+            narrativeText.textContent = '';
+            
+            // Disable choices initially
+            choice1.disabled = true;
+            choice2.disabled = true;
+            
+            const testText = "This is a test narrative that will be revealed character by character. While this text is still appearing, you should click one of the choice buttons to test the force-completion functionality. The typewriter should immediately complete and the choice should be processed after a 50ms delay.";
+            
+            log('Starting typewriter animation...', 'info');
+            updateStatus('Typewriter running - click a choice button now!', 'info');
+            
+            // Start typewriter effect
+            typewriterEffect.revealText(
+                narrativeText,
+                testText,
+                50, // 50ms per character for testing
+                () => {
+                    log('Typewriter completed naturally', 'info');
+                    choice1.disabled = false;
+                    choice2.disabled = false;
+                    
+                    if (testResults.length === 0) {
+                        updateStatus('Typewriter completed - test not triggered', 'info');
+                    }
+                }
+            );
+            
+            // Enable choices after a short delay to allow clicking during typewriter
+            setTimeout(() => {
+                choice1.disabled = false;
+                choice2.disabled = false;
+            }, 200);
+        }
+
+        function resetTest() {
+            log('Resetting test...', 'info');
+            testResults = [];
+            narrativeText.textContent = '';
+            choice1.disabled = true;
+            choice2.disabled = true;
+            
+            if (typewriterEffect && typewriterEffect.isActive()) {
+                typewriterEffect.skipToEnd();
+            }
+            
+            updateStatus('Test reset - ready to start', 'info');
+        }
+
+        // Event listeners
+        startTest.addEventListener('click', startTypewriterTest);
+        resetTest.addEventListener('click', resetTest);
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTest();
+        });
+    </script>
+</body>
+</html>

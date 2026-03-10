@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Phase Gate Validator",
+  "description": "Validates phase checkpoints in tasks.md by running appropriate tests and verifying pass conditions for each phase gate",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "**/tasks.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Check if a checkpoint line was just added or modified in tasks.md. If so, identify which checkpoint it is and run the appropriate validation:\n\n**Phase 0 Complete**: Manually test all 5 scenes of each role in browser. Verify outcome screen appears, no white screen, no console errors.\n\n**Phase 1 Smoke Test**: Run smoke-test-phase1.js. Verify all nextScene references resolve, no unreachable scenes, no routing loops, SceneRouter.loadRole() returns valid:true for all roles.\n\n**All Three Roles Have Complete Branching Paths**: Trace all 9 paths (3 per role: compliance, instinct, witness). Verify no missing scene IDs.\n\n**Phase 4 Smoke Test**: Run smoke-test-phase4.js. Verify PsychologyEngine initialization, applyEffects clamping, calculateGrade, and classifyArchetype.\n\n**Phase 5 Smoke Test**: Run smoke-test-phase5.js. Verify all 18 outcome combinations return epilogues between 100-200 words with non-empty historicalAnchor fields.\n\n**All Three Roles Completable End-to-End**: Play through each role completely and verify the full experience works.\n\nReport pass/fail status clearly. If failed, identify the specific issue and suggest the fix."
+  }
+}

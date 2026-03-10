@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task 0.5 Verification - Timed Choice Defensive Programming</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .pass {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .fail {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #console-output {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            padding: 10px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Task 0.5 Verification: Timed Choice Defensive Programming</h1>
+    
+    <div class="test-section">
+        <h2>Edge Case Testing</h2>
+        <p>This test verifies that the TimedChoiceSystem handles edge cases gracefully:</p>
+        <ul>
+            <li>Missing or invalid defaultChoice</li>
+            <li>Empty choices array</li>
+            <li>Malformed choices with null/undefined elements</li>
+            <li>Timer expiration with corrupted state</li>
+        </ul>
+        
+        <button onclick="runEdgeCaseTests()">Run Edge Case Tests</button>
+        <div id="test-results"></div>
+    </div>
+
+    <div class="test-section">
+        <h2>Console Output</h2>
+        <div id="console-output"></div>
+    </div>
+
+    <script type="module">
+        import TimedChoiceSystem from './js/engine/TimedChoiceSystem.js';
+        import EventBus from './js/engine/EventBus.js';
+
+        // Capture console output
+        const originalConsoleLog = console.log;
+        const originalConsoleWarn = console.warn;
+        const originalConsoleError = console.error;
+        const consoleOutput = document.getElementById('console-output');
+
+        function logToConsole(type, ...args) {
+            const message = args.join(' ');
+            consoleOutput.textContent += `[${type.toUpperCase()}] ${message}\n`;
+            consoleOutput.scrollTop = consoleOutput.scrollHeight;
+        }
+
+        console.log = (...args) => {
+            originalConsoleLog(...args);
+            logToConsole('log', ...args);
+        };
+        console.warn = (...args) => {
+            originalConsoleWarn(...args);
+            logToConsole('warn', ...args);
+        };
+        console.error = (...args) => {
+            originalConsoleError(...args);
+            logToConsole('error', ...args);
+        };
+
+        function addTestResult(testName, passed, message = '') {
+            const resultsDiv = document.getElementById('test-results');
+            const resultDiv = document.createElement('div');
+            resultDiv.className = `test-result ${passed ? 'pass' : 'fail'}`;
+            resultDiv.innerHTML = `
+                <strong>${testName}</strong>: ${passed ? 'PASS' : 'FAIL'}
+                ${message ? `<br><small>${message}</small>` : ''}
+            `;
+            resultsDiv.appendChild(resultDiv);
+        }
+
+        window.runEdgeCaseTests = async function() {
+            const resultsDiv = document.getElementById('test-results');
+            resultsDiv.innerHTML = '';
+            consoleOutput.textContent = '';
+
+            console.log('=== Task 0.5 Edge Case Tests ===');
+
+            const eventBus = new EventBus();
+            let testCount = 0;
+            let passCount = 0;
+
+            // Test 1: Missing defaultChoice with valid choices
+            try {
+                const system1 = new TimedChoiceSystem(eventBus);
+                const choices = [
+                    { id: 'choice-a', text: 'Option A' },
+                    { id: 'choice-b', text: 'Option B' }
+                ];
+
+                system1.startTimer(5000, null, () => {}, choices);
+                const passed = system1.isActive && system1.defaultChoiceId === 'choice-a';
+                addTestResult('Missing defaultChoice fallback', passed, 
+                    passed ? 'Falls back to first choice correctly' : 'Failed to fall back to first choice');
+                if (passed) passCount++;
+                testCount++;
+                system1.cancelTimer();
+            } catch (error) {
+                addTestResult('Missing defaultChoice fallback', false, `Error: ${error.message}`);
+                testCount++;
+            }
+
+            // Test 2: Invalid defaultChoice with valid choices
+            try {
+                const system2 = new TimedChoiceSystem(eventBus);
+                const choices = [
+                    { id: 'choice-a', text: 'Option A' },
+                    { id: 'choice-b', text: 'Option B' }
+                ];
+
+                system2.startTimer(5000, 'choice-nonexistent', () => {}, choices);
+                const passed = system2.isActive && system2.defaultChoiceId === 'choice-a';
+                addTestResult('Invalid defaultChoice fallback', passed,
+                    passed ? 'Falls back to first choice correctly' : 'Failed to fall back to first choice');
+                if (passed) passCount++;
+                testCount++;
+                system2.cancelTimer();
+            } catch (error) {
+                addTestResult('Invalid defaultChoice fallback', false, `Error: ${error.message}`);
+                testCount++;
+            }
+
+            // Test 3: Empty choices array
+            try {
+                const system3 = new TimedChoiceSystem(eventBus);
+                system3.startTimer(5000, 'choice-a', () => {}, []);
+                const passed = !system3.isActive;
+                addTestResult('Empty choices array rejection', passed,
+                    passed ? 'Correctly rejects empty choices array' : 'Should reject empty choices array');
+                if (passed) passCount++;
+                testCount++;
+            } catch (error) {
+                addTestResult('Empty choices array rejection', false, `Error: ${error.message}`);
+                testCount++;
+            }
+
+            // Test 4: Malformed choices array
+            try {
+                const system4 = new TimedChoiceSystem(eventBus);
+                const malformedChoices = [
+                    null,
+                    { id: 'choice-a', text: 'Option A' },
+                    undefined,
+                    { id: 'choice-b', text: 'Option B' }
+                ];
+
+                system4.startTimer(5000, 'choice-nonexistent', () => {}, malformedChoices);
+                const passed = system4.isActive && system4.defaultChoiceId === 'choice-a';
+                addTestResult('Malformed choices array handling', passed,
+                    passed ? 'Correctly finds first valid choice' : 'Failed to handle malformed array');
+                if (passed) passCount++;
+                testCount++;
+                system4.cancelTimer();
+            } catch (error) {
+                addTestResult('Malformed choices array handling', false, `Error: ${error.message}`);
+                testCount++;
+            }
+
+            // Test 5: Timer expiration with invalid callback
+            try {
+                const system5 = new TimedChoiceSystem(eventBus);
+                const choices = [{ id: 'choice-a', text: 'Option A' }];
+                
+                let expiredEmitted = false;
+                eventBus.on('timer:expired', () => {
+                    expiredEmitted = true;
+                });
+
+                system5.startTimer(200, 'choice-a', () => {}, choices);
+                system5.onExpireCallback = null; // Simulate corruption
+
+                await new Promise(resolve => setTimeout(resolve, 300));
+
+                const passed = !expiredEmitted && !system5.isActive;
+                addTestResult('Invalid callback handling', passed,
+                    passed ? 'Correctly handles invalid callback without crashing' : 'Failed to handle invalid callback');
+                if (passed) passCount++;
+                testCount++;
+            } catch (error) {
+                addTestResult('Invalid callback handling', false, `Error: ${error.message}`);
+                testCount++;
+            }
+
+            // Test 6: Timer expiration with invalid defaultChoiceId
+            try {
+                const system6 = new TimedChoiceSystem(eventBus);
+                const choices = [{ id: 'choice-a', text: 'Option A' }];
+                
+                let expiredEmitted = false;
+                eventBus.on('timer:expired', () => {
+                    expiredEmitted = true;
+                });
+
+                system6.startTimer(200, 'choice-a', () => {}, choices);
+                system6.defaultChoiceId = null; // Simulate corruption
+
+                await new Promise(resolve => setTimeout(resolve, 300));
+
+                const passed = !expiredEmitted && !system6.isActive;
+                addTestResult('Invalid defaultChoiceId handling', passed,
+                    passed ? 'Correctly handles invalid defaultChoiceId without crashing' : 'Failed to handle invalid defaultChoiceId');
+                if (passed) passCount++;
+                testCount++;
+            } catch (error) {
+                addTestResult('Invalid defaultChoiceId handling', false, `Error: ${error.message}`);
+                testCount++;
+            }
+
+            // Summary
+            const summaryDiv = document.createElement('div');
+            summaryDiv.className = `test-result ${passCount === testCount ? 'pass' : 'info'}`;
+            summaryDiv.innerHTML = `
+                <strong>Test Summary</strong><br>
+                Passed: ${passCount}/${testCount}<br>
+                ${passCount === testCount ? 'All edge case tests passed! ✓' : 'Some tests failed ✗'}
+            `;
+            resultsDiv.appendChild(summaryDiv);
+
+            console.log(`=== Test Summary: ${passCount}/${testCount} passed ===`);
+        };
+    </script>
+</body>
+</html>
