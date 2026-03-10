@@ -4,7 +4,7 @@
  * Tracks four psychological scores throughout gameplay:
  * - Morale (State of Mind)
  * - Loyalty (Duty Rating)
- * - Awareness (Humanity/Moral Awareness)
+ * - Humanity (Moral Awareness)
  * - Composure (Under Pressure)
  * 
  * Calculates Teammate Grade and Personality Archetype at mission end.
@@ -20,7 +20,7 @@ class PsychologyEngine {
     this.scores = {
       morale: 50,
       loyalty: 50,
-      awareness: 50,
+      humanity: 50,
       composure: 50
     };
     
@@ -29,6 +29,13 @@ class PsychologyEngine {
     
     // Current role ID (needed for archetype descriptions)
     this.currentRole = null;
+    
+    // Grade and archetype configuration (injected)
+    this.gradeConfig = null;
+    this.archetypes = null;
+    
+    // Listen for terminal scene to calculate final results
+    this.eventBus.on('scene:terminal', this.handleTerminal.bind(this));
   }
 
   /**
@@ -39,7 +46,7 @@ class PsychologyEngine {
     this.scores = {
       morale: 50,
       loyalty: 50,
-      awareness: 50,
+      humanity: 50,
       composure: 50
     };
     this.history = [];
@@ -52,12 +59,22 @@ class PsychologyEngine {
   setCurrentRole(roleId) {
     this.currentRole = roleId;
   }
+  
+  /**
+   * Set grade and archetype configuration
+   * @param {Object} gradeConfig - Grade configuration from psychology-data.js
+   * @param {Array} archetypes - Archetype data from psychology-data.js
+   */
+  setConfiguration(gradeConfig, archetypes) {
+    this.gradeConfig = gradeConfig;
+    this.archetypes = archetypes;
+  }
 
   /**
    * Apply score deltas from a choice's psychologyEffects
    * Clamps all scores to 0-100 after applying
    * Emits psychology:scores-updated event
-   * @param {Object} psychologyEffects - { morale, loyalty, awareness, composure }
+   * @param {Object} psychologyEffects - { morale, loyalty, humanity, composure }
    * @param {string} sceneId - Scene ID where choice was made
    * @param {string} choiceId - Choice ID that was selected
    */
@@ -71,8 +88,8 @@ class PsychologyEngine {
     if (typeof psychologyEffects.loyalty === 'number') {
       this.scores.loyalty += psychologyEffects.loyalty;
     }
-    if (typeof psychologyEffects.awareness === 'number') {
-      this.scores.awareness += psychologyEffects.awareness;
+    if (typeof psychologyEffects.humanity === 'number') {
+      this.scores.humanity += psychologyEffects.humanity;
     }
     if (typeof psychologyEffects.composure === 'number') {
       this.scores.composure += psychologyEffects.composure;
@@ -81,7 +98,7 @@ class PsychologyEngine {
     // Clamp to 0-100
     this.scores.morale = Math.max(0, Math.min(100, this.scores.morale));
     this.scores.loyalty = Math.max(0, Math.min(100, this.scores.loyalty));
-    this.scores.awareness = Math.max(0, Math.min(100, this.scores.awareness));
+    this.scores.humanity = Math.max(0, Math.min(100, this.scores.humanity));
     this.scores.composure = Math.max(0, Math.min(100, this.scores.composure));
 
     // Record in history
@@ -103,7 +120,7 @@ class PsychologyEngine {
 
   /**
    * Get current snapshot of all four scores
-   * @returns {Object} { morale, loyalty, awareness, composure }
+   * @returns {Object} { morale, loyalty, humanity, composure }
    */
   getScores() {
     return { ...this.scores };
@@ -130,7 +147,7 @@ class PsychologyEngine {
     const compositeScore = 
       (scores.morale * weights.morale) +
       (scores.loyalty * weights.loyalty) +
-      (scores.awareness * weights.awareness) +
+      (scores.humanity * weights.humanity) +
       (scores.composure * weights.composure);
 
     // Find matching threshold
@@ -169,8 +186,6 @@ class PsychologyEngine {
     
     const highest = scoreEntries[0][0];
     const lowest = scoreEntries[scoreEntries.length - 1][0];
-    const highestValue = scoreEntries[0][1];
-    const lowestValue = scoreEntries[scoreEntries.length - 1][1];
 
     // Try to match archetype patterns
     for (const archetype of archetypes) {
@@ -188,15 +203,15 @@ class PsychologyEngine {
           matches = false;
           break;
         }
-        if (requirement === 'high' && scores[trait] < 70) {
+        if (requirement === 'high' && scores[trait] < 65) {
           matches = false;
           break;
         }
-        if (requirement === 'low' && scores[trait] > 30) {
+        if (requirement === 'low' && scores[trait] > 35) {
           matches = false;
           break;
         }
-        if (requirement === 'mid' && (scores[trait] < 40 || scores[trait] > 60)) {
+        if (requirement === 'mid' && (scores[trait] < 35 || scores[trait] > 65)) {
           matches = false;
           break;
         }
@@ -215,7 +230,7 @@ class PsychologyEngine {
     const fallbackArchetypes = {
       morale: 'The Idealist',
       loyalty: 'The Soldier',
-      awareness: 'The Witness',
+      humanity: 'The Witness',
       composure: 'The Pragmatist'
     };
 
@@ -224,6 +239,26 @@ class PsychologyEngine {
       description: 'You navigated December 7th in your own way. Every path through history is unique.',
       dominantTrait: highest
     };
+  }
+  
+  /**
+   * Handle scene:terminal event
+   * Calculates grade and archetype, emits psychology:grade-calculated
+   */
+  handleTerminal() {
+    if (!this.gradeConfig || !this.archetypes || !this.currentRole) {
+      console.warn('PsychologyEngine: Cannot calculate grade/archetype - missing configuration');
+      return;
+    }
+    
+    const scores = this.getScores();
+    const grade = this.calculateGrade(scores, this.gradeConfig);
+    const archetype = this.classifyArchetype(scores, this.archetypes, this.currentRole);
+    
+    this.eventBus.emit('psychology:grade-calculated', {
+      grade,
+      archetype
+    });
   }
 
   /**
