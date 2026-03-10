@@ -30,11 +30,7 @@ Below deck, you know some men are writing letters they hope they'll never need t
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.1.I",
     atmosphericEffect: null,
-    ambientSound: {
-      id: "425268__77pacer__airplanetank-engine-sound.wav",
-      volume: 0.6,
-      fadeIn: 1000
-    },
+    ambientTrack: "425268__77pacer__airplanetank-engine-sound.wav",
     narratorAudio: "audio/narration/japanese-aviator/ja-scene-01.mp3",
     choices: [
       {
@@ -77,11 +73,7 @@ Below, you can see Wheeler Field. Rows of aircraft parked wingtip to wingtip, gl
     apThemes: ["causation", "perspective"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: null,
-    ambientSound: {
-      id: "161120__fight2flyphoto__a6m-zero-chasing-p-51d-mustang.wav",
-      volume: 0.6,
-      fadeIn: 1000
-    },
+    ambientTrack: "161120__fight2flyphoto__a6m-zero-chasing-p-51d-mustang.wav",
     narratorAudio: "audio/narration/japanese-aviator/ja-scene-02.mp3",
     radioClips: [
       {
@@ -136,11 +128,7 @@ Your fuel gauge shows three-quarters remaining. Your ammunition counter reads fu
     apThemes: ["perspective", "continuity"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "smoke",
-    ambientSound: {
-      id: "149966__nenadsimic__muffled-distant-explosion.wav",
-      volume: 0.6,
-      fadeIn: 1000
-    },
+    ambientTrack: "149966__nenadsimic__muffled-distant-explosion.wav",
     narratorAudio: "audio/narration/japanese-aviator/ja-scene-03.mp3",
     radioClips: [
       {
@@ -200,11 +188,7 @@ Your fuel gauge reads half. Enough to escort him partway, maybe. Or enough to ma
     apThemes: ["perspective", "causation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: "shake",
-    ambientSound: {
-      id: "161120__fight2flyphoto__a6m-zero-chasing-p-51d-mustang.wav",
-      volume: 0.6,
-      fadeIn: 1000
-    },
+    ambientTrack: "161120__fight2flyphoto__a6m-zero-chasing-p-51d-mustang.wav",
     narratorAudio: "audio/narration/japanese-aviator/ja-scene-04.mp3",
     radioClips: [
       {
@@ -264,11 +248,7 @@ You think about the burning ships, the men in the water, the carriers that weren
     apThemes: ["causation", "continuity", "argumentation"],
     apKeyConcept: "KC-7.3.I",
     atmosphericEffect: null,
-    ambientSound: {
-      id: "425268__77pacer__airplanetank-engine-sound.wav",
-      volume: 0.6,
-      fadeIn: 1000
-    },
+    ambientTrack: "425268__77pacer__airplanetank-engine-sound.wav",
     narratorAudio: "audio/narration/japanese-aviator/ja-scene-05.mp3",
     choices: [
       {

@@ -79,8 +79,9 @@ class NarratorAudioManager {
       }
     });
     
-    // Listen for scene transitions to stop narration
+    // Listen for scene transitions to stop narration BEFORE new scene loads
     this.eventBus.on('scene:transition', () => {
+      console.log('[Audio] Scene transition detected - stopping all narrator audio');
       this.stopAll();
     });
     
@@ -144,16 +145,27 @@ class NarratorAudioManager {
     console.log(`[Audio] Playing scene audio for ${scene.id}: ${this.audioQueue.length} items in queue`);
     
     // Play each item in the queue sequentially
+    this.isPlaying = true;
     try {
       for (const item of this.audioQueue) {
+        // Check if we should stop (scene transition occurred)
+        if (!this.isPlaying) {
+          console.log('[Audio] Playback interrupted by scene transition');
+          break;
+        }
+        
         await this.playAudioFile(item.src, item.type);
       }
       
-      // All audio complete
-      this.eventBus.emit('narrator:complete', { sceneId: scene.id });
-      console.log(`[Audio] Scene audio complete for ${scene.id}`);
+      // All audio complete (only if not interrupted)
+      if (this.isPlaying) {
+        this.eventBus.emit('narrator:complete', { sceneId: scene.id });
+        console.log(`[Audio] Scene audio complete for ${scene.id}`);
+      }
     } catch (error) {
       console.error(`[Audio] Error playing scene audio:`, error);
+    } finally {
+      this.isPlaying = false;
     }
   }
 
@@ -164,8 +176,14 @@ class NarratorAudioManager {
    * @returns {Promise} Resolves when audio finishes playing
    */
   playAudioFile(src, type) {
-    return new Promise(async (resolve, reject) => {
+    return new Promise(async (resolve) => {
       if (!src) {
+        resolve();
+        return;
+      }
+
+      // Check if playback was stopped
+      if (!this.isPlaying) {
         resolve();
         return;
       }
@@ -173,6 +191,12 @@ class NarratorAudioManager {
       try {
         // Load audio buffer
         const audioBuffer = await this.loadAudioFile(src);
+        
+        // Check again if playback was stopped while loading
+        if (!this.isPlaying) {
+          resolve();
+          return;
+        }
         
         // Create audio source
         const source = this.audioContext.createBufferSource();
@@ -205,11 +229,9 @@ class NarratorAudioManager {
         // Store current source and gain node
         this.currentSource = source;
         this.currentGainNode = gainNode;
-        this.isPlaying = true;
         
         // Set up completion handler
         source.onended = () => {
-          this.isPlaying = false;
           this.currentSource = null;
           this.currentGainNode = null;
           

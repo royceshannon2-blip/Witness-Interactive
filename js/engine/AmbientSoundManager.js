@@ -69,6 +69,11 @@ class AmbientSoundManager {
     this.eventBus.on('sound:toggle', () => {
       this.toggleMute();
     });
+    
+    // Listen for ambient crossfade requests from SceneStateMachine
+    this.eventBus.on('ambient:crossfade', (data) => {
+      this.crossfade(data.from, data.to, data.duration);
+    });
   }
 
   /**

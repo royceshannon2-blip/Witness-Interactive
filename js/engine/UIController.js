@@ -813,10 +813,10 @@ class UIController {
     
     // Change ambient sound if specified (Task 7.2)
     // Use crossfade for smooth transitions between ambient tracks
-    if (scene.ambientSound && this.ambientSoundManager) {
+    if (scene.ambientTrack && this.ambientSoundManager) {
       // Get the currently playing ambient sound (if any)
       const currentAmbient = this.currentAmbientSound || null;
-      const newAmbient = scene.ambientSound.id;
+      const newAmbient = scene.ambientTrack;
       
       // Crossfade from current to new ambient sound
       this.ambientSoundManager.crossfade(currentAmbient, newAmbient, 1500);

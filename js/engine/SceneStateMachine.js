@@ -43,6 +43,9 @@ class SceneStateMachine {
     // Current mission and role IDs
     this.currentMissionId = null;
     this.currentRoleId = null;
+    
+    // Track current ambient track for crossfading
+    this.currentAmbientTrack = null;
   }
 
   /**
@@ -224,6 +227,19 @@ class SceneStateMachine {
 
     // Get the new current scene
     const newScene = this.getCurrentScene();
+
+    // Handle ambient audio crossfading
+    if (newScene.ambientTrack) {
+      if (this.currentAmbientTrack !== newScene.ambientTrack) {
+        // Crossfade to new ambient track
+        this.eventBus.emit('ambient:crossfade', {
+          from: this.currentAmbientTrack,
+          to: newScene.ambientTrack,
+          duration: 1500
+        });
+        this.currentAmbientTrack = newScene.ambientTrack;
+      }
+    }
 
     // Emit scene:transition event
     this.eventBus.emit('scene:transition', {
