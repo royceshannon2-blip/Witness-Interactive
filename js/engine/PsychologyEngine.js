@@ -1,22 +1,18 @@
 /**
  * PsychologyEngine - Player Psychology Tracking System
  * 
- * Tracks four psychological dimensions throughout gameplay:
- * - Morale: State of mind and emotional resilience
- * - Loyalty: Duty to orders and unit
- * - Humanity: Compassion and moral concern
- * - Composure: Ability to stay calm under pressure
+ * Tracks four psychological scores throughout gameplay:
+ * - Morale (State of Mind)
+ * - Loyalty (Duty Rating)
+ * - Awareness (Humanity/Moral Awareness)
+ * - Composure (Under Pressure)
  * 
- * Calculates Teammate Grade and Personality Archetype based on final scores.
+ * Calculates Teammate Grade and Personality Archetype at mission end.
  * 
  * Requirements: Psychology System
  */
 
 class PsychologyEngine {
-  /**
-   * Create PsychologyEngine instance
-   * @param {EventBus} eventBus - Event bus for component communication
-   */
   constructor(eventBus) {
     this.eventBus = eventBus;
     
@@ -24,65 +20,90 @@ class PsychologyEngine {
     this.scores = {
       morale: 50,
       loyalty: 50,
-      humanity: 50,
+      awareness: 50,
       composure: 50
     };
     
-    // History of score changes
+    // History of all score changes
     this.history = [];
     
-    // Subscribe to events
-    this.eventBus.on('scene:terminal', () => {
-      this.calculateGradeAndArchetype();
-    });
+    // Current role ID (needed for archetype descriptions)
+    this.currentRole = null;
   }
 
   /**
-   * Initialize scores to 50 for new session
+   * Initialize scores to 50 for a new session
+   * Clear all history
    */
   init() {
     this.scores = {
       morale: 50,
       loyalty: 50,
-      humanity: 50,
+      awareness: 50,
       composure: 50
     };
     this.history = [];
   }
 
   /**
-   * Apply score deltas from choice
-   * @param {Object} psychologyEffects - Delta object with morale, loyalty, humanity, composure
+   * Set the current role ID
+   * @param {string} roleId - Role identifier
    */
-  applyEffects(psychologyEffects) {
-    if (!psychologyEffects) {
-      return;
+  setCurrentRole(roleId) {
+    this.currentRole = roleId;
+  }
+
+  /**
+   * Apply score deltas from a choice's psychologyEffects
+   * Clamps all scores to 0-100 after applying
+   * Emits psychology:scores-updated event
+   * @param {Object} psychologyEffects - { morale, loyalty, awareness, composure }
+   * @param {string} sceneId - Scene ID where choice was made
+   * @param {string} choiceId - Choice ID that was selected
+   */
+  applyEffects(psychologyEffects, sceneId, choiceId) {
+    if (!psychologyEffects) return;
+
+    // Apply deltas
+    if (typeof psychologyEffects.morale === 'number') {
+      this.scores.morale += psychologyEffects.morale;
+    }
+    if (typeof psychologyEffects.loyalty === 'number') {
+      this.scores.loyalty += psychologyEffects.loyalty;
+    }
+    if (typeof psychologyEffects.awareness === 'number') {
+      this.scores.awareness += psychologyEffects.awareness;
+    }
+    if (typeof psychologyEffects.composure === 'number') {
+      this.scores.composure += psychologyEffects.composure;
     }
 
-    // Apply deltas and clamp to 0-100
-    if (psychologyEffects.morale) {
-      this.scores.morale = Math.max(0, Math.min(100, this.scores.morale + psychologyEffects.morale));
-    }
-    if (psychologyEffects.loyalty) {
-      this.scores.loyalty = Math.max(0, Math.min(100, this.scores.loyalty + psychologyEffects.loyalty));
-    }
-    if (psychologyEffects.humanity) {
-      this.scores.humanity = Math.max(0, Math.min(100, this.scores.humanity + psychologyEffects.humanity));
-    }
-    if (psychologyEffects.composure) {
-      this.scores.composure = Math.max(0, Math.min(100, this.scores.composure + psychologyEffects.composure));
-    }
+    // Clamp to 0-100
+    this.scores.morale = Math.max(0, Math.min(100, this.scores.morale));
+    this.scores.loyalty = Math.max(0, Math.min(100, this.scores.loyalty));
+    this.scores.awareness = Math.max(0, Math.min(100, this.scores.awareness));
+    this.scores.composure = Math.max(0, Math.min(100, this.scores.composure));
 
-    // Emit update event
+    // Record in history
+    this.history.push({
+      sceneId,
+      choiceId,
+      effects: { ...psychologyEffects },
+      scoresAfter: { ...this.scores }
+    });
+
+    // Emit event
     this.eventBus.emit('psychology:scores-updated', {
+      sceneId,
+      choiceId,
       effects: psychologyEffects,
       scores: { ...this.scores }
     });
   }
 
   /**
-   * Get current score snapshot
-   * @returns {Object} Current scores
+   * Get current snapshot of all four scores
+   * @returns {Object} { morale, loyalty, awareness, composure }
    */
   getScores() {
     return { ...this.scores };
@@ -97,127 +118,117 @@ class PsychologyEngine {
   }
 
   /**
-   * Calculate Teammate Grade from scores
+   * Calculate final Teammate Grade from score snapshot
+   * Uses weighted average of scores
    * @param {Object} scores - Score snapshot
-   * @param {Object} gradeConfig - Grade configuration with thresholds
-   * @returns {Object} Grade result with letter, label, description
+   * @param {Object} gradeConfig - Grade configuration from psychology-data.js
+   * @returns {Object} { letter, label, description, scoreUsed }
    */
   calculateGrade(scores, gradeConfig) {
-    if (!gradeConfig || !gradeConfig.thresholds) {
-      return { letter: 'C', label: 'Average', description: 'You performed adequately.' };
-    }
-
     // Calculate weighted average
-    const weights = gradeConfig.weights || {
-      morale: 0.30,
-      loyalty: 0.25,
-      humanity: 0.30,
-      composure: 0.15
-    };
-
-    const composite = 
+    const weights = gradeConfig.weights;
+    const compositeScore = 
       (scores.morale * weights.morale) +
       (scores.loyalty * weights.loyalty) +
-      (scores.humanity * weights.humanity) +
+      (scores.awareness * weights.awareness) +
       (scores.composure * weights.composure);
 
     // Find matching threshold
-    for (const threshold of gradeConfig.thresholds) {
-      if (composite >= threshold.min) {
+    const thresholds = gradeConfig.thresholds;
+    for (const threshold of thresholds) {
+      if (compositeScore >= threshold.min) {
         return {
           letter: threshold.letter,
           label: threshold.label,
           description: threshold.description,
-          scoreUsed: Math.round(composite)
+          scoreUsed: Math.round(compositeScore)
         };
       }
     }
 
-    return { letter: 'F', label: 'Failed', description: 'You did not survive.' };
-  }
-
-  /**
-   * Classify Personality Archetype from scores
-   * @param {Object} scores - Score snapshot
-   * @param {Array} archetypes - Array of archetype definitions
-   * @param {string} role - Current role for role-specific descriptions
-   * @returns {Object} Archetype result with name, description, dominantTrait
-   */
-  classifyArchetype(scores, archetypes, role) {
-    if (!archetypes || archetypes.length === 0) {
-      return { name: 'The Survivor', description: 'You made it through.' };
-    }
-
-    // Find dominant trait
-    let dominantTrait = 'morale';
-    let maxScore = scores.morale;
-
-    for (const [trait, score] of Object.entries(scores)) {
-      if (score > maxScore) {
-        maxScore = score;
-        dominantTrait = trait;
-      }
-    }
-
-    // Find matching archetype
-    for (const archetype of archetypes) {
-      if (this.matchesPattern(scores, archetype.dominantPattern)) {
-        return {
-          name: archetype.name,
-          description: archetype.descriptions[role] || archetype.descriptions.default || archetype.name,
-          dominantTrait
-        };
-      }
-    }
-
-    // Default archetype
+    // Fallback (should never reach here if thresholds include min: 0)
     return {
-      name: 'The Survivor',
-      description: 'You made it through December 7th.',
-      dominantTrait
+      letter: 'F',
+      label: 'Unknown',
+      description: 'Unable to calculate grade.',
+      scoreUsed: Math.round(compositeScore)
     };
   }
 
   /**
-   * Check if scores match archetype pattern
-   * @private
+   * Classify Personality Archetype from score pattern
+   * @param {Object} scores - Score snapshot
+   * @param {Array} archetypes - Archetype data from psychology-data.js
+   * @param {string} role - Role ID for role-specific description
+   * @returns {Object} { name, description, dominantTrait }
    */
-  matchesPattern(scores, pattern) {
-    if (!pattern) return false;
+  classifyArchetype(scores, archetypes, role) {
+    // Find highest and lowest scores
+    const scoreEntries = Object.entries(scores);
+    scoreEntries.sort((a, b) => b[1] - a[1]);
+    
+    const highest = scoreEntries[0][0];
+    const lowest = scoreEntries[scoreEntries.length - 1][0];
+    const highestValue = scoreEntries[0][1];
+    const lowestValue = scoreEntries[scoreEntries.length - 1][1];
 
-    for (const [trait, condition] of Object.entries(pattern)) {
-      const score = scores[trait];
+    // Try to match archetype patterns
+    for (const archetype of archetypes) {
+      const pattern = archetype.dominantPattern;
       
-      if (condition === 'highest') {
-        // Check if this is the highest score
-        const isHighest = Object.values(scores).every(s => s <= score);
-        if (!isHighest) return false;
-      } else if (condition === 'high') {
-        if (score < 65) return false;
-      } else if (condition === 'mid') {
-        if (score < 35 || score > 65) return false;
-      } else if (condition === 'low') {
-        if (score >= 35) return false;
-      } else if (condition === 'lowest') {
-        const isLowest = Object.values(scores).every(s => s >= score);
-        if (!isLowest) return false;
+      // Check if pattern matches
+      let matches = true;
+      
+      for (const [trait, requirement] of Object.entries(pattern)) {
+        if (requirement === 'highest' && trait !== highest) {
+          matches = false;
+          break;
+        }
+        if (requirement === 'lowest' && trait !== lowest) {
+          matches = false;
+          break;
+        }
+        if (requirement === 'high' && scores[trait] < 70) {
+          matches = false;
+          break;
+        }
+        if (requirement === 'low' && scores[trait] > 30) {
+          matches = false;
+          break;
+        }
+        if (requirement === 'mid' && (scores[trait] < 40 || scores[trait] > 60)) {
+          matches = false;
+          break;
+        }
+      }
+
+      if (matches) {
+        return {
+          name: archetype.name,
+          description: archetype.descriptions[role] || archetype.descriptions['japanese-aviator'],
+          dominantTrait: highest
+        };
       }
     }
 
-    return true;
-  }
+    // Fallback: use highest score to determine archetype
+    const fallbackArchetypes = {
+      morale: 'The Idealist',
+      loyalty: 'The Soldier',
+      awareness: 'The Witness',
+      composure: 'The Pragmatist'
+    };
 
-  /**
-   * Calculate grade and archetype on scene terminal
-   * @private
-   */
-  calculateGradeAndArchetype() {
-    // This will be called by event listener
-    // Actual calculation happens in dependent components
+    return {
+      name: fallbackArchetypes[highest] || 'The Realist',
+      description: 'You navigated December 7th in your own way. Every path through history is unique.',
+      dominantTrait: highest
+    };
   }
 
   /**
    * Reset all scores and history
+   * Call on role restart
    */
   reset() {
     this.init();
