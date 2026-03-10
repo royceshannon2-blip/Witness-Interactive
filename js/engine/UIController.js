@@ -94,6 +94,9 @@ class UIController {
     // Set of roleIds that have been completed
     this.completedRoles = new Set();
     
+    // Track current ambient sound for crossfading
+    this.currentAmbientSound = null;
+    
     // Subscribe to EventBus events
     this.subscribeToEvents();
     
@@ -303,6 +306,12 @@ class UIController {
    */
   handleGameStart(data) {
     this.showScreen('landing');
+    
+    // Play peaceful morning ambient sound on landing screen
+    if (this.ambientSoundManager) {
+      this.ambientSoundManager.fadeIn('656124__itsthegoodstuff__nature-ambiance.wav', 1500);
+      this.currentAmbientSound = '656124__itsthegoodstuff__nature-ambiance.wav';
+    }
   }
 
   /**
@@ -803,12 +812,17 @@ class UIController {
     this.eventBus.emit('scene:rendered', { scene });
     
     // Change ambient sound if specified (Task 7.2)
+    // Use crossfade for smooth transitions between ambient tracks
     if (scene.ambientSound && this.ambientSoundManager) {
-      this.ambientSoundManager.playSound(
-        scene.ambientSound.id,
-        true, // loop
-        scene.ambientSound.volume || 0.6
-      );
+      // Get the currently playing ambient sound (if any)
+      const currentAmbient = this.currentAmbientSound || null;
+      const newAmbient = scene.ambientSound.id;
+      
+      // Crossfade from current to new ambient sound
+      this.ambientSoundManager.crossfade(currentAmbient, newAmbient, 1500);
+      
+      // Store current ambient sound for next transition
+      this.currentAmbientSound = newAmbient;
     }
   }
 

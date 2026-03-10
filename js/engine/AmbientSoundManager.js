@@ -1,35 +1,36 @@
 /**
- * AmbientSoundManager - Background Audio System
+ * AmbientSoundManager - Background Audio System with Web Audio API
  * 
  * Manages atmospheric background audio playback with crossfading support.
- * Handles mute state, volume control, and graceful degradation for missing files.
+ * Uses Web Audio API for precise control and better performance.
  * 
  * Features:
- * - HTML5 Audio API for playback
+ * - Web Audio API (AudioContext) for playback
  * - Crossfading between different ambient sounds
  * - Mute/unmute toggle
  * - Graceful handling of missing audio files
  * - EventBus integration for scene transitions
+ * - Proper AudioContext resume after user gesture
  * 
  * Requirements: 3.1-3.10, 8.1-8.5
  */
 
 class AmbientSoundManager {
-  constructor(eventBus, config = {}) {
+  constructor(eventBus, audioContext, config = {}) {
     this.eventBus = eventBus;
+    this.audioContext = audioContext;
     
     // Configuration with defaults
     this.config = {
-      defaultVolume: config.defaultVolume || 0.6,
-      crossfadeDuration: config.crossfadeDuration || 1000,
-      preloadOnStart: config.preloadOnStart || true,
-      audioPath: config.audioPath || './audio/ambient/'
+      defaultVolume: config.defaultVolume || 0.4, // 40% volume as specified
+      crossfadeDuration: config.crossfadeDuration || 1500, // 1.5 seconds
+      audioPath: config.audioPath || 'audio/ambient/'
     };
     
-    // Audio elements storage: Map<soundId, HTMLAudioElement>
-    this.audioElements = new Map();
+    // Audio buffers storage: Map<soundId, AudioBuffer>
+    this.audioBuffers = new Map();
     
-    // Currently playing sounds: Map<soundId, {element, volume}>
+    // Currently playing sounds: Map<soundId, {source, gainNode, startTime}>
     this.activeSounds = new Map();
     
     // Mute state (stored in memory, not localStorage per requirements)
@@ -38,18 +39,24 @@ class AmbientSoundManager {
     // Crossfade animation frame ID for cleanup
     this.crossfadeAnimationId = null;
     
+    // Track if audio is ready to play
+    this.audioReady = false;
+    
     // Subscribe to EventBus events
     this.setupEventListeners();
+    
+    // Pre-fetch ambient audio files
+    this.prefetchAmbientAudio();
   }
 
   /**
    * Setup EventBus event listeners
    */
   setupEventListeners() {
-    // Listen for scene transitions to handle ambient sound changes
-    this.eventBus.on('scene:transition', (data) => {
-      // Scene transition handling will be done by UIController
-      // This is here for potential future direct scene-to-sound mapping
+    // Listen for audio unlock after user gesture
+    this.eventBus.on('audio:unlocked', () => {
+      this.audioReady = true;
+      console.log('[Audio] AmbientSoundManager ready');
     });
     
     // Listen for sound toggle from UI
@@ -59,156 +66,267 @@ class AmbientSoundManager {
   }
 
   /**
-   * Play a sound with optional looping and volume
-   * @param {string} soundId - Identifier for the sound (e.g., 'ocean-waves')
-   * @param {boolean} loop - Whether to loop the sound (default: true)
-   * @param {number} volume - Volume level 0.0-1.0 (default: config.defaultVolume)
+   * Pre-fetch and decode all ambient audio files
    */
-  playSound(soundId, loop = true, volume = null) {
-    if (!soundId) {
-      console.error('AmbientSoundManager.playSound: soundId is required');
-      return;
-    }
+  async prefetchAmbientAudio() {
+    const ambientFiles = [
+      '149966__nenadsimic__muffled-distant-explosion.wav',
+      '161120__fight2flyphoto__a6m-zero-chasing-p-51d-mustang.wav',
+      '369483__alcappuccino__small-aircraft-katana-dv20-inside.wav',
+      '425268__77pacer__airplanetank-engine-sound.wav',
+      '578524__samsterbirdies__calm-ocean-waves.flac',
+      '656124__itsthegoodstuff__nature-ambiance.wav'
+    ];
+
+    console.log('[Audio] Pre-fetching ambient audio files...');
     
-    const targetVolume = volume !== null ? volume : this.config.defaultVolume;
-    
-    // Get or create audio element
-    let audioElement = this.audioElements.get(soundId);
-    
-    if (!audioElement) {
-      audioElement = this.createAudioElement(soundId);
-      if (!audioElement) {
-        // Failed to create audio element (file missing or error)
-        return;
+    for (const filename of ambientFiles) {
+      try {
+        await this.loadAudioFile(filename);
+      } catch (error) {
+        console.warn(`[Audio] Failed to pre-fetch ${filename}:`, error.message);
       }
-      this.audioElements.set(soundId, audioElement);
     }
     
-    // Configure audio element
-    audioElement.loop = loop;
-    audioElement.volume = this.muted ? 0 : targetVolume;
+    console.log(`[Audio] Pre-fetched ${this.audioBuffers.size}/${ambientFiles.length} ambient files`);
+  }
+
+  /**
+   * Load and decode an audio file
+   * @param {string} filename - Audio filename
+   * @returns {Promise<AudioBuffer>}
+   */
+  async loadAudioFile(filename) {
+    // Check if already loaded
+    if (this.audioBuffers.has(filename)) {
+      return this.audioBuffers.get(filename);
+    }
+
+    const url = `${this.config.audioPath}${filename}`;
     
-    // Play audio
-    const playPromise = audioElement.play();
-    
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          // Store as active sound
-          this.activeSounds.set(soundId, {
-            element: audioElement,
-            volume: targetVolume
-          });
-          
-          // Emit event
-          this.eventBus.emit('sound:playing', { soundId, volume: targetVolume });
-        })
-        .catch(error => {
-          console.error(`AmbientSoundManager: Failed to play sound "${soundId}":`, error);
-          this.eventBus.emit('sound:error', { soundId, error: error.message });
-        });
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const arrayBuffer = await response.arrayBuffer();
+      const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+      
+      this.audioBuffers.set(filename, audioBuffer);
+      console.log(`[Audio] Loaded: ${filename}`);
+      
+      return audioBuffer;
+    } catch (error) {
+      console.warn(`[Audio] Failed to load ${url}:`, error.message);
+      this.eventBus.emit('sound:error', { soundId: filename, error: error.message });
+      throw error;
     }
   }
 
   /**
-   * Stop a sound with optional fade out
-   * @param {string} soundId - Identifier for the sound to stop
-   * @param {boolean} fadeOut - Whether to fade out (default: false)
+   * Play a sound with looping
+   * @param {string} filename - Audio filename to play
+   * @param {number} volume - Volume level 0.0-1.0 (default: config.defaultVolume)
    */
-  stopSound(soundId, fadeOut = false) {
-    const activeSound = this.activeSounds.get(soundId);
+  async playSound(filename, volume = null) {
+    if (!filename) {
+      console.error('[Audio] AmbientSoundManager.playSound: filename is required');
+      return;
+    }
+
+    // Wait for audio to be ready
+    if (!this.audioReady) {
+      console.log('[Audio] Waiting for user gesture to unlock audio...');
+      return;
+    }
+
+    const targetVolume = volume !== null ? volume : this.config.defaultVolume;
+    
+    try {
+      // Load audio buffer if not already loaded
+      const audioBuffer = await this.loadAudioFile(filename);
+      
+      // Create audio source
+      const source = this.audioContext.createBufferSource();
+      source.buffer = audioBuffer;
+      source.loop = true;
+      
+      // Create gain node for volume control
+      const gainNode = this.audioContext.createGain();
+      gainNode.gain.value = this.muted ? 0 : targetVolume;
+      
+      // Connect: source -> gain -> destination
+      source.connect(gainNode);
+      gainNode.connect(this.audioContext.destination);
+      
+      // Start playback
+      source.start(0);
+      
+      // Store as active sound
+      this.activeSounds.set(filename, {
+        source,
+        gainNode,
+        volume: targetVolume,
+        startTime: this.audioContext.currentTime
+      });
+      
+      // Emit event
+      this.eventBus.emit('sound:playing', { soundId: filename, volume: targetVolume });
+      
+      console.log(`[Audio] Playing: ${filename}`);
+    } catch (error) {
+      console.error(`[Audio] Failed to play sound "${filename}":`, error);
+      this.eventBus.emit('sound:error', { soundId: filename, error: error.message });
+    }
+  }
+
+  /**
+   * Stop a sound
+   * @param {string} filename - Filename of sound to stop
+   */
+  stopSound(filename) {
+    const activeSound = this.activeSounds.get(filename);
     
     if (!activeSound) {
       return; // Sound not playing
     }
     
-    const { element } = activeSound;
+    const { source, gainNode } = activeSound;
     
-    if (fadeOut) {
-      // Fade out over 500ms
-      this.fadeVolume(element, element.volume, 0, 500, () => {
-        element.pause();
-        element.currentTime = 0;
-        this.activeSounds.delete(soundId);
-        this.eventBus.emit('sound:stopped', { soundId });
+    try {
+      // Stop the source
+      source.stop();
+      
+      // Disconnect nodes
+      source.disconnect();
+      gainNode.disconnect();
+      
+      // Remove from active sounds
+      this.activeSounds.delete(filename);
+      
+      this.eventBus.emit('sound:stopped', { soundId: filename });
+      console.log(`[Audio] Stopped: ${filename}`);
+    } catch (error) {
+      console.warn(`[Audio] Error stopping sound "${filename}":`, error.message);
+    }
+  }
+
+  /**
+   * Fade out a sound over duration
+   * @param {string} filename - Filename of sound to fade out
+   * @param {number} duration - Fade duration in milliseconds
+   */
+  fadeOut(filename, duration = 1500) {
+    const activeSound = this.activeSounds.get(filename);
+    
+    if (!activeSound) {
+      return;
+    }
+    
+    const { source, gainNode, volume } = activeSound;
+    const currentTime = this.audioContext.currentTime;
+    const endTime = currentTime + (duration / 1000);
+    
+    // Schedule fade out
+    gainNode.gain.setValueAtTime(this.muted ? 0 : volume, currentTime);
+    gainNode.gain.linearRampToValueAtTime(0, endTime);
+    
+    // Stop and cleanup after fade completes
+    setTimeout(() => {
+      this.stopSound(filename);
+    }, duration);
+    
+    console.log(`[Audio] Fading out: ${filename} over ${duration}ms`);
+  }
+
+  /**
+   * Fade in a sound over duration
+   * @param {string} filename - Filename of sound to fade in
+   * @param {number} duration - Fade duration in milliseconds
+   */
+  async fadeIn(filename, duration = 1500) {
+    if (!filename) {
+      return;
+    }
+
+    // Wait for audio to be ready
+    if (!this.audioReady) {
+      console.log('[Audio] Waiting for user gesture to unlock audio...');
+      return;
+    }
+
+    try {
+      // Load audio buffer if not already loaded
+      const audioBuffer = await this.loadAudioFile(filename);
+      
+      // Create audio source
+      const source = this.audioContext.createBufferSource();
+      source.buffer = audioBuffer;
+      source.loop = true;
+      
+      // Create gain node for volume control
+      const gainNode = this.audioContext.createGain();
+      gainNode.gain.value = 0; // Start at 0
+      
+      // Connect: source -> gain -> destination
+      source.connect(gainNode);
+      gainNode.connect(this.audioContext.destination);
+      
+      // Start playback
+      const currentTime = this.audioContext.currentTime;
+      source.start(0);
+      
+      // Schedule fade in
+      const targetVolume = this.muted ? 0 : this.config.defaultVolume;
+      const endTime = currentTime + (duration / 1000);
+      gainNode.gain.linearRampToValueAtTime(targetVolume, endTime);
+      
+      // Store as active sound
+      this.activeSounds.set(filename, {
+        source,
+        gainNode,
+        volume: this.config.defaultVolume,
+        startTime: currentTime
       });
-    } else {
-      // Stop immediately
-      element.pause();
-      element.currentTime = 0;
-      this.activeSounds.delete(soundId);
-      this.eventBus.emit('sound:stopped', { soundId });
+      
+      // Emit event
+      this.eventBus.emit('sound:playing', { soundId: filename, volume: this.config.defaultVolume });
+      
+      console.log(`[Audio] Fading in: ${filename} over ${duration}ms`);
+    } catch (error) {
+      console.error(`[Audio] Failed to fade in sound "${filename}":`, error);
+      this.eventBus.emit('sound:error', { soundId: filename, error: error.message });
     }
   }
 
   /**
    * Crossfade from one sound to another
-   * @param {string} fromSoundId - Sound to fade out (null if none)
-   * @param {string} toSoundId - Sound to fade in
-   * @param {number} duration - Crossfade duration in milliseconds
+   * @param {string} fromFilename - Sound to fade out (null if none)
+   * @param {string} toFilename - Sound to fade in
+   * @param {number} duration - Crossfade duration in milliseconds (default: 1500ms)
    */
-  crossfade(fromSoundId, toSoundId, duration = null) {
+  async crossfade(fromFilename, toFilename, duration = null) {
     const crossfadeDuration = duration !== null ? duration : this.config.crossfadeDuration;
     
-    // If no fromSound, just play the new sound
-    if (!fromSoundId || !this.activeSounds.has(fromSoundId)) {
-      this.playSound(toSoundId, true);
+    // If no fromSound, just fade in the new sound
+    if (!fromFilename || !this.activeSounds.has(fromFilename)) {
+      await this.fadeIn(toFilename, crossfadeDuration);
       return;
     }
     
     // If same sound, do nothing
-    if (fromSoundId === toSoundId) {
+    if (fromFilename === toFilename) {
       return;
     }
     
-    const fromSound = this.activeSounds.get(fromSoundId);
-    const fromElement = fromSound.element;
-    const fromVolume = fromSound.volume;
+    console.log(`[Audio] Crossfading: ${fromFilename} -> ${toFilename}`);
     
-    // Start playing the new sound at volume 0
-    const toElement = this.audioElements.get(toSoundId) || this.createAudioElement(toSoundId);
-    if (!toElement) {
-      // Failed to create new audio element, just stop the old one
-      this.stopSound(fromSoundId, true);
-      return;
-    }
+    // Start fade out of old sound
+    this.fadeOut(fromFilename, crossfadeDuration);
     
-    if (!this.audioElements.has(toSoundId)) {
-      this.audioElements.set(toSoundId, toElement);
-    }
-    
-    toElement.loop = true;
-    toElement.volume = 0;
-    
-    const playPromise = toElement.play();
-    
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          // Store as active sound
-          this.activeSounds.set(toSoundId, {
-            element: toElement,
-            volume: this.config.defaultVolume
-          });
-          
-          // Perform crossfade
-          this.performCrossfade(fromElement, toElement, fromVolume, this.config.defaultVolume, crossfadeDuration, () => {
-            // Stop the old sound after crossfade
-            fromElement.pause();
-            fromElement.currentTime = 0;
-            this.activeSounds.delete(fromSoundId);
-            this.eventBus.emit('sound:stopped', { soundId: fromSoundId });
-          });
-          
-          this.eventBus.emit('sound:playing', { soundId: toSoundId, volume: this.config.defaultVolume });
-        })
-        .catch(error => {
-          console.error(`AmbientSoundManager: Failed to crossfade to sound "${toSoundId}":`, error);
-          this.eventBus.emit('sound:error', { soundId: toSoundId, error: error.message });
-          // Stop the old sound anyway
-          this.stopSound(fromSoundId, true);
-        });
-    }
+    // Start fade in of new sound
+    await this.fadeIn(toFilename, crossfadeDuration);
   }
 
   /**
@@ -218,13 +336,15 @@ class AmbientSoundManager {
     this.muted = !this.muted;
     
     // Update volume for all active sounds
-    this.activeSounds.forEach((soundData, soundId) => {
-      const { element, volume } = soundData;
-      element.volume = this.muted ? 0 : volume;
+    this.activeSounds.forEach((soundData) => {
+      const { gainNode, volume } = soundData;
+      const currentTime = this.audioContext.currentTime;
+      gainNode.gain.setValueAtTime(this.muted ? 0 : volume, currentTime);
     });
     
     // Emit mute state change (for UI updates)
     this.eventBus.emit('sound:muted', { muted: this.muted });
+    console.log(`[Audio] Ambient sound ${this.muted ? 'muted' : 'unmuted'}`);
   }
 
   /**
@@ -236,141 +356,11 @@ class AmbientSoundManager {
   }
 
   /**
-   * Create an audio element for a sound
-   * @param {string} soundId - Identifier for the sound
-   * @returns {HTMLAudioElement|null} Audio element or null if failed
+   * Stop all sounds
    */
-  createAudioElement(soundId) {
-    const audio = new Audio();
-    
-    // If soundId already has an extension, use it directly
-    const extensions = ['.mp3', '.wav', '.flac', '.ogg', '.m4a'];
-    const hasExtension = extensions.some(ext => soundId.toLowerCase().endsWith(ext));
-    
-    if (hasExtension) {
-      audio.src = `${this.config.audioPath}${soundId}`;
-      audio.preload = 'auto';
-      
-      // Handle load errors gracefully
-      audio.addEventListener('error', () => {
-        console.warn(`AmbientSoundManager: Audio file not found or failed to load: ${audio.src}`);
-        console.warn('Game will continue without this audio. This is expected if audio files have not been provided yet.');
-        this.eventBus.emit('sound:error', { soundId, error: 'Failed to load audio file' });
-      });
-    } else {
-      // Try multiple extensions in order of browser support
-      // .flac first since that's what we have, then .wav, then others
-      const tryExtensions = ['.flac', '.wav', '.mp3', '.ogg', '.m4a'];
-      let extensionIndex = 0;
-      
-      const tryNextExtension = () => {
-        // Remove previous error listener to prevent stacking
-        audio.removeEventListener('error', tryNextExtension);
-        
-        extensionIndex++;
-        
-        if (extensionIndex < tryExtensions.length) {
-          // Try next extension
-          audio.src = `${this.config.audioPath}${soundId}${tryExtensions[extensionIndex]}`;
-          audio.addEventListener('error', tryNextExtension, { once: true });
-          audio.load();
-        } else {
-          // All extensions failed
-          console.warn(`AmbientSoundManager: Audio file not found after trying all extensions: ${soundId}`);
-          console.warn('Tried extensions:', tryExtensions.join(', '));
-          console.warn('Game will continue without this audio.');
-          this.eventBus.emit('sound:error', { soundId, error: 'Failed to load audio file' });
-        }
-      };
-      
-      // Set initial source and add error handler
-      audio.src = `${this.config.audioPath}${soundId}${tryExtensions[0]}`;
-      audio.preload = 'auto';
-      audio.addEventListener('error', tryNextExtension, { once: true });
-      audio.load(); // Explicitly trigger load to catch errors
-    }
-    
-    return audio;
-  }
-
-  /**
-   * Fade volume from one level to another
-   * @param {HTMLAudioElement} element - Audio element to fade
-   * @param {number} fromVolume - Starting volume
-   * @param {number} toVolume - Target volume
-   * @param {number} duration - Fade duration in milliseconds
-   * @param {Function} onComplete - Callback when fade completes
-   */
-  fadeVolume(element, fromVolume, toVolume, duration, onComplete) {
-    if (this.muted) {
-      // If muted, skip fade and complete immediately
-      element.volume = 0;
-      if (onComplete) onComplete();
-      return;
-    }
-    
-    const startTime = performance.now();
-    const volumeDelta = toVolume - fromVolume;
-    
-    const animate = (currentTime) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      // Linear interpolation
-      const currentVolume = fromVolume + (volumeDelta * progress);
-      element.volume = this.muted ? 0 : currentVolume;
-      
-      if (progress < 1) {
-        requestAnimationFrame(animate);
-      } else {
-        if (onComplete) onComplete();
-      }
-    };
-    
-    requestAnimationFrame(animate);
-  }
-
-  /**
-   * Perform crossfade between two audio elements
-   * @param {HTMLAudioElement} fromElement - Element to fade out
-   * @param {HTMLAudioElement} toElement - Element to fade in
-   * @param {number} fromVolume - Starting volume for fromElement
-   * @param {number} toVolume - Target volume for toElement
-   * @param {number} duration - Crossfade duration in milliseconds
-   * @param {Function} onComplete - Callback when crossfade completes
-   */
-  performCrossfade(fromElement, toElement, fromVolume, toVolume, duration, onComplete) {
-    if (this.muted) {
-      // If muted, skip crossfade and complete immediately
-      fromElement.volume = 0;
-      toElement.volume = 0;
-      if (onComplete) onComplete();
-      return;
-    }
-    
-    const startTime = performance.now();
-    
-    const animate = (currentTime) => {
-      const elapsed = currentTime - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      
-      // Fade out old sound
-      const currentFromVolume = fromVolume * (1 - progress);
-      fromElement.volume = this.muted ? 0 : currentFromVolume;
-      
-      // Fade in new sound
-      const currentToVolume = toVolume * progress;
-      toElement.volume = this.muted ? 0 : currentToVolume;
-      
-      if (progress < 1) {
-        this.crossfadeAnimationId = requestAnimationFrame(animate);
-      } else {
-        this.crossfadeAnimationId = null;
-        if (onComplete) onComplete();
-      }
-    };
-    
-    this.crossfadeAnimationId = requestAnimationFrame(animate);
+  stopAll() {
+    const filenames = Array.from(this.activeSounds.keys());
+    filenames.forEach(filename => this.stopSound(filename));
   }
 
   /**
@@ -383,14 +373,11 @@ class AmbientSoundManager {
     }
     
     // Stop all active sounds
-    this.activeSounds.forEach((soundData, soundId) => {
-      soundData.element.pause();
-      soundData.element.currentTime = 0;
-    });
+    this.stopAll();
     
     // Clear all maps
     this.activeSounds.clear();
-    this.audioElements.clear();
+    this.audioBuffers.clear();
   }
 }
 

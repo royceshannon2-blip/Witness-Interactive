@@ -110,19 +110,24 @@ async function initializeApp() {
     });
     console.log('✓ TimedChoiceSystem initialized');
     
-    // 14. Initialize AmbientSoundManager (background audio system)
-    const ambientSoundManager = new AmbientSoundManager(eventBus, {
-        defaultVolume: 0.6,           // default volume level (0.0-1.0)
-        crossfadeDuration: 1000,      // crossfade duration in ms
-        preloadOnStart: true,         // preload audio files on start
-        audioPath: './audio/ambient/'  // path to audio files
+    // 14. Create shared AudioContext for all audio playback
+    // CRITICAL: Create in suspended state, will be resumed after user gesture
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    console.log('[Audio] AudioContext created, state:', audioContext.state);
+    
+    // 15. Initialize AmbientSoundManager (background audio system)
+    const ambientSoundManager = new AmbientSoundManager(eventBus, audioContext, {
+        defaultVolume: 0.4,           // 40% volume as specified
+        crossfadeDuration: 1500,      // 1.5 seconds crossfade
+        audioPath: 'audio/ambient/'   // path to audio files (no leading slash)
     });
     console.log('✓ AmbientSoundManager initialized');
     
-    // 15. Initialize NarratorAudioManager (narrator voice playback)
-    const narratorAudioManager = new NarratorAudioManager(eventBus, {
-        defaultVolume: 0.8,           // narrator volume level (0.0-1.0)
-        audioPath: './audio/narration/' // path to narration files
+    // 16. Initialize NarratorAudioManager (narrator voice playback)
+    const narratorAudioManager = new NarratorAudioManager(eventBus, audioContext, {
+        narratorVolume: 1.0,          // 100% volume for narrator
+        radioVolume: 0.8,             // 80% volume for radio clips
+        audioPath: 'audio/narration/' // path to narration files (no leading slash)
     });
     console.log('✓ NarratorAudioManager initialized');
     
@@ -212,33 +217,29 @@ async function initializeApp() {
     
     // Setup audio resume on first user interaction (required by browsers)
     let audioResumed = false;
-    const resumeAudio = () => {
+    const resumeAudio = async () => {
         if (audioResumed) return;
-        audioResumed = true;
         
-        // Create a silent audio element and play it to unlock audio
-        const silentAudio = new Audio();
-        silentAudio.src = 'data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA';
-        silentAudio.volume = 0.01; // Very quiet
-        const playPromise = silentAudio.play();
-        
-        if (playPromise !== undefined) {
-            playPromise.then(() => {
-                console.log('✓ Audio unlocked after user gesture');
-                // Emit event to notify audio managers
-                eventBus.emit('audio:unlocked');
-            }).catch((err) => {
-                console.warn('Audio unlock failed:', err.message);
-                // Try again on next interaction
-                audioResumed = false;
-            });
-        }
-        
-        // Remove listeners after first successful interaction
-        if (audioResumed) {
+        try {
+            // Resume AudioContext
+            if (audioContext.state === 'suspended') {
+                await audioContext.resume();
+                console.log('[Audio] AudioContext resumed, state:', audioContext.state);
+            }
+            
+            audioResumed = true;
+            
+            // Emit event to notify audio managers
+            eventBus.emit('audio:unlocked');
+            
+            // Remove listeners after first successful interaction
             document.removeEventListener('click', resumeAudio);
             document.removeEventListener('touchstart', resumeAudio);
             document.removeEventListener('keydown', resumeAudio);
+        } catch (err) {
+            console.warn('[Audio] AudioContext resume failed:', err.message);
+            // Try again on next interaction
+            audioResumed = false;
         }
     };
     
