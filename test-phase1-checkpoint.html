@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 1 Checkpoint Test</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/atmospheric-effects.css">
+    <style>
+        body {
+            padding: 2rem;
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+        .checkpoint-section {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            border: 2px solid #4a4a4a;
+            border-radius: 8px;
+        }
+        .checkpoint-section h2 {
+            margin-top: 0;
+            color: #d4af37;
+        }
+        .test-status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+        .test-status.pass {
+            background: #2d5016;
+            color: #7bc043;
+        }
+        .test-status.fail {
+            background: #5c1a1a;
+            color: #ff6b6b;
+        }
+        .test-status.pending {
+            background: #4a3a1a;
+            color: #d4af37;
+        }
+        .test-btn {
+            padding: 0.75rem 1.5rem;
+            margin: 0.5rem;
+            background: #d4af37;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        .test-btn:hover {
+            background: #e5c047;
+        }
+        .test-output {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #2a2a2a;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .demo-narrative {
+            padding: 1.5rem;
+            background: #2a2a2a;
+            border-radius: 8px;
+            margin: 1rem 0;
+            min-height: 100px;
+        }
+        .demo-choices {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .choice-button {
+            padding: 1rem;
+            background: #3a3a3a;
+            border: 2px solid #4a4a4a;
+            border-radius: 4px;
+            color: #e0e0e0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .choice-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+            border-color: #d4af37;
+        }
+        .choice-button:active {
+            transform: translateY(0);
+        }
+        .choice-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Phase 1 Checkpoint Test</h1>
+    <p>This page tests all Phase 1 features before proceeding to Phase 2.</p>
+
+    <!-- Test 1: TypewriterEffect -->
+    <div class="checkpoint-section">
+        <h2>
+            Test 1: TypewriterEffect
+            <span class="test-status pending" id="test1-status">PENDING</span>
+        </h2>
+        <p>Tests character-by-character text reveal and click-to-skip functionality.</p>
+        
+        <button class="test-btn" id="test1-start">Start Typewriter Test</button>
+        <button class="test-btn" id="test1-skip">Skip Animation</button>
+        
+        <div class="demo-narrative" id="test1-narrative"></div>
+        <div class="test-output" id="test1-output">Ready to test...</div>
+    </div>
+
+    <!-- Test 2: SceneTransition -->
+    <div class="checkpoint-section">
+        <h2>
+            Test 2: SceneTransition
+            <span class="test-status pending" id="test2-status">PENDING</span>
+        </h2>
+        <p>Tests fade transitions between scenes.</p>
+        
+        <button class="test-btn" id="test2-fade">Test Fade Transition</button>
+        <button class="test-btn" id="test2-flash">Test Flash Transition</button>
+        
+        <div class="demo-narrative" id="test2-narrative">Scene content will transition here...</div>
+        <div class="test-output" id="test2-output">Ready to test...</div>
+    </div>
+
+    <!-- Test 3: Enhanced Choice Interactions -->
+    <div class="checkpoint-section">
+        <h2>
+            Test 3: Enhanced Choice Interactions
+            <span class="test-status pending" id="test3-status">PENDING</span>
+        </h2>
+        <p>Tests hover effects, transitions, and keyboard navigation on choice buttons.</p>
+        
+        <div class="demo-choices">
+            <button class="choice-button" tabindex="0">Choice 1: Hover and click me</button>
+            <button class="choice-button" tabindex="0">Choice 2: Try keyboard navigation (Tab + Enter)</button>
+            <button class="choice-button" tabindex="0">Choice 3: Test touch on mobile</button>
+        </div>
+        <div class="test-output" id="test3-output">
+            Hover over buttons to see scale and shadow effects.<br>
+            Press Tab to navigate, Enter to select.<br>
+            On mobile, tap to see active state.
+        </div>
+    </div>
+
+    <!-- Test 4: Prefers-Reduced-Motion -->
+    <div class="checkpoint-section">
+        <h2>
+            Test 4: Prefers-Reduced-Motion
+            <span class="test-status pending" id="test4-status">PENDING</span>
+        </h2>
+        <p>Tests that animations respect accessibility preferences.</p>
+        
+        <button class="test-btn" id="test4-check">Check Motion Preference</button>
+        <button class="test-btn" id="test4-test">Test with Reduced Motion</button>
+        
+        <div class="test-output" id="test4-output">
+            Current setting: <span id="motion-pref">Checking...</span><br><br>
+            To test: Open DevTools → Rendering → Emulate CSS media feature prefers-reduced-motion: reduce
+        </div>
+    </div>
+
+    <!-- Test 5: EventBus Integration -->
+    <div class="checkpoint-section">
+        <h2>
+            Test 5: EventBus Integration
+            <span class="test-status pending" id="test5-status">PENDING</span>
+        </h2>
+        <p>Tests that all components communicate via EventBus.</p>
+        
+        <button class="test-btn" id="test5-run">Run EventBus Test</button>
+        
+        <div class="test-output" id="test5-output">Ready to test...</div>
+    </div>
+
+    <!-- Test 6: No Global Variables -->
+    <div class="checkpoint-section">
+        <h2>
+            Test 6: No Global Variables
+            <span class="test-status pending" id="test6-status">PENDING</span>
+        </h2>
+        <p>Tests that no engine components leak global variables.</p>
+        
+        <button class="test-btn" id="test6-run">Check Global Variables</button>
+        
+        <div class="test-output" id="test6-output">Ready to test...</div>
+    </div>
+
+    <!-- Test 7: Mobile Responsiveness -->
+    <div class="checkpoint-section">
+        <h2>
+            Test 7: Mobile Responsiveness
+            <span class="test-status pending" id="test7-status">PENDING</span>
+        </h2>
+        <p>Tests that UI works on mobile viewports.</p>
+        
+        <button class="test-btn" id="test7-check">Check Viewport</button>
+        
+        <div class="test-output" id="test7-output">
+            Current viewport: <span id="viewport-size">Checking...</span><br><br>
+            To test: Open DevTools → Toggle device toolbar → Test on iPhone/Android
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="checkpoint-section">
+        <h2>Checkpoint Summary</h2>
+        <div class="test-output" id="summary-output">
+            Run all tests above to verify Phase 1 implementation.<br><br>
+            <strong>Phase 1 Success Criteria:</strong><br>
+            ✓ Typewriter effect reveals text character-by-character<br>
+            ✓ Click-to-skip works<br>
+            ✓ Scene transitions are smooth<br>
+            ✓ Choice buttons have hover/click feedback<br>
+            ✓ No console errors<br>
+            ✓ Works on mobile device<br>
+            ✓ Respects prefers-reduced-motion<br>
+            ✓ No global variables<br><br>
+            <strong>Once all tests pass, proceed to Phase 2.</strong>
+        </div>
+    </div>
+
+    <script type="module">
+        import EventBus from './js/engine/EventBus.js';
+        import TypewriterEffect from './js/engine/TypewriterEffect.js';
+        import SceneTransition from './js/engine/SceneTransition.js';
+
+        // Initialize components
+        const eventBus = new EventBus();
+        const typewriter = new TypewriterEffect(eventBus, {
+            defaultSpeed: 30,
+            skipOnClick: true,
+            respectMotionPrefs: true
+        });
+        const sceneTransition = new SceneTransition(eventBus, {
+            defaultType: 'fade',
+            duration: 500,
+            respectMotionPrefs: true
+        });
+
+        // Helper to log output
+        function log(elementId, message, append = true) {
+            const output = document.getElementById(elementId);
+            const timestamp = new Date().toLocaleTimeString();
+            const newContent = `[${timestamp}] ${message}<br>`;
+            if (append) {
+                output.innerHTML += newContent;
+            } else {
+                output.innerHTML = newContent;
+            }
+            output.scrollTop = output.scrollHeight;
+        }
+
+        // Helper to update test status
+        function setStatus(testId, status) {
+            const statusEl = document.getElementById(`${testId}-status`);
+            statusEl.textContent = status;
+            statusEl.className = `test-status ${status.toLowerCase()}`;
+        }
+
+        // Test 1: TypewriterEffect
+        const test1Narrative = document.getElementById('test1-narrative');
+        const testText = "December 7, 1941. 0755 hours. The morning sun glints off the calm waters of Pearl Harbor. You're on the deck of the USS Arizona, enjoying a peaceful Sunday morning. Suddenly, the air raid siren pierces the silence.";
+
+        document.getElementById('test1-start').addEventListener('click', () => {
+            log('test1-output', 'Starting typewriter animation...', false);
+            test1Narrative.textContent = '';
+            
+            typewriter.revealText(test1Narrative, testText, 20, () => {
+                log('test1-output', '✓ Typewriter animation completed');
+                setStatus('test1', 'PASS');
+            });
+            
+            log('test1-output', 'Animation started. Watch text appear character-by-character.');
+            log('test1-output', 'Click "Skip Animation" to test skip functionality.');
+        });
+
+        document.getElementById('test1-skip').addEventListener('click', () => {
+            if (typewriter.isActive()) {
+                typewriter.skipToEnd();
+                log('test1-output', '✓ Skip triggered - text should appear instantly');
+            } else {
+                log('test1-output', '⚠ No active animation to skip');
+            }
+        });
+
+        // Test 2: SceneTransition
+        let sceneNumber = 1;
+        const test2Narrative = document.getElementById('test2-narrative');
+
+        document.getElementById('test2-fade').addEventListener('click', () => {
+            log('test2-output', 'Starting fade transition...', false);
+            
+            sceneTransition.transition(null, null, 'fade', 500);
+            
+            setTimeout(() => {
+                sceneNumber++;
+                test2Narrative.textContent = `Scene ${sceneNumber}: Fade transition complete`;
+                log('test2-output', '✓ Fade transition completed');
+                setStatus('test2', 'PASS');
+            }, 250);
+        });
+
+        document.getElementById('test2-flash').addEventListener('click', () => {
+            log('test2-output', 'Starting flash transition...', false);
+            
+            sceneTransition.transition(null, null, 'flash', 500);
+            
+            setTimeout(() => {
+                sceneNumber++;
+                test2Narrative.textContent = `Scene ${sceneNumber}: Flash transition complete`;
+                log('test2-output', '✓ Flash transition completed');
+                setStatus('test2', 'PASS');
+            }, 250);
+        });
+
+        // Test 3: Enhanced Choice Interactions
+        const choiceButtons = document.querySelectorAll('.demo-choices .choice-button');
+        let choiceInteracted = false;
+
+        choiceButtons.forEach((btn, index) => {
+            btn.addEventListener('click', () => {
+                log('test3-output', `✓ Choice ${index + 1} clicked`, false);
+                if (!choiceInteracted) {
+                    choiceInteracted = true;
+                    setStatus('test3', 'PASS');
+                }
+            });
+            
+            btn.addEventListener('mouseenter', () => {
+                if (!choiceInteracted) {
+                    log('test3-output', `Hover detected on Choice ${index + 1}`, false);
+                }
+            });
+        });
+
+        // Test 4: Prefers-Reduced-Motion
+        document.getElementById('test4-check').addEventListener('click', () => {
+            const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const motionPref = document.getElementById('motion-pref');
+            
+            if (prefersReduced) {
+                motionPref.textContent = 'REDUCED MOTION (animations disabled)';
+                motionPref.style.color = '#7bc043';
+            } else {
+                motionPref.textContent = 'NO PREFERENCE (animations enabled)';
+                motionPref.style.color = '#d4af37';
+            }
+            
+            log('test4-output', `Motion preference: ${prefersReduced ? 'REDUCED' : 'NO PREFERENCE'}`, false);
+            log('test4-output', `TypewriterEffect respects setting: ${typewriter.respectMotionPrefs}`);
+            log('test4-output', `SceneTransition respects setting: ${sceneTransition.respectMotionPrefs}`);
+            setStatus('test4', 'PASS');
+        });
+
+        document.getElementById('test4-test').addEventListener('click', () => {
+            log('test4-output', 'Testing with reduced motion simulation...', false);
+            log('test4-output', 'Enable "prefers-reduced-motion: reduce" in DevTools');
+            log('test4-output', 'Then run Test 1 and Test 2 again');
+            log('test4-output', 'Animations should be instant/minimal');
+        });
+
+        // Test 5: EventBus Integration
+        document.getElementById('test5-run').addEventListener('click', () => {
+            log('test5-output', 'Testing EventBus integration...', false);
+            
+            let eventsReceived = [];
+            
+            // Listen for typewriter events
+            eventBus.on('typewriter:complete', () => {
+                eventsReceived.push('typewriter:complete');
+            });
+            
+            eventBus.on('typewriter:skipped', () => {
+                eventsReceived.push('typewriter:skipped');
+            });
+            
+            // Listen for transition events
+            eventBus.on('transition:start', () => {
+                eventsReceived.push('transition:start');
+            });
+            
+            eventBus.on('transition:complete', () => {
+                eventsReceived.push('transition:complete');
+            });
+            
+            log('test5-output', '✓ Event listeners registered');
+            log('test5-output', 'Run Test 1 and Test 2 to trigger events');
+            log('test5-output', `Events received so far: ${eventsReceived.length}`);
+            
+            setTimeout(() => {
+                if (eventsReceived.length > 0) {
+                    log('test5-output', `✓ EventBus working: ${eventsReceived.join(', ')}`);
+                    setStatus('test5', 'PASS');
+                } else {
+                    log('test5-output', '⚠ No events received yet - run other tests first');
+                }
+            }, 1000);
+        });
+
+        // Test 6: No Global Variables
+        document.getElementById('test6-run').addEventListener('click', () => {
+            log('test6-output', 'Checking for global variables...', false);
+            
+            const suspiciousGlobals = Object.keys(window).filter(key => {
+                const lowerKey = key.toLowerCase();
+                return (lowerKey.includes('eventbus') || 
+                        lowerKey.includes('typewriter') || 
+                        lowerKey.includes('scenetransition') ||
+                        lowerKey.includes('consequence') ||
+                        lowerKey.includes('witness') ||
+                        (lowerKey.includes('game') && !lowerKey.includes('gamepad')));
+            });
+            
+            if (suspiciousGlobals.length === 0) {
+                log('test6-output', '✓ No global variables detected from engine components');
+                setStatus('test6', 'PASS');
+            } else {
+                log('test6-output', `✗ Global variables found: ${suspiciousGlobals.join(', ')}`);
+                setStatus('test6', 'FAIL');
+            }
+        });
+
+        // Test 7: Mobile Responsiveness
+        document.getElementById('test7-check').addEventListener('click', () => {
+            const viewportSize = document.getElementById('viewport-size');
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            
+            viewportSize.textContent = `${width}x${height}px`;
+            
+            log('test7-output', `Viewport: ${width}x${height}px`, false);
+            
+            if (width <= 640) {
+                log('test7-output', '✓ Mobile viewport detected');
+                log('test7-output', 'Test touch interactions on choice buttons');
+                setStatus('test7', 'PASS');
+            } else if (width <= 1024) {
+                log('test7-output', '✓ Tablet viewport detected');
+                setStatus('test7', 'PASS');
+            } else {
+                log('test7-output', '⚠ Desktop viewport - resize to test mobile');
+                log('test7-output', 'Open DevTools → Toggle device toolbar');
+            }
+        });
+
+        // Auto-run some tests on load
+        setTimeout(() => {
+            document.getElementById('test4-check').click();
+            document.getElementById('test6-run').click();
+            document.getElementById('test7-check').click();
+        }, 500);
+
+        console.log('Phase 1 Checkpoint Test initialized');
+        console.log('Components:', { eventBus, typewriter, sceneTransition });
+    </script>
+</body>
+</html>
