@@ -775,6 +775,9 @@ class UIController {
             // Enable choices after typewriter completes
             this.enableChoices();
             
+            // Emit typewriter complete with sceneId for atmospheric effects
+            this.eventBus.emit('typewriter:complete', { sceneId: scene.id });
+            
             // Start timed choice AFTER typewriter completes (if specified)
             if (scene.timedChoice && this.timedChoiceSystem) {
               this.startTimedChoice(scene.timedChoice);
@@ -785,6 +788,9 @@ class UIController {
         // Fallback: enable choices immediately if paragraph not found
         this.enableChoices();
         
+        // Emit typewriter complete even if no paragraph found
+        this.eventBus.emit('typewriter:complete', { sceneId: scene.id });
+        
         // Start timed choice if specified
         if (scene.timedChoice && this.timedChoiceSystem) {
           this.startTimedChoice(scene.timedChoice);
@@ -793,6 +799,9 @@ class UIController {
     } else {
       // No typewriter effect available, enable choices immediately
       this.enableChoices();
+      
+      // Emit typewriter complete even without typewriter effect
+      this.eventBus.emit('typewriter:complete', { sceneId: scene.id });
       
       // Start timed choice if specified
       if (scene.timedChoice && this.timedChoiceSystem) {
