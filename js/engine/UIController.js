@@ -23,10 +23,6 @@ import SceneTransition from './SceneTransition.js';
 import AtmosphericEffects from './AtmosphericEffects.js';
 import TimedChoiceSystem from './TimedChoiceSystem.js';
 import { HapticFeedback } from './HapticFeedback.js';
-import KnowledgeCheckpoint from './KnowledgeCheckpoint.js';
-import PathClassifier from './PathClassifier.js';
-import { PATH_RULES } from '../content/missions/pearl-harbor/psychology-data.js';
-import { getRippleIntro } from '../content/missions/pearl-harbor/ripple-intros.js';
 
 class UIController {
   /**
@@ -73,12 +69,6 @@ class UIController {
     
     // Initialize haptic feedback for mobile
     this.haptics = new HapticFeedback();
-    
-    // Initialize path classifier
-    this.pathClassifier = new PathClassifier();
-    
-    // Initialize knowledge checkpoint with required dependencies
-    this.knowledgeCheckpoint = new KnowledgeCheckpoint(eventBus, this.pathClassifier);
     
     // Get reference to app container
     this.appContainer = document.getElementById('app');
@@ -352,7 +342,7 @@ class UIController {
 
   /**
    * Handle game:complete event
-   * @param {object} data - Event data containing roleId, missionId
+   * @param {object} data - Event data containing roleId and missionId
    * @private
    */
   handleGameComplete(data) {
@@ -366,14 +356,8 @@ class UIController {
       this.currentMissionId = data.missionId;
     }
     
-    // Calculate outcome using ConsequenceSystem (via EventBus architecture)
-    const outcome = this.calculateCurrentOutcome();
-    
-    // Store outcome data for later screens
-    if (outcome) {
-      this.currentOutcomeId = outcome.id;
-      this.currentSurvival = outcome.survivalData;
-    }
+    // Calculate outcome immediately and store it
+    this.currentOutcome = this.calculateCurrentOutcome();
     
     this.showScreen('outcome', data);
   }
@@ -398,24 +382,14 @@ class UIController {
       return null;
     }
     
-    // Two-step outcome calculation:
-    // 1. Determine survival based on historical probability + player choices
-    const survival = this.consequenceSystem.determineSurvival(this.currentRoleId);
-    
-    // 2. Select best narrative match within the survived/died bucket
-    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes, survival.survived);
+    // Calculate outcome using ConsequenceSystem
+    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes);
     if (!outcomeId) {
       return null;
     }
     
     // Find the matching outcome object
     const outcome = role.outcomes.find(o => o.id === outcomeId);
-    
-    // Attach survival data for results display
-    if (outcome) {
-      outcome.survivalData = survival;
-    }
-    
     return outcome;
   }
 
@@ -563,15 +537,6 @@ class UIController {
    */
   renderLandingScreen() {
     const c = this.content.landing;
-    
-    // Render testimonials carousel
-    const testimonialsHTML = c.socialProof.testimonials.map(t => `
-      <div class="testimonial">
-        <p class="testimonial-quote">"${t.quote}"</p>
-        <p class="testimonial-author">— ${t.author}</p>
-      </div>
-    `).join('');
-    
     return `
       <article class="landing-content text-center" role="article" aria-labelledby="landing-title">
         <h1 id="landing-title" class="text-gold">${c.title}</h1>
@@ -579,15 +544,6 @@ class UIController {
         <p class="tagline">${c.tagline}</p>
         <p class="context">${c.context}</p>
         <button id="begin-button" class="mt-lg" aria-label="Begin game and view mission timeline">${c.buttonText}</button>
-        
-        <section class="social-proof-section" aria-labelledby="social-proof-heading">
-          <p class="social-proof-stat">${c.socialProof.stat}</p>
-          <p class="social-proof-label">${c.socialProof.label}</p>
-          
-          <div class="testimonials-carousel" role="region" aria-label="Student testimonials">
-            ${testimonialsHTML}
-          </div>
-        </section>
       </article>
     `;
   }
@@ -745,7 +701,7 @@ class UIController {
     };
     
     // Generate results card HTML using ResultsCard component
-    const cardHTML = this.resultsCard ? this.resultsCard.generateCard(cardData) : `<p>${this.content.errors.resultsCard.generatorUnavailable}</p>`;
+    const cardHTML = this.resultsCard ? this.resultsCard.generateCard(cardData) : '<p>Error: Results card generator not available.</p>';
     
     return `
       <article class="results-content text-center" role="article" aria-labelledby="results-title">
@@ -868,12 +824,11 @@ class UIController {
     this.updateProgress(sceneIndex + 1, totalScenes);
     
     // Apply atmospheric effect if specified (using AtmosphericEffects component)
-    if (scene.atmosphericEffect && this.atmosphericEffects && typeof this.atmosphericEffects.applyEffect === 'function') {
+    if (scene.atmosphericEffect && this.atmosphericEffects) {
       this.atmosphericEffects.applyEffect(scene.atmosphericEffect);
     }
     
     // Emit scene:rendered event for narrator audio
-    this.eventBus.emit('scene:rendered', { sceneId: scene.id });
 
     
     // Change ambient sound if specified (Task 7.2)
@@ -968,26 +923,6 @@ class UIController {
    * @private
    */
   handleChoiceClick(choice) {
-    // If typewriter is still running, force-complete it first
-    if (this.typewriterEffect && this.typewriterEffect.isActive()) {
-      this.typewriterEffect.skipToEnd();
-      
-      // Add 50ms delay after completion before transition
-      setTimeout(() => {
-        this.emitChoiceMade(choice);
-      }, 50);
-    } else {
-      // Typewriter already complete, emit immediately
-      this.emitChoiceMade(choice);
-    }
-  }
-
-  /**
-   * Emit choice:made event
-   * @param {object} choice - Choice object
-   * @private
-   */
-  emitChoiceMade(choice) {
     // Emit choice:made event (ConsequenceSystem will handle flag setting)
     // SceneStateMachine will handle transition
     this.eventBus.emit('choice:made', {
@@ -1085,17 +1020,11 @@ class UIController {
     
     // Knowledge checkpoint screen
     if (screenName === 'knowledge-checkpoint') {
+      // Note: view-results listener is attached inside showCheckpointResults()
+      // AFTER all questions are answered — that's when the button becomes visible.
+      // Attaching it here would find the hidden button but lose the listener when
+      // showCheckpointResults() calls classList.remove('hidden') on the same element.
       this.populateKnowledgeCheckpoint(screen);
-      
-      const viewResultsButton = screen.querySelector('#view-results');
-      if (viewResultsButton) {
-        viewResultsButton.addEventListener('click', () => {
-          this.eventBus.emit('checkpoint:complete', {
-            score: this.checkpointScore,
-            totalQuestions: this.checkpointTotalQuestions
-          });
-        });
-      }
     }
     
     // Results card screen
@@ -1243,7 +1172,7 @@ class UIController {
     // Get current mission and role
     if (!this.currentMissionId || !this.currentRoleId) {
       console.error('UIController.populateOutcomeScreen: No mission or role ID stored');
-      outcomeResultContainer.innerHTML = `<p>${this.content.errors.outcomeScreen.noMissionOrRole}</p>`;
+      outcomeResultContainer.innerHTML = '<p>Error: Unable to determine outcome. Mission or role data missing.</p>';
       return;
     }
     
@@ -1251,7 +1180,7 @@ class UIController {
     
     if (!mission) {
       console.error(`UIController.populateOutcomeScreen: Mission "${this.currentMissionId}" not found`);
-      outcomeResultContainer.innerHTML = `<p>${this.content.errors.outcomeScreen.missionNotFound}</p>`;
+      outcomeResultContainer.innerHTML = '<p>Error: Mission data not found.</p>';
       return;
     }
     
@@ -1260,16 +1189,16 @@ class UIController {
     
     if (!role || !role.outcomes) {
       console.error(`UIController.populateOutcomeScreen: Role "${this.currentRoleId}" not found or has no outcomes`);
-      outcomeResultContainer.innerHTML = `<p>${this.content.errors.outcomeScreen.roleNotFound}</p>`;
+      outcomeResultContainer.innerHTML = '<p>Error: Role outcome data not found.</p>';
       return;
     }
     
-    // Use outcomeId passed from SceneStateMachine via game:complete event
-    const outcomeId = this.currentOutcomeId;
+    // Calculate outcome using ConsequenceSystem
+    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes);
     
     if (!outcomeId) {
-      console.error('UIController.populateOutcomeScreen: No outcome ID stored from game:complete event');
-      outcomeResultContainer.innerHTML = `<p>${this.content.errors.outcomeScreen.noOutcomeId}</p>`;
+      console.error('UIController.populateOutcomeScreen: No matching outcome found for current flags');
+      outcomeResultContainer.innerHTML = '<p>Error: Unable to determine outcome based on your choices.</p>';
       return;
     }
     
@@ -1278,7 +1207,7 @@ class UIController {
     
     if (!outcome) {
       console.error(`UIController.populateOutcomeScreen: Outcome "${outcomeId}" not found in role outcomes`);
-      outcomeResultContainer.innerHTML = `<p>${this.content.errors.outcomeScreen.outcomeNotFound}</p>`;
+      outcomeResultContainer.innerHTML = '<p>Error: Outcome data not found.</p>';
       return;
     }
     
@@ -1286,26 +1215,12 @@ class UIController {
     const survivalStatus = outcome.survived ? 'You Survived' : 'You Did Not Survive';
     const survivalClass = outcome.survived ? 'text-success' : 'text-danger';
     
-    let outcomeHTML = `
+    outcomeResultContainer.innerHTML = `
       <h3 class="${survivalClass}">${survivalStatus}</h3>
       <div class="outcome-epilogue mt-md">
         ${this.formatEpilogue(outcome.epilogue)}
       </div>
     `;
-    
-    // Add death context panel if player died
-    if (outcome.deathContext) {
-      outcomeHTML += `
-        <div class="death-context panel panel-parchment mt-md">
-          <h4>What Happened</h4>
-          <p><strong>Cause:</strong> ${outcome.deathContext.cause}</p>
-          <p><strong>Historical rate:</strong> ${outcome.deathContext.historicalRate}</p>
-          <p><strong>Your choices:</strong> ${outcome.deathContext.yourChoices}</p>
-        </div>
-      `;
-    }
-    
-    outcomeResultContainer.innerHTML = outcomeHTML;
   }
 
   /**
@@ -1348,20 +1263,8 @@ class UIController {
       return;
     }
     
-    // Get path variant for personalized intro
-    const consequenceFlags = this.consequenceSystem.getAllFlags();
-    const pathVariant = PathClassifier.classify(consequenceFlags, PATH_RULES);
-    const introData = getRippleIntro(this.currentRoleId, pathVariant);
-    const introText = introData.text || introData; // Extract text property if it's an object
-    
     // Clear existing events
     rippleTimelineContainer.innerHTML = '';
-    
-    // Add path-aware intro text
-    const introElement = document.createElement('div');
-    introElement.className = 'ripple-intro';
-    introElement.innerHTML = `<p>${introText}</p>`;
-    rippleTimelineContainer.appendChild(introElement);
     
     // Create a ripple event element for each event in the mission data
     mission.historicalRipple.forEach((event, index) => {
@@ -1439,7 +1342,7 @@ class UIController {
     // Get current mission and role
     if (!this.currentMissionId || !this.currentRoleId) {
       console.error('UIController.populateKnowledgeCheckpoint: No mission or role ID stored');
-      questionsContainer.innerHTML = `<p>${this.content.errors.knowledgeCheckpoint.noMissionOrRole}</p>`;
+      questionsContainer.innerHTML = '<p>Error: Unable to load questions. Mission or role data missing.</p>';
       return;
     }
     
@@ -1447,38 +1350,29 @@ class UIController {
     
     if (!mission || !mission.knowledgeQuestions) {
       console.error(`UIController.populateKnowledgeCheckpoint: Mission "${this.currentMissionId}" not found or has no knowledge questions`);
-      questionsContainer.innerHTML = `<p>${this.content.errors.knowledgeCheckpoint.noQuestions}</p>`;
+      questionsContainer.innerHTML = '<p>Error: Knowledge questions not found.</p>';
       return;
     }
     
-    // Load all questions into KnowledgeCheckpoint
-    this.knowledgeCheckpoint.loadQuestions(mission.knowledgeQuestions);
+    // Filter questions by roleSpecific field
+    const roleQuestions = mission.knowledgeQuestions.filter(q => q.roleSpecific === this.currentRoleId);
     
-    // Determine player's path variant using PathClassifier (static method)
-    const consequenceFlags = this.consequenceSystem.getAllFlags();
-    const pathVariant = PathClassifier.classify(consequenceFlags, PATH_RULES);
-    
-    console.log(`KnowledgeCheckpoint: Player path classified as "${pathVariant}"`);
-    
-    // Select 5 path-aware questions using KnowledgeCheckpoint
-    const selectedQuestions = this.knowledgeCheckpoint.selectQuestions(consequenceFlags, PATH_RULES);
-    
-    if (selectedQuestions.length === 0) {
-      console.error('UIController.populateKnowledgeCheckpoint: No questions selected');
-      questionsContainer.innerHTML = `<p>${this.content.errors.knowledgeCheckpoint.selectionFailed}</p>`;
+    if (roleQuestions.length === 0) {
+      console.error(`UIController.populateKnowledgeCheckpoint: No questions found for role "${this.currentRoleId}"`);
+      questionsContainer.innerHTML = '<p>Error: No questions available for this role.</p>';
       return;
     }
     
     // Initialize checkpoint tracking
     this.checkpointAnswers = new Map(); // questionId -> {selectedAnswer, correct}
     this.checkpointScore = 0;
-    this.checkpointTotalQuestions = selectedQuestions.length;
+    this.checkpointTotalQuestions = roleQuestions.length;
     
     // Clear existing questions
     questionsContainer.innerHTML = '';
     
     // Render each question
-    selectedQuestions.forEach((question, index) => {
+    roleQuestions.forEach((question, index) => {
       const questionElement = document.createElement('article');
       questionElement.className = 'checkpoint-question panel panel-parchment mt-md';
       questionElement.dataset.questionId = question.id;
@@ -1514,7 +1408,10 @@ class UIController {
       optionsContainer.setAttribute('aria-label', `Answer options for question ${index + 1}`);
       
       // Render each option as a button
-      question.options.forEach(option => {
+      // Shuffle answer options so correct answer isn't always the same letter
+      const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
+
+      shuffledOptions.forEach(option => {
         const optionButton = document.createElement('button');
         optionButton.className = 'option-button';
         optionButton.dataset.optionId = option.id;
@@ -1621,8 +1518,16 @@ class UIController {
       return;
     }
     
-    // Show the button
+    // Show the button and attach its click listener here
+    // (attaching it in attachEventListeners would lose the handler
+    //  because the button is hidden and re-shown by this method)
     viewResultsButton.classList.remove('hidden');
+    viewResultsButton.addEventListener('click', () => {
+      this.eventBus.emit('checkpoint:complete', {
+        score: this.checkpointScore,
+        totalQuestions: this.checkpointTotalQuestions
+      });
+    });
     
     // Add score display above the button
     const checkpointContent = document.querySelector('.checkpoint-content');
