@@ -28,6 +28,9 @@ export default class KnowledgeCheckpoint {
    * @returns {Array} - 3 selected questions
    */
   selectQuestions(roleId) {
+    if (!this.pathClassifier || typeof this.pathClassifier.classify !== 'function') {
+  return allQuestions;
+}
     // Filter questions by role
     const roleQuestions = this.allQuestions.filter(q => 
       q.roleSpecific === roleId
