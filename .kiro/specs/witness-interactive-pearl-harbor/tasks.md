@@ -139,7 +139,7 @@ The MVP focuses on shipping a working game by April 4th with manual + Playwright
     - Track completed roles in session state (no localStorage)
     - _Requirements: 4.1, 4.3, 4.5, 23.1, 23.2, 23.3_
 
-- [ ] 10. Create Pearl Harbor narrative content
+- [x] 10. Create Pearl Harbor narrative content
   - [x] 10.1 Write Japanese Naval Aviator role scenes
     - Create japanese-aviator.js with 4-5 scene objects
     - Each scene includes: id, narrative, apThemes array, choices array, atmosphericEffect
