@@ -12,7 +12,7 @@ export const FEEDBACK_CONFIG = {
   transportType: 'googleSheets',
 
   // Endpoint URL for Google Sheets Apps Script or email webhook
-  endpointUrl: 'https://script.google.com/macros/s/AKfycbxozJvabnU6ZioercOI-Y9azZ8OK86IGLBbfN2R5UyzuTMrZBmiRI5BmO5jYuL7_PA/exec',
+  endpointUrl: 'https://script.google.com/macros/s/AKfycbxjn-L3-qQNwBCCF_2BWwkEexJ-SS_KXjvE2LdZ9PRlymPScVQKZy36z_i9AK5ezb33/exec',
 
   // Optional auth token or API key
   authToken: '',
