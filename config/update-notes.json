@@ -1,19 +1,17 @@
 {
-  "version": "1.4.1",
-  "date": "2026-03-10",
+  "version": "1.4.2",
+  "date": "2026-03-11",
   "new": [
+    "Real-time psychology score notifications show how your choices impact your character",
+    "Toast notifications appear when your decisions affect morale, loyalty, awareness, and composure",
     "Share your results with friends via native share or clipboard",
-    "Faster text speed on mobile devices for better experience",
-    "Optimized effects for low-end devices",
     "Social proof showing student testimonials on landing page"
   ],
   "fixed": [
-    "Historical ripple timeline now displays personalized intro text correctly",
-    "Knowledge checkpoint questions now appear properly after completing missions",
-    "Narrator audio now plays during scenes as intended",
-    "Visual effects now work smoothly throughout the game",
-    "Mobile performance improvements",
-    "Better touch interaction handling",
-    "Smoother animations on all devices"
+    "Knowledge checkpoint quiz now displays correctly after completing missions",
+    "Historical ripple timeline displays personalized intro text",
+    "Narrator audio plays during scenes as intended",
+    "Visual effects work smoothly throughout the game",
+    "Mobile performance improvements and better touch handling"
   ]
 }
