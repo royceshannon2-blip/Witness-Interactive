@@ -24,15 +24,19 @@ export default class KnowledgeCheckpoint {
 
   /**
    * Select 3 questions for the current role
+   * PathClassifier is Phase 3 — guard allows quiz to work without it
    * @param {string} roleId - Current role ID (e.g., 'japanese-aviator')
    * @returns {Array} - 3 selected questions
    */
   selectQuestions(roleId) {
+    // PathClassifier is not built yet (Phase 3)
+    // Return all questions so the quiz renders instead of crashing
     if (!this.pathClassifier || typeof this.pathClassifier.classify !== 'function') {
-  return allQuestions;
-}
+      return this.allQuestions;
+    }
+
     // Filter questions by role
-    const roleQuestions = this.allQuestions.filter(q => 
+    const roleQuestions = this.allQuestions.filter(q =>
       q.roleSpecific === roleId
     );
 
