@@ -745,7 +745,7 @@ class UIController {
     };
     
     // Generate results card HTML using ResultsCard component
-    const cardHTML = this.resultsCard ? this.resultsCard.generateCard(cardData) : '<p>Error: Results card generator not available.</p>';
+    const cardHTML = this.resultsCard ? this.resultsCard.generateCard(cardData) : `<p>${this.content.errors.resultsCard.generatorUnavailable}</p>`;
     
     return `
       <article class="results-content text-center" role="article" aria-labelledby="results-title">
@@ -1439,7 +1439,7 @@ class UIController {
     // Get current mission and role
     if (!this.currentMissionId || !this.currentRoleId) {
       console.error('UIController.populateKnowledgeCheckpoint: No mission or role ID stored');
-      questionsContainer.innerHTML = '<p>Error: Unable to load questions. Mission or role data missing.</p>';
+      questionsContainer.innerHTML = `<p>${this.content.errors.knowledgeCheckpoint.noMissionOrRole}</p>`;
       return;
     }
     
@@ -1447,7 +1447,7 @@ class UIController {
     
     if (!mission || !mission.knowledgeQuestions) {
       console.error(`UIController.populateKnowledgeCheckpoint: Mission "${this.currentMissionId}" not found or has no knowledge questions`);
-      questionsContainer.innerHTML = '<p>Error: Knowledge questions not found.</p>';
+      questionsContainer.innerHTML = `<p>${this.content.errors.knowledgeCheckpoint.noQuestions}</p>`;
       return;
     }
     
@@ -1466,7 +1466,7 @@ class UIController {
     
     if (selectedQuestions.length === 0) {
       console.error('UIController.populateKnowledgeCheckpoint: No questions selected');
-      questionsContainer.innerHTML = '<p>Error: Unable to select questions.</p>';
+      questionsContainer.innerHTML = `<p>${this.content.errors.knowledgeCheckpoint.selectionFailed}</p>`;
       return;
     }
     

@@ -92,6 +92,25 @@ const uiContent = {
     muteLabel: "Mute Sound",
     unmuteLabel: "Unmute Sound",
     placeholderNote: "(Sound coming soon)"
+  },
+  
+  errors: {
+    outcomeScreen: {
+      noMissionOrRole: "Error: Unable to determine outcome. Mission or role data missing.",
+      missionNotFound: "Error: Mission data not found.",
+      roleNotFound: "Error: Role outcome data not found.",
+      noOutcomeId: "Error: Unable to determine outcome based on your choices.",
+      outcomeNotFound: "Error: Outcome data not found."
+    },
+    knowledgeCheckpoint: {
+      noMissionOrRole: "Error: Unable to load questions. Mission or role data missing.",
+      noQuestions: "Error: Knowledge questions not found.",
+      noRoleQuestions: "Error: No questions available for this role.",
+      selectionFailed: "Error: Unable to select questions."
+    },
+    resultsCard: {
+      generatorUnavailable: "Error: Results card generator not available."
+    }
   }
 };
 
