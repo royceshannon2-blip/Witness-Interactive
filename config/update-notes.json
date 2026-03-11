@@ -1,0 +1,19 @@
+{
+  "version": "1.4.1",
+  "date": "2026-03-10",
+  "new": [
+    "Share your results with friends via native share or clipboard",
+    "Faster text speed on mobile devices for better experience",
+    "Optimized effects for low-end devices",
+    "Social proof showing student testimonials on landing page"
+  ],
+  "fixed": [
+    "Historical ripple timeline now displays personalized intro text correctly",
+    "Knowledge checkpoint questions now appear properly after completing missions",
+    "Narrator audio now plays during scenes as intended",
+    "Visual effects now work smoothly throughout the game",
+    "Mobile performance improvements",
+    "Better touch interaction handling",
+    "Smoother animations on all devices"
+  ]
+}
