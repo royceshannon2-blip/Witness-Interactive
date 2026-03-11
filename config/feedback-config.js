@@ -9,11 +9,10 @@
 
 export const FEEDBACK_CONFIG = {
   // Transport type: "googleSheets" | "email" | "console"
-  transportType: 'console',
+  transportType: 'googleSheets',
 
   // Endpoint URL for Google Sheets Apps Script or email webhook
-  // Example Google Sheets: 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec'
-  endpointUrl: '',
+  endpointUrl: 'https://script.google.com/macros/s/AKfycbxozJvabnU6ZioercOI-Y9azZ8OK86IGLBbfN2R5UyzuTMrZBmiRI5BmO5jYuL7_PA/exec',
 
   // Optional auth token or API key
   authToken: '',
