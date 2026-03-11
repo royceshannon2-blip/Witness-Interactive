@@ -165,67 +165,97 @@ class FeedbackSurveyPanel {
     const panel = this.panel;
     const likedText = panel.querySelector('#feedback-liked').value.trim();
     const issuesText = panel.querySelector('#feedback-issues').value.trim();
-    
+
     // Get survival and outcome data
-    const survivalResult = this.consequenceSystem.determineSurvival(this.currentRoleId);
-    const flags = this.consequenceSystem.getAllFlags();
-    
+    // Guard: determineSurvival may not exist if ConsequenceSystem isn't wired yet
+    let survivalResult = { survived: null, deathChance: null, modifiers: [] };
+    let flags = {};
+    try {
+      survivalResult = this.consequenceSystem.determineSurvival(this.currentRoleId);
+      flags = this.consequenceSystem.getAllFlags();
+    } catch (err) {
+      console.warn('[FeedbackSurvey] Could not read consequence data:', err.message);
+    }
+
     // Build payload
     const payload = {
       sessionId: this.sessionId,
       timestamp: new Date().toISOString(),
       missionId: this.currentMissionId,
       roleId: this.currentRoleId,
-      
-      // Gameplay data
-      flags: flags,
+      flags,
       survival: {
         survived: survivalResult.survived,
         deathChance: survivalResult.deathChance,
-        modifiers: survivalResult.modifiers
+        modifiers: survivalResult.modifiers || []
       },
-      
-      // Survey responses
       rating: this.selectedRating || null,
       liked: likedText || null,
       issues: issuesText || null
     };
-    
+
     // Show loading state
     const primaryBtn = panel.querySelector('.feedback-btn-primary');
-    const originalText = primaryBtn.textContent;
     primaryBtn.textContent = 'Sending...';
     primaryBtn.disabled = true;
-    
-    // Send feedback
-    const success = await this.transport.send(payload);
-    
-    // Show thank you message regardless of success (fail silently)
-    this._showThankYou();
+
+    // Send and capture result + any debug info
+    let success = false;
+    let debugMessage = '';
+    try {
+      success = await this.transport.send(payload);
+      debugMessage = success ? 'Transport returned true' : 'Transport returned false';
+    } catch (err) {
+      debugMessage = 'Transport threw: ' + err.message;
+    }
+
+    this._showThankYou(success, debugMessage, payload);
   }
 
   /**
-   * Show thank you message and hide panel
+   * Show thank you message with visible debug status
+   * @param {boolean} success - Whether transport succeeded
+   * @param {string} debugMessage - Debug info to display
+   * @param {object} payload - The payload that was sent (shown on failure)
    */
-  _showThankYou() {
+  _showThankYou(success = true, debugMessage = '', payload = {}) {
     const content = this.panel.querySelector('.feedback-survey-content');
+
+    // Status indicator — visible without DevTools
+    const statusColor = success ? '#4caf50' : '#e53935';
+    const statusIcon  = success ? '✓' : '✗';
+    const statusText  = success ? 'Sent to Google Sheets' : 'Send failed — see details below';
+
+    // Show payload summary on failure so you can see what was attempted
+    const debugBlock = !success ? `
+      <details style="margin-top:12px; text-align:left;">
+        <summary style="cursor:pointer; font-size:12px; color:#aaa;">Debug info (tap to expand)</summary>
+        <p style="font-size:11px; color:#e53935; margin:6px 0;">${debugMessage}</p>
+        <pre style="font-size:10px; color:#aaa; white-space:pre-wrap; word-break:break-all; max-height:120px; overflow-y:auto;">${JSON.stringify(payload, null, 2)}</pre>
+      </details>
+    ` : '';
+
     content.innerHTML = `
-      <div class="feedback-thank-you">
-        <h2 class="feedback-survey-title">Thanks for helping improve the game!</h2>
-        <p class="feedback-survey-subtitle">Your feedback helps us create better historical experiences.</p>
-        <button class="feedback-btn feedback-btn-primary">Continue</button>
+      <div class="feedback-thank-you" style="text-align:center; padding: 16px;">
+        <div style="font-size: 48px; margin-bottom: 8px;">${statusIcon}</div>
+        <h2 class="feedback-survey-title" style="color:${statusColor};">${statusText}</h2>
+        <p class="feedback-survey-subtitle">
+          ${success
+            ? 'Thanks for helping improve the game!'
+            : 'Transport issue — check debug info below and report to dev.'}
+        </p>
+        ${debugBlock}
+        <button class="feedback-btn feedback-btn-primary" style="margin-top:16px;">Continue</button>
       </div>
     `;
-    
+
     const continueBtn = content.querySelector('.feedback-btn-primary');
-    continueBtn.addEventListener('click', () => {
-      this.hide();
-    });
-    
-    // Auto-hide after 3 seconds
-    setTimeout(() => {
-      this.hide();
-    }, 3000);
+    continueBtn.addEventListener('click', () => { this.hide(); });
+
+    // Auto-hide after 5s on success, stay open on failure so you can read debug info
+    if (success) {
+      setTimeout(() => { this.hide(); }, 5000);
+    }
   }
 
   /**
