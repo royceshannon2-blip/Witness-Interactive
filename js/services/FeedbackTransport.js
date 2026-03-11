@@ -5,6 +5,11 @@
  * - Google Sheets (via Apps Script Web App)
  * - Email webhook
  * - Console logging (development)
+ *
+ * CORS note: Apps Script Web Apps deployed with "Anyone" access
+ * accept cross-origin JSON POST requests without preflight issues
+ * when the deployment is configured correctly. This file sends
+ * standard JSON — no FormData, no no-cors mode.
  */
 
 import { FEEDBACK_CONFIG } from '../../config/feedback-config.js';
@@ -13,7 +18,7 @@ class FeedbackTransport {
   /**
    * Send feedback payload to configured endpoint
    * @param {object} payload - Feedback data
-   * @returns {Promise<boolean>} - Success status
+   * @returns {Promise<boolean>} - True on success, false on failure
    */
   async send(payload) {
     const { transportType, endpointUrl, authToken, requestTimeout } = FEEDBACK_CONFIG;
@@ -21,11 +26,11 @@ class FeedbackTransport {
     try {
       switch (transportType) {
         case 'googleSheets':
-          return await this._sendToGoogleSheets(payload, endpointUrl, authToken, requestTimeout);
-        
+          return await this._sendToGoogleSheets(payload, endpointUrl, requestTimeout);
+
         case 'email':
           return await this._sendToEmail(payload, endpointUrl, authToken, requestTimeout);
-        
+
         case 'console':
         default:
           return this._logToConsole(payload);
@@ -38,58 +43,67 @@ class FeedbackTransport {
 
   /**
    * Send to Google Sheets via Apps Script Web App
+   * Uses standard JSON POST — Apps Script reads from e.postData.contents
    */
-  async _sendToGoogleSheets(payload, endpointUrl, authToken, timeout) {
-  if (!endpointUrl) {
-    console.warn('[FeedbackTransport] Google Sheets endpoint not configured');
-    return this._logToConsole(payload);
-  }
-
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeout);
-
-  try {
-    // CORS fix: Apps Script requires form-encoded body with no-cors mode
-    // JSON + POST triggers a preflight that Apps Script cannot handle
-    const formData = new FormData();
-    formData.append('payload', JSON.stringify(payload));
-
-    const response = await fetch(endpointUrl, {
-      method: 'POST',
-      body: formData,
-      mode: 'no-cors',  // Bypasses preflight — required for Apps Script
-      signal: controller.signal
-    });
-
-    clearTimeout(timeoutId);
-
-    // no-cors returns an opaque response — you can't read status
-    // If fetch didn't throw, assume success
-    console.log('[FeedbackTransport] Sent to Google Sheets (opaque response)');
-    return true;
-
-  } catch (error) {
-    clearTimeout(timeoutId);
-    if (error.name === 'AbortError') {
-      console.error('[FeedbackTransport] Request timeout');
-    } else {
-      console.error('[FeedbackTransport] Network error:', error);
+  async _sendToGoogleSheets(payload, endpointUrl, timeout) {
+    if (!endpointUrl) {
+      console.warn('[FeedbackTransport] Google Sheets endpoint not configured — falling back to console');
+      return this._logToConsole(payload);
     }
-    return false;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeout || 8000);
+
+    try {
+      const response = await fetch(endpointUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'text/plain' // text/plain avoids CORS preflight; Apps Script reads it fine
+        },
+        body: JSON.stringify(payload),
+        signal: controller.signal
+        // No mode: 'no-cors' — we need to read the response to confirm success
+      });
+
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        console.error('[FeedbackTransport] Apps Script returned HTTP error:', response.status);
+        return false;
+      }
+
+      const result = await response.json();
+
+      if (result.status === 'success') {
+        console.log('[FeedbackTransport] Feedback recorded in Google Sheets ✓');
+        return true;
+      } else {
+        console.error('[FeedbackTransport] Apps Script error:', result.message);
+        return false;
+      }
+
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error.name === 'AbortError') {
+        console.error('[FeedbackTransport] Request timed out');
+      } else {
+        console.error('[FeedbackTransport] Network error:', error.message);
+      }
+      return false;
+    }
   }
-}
 
   /**
    * Send to email webhook
    */
   async _sendToEmail(payload, endpointUrl, authToken, timeout) {
     if (!endpointUrl) {
-      console.warn('[FeedbackTransport] Email endpoint not configured');
+      console.warn('[FeedbackTransport] Email endpoint not configured — falling back to console');
       return this._logToConsole(payload);
     }
 
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), timeout);
+    const timeoutId = setTimeout(() => controller.abort(), timeout || 8000);
 
     try {
       const response = await fetch(endpointUrl, {
@@ -105,25 +119,26 @@ class FeedbackTransport {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        console.error('[FeedbackTransport] Email webhook response not OK:', response.status);
+        console.error('[FeedbackTransport] Email webhook error:', response.status);
         return false;
       }
 
-      console.log('[FeedbackTransport] Successfully sent via email webhook');
+      console.log('[FeedbackTransport] Feedback sent via email webhook ✓');
       return true;
+
     } catch (error) {
       clearTimeout(timeoutId);
       if (error.name === 'AbortError') {
-        console.error('[FeedbackTransport] Request timeout');
+        console.error('[FeedbackTransport] Request timed out');
       } else {
-        console.error('[FeedbackTransport] Network error:', error);
+        console.error('[FeedbackTransport] Network error:', error.message);
       }
       return false;
     }
   }
 
   /**
-   * Log to console (development mode)
+   * Log to console (development / fallback mode)
    */
   _logToConsole(payload) {
     console.log('[FeedbackTransport] Feedback payload (console mode):');
