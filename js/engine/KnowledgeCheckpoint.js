@@ -25,13 +25,12 @@ export default class KnowledgeCheckpoint {
   /**
    * Select 5 questions based on player's path
    * @param {Object} flags - Player's choice flags
-   * @param {string} roleId - Player's role ID
+   * @param {Array} pathRules - Path classification rules
    * @returns {Array} - 5 selected questions
    */
-  selectQuestions(flags, roleId) {
-    // Classify player's path
-    const pathResult = this.pathClassifier.classify(flags, roleId);
-    const playerPath = pathResult.path;
+  selectQuestions(flags, pathRules) {
+    // Classify player's path using static method
+    const playerPath = PathClassifier.classify(flags, pathRules);
 
     // Filter questions by path variant
     const pathSpecificQuestions = this.allQuestions.filter(q => 
