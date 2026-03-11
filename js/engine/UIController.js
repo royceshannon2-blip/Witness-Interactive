@@ -1454,15 +1454,14 @@ class UIController {
     // Load all questions into KnowledgeCheckpoint
     this.knowledgeCheckpoint.loadQuestions(mission.knowledgeQuestions);
     
-    // Determine player's path variant using PathClassifier
+    // Determine player's path variant using PathClassifier (static method)
     const consequenceFlags = this.consequenceSystem.getAllFlags();
-    const pathResult = this.pathClassifier.classify(consequenceFlags, this.currentRoleId);
-    const pathVariant = pathResult.path;
+    const pathVariant = PathClassifier.classify(consequenceFlags, PATH_RULES);
     
     console.log(`KnowledgeCheckpoint: Player path classified as "${pathVariant}"`);
     
     // Select 5 path-aware questions using KnowledgeCheckpoint
-    const selectedQuestions = this.knowledgeCheckpoint.selectQuestions(consequenceFlags, this.currentRoleId);
+    const selectedQuestions = this.knowledgeCheckpoint.selectQuestions(consequenceFlags, PATH_RULES);
     
     if (selectedQuestions.length === 0) {
       console.error('UIController.populateKnowledgeCheckpoint: No questions selected');
