@@ -1,17 +1,16 @@
 {
-  "version": "1.4.2",
+  "version": "1.4.3",
   "date": "2026-03-11",
   "new": [
+    "Feedback survey now sends responses to Google Sheets for analysis",
     "Real-time psychology score notifications show how your choices impact your character",
     "Toast notifications appear when your decisions affect morale, loyalty, awareness, and composure",
-    "Share your results with friends via native share or clipboard",
-    "Social proof showing student testimonials on landing page"
+    "Share your results with friends via native share or clipboard"
   ],
   "fixed": [
     "Knowledge checkpoint quiz now displays correctly after completing missions",
     "Historical ripple timeline displays personalized intro text",
     "Narrator audio plays during scenes as intended",
-    "Visual effects work smoothly throughout the game",
-    "Mobile performance improvements and better touch handling"
+    "Visual effects work smoothly throughout the game"
   ]
 }
