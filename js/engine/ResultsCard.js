@@ -103,21 +103,32 @@ class ResultsCard {
     // Collect AP themes engaged during session
     const apThemes = this.collectApThemes(mission, summary.roleId);
     
-    // Get path classification
-    const consequenceFlags = this.consequenceSystem.getAllFlags();
+    // Get path classification — guard: ConsequenceSystem may not be wired yet
+    const consequenceFlags = (this.consequenceSystem && typeof this.consequenceSystem.getAllFlags === 'function')
+      ? this.consequenceSystem.getAllFlags()
+      : {};
     const pathVariant = PathClassifier.classify(consequenceFlags, PATH_RULES);
-    const pathSummary = PathClassifier.getSummary(pathVariant);
-    const otherPaths = PathClassifier.getOtherPaths(pathVariant);
+    const pathSummary = PathClassifier.getSummary ? PathClassifier.getSummary(pathVariant) : pathVariant;
+    const otherPaths = PathClassifier.getOtherPaths ? PathClassifier.getOtherPaths(pathVariant) : [];
     
     // Track completed path
     this.completedPaths.add(pathVariant);
     
-    // Get psychology scores and grade
-    const psychologyScores = this.psychologyEngine.getScores();
-    const grade = this.psychologyEngine.calculateGrade(psychologyScores, GRADE_CONFIG);
+    // Get psychology scores and grade — guard: PsychologyEngine is Phase 3, not built yet
+    const psychologyAvailable = this.psychologyEngine &&
+      typeof this.psychologyEngine.getScores === 'function';
     
-    // Get archetype classification
-    const archetype = this.psychologyEngine.classifyArchetype(psychologyScores, ARCHETYPES, summary.roleId);
+    const psychologyScores = psychologyAvailable
+      ? this.psychologyEngine.getScores()
+      : null;
+    
+    const grade = (psychologyAvailable && typeof this.psychologyEngine.calculateGrade === 'function')
+      ? this.psychologyEngine.calculateGrade(psychologyScores, GRADE_CONFIG)
+      : null;
+    
+    const archetype = (psychologyAvailable && typeof this.psychologyEngine.classifyArchetype === 'function')
+      ? this.psychologyEngine.classifyArchetype(psychologyScores, ARCHETYPES, summary.roleId)
+      : null;
     
     // Store card data for clipboard operations
     this.lastCardData = {
@@ -169,19 +180,21 @@ class ResultsCard {
       `;
     }
     
-    // Render psychology scores with bars
-    const scoresHTML = Object.entries(cardData.psychologyScores).map(([key, value]) => {
-      const label = HUD_LABELS[key] || key;
-      return `
-        <div class="score-bar-container">
-          <div class="score-bar-label">${label}</div>
-          <div class="score-bar">
-            <div class="score-bar-fill" style="width: ${value}%"></div>
-          </div>
-          <div class="score-bar-value">${value}</div>
-        </div>
-      `;
-    }).join('');
+    // Render psychology scores — only if PsychologyEngine is wired (Phase 3)
+    const scoresHTML = cardData.psychologyScores
+      ? Object.entries(cardData.psychologyScores).map(([key, value]) => {
+          const label = HUD_LABELS[key] || key;
+          return `
+            <div class="score-bar-container">
+              <div class="score-bar-label">${label}</div>
+              <div class="score-bar">
+                <div class="score-bar-fill" style="width: ${value}%"></div>
+              </div>
+              <div class="score-bar-value">${value}</div>
+            </div>
+          `;
+        }).join('')
+      : '';
     
     return `
       <div class="results-card-header">
@@ -208,6 +221,7 @@ class ResultsCard {
           </div>
         </div>
         
+        ${cardData.grade ? `
         <div class="result-item teammate-grade">
           <span class="result-label">Teammate Grade:</span>
           <div class="grade-display">
@@ -217,22 +231,24 @@ class ResultsCard {
               <p class="grade-description text-secondary">${cardData.grade.description}</p>
             </div>
           </div>
-        </div>
+        </div>` : ''}
         
+        ${cardData.archetype ? `
         <div class="result-item personality-archetype">
           <span class="result-label">Personality Archetype:</span>
           <div class="archetype-display">
             <div class="archetype-name">${cardData.archetype.name}</div>
             <p class="archetype-description text-secondary">${cardData.archetype.description}</p>
           </div>
-        </div>
+        </div>` : ''}
         
+        ${scoresHTML ? `
         <div class="result-item final-scores">
           <span class="result-label">Final Psychology Scores:</span>
           <div class="scores-display mt-sm">
             ${scoresHTML}
           </div>
-        </div>
+        </div>` : ''}
         
         <div class="result-item">
           <span class="result-label">Outcome:</span>
@@ -478,10 +494,12 @@ class ResultsCard {
     const apThemesList = cardData.apThemesEngaged.map(theme => this.formatApTheme(theme)).join(', ');
     const otherPathsList = cardData.otherPaths.map(path => this.formatPathVariant(path)).join(', ');
     
-    // Format psychology scores
-    const scoresText = Object.entries(cardData.psychologyScores)
-      .map(([key, value]) => `${HUD_LABELS[key] || key}: ${value}`)
-      .join(', ');
+    // Format psychology scores — only if PsychologyEngine available
+    const scoresText = cardData.psychologyScores
+      ? Object.entries(cardData.psychologyScores)
+          .map(([key, value]) => `${HUD_LABELS[key] || key}: ${value}`)
+          .join(', ')
+      : 'Not available (coming soon)';
     
     // Format survival stats if available
     let survivalStatsText = '';
@@ -500,12 +518,10 @@ Path Taken: ${this.formatPathVariant(cardData.pathVariant)}
 Path Summary: ${cardData.pathSummary}
 Other Available Paths: ${otherPathsList}
 
-Teammate Grade: ${cardData.grade.letter} - ${cardData.grade.label}
-${cardData.grade.description}
-
-Personality Archetype: ${cardData.archetype.name}
-${cardData.archetype.description}
-
+${cardData.grade ? `Teammate Grade: ${cardData.grade.letter} - ${cardData.grade.label}
+${cardData.grade.description}` : ''}
+${cardData.archetype ? `Personality Archetype: ${cardData.archetype.name}
+${cardData.archetype.description}` : ''}
 Final Psychology Scores: ${scoresText}
 
 Outcome: ${survivalStatus}${survivalStatsText}
