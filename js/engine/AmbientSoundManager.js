@@ -22,7 +22,7 @@ class AmbientSoundManager {
     
     // Configuration with defaults
     this.config = {
-      defaultVolume: config.defaultVolume || 0.4, // 40% volume as specified
+      defaultVolume: config.defaultVolume || 0.15, // 15% — balanced against narrator audio
       crossfadeDuration: config.crossfadeDuration || 1500, // 1.5 seconds
       audioPath: config.audioPath || 'audio/ambient/'
     };
