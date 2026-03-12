@@ -77,6 +77,12 @@ You have seconds. The roadblock at the end of the street—you know the commande
         text: "Comply—reveal Celestin's location",
         consequences: { rw_revealed_celestin: true, rw_compliance_path: 4 },
         nextScene: "rw-hm-scene-03b"
+      },
+      {
+        id: "rw-hm-choice-02a-c",
+        text: "Run—flee with your family",
+        consequences: { rw_fled_from_militia: true, rw_flight_path: 3 },
+        nextScene: "rw-hm-scene-03d"
       }
     ]
   },
