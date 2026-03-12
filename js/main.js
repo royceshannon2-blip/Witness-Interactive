@@ -35,6 +35,7 @@ import UpdateNotesPanel from './ui/UpdateNotesPanel.js';
 
 // Content imports
 import pearlHarborMission from './content/missions/pearl-harbor/mission.js';
+import rwandaMission from './content/missions/rwanda/mission.js';
 import uiContent from './content/ui-content.js';
 
 /**
@@ -71,6 +72,10 @@ async function initializeApp() {
     // 6. Load Pearl Harbor mission
     missionRegistry.register(pearlHarborMission);
     console.log('✓ Pearl Harbor mission loaded');
+    
+    // 7. Load Rwanda Genocide mission
+    missionRegistry.register(rwandaMission);
+    console.log('✓ Rwanda Genocide mission loaded');
     
     // 7. Initialize TimelineSelector (mission selection UI)
     const timelineSelector = new TimelineSelector(eventBus, missionRegistry);

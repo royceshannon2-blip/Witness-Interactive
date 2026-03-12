@@ -1,17 +1,12 @@
 {
-  "version": "1.4.4",
-  "date": "2026-03-11",
+  "version": "1.5.0",
+  "date": "2026-03-15",
   "new": [
-    "Feedback survey now sends responses to Google Sheets for analysis",
-    "Real-time psychology score notifications show how your choices impact your character",
-    "Toast notifications appear when your decisions affect morale, loyalty, awareness, and composure",
-    "Share your results with friends via native share or clipboard"
+    "New mission: Rwanda, 1994 - Experience the genocide from three perspectives",
+    "Play as Hutu Moderate, Tutsi Survivor, or UN Peacekeeper",
+    "9 branching narrative paths with aftermath scenes exploring reconciliation",
+    "Gacaca courts and post-genocide justice themes",
+    "True branching where your choices lead to genuinely different scenes"
   ],
-  "fixed": [
-    "Knowledge checkpoint quiz now displays correctly after completing missions",
-    "Quiz questions are properly selected based on your role",
-    "Historical ripple timeline displays personalized intro text",
-    "Narrator audio plays during scenes as intended",
-    "Visual effects work smoothly throughout the game"
-  ]
+  "fixed": []
 }
