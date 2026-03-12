@@ -133,8 +133,9 @@ class SceneStateMachine {
       console.error(`SceneStateMachine.validateChoice: Choice "${choice.id}" missing "text"`);
       return false;
     }
-    if (typeof choice.nextScene !== 'string') {
-      console.error(`SceneStateMachine.validateChoice: Choice "${choice.id}" missing "nextScene"`);
+    // Allow nextScene to be null for terminal scenes
+    if (choice.nextScene !== null && typeof choice.nextScene !== 'string') {
+      console.error(`SceneStateMachine.validateChoice: Choice "${choice.id}" has invalid "nextScene" (must be string or null)`);
       return false;
     }
     if (choice.consequences !== undefined && typeof choice.consequences !== 'object') {
@@ -161,10 +162,21 @@ class SceneStateMachine {
    * emit scene:error (which UIController handles by re-rendering the current scene
    * and keeping the player on screen) rather than game:complete.
    * game:complete is only emitted after the final real scene is played.
+   * 
+   * Terminal scenes: If nextSceneId is null, emit role:complete to trigger outcome generation.
    */
   transitionTo(nextSceneId) {
+    // Handle terminal scenes (nextScene: null)
+    if (nextSceneId === null) {
+      this.eventBus.emit('role:complete', {
+        missionId: this.currentMissionId,
+        roleId   : this.currentRoleId
+      });
+      return;
+    }
+    
     if (typeof nextSceneId !== 'string') {
-      console.error('SceneStateMachine.transitionTo: nextSceneId must be a string');
+      console.error('SceneStateMachine.transitionTo: nextSceneId must be a string or null');
       return;
     }
 
