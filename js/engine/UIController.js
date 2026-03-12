@@ -1411,13 +1411,15 @@ class UIController {
       // Shuffle answer options so correct answer isn't always the same letter
       const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
 
-      shuffledOptions.forEach(option => {
+      const displayLabels = ['A', 'B', 'C', 'D'];
+      shuffledOptions.forEach((option, displayIndex) => {
+        const label = displayLabels[displayIndex] || String(displayIndex + 1);
         const optionButton = document.createElement('button');
         optionButton.className = 'option-button';
         optionButton.dataset.optionId = option.id;
         optionButton.dataset.correct = option.correct;
-        optionButton.textContent = `${option.id.toUpperCase()}. ${option.text}`;
-        optionButton.setAttribute('aria-label', `Option ${option.id.toUpperCase()}: ${option.text}`);
+        optionButton.textContent = `${label}. ${option.text}`;
+        optionButton.setAttribute('aria-label', `Option ${label}: ${option.text}`);
         
         // Add click handler for answer selection
         optionButton.addEventListener('click', () => {
