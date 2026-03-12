@@ -200,21 +200,18 @@ async function initializeApp() {
         sceneStateMachine.loadRole(missionId, roleId, role.scenes);
         console.log(`✓ Loaded role "${roleId}" with ${role.scenes.length} scenes`);
     });
-    
-    // Dev cheat code: Ctrl+Shift+K auto-advances scene
-document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.shiftKey && e.key === 'K') {
-        console.log('[Dev] Auto-advancing scene');
-        document.querySelector('.choice-button')?.click();
-    }
-});
 
-// 17. Set up choice:made handler to transition scenes
-eventBus.on('choice:made', (data) => {
-    const { nextSceneId, consequences } = data;
-    sceneStateMachine.transitionTo(nextSceneId);
-    console.log(`✓ Transitioning to scene "${nextSceneId}"`, consequences);
-});
+    // Dev cheat code: Ctrl+Shift+K auto-advances scene
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key === 'K') {
+            console.log('[Dev] Auto-advancing scene');
+            document.querySelector('.choice-button')?.click();
+        }
+    });
+    
+    // 17. Set up choice:made handler to transition scenes
+    eventBus.on('choice:made', (data) => {
+        const { nextSceneId, consequences } = data;
         
         // ConsequenceSystem will handle setting flags
         // SceneStateMachine will handle scene transition
