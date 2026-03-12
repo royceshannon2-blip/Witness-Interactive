@@ -297,27 +297,27 @@ const knowledgeQuestions = [
     id: 'ph-ja-q-04',
     roleSpecific: 'japanese-aviator',
     apSkill: 'argumentation',
-    question: 'Which evidence best supports the argument that Japan's military leadership underestimated American resolve before the Pearl Harbor attack?',
+    question: 'Which evidence best supports the argument that Japan\'s military leadership underestimated American resolve before the Pearl Harbor attack?',
     options: [
       { id: 'a', text: 'Japan believed the attack would force the U.S. to negotiate a peace settlement', correct: true },
       { id: 'b', text: 'Japan expected the U.S. to surrender its Pacific territories immediately', correct: false },
       { id: 'c', text: 'Japanese admirals predicted the U.S. would need ten years to rebuild', correct: false },
       { id: 'd', text: 'Japan assumed Britain would pressure the U.S. to stay neutral', correct: false }
     ],
-    explanation: 'Japanese strategists hoped that a decisive blow against the Pacific Fleet would discourage the U.S. from prolonged war, leading to a negotiated settlement favorable to Japan. Admiral Yamamoto, who planned the attack, privately doubted this would work — he had studied in the U.S. and understood American industrial capacity. His famous warning about awakening a sleeping giant reflected this concern. The miscalculation was cultural and political: Japanese leadership underestimated how completely the attack would unify American public opinion against Japan.'
+    explanation: 'Japanese strategists hoped that a decisive blow against the Pacific Fleet would discourage the U.S. from prolonged war, leading to a negotiated settlement. Admiral Yamamoto, who planned the attack, privately doubted this — he had studied in the U.S. and understood American industrial capacity. His warning about awakening a sleeping giant reflected this concern. The miscalculation was cultural and political: Japanese leadership underestimated how completely the attack would unify American public opinion against Japan.'
   },
   {
     id: 'ph-ja-q-05',
     roleSpecific: 'japanese-aviator',
     apSkill: 'continuity',
-    question: 'How did Japan's imperial expansion in the 1930s contribute to the conditions that made the Pearl Harbor attack inevitable?',
+    question: 'How did Japan\'s imperial expansion in the 1930s contribute to the conditions that made the Pearl Harbor attack inevitable?',
     options: [
-      { id: 'a', text: 'Japan's invasion of Manchuria in 1931 began a pattern of expansion that escalated into conflict with the U.S.', correct: true },
-      { id: 'b', text: 'Japan's alliance with the Soviet Union threatened American interests in the Pacific', correct: false },
-      { id: 'c', text: 'Japan's democratic reforms in the 1930s were rejected by Western powers', correct: false },
-      { id: 'd', text: 'Japan's economic depression forced military leaders to seek overseas markets', correct: false }
+      { id: 'a', text: 'Japan\'s invasion of Manchuria in 1931 began a pattern of expansion that escalated into conflict with the U.S.', correct: true },
+      { id: 'b', text: 'Japan\'s alliance with the Soviet Union threatened American interests in the Pacific', correct: false },
+      { id: 'c', text: 'Japan\'s democratic reforms in the 1930s were rejected by Western powers', correct: false },
+      { id: 'd', text: 'Japan\'s economic depression forced military leaders to seek overseas markets', correct: false }
     ],
-    explanation: 'Japan's seizure of Manchuria in 1931, followed by full-scale invasion of China in 1937, placed it on a collision course with the U.S. Each step — the Rape of Nanjing, the occupation of French Indochina, the Tripartite Pact with Germany and Italy — triggered increasingly severe American responses, culminating in the 1941 oil embargo. The attack on Pearl Harbor was the endpoint of a decade-long escalation driven by Japanese imperial ambition and American resistance to Asian hegemony.'
+    explanation: 'Japan\'s seizure of Manchuria in 1931, followed by full-scale invasion of China in 1937, placed it on a collision course with the U.S. Each step — the Rape of Nanjing, the occupation of French Indochina, the Tripartite Pact with Germany and Italy — triggered increasingly severe American responses, culminating in the 1941 oil embargo. The attack on Pearl Harbor was the endpoint of a decade-long escalation driven by Japanese imperial ambition and American resistance to Asian hegemony.'
   },
   {
     id: 'ph-ja-q-06',
@@ -330,20 +330,20 @@ const knowledgeQuestions = [
       { id: 'c', text: 'Most claimed they were unaware the attack would target a naval base', correct: false },
       { id: 'd', text: 'Most described the attack as an act they personally opposed but were ordered to carry out', correct: false }
     ],
-    explanation: 'Postwar accounts from Japanese aviators — including Commander Mitsuo Fuchida, who led the attack — reflect professional pride in the mission's execution alongside acknowledgment that it failed strategically. Fuchida later became a Christian minister and reconciled with American survivors. Many Japanese veterans expressed that they believed they were fighting for their country's survival and resource security, not aggression. Their accounts reveal the complexity of soldiers following orders in a war they did not individually choose, a perspective that complicates simple narratives of villainy.'
+    explanation: 'Postwar accounts from Japanese aviators — including Commander Mitsuo Fuchida, who led the attack — reflect professional pride in the mission alongside acknowledgment that it failed strategically. Fuchida later became a Christian minister and reconciled with American survivors. Many Japanese veterans expressed that they believed they were fighting for their country\'s survival and resource security. Their accounts reveal the complexity of soldiers following orders in a war they did not individually choose.'
   },
   {
     id: 'ph-ja-q-07',
     roleSpecific: 'japanese-aviator',
     apSkill: 'causation',
-    question: 'What was the significance of Japan failing to destroy the U.S. Pacific Fleet's fuel storage facilities at Pearl Harbor?',
+    question: 'What was the significance of Japan failing to destroy the U.S. Pacific Fleet\'s fuel storage facilities at Pearl Harbor?',
     options: [
-      { id: 'a', text: 'The intact fuel depots allowed the U.S. Navy to resume operations in the Pacific within days', correct: true },
+      { id: 'a', text: 'The intact fuel depots allowed the U.S. Navy to resume Pacific operations within days', correct: true },
       { id: 'b', text: 'The fuel tanks were protected by underground bunkers Japan could not penetrate', correct: false },
-      { id: 'c', text: 'Destroying fuel storage was not part of Japan's tactical objectives', correct: false },
+      { id: 'c', text: 'Destroying fuel storage was not part of Japan\'s tactical objectives', correct: false },
       { id: 'd', text: 'The fuel was transferred to civilian ships before the attack began', correct: false }
     ],
-    explanation: 'Admiral Nagumo's decision not to launch a third wave of attacks left approximately 4.5 million barrels of fuel oil untouched at Pearl Harbor. Had these been destroyed, the U.S. Pacific Fleet would have been forced to operate from the West Coast, effectively ceding the Pacific to Japan for months or years. Military historians consider this one of the costliest oversights of the attack. Combined with the survival of the aircraft carriers, the intact fuel reserves allowed the U.S. to mount the Doolittle Raid on Tokyo just four months later.'
+    explanation: 'Admiral Nagumo\'s decision not to launch a third wave left approximately 4.5 million barrels of fuel oil untouched at Pearl Harbor. Had these been destroyed, the U.S. Pacific Fleet would have been forced to operate from the West Coast, effectively ceding the Pacific to Japan for months or years. Military historians consider this one of the costliest oversights of the attack. Combined with the survival of the aircraft carriers, the intact fuel reserves allowed the U.S. to mount the Doolittle Raid on Tokyo just four months later.'
   },
 
   // American Sailor — Questions 4-7
@@ -358,49 +358,49 @@ const knowledgeQuestions = [
       { id: 'c', text: 'It represented a compromise between veterans who wanted the ship raised and those who did not', correct: false },
       { id: 'd', text: 'It was funded entirely by Japanese reparations as part of the 1951 peace treaty', correct: false }
     ],
-    explanation: 'The USS Arizona Memorial, dedicated in 1962 and designed by Alfred Preis (himself a German immigrant interned during the war), represented a new approach to war commemoration — leaving the wreck in place as a tomb for the 1,177 men still aboard. Oil still seeps from the ship daily, called "black tears" by visitors. The memorial has become a site of reconciliation: Japanese officials including Prime Ministers have visited to pay respects, and surviving American and Japanese veterans have met there. It reflects how national memory evolves from raw grief toward complex historical reckoning.'
+    explanation: 'The USS Arizona Memorial, dedicated in 1962 and designed by Alfred Preis, represented a new approach to war commemoration — leaving the wreck in place as a tomb for the 1,177 men still aboard. Oil still seeps from the ship daily. The memorial has become a site of reconciliation: Japanese officials including Prime Ministers have visited to pay respects, and surviving American and Japanese veterans have met there. It reflects how national memory evolves from raw grief toward complex historical reckoning.'
   },
   {
     id: 'ph-as-q-05',
     roleSpecific: 'american-sailor',
     apSkill: 'causation',
-    question: 'What role did the "winds code" and intelligence failures play in the surprise achieved at Pearl Harbor?',
+    question: 'What role did intelligence failures play in the surprise achieved at Pearl Harbor?',
     options: [
       { id: 'a', text: 'U.S. intelligence had intercepted signals indicating a Japanese attack was imminent but failed to identify Pearl Harbor as the target', correct: true },
       { id: 'b', text: 'American codebreakers had no knowledge of Japanese intentions before the attack', correct: false },
       { id: 'c', text: 'The U.S. deliberately allowed the attack to justify entering the war', correct: false },
       { id: 'd', text: 'Japan used unbreakable codes that American cryptographers could not penetrate', correct: false }
     ],
-    explanation: 'U.S. signals intelligence (MAGIC) had broken Japanese diplomatic codes and knew war was imminent — a "war warning" was even sent to Pacific commanders on November 27, 1941. However, analysts expected an attack on British Malaya, Thailand, or the Philippines, not Hawaii. Pearl Harbor was considered too shallow for torpedo attacks (the Japanese had modified their torpedoes) and too far from Japan for a carrier strike. This combination of correct intelligence, incorrect threat assessment, and institutional failures produced one of history's most consequential intelligence failures.'
+    explanation: 'U.S. signals intelligence had broken Japanese diplomatic codes and knew war was imminent — a war warning was sent to Pacific commanders on November 27, 1941. However, analysts expected an attack on British Malaya or the Philippines, not Hawaii. Pearl Harbor was considered too shallow for torpedo attacks and too far from Japan for a carrier strike. This combination of correct intelligence and incorrect threat assessment produced one of history\'s most consequential intelligence failures.'
   },
   {
     id: 'ph-as-q-06',
     roleSpecific: 'american-sailor',
     apSkill: 'perspective',
-    question: 'How did African American sailors' experience at Pearl Harbor reflect broader racial inequalities in the U.S. military in 1941?',
+    question: 'How did African American sailors\' experience at Pearl Harbor reflect broader racial inequalities in the U.S. military in 1941?',
     options: [
-      { id: 'a', text: 'Black sailors were largely restricted to mess duties but some performed heroic acts of resistance during the attack', correct: true },
-      { id: 'b', text: 'The Navy was fully integrated by 1941 following Roosevelt's executive order', correct: false },
+      { id: 'a', text: 'Black sailors were largely restricted to mess duties but some performed heroic acts during the attack', correct: true },
+      { id: 'b', text: 'The Navy was fully integrated by 1941 following Roosevelt\'s executive order', correct: false },
       { id: 'c', text: 'African Americans were not permitted to serve in the Navy until after Pearl Harbor', correct: false },
       { id: 'd', text: 'Black sailors commanded their own segregated ships during the battle', correct: false }
     ],
-    explanation: 'In 1941, the Navy assigned Black sailors almost exclusively to mess attendant roles. Doris "Dorie" Miller, a mess attendant aboard the USS West Virginia, became one of Pearl Harbor's most celebrated heroes when he manned an anti-aircraft gun — a weapon he had never been trained to use — and fired on Japanese aircraft during the attack. He was awarded the Navy Cross but remained barred from combat roles due to segregation. His story illustrates the contradiction of Black Americans fighting for a democracy that denied them equal rights, a tension that would fuel the Double V Campaign during the war.'
+    explanation: 'In 1941, the Navy assigned Black sailors almost exclusively to mess attendant roles. Doris "Dorie" Miller, a mess attendant aboard the USS West Virginia, became one of Pearl Harbor\'s most celebrated heroes when he manned an anti-aircraft gun he had never been trained to use and fired on Japanese aircraft. He was awarded the Navy Cross but remained barred from combat roles. His story illustrates the contradiction of Black Americans fighting for a democracy that denied them equal rights.'
   },
   {
     id: 'ph-as-q-07',
     roleSpecific: 'american-sailor',
     apSkill: 'argumentation',
-    question: 'Which piece of evidence best supports the argument that the U.S. military's peacetime posture at Pearl Harbor reflected broader American isolationism?',
+    question: 'Which evidence best supports the argument that the U.S. military\'s peacetime posture at Pearl Harbor reflected broader American isolationism?',
     options: [
-      { id: 'a', text: 'Anti-aircraft ammunition was stored in locked magazines and many ships were in reduced readiness on Sunday morning', correct: true },
+      { id: 'a', text: 'Anti-aircraft ammunition was stored in locked magazines and ships were in reduced readiness on Sunday morning', correct: true },
       { id: 'b', text: 'The Pacific Fleet had been deliberately moved to Pearl Harbor to provoke Japan', correct: false },
       { id: 'c', text: 'Congress had passed legislation prohibiting military preparedness in the Pacific', correct: false },
       { id: 'd', text: 'Military commanders had received no intelligence about Japanese naval movements', correct: false }
     ],
-    explanation: 'The attack found Pearl Harbor in peacetime configuration: ammunition locked, aircraft parked in neat rows (easier to guard against sabotage, not air attack), and many officers ashore. This was not negligence but reflected the dominant assumption that war, if it came, would begin with diplomacy breaking down over days, not a Sunday morning surprise. American isolationism had kept military spending low through the 1930s and created a culture of unpreparedness. The attack exposed the gap between isolationist assumptions and the reality of global conflict in the modern era.'
+    explanation: 'The attack found Pearl Harbor in peacetime configuration: ammunition locked, aircraft parked in neat rows, and many officers ashore. This was not negligence but reflected the assumption that war would begin with diplomacy breaking down over days, not a Sunday morning surprise. American isolationism had kept military spending low through the 1930s and created a culture of unpreparedness. The attack exposed the gap between isolationist assumptions and the reality of modern global conflict.'
   },
 
-  // American Civilian — Questions 4-6 (brings total to 20)
+  // American Civilian — Questions 4-6
   {
     id: 'ph-ac-q-04',
     roleSpecific: 'american-civilian',
@@ -412,7 +412,7 @@ const knowledgeQuestions = [
       { id: 'c', text: 'It was carried out without presidential authorization', correct: false },
       { id: 'd', text: 'It applied only to Japanese Americans while ignoring German and Italian Americans entirely', correct: false }
     ],
-    explanation: 'Executive Order 9066 authorized the removal of approximately 120,000 people of Japanese ancestry — two-thirds of whom were American citizens (Nisei) — from the West Coast. No equivalent mass internment was imposed on German Americans or Italian Americans despite the U.S. being at war with Germany and Italy. The Supreme Court upheld internment in Korematsu v. United States (1944), a decision widely criticized as wrong. In 1988, the Civil Liberties Act formally apologized and provided $20,000 reparations to surviving internees. The Korematsu decision was formally repudiated by the Supreme Court in 2018.'
+    explanation: 'Executive Order 9066 authorized the removal of approximately 120,000 people of Japanese ancestry — two-thirds of whom were American citizens — from the West Coast. No equivalent mass internment was imposed on German Americans or Italian Americans. The Supreme Court upheld internment in Korematsu v. United States (1944), a decision widely criticized as wrong. In 1988, the Civil Liberties Act formally apologized and provided $20,000 reparations to surviving internees. The Korematsu decision was formally repudiated by the Supreme Court in 2018.'
   },
   {
     id: 'ph-ac-q-05',
@@ -420,12 +420,12 @@ const knowledgeQuestions = [
     apSkill: 'causation',
     question: 'How did the Pearl Harbor attack transform the role of American women in the wartime economy?',
     options: [
-      { id: 'a', text: 'Millions of women entered industrial jobs as men left for military service, permanently expanding women's participation in the workforce', correct: true },
+      { id: 'a', text: 'Millions of women entered industrial jobs as men left for military service, permanently expanding women\'s participation in the workforce', correct: true },
       { id: 'b', text: 'Women were immediately conscripted into military service following the attack', correct: false },
-      { id: 'c', text: 'Women's workforce participation actually declined as families prioritized domestic stability', correct: false },
-      { id: 'd', text: 'The government specifically barred women from defense industry jobs to preserve male employment', correct: false }
+      { id: 'c', text: 'Women\'s workforce participation actually declined as families prioritized domestic stability', correct: false },
+      { id: 'd', text: 'The government barred women from defense industry jobs to preserve male employment', correct: false }
     ],
-    explanation: 'Pearl Harbor's entry of the U.S. into WWII triggered massive industrial mobilization that drew millions of women into factory work, symbolized by "Rosie the Riveter." Women worked in shipyards, aircraft factories, and munitions plants — jobs previously considered exclusively male. By 1944, women comprised 37% of the total workforce. While many were pressured back into domestic roles after the war, the shift permanently altered expectations about women's economic capabilities and contributed to the foundation of the postwar women's movement. The war demonstrated that gender barriers in employment were social constructs, not natural limits.'
+    explanation: 'Pearl Harbor\'s entry of the U.S. into WWII triggered massive industrial mobilization that drew millions of women into factory work, symbolized by Rosie the Riveter. Women worked in shipyards, aircraft factories, and munitions plants. By 1944, women comprised 37% of the total workforce. While many were pressured back into domestic roles after the war, the shift permanently altered expectations about women\'s economic capabilities and contributed to the foundation of the postwar women\'s movement.'
   },
   {
     id: 'ph-ac-q-06',
@@ -433,13 +433,14 @@ const knowledgeQuestions = [
     apSkill: 'continuity',
     question: 'How did the Pearl Harbor attack reshape American foreign policy for the remainder of the 20th century?',
     options: [
-      { id: 'a', text: 'It ended American isolationism and established a pattern of international engagement and military preparedness that defined the Cold War era', correct: true },
+      { id: 'a', text: 'It ended American isolationism and established a pattern of international engagement that defined the Cold War era', correct: true },
       { id: 'b', text: 'It caused the U.S. to withdraw from international organizations to focus on Pacific security', correct: false },
       { id: 'c', text: 'It led directly to the creation of NATO as a defense against Japanese aggression', correct: false },
       { id: 'd', text: 'It reinforced isolationism by demonstrating the costs of Pacific involvement', correct: false }
     ],
-    explanation: 'Pearl Harbor ended two decades of American isolationism rooted in the disillusionment of World War I. After 1945, the U.S. never returned to pre-war disengagement: it joined the United Nations, implemented the Marshall Plan, formed NATO, stationed permanent military bases worldwide, and entered the Korean and Vietnam conflicts. The "never again" lesson of Pearl Harbor — that threats must be confronted before they reach American shores — became the foundational logic of Cold War containment policy and shaped American foreign policy through the end of the 20th century and beyond.'
+    explanation: 'Pearl Harbor ended two decades of American isolationism rooted in the disillusionment of World War I. After 1945, the U.S. never returned to pre-war disengagement: it joined the United Nations, implemented the Marshall Plan, formed NATO, stationed permanent military bases worldwide, and entered the Korean and Vietnam conflicts. The never-again lesson of Pearl Harbor — that threats must be confronted before they reach American shores — became the foundational logic of Cold War containment policy.'
   }
+
 ];
 
 // Export for mission.js to import
