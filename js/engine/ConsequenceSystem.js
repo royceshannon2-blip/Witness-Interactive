@@ -16,6 +16,12 @@
  *                        elevated to ~2% from raw 0.03% because the player is
  *                        explicitly placed in a high-risk residential zone
  *
+ *   hutu-moderate     : 15% death rate  (thousands of Hutu moderates killed;
+ *                        elevated baseline because player is named on lists)
+ *   tutsi-survivor    : 75% death rate  (500,000–800,000 of ~1M Tutsi killed)
+ *   un-peacekeeper    :  5% death rate  (small number of peacekeepers killed;
+ *                        elevated for defiance/engagement choices)
+ *
  * Requirements: 6.1, 6.2, 6.4, 6.5, 20.1, 20.2
  */
 
@@ -60,7 +66,7 @@ class ConsequenceSystem {
    * Determine whether the player survived, based on historical probability
    * modified by their in-game choices.
    *
-   * @param {string} roleId - 'japanese-aviator' | 'american-sailor' | 'american-civilian'
+   * @param {string} roleId
    * @returns {{ survived: boolean, deathChance: number, modifiers: object }}
    */
   determineSurvival(roleId) {
@@ -70,22 +76,25 @@ class ConsequenceSystem {
       case 'japanese-aviator':   return this._survivalJA(flags);
       case 'american-sailor':    return this._survivalAS(flags);
       case 'american-civilian':  return this._survivalAC(flags);
+      case 'hutu-moderate':      return this._survivalHM(flags);
+      case 'tutsi-survivor':     return this._survivalTS(flags);
+      case 'un-peacekeeper':     return this._survivalUN(flags);
       default:
         console.warn(`ConsequenceSystem: unknown roleId "${roleId}", defaulting to survived`);
         return { survived: true, deathChance: 0, modifiers: {} };
     }
   }
 
+  // ─── PEARL HARBOR SURVIVAL METHODS ────────────────────────────────────────
+
   /**
    * Japanese Aviator survival
    * Baseline: 35% death rate (64 aircraft lost of 183 in attack)
-   * Aggressive choices increase death chance. Cautious choices decrease it.
    */
   _survivalJA(flags) {
     let deathChance = 0.35;
     const modifiers = {};
 
-    // Aggressive attack runs increase exposure to AA fire
     if (flags.aggressive_action >= 2) {
       deathChance += 0.25;
       modifiers['multiple_attack_runs'] = '+25% (flew multiple aggressive passes over target)';
@@ -94,13 +103,11 @@ class ConsequenceSystem {
       modifiers['aggressive_attack'] = '+10% (pressed attack aggressively)';
     }
 
-    // Mission priority (one more pass) at scene 4 is the riskiest choice
     if (flags.mission_priority && flags.fuel_risk) {
       deathChance += 0.20;
       modifiers['low_fuel_combat'] = '+20% (continued combat with critically low fuel)';
     }
 
-    // Helping a comrade means flying slower, lower, more exposed
     if (flags.helped_comrade && flags.fuel_risk) {
       deathChance += 0.15;
       modifiers['escort_fuel_risk'] = '+15% (escorted damaged aircraft while low on fuel)';
@@ -109,7 +116,6 @@ class ConsequenceSystem {
       modifiers['escort_risk'] = '+5% (broke formation to escort damaged aircraft)';
     }
 
-    // Caution / tactical awareness reduce death chance
     if (flags.tactical_caution) {
       deathChance -= 0.10;
       modifiers['tactical_caution'] = '-10% (avoided unnecessary AA exposure)';
@@ -138,62 +144,51 @@ class ConsequenceSystem {
   /**
    * American Sailor survival
    * Baseline: 78% death rate (1,177 of 1,512 USS Arizona crew)
-   * Being below deck or staying aboard dramatically increases death.
-   * Getting off the ship is the primary survival factor.
    */
   _survivalAS(flags) {
     let deathChance = 0.78;
     const modifiers = {};
 
-    // Below deck when the magazine explodes = almost certain death
     if (flags.damage_control || flags.duty_focused) {
       deathChance += 0.12;
       modifiers['below_deck_explosion'] = '+12% (below deck when forward magazine detonated)';
     }
 
-    // Staying aboard after the explosion = trapped on sinking ship
     if (flags.stayed_aboard) {
       deathChance += 0.10;
       modifiers['stayed_aboard'] = '+10% (remained on sinking ship)';
     }
 
-    // Getting off the ship early is the main survival factor
     if (flags.abandoned_ship) {
       deathChance -= 0.30;
       modifiers['abandoned_ship'] = '-30% (jumped overboard early, increased escape chance)';
     }
 
-    // Grabbing life jackets before the attack = survival preparation
     if (flags.survival_priority && flags.prepared_for_disaster) {
       deathChance -= 0.15;
       modifiers['prepared_survival'] = '-15% (had survival gear ready)';
     }
 
-    // Quick reaction to battle stations = more time to respond
     if (flags.quick_reaction) {
       deathChance -= 0.10;
       modifiers['quick_reaction'] = '-10% (reacted quickly, reached safer position)';
     }
 
-    // Helping wounded = on deck = exposed but mobile
     if (flags.helped_wounded) {
       deathChance -= 0.08;
       modifiers['topside_position'] = '-8% (was topside helping wounded, able to escape)';
     }
 
-    // Rescuing swimmers = already off the ship
     if (flags.rescued_swimmers) {
       deathChance -= 0.12;
       modifiers['rescued_swimmers'] = '-12% (in water rescuing others = already off Arizona)';
     }
 
-    // Swimming to another ship = off Arizona, on a less damaged vessel
     if (flags.tactical_retreat) {
       deathChance -= 0.15;
       modifiers['tactical_retreat'] = '-15% (swam to another ship, off Arizona)';
     }
 
-    // Fighting back = on deck at guns = exposed but mobile
     if (flags.fought_back) {
       deathChance -= 0.05;
       modifiers['topside_fighting'] = '-5% (was topside at AA guns, mobile position)';
@@ -209,21 +204,17 @@ class ConsequenceSystem {
 
   /**
    * American Civilian survival
-   * Baseline: ~2% death chance (elevated from raw 0.03% because
-   * player is in a high-risk zone adjacent to Pearl Harbor)
-   * Risk-taking choices dramatically raise the chance. Taking shelter drops it.
+   * Baseline: ~2% death chance
    */
   _survivalAC(flags) {
     let deathChance = 0.02;
     const modifiers = {};
 
-    // Running toward Pearl Harbor = entering active combat zone
     if (flags.rushed_to_help || flags.went_to_harbor) {
       deathChance += 0.12;
       modifiers['entered_combat_zone'] = '+12% (moved toward active attack zone)';
     }
 
-    // Staying to rescue = prolonged exposure to falling shells
     if (flags.rescued_victim && flags.stayed_to_help) {
       deathChance += 0.10;
       modifiers['prolonged_exposure'] = '+10% (extended time in open during shell barrage)';
@@ -232,25 +223,21 @@ class ConsequenceSystem {
       modifiers['rescue_exposure'] = '+5% (entered damaged structure to rescue victim)';
     }
 
-    // Diving for cover at scene 2 = survived the first shell barrage
     if (flags.took_cover && flags.self_preservation) {
       deathChance -= 0.008;
       modifiers['took_cover'] = '-0.8% (took immediate cover from falling shells)';
     }
 
-    // Pushing elderly man = exposed self briefly but covered quickly
     if (flags.saved_neighbor) {
       deathChance += 0.03;
       modifiers['exposed_for_neighbor'] = '+3% (briefly exposed protecting neighbor)';
     }
 
-    // Shouting warning = stayed in open longer
     if (flags.warned_others) {
       deathChance += 0.02;
       modifiers['warning_exposure'] = '+2% (stayed in open to warn others)';
     }
 
-    // Taking family to shelter = inside, protected
     if (flags.family_priority && flags.survival_focused) {
       deathChance -= 0.01;
       modifiers['sheltered'] = '-1% (took shelter with family, reduced exposure)';
@@ -261,6 +248,297 @@ class ConsequenceSystem {
     const survived = roll > deathChance;
 
     console.log(`[Survival] AC: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} survived=${survived}`);
+    return { survived, deathChance, modifiers, roll };
+  }
+
+  // ─── RWANDA SURVIVAL METHODS ───────────────────────────────────────────────
+
+  /**
+   * Hutu Moderate (Augustin) survival
+   *
+   * Baseline: 15% death rate
+   * Hutu moderates who sheltered Tutsi or refused to participate were
+   * targeted by Interahamwe. Player is already on lists for refusing
+   * to attend Hutu Power rallies — elevated baseline reflects this.
+   *
+   * Rescue path: high death risk (sheltering = death sentence if discovered)
+   * Compliance path: lower death risk (militia trusts you — for now)
+   * Flight path: low death risk (invisible, not participating)
+   */
+  _survivalHM(flags) {
+    let deathChance = 0.15;
+    const modifiers = {};
+
+    // Rescue path — hiding Celestin is the most dangerous choice
+    if (flags.rw_helped_celestin) {
+      deathChance += 0.30;
+      modifiers['sheltered_tutsi'] = '+30% (sheltering Tutsi is a death sentence if discovered)';
+    }
+
+    // Misdirecting the militia compounds the risk if discovered
+    if (flags.rw_misdirected_militia) {
+      deathChance += 0.15;
+      modifiers['misdirected_militia'] = '+15% (lying to Interahamwe — discovery means death)';
+    }
+
+    // Saving people at roadblock — if militia finds out, instant execution
+    if (flags.rw_saved_at_roadblock) {
+      deathChance += 0.20;
+      modifiers['saved_at_roadblock'] = '+20% (falsified identity cards — militia will discover this)';
+    }
+
+    // Compliance path — attending the rally buys protection
+    if (flags.rw_attended_rally) {
+      deathChance -= 0.08;
+      modifiers['attended_rally'] = '-8% (demonstrated loyalty to Hutu Power)';
+    }
+
+    // Staffing roadblocks = trusted by militia = protected
+    if (flags.rw_staffed_roadblock) {
+      deathChance -= 0.10;
+      modifiers['staffed_roadblock'] = '-10% (assigned role by militia commander, protected status)';
+    }
+
+    // Revealing Celestin = proof of loyalty = militia trusts you fully
+    if (flags.rw_revealed_celestin) {
+      deathChance -= 0.12;
+      modifiers['revealed_celestin'] = '-12% (proved loyalty by revealing hiding Tutsi)';
+    }
+
+    // Direct participation = deepest militia trust, but RPF will find you later
+    // (survival here = survived the genocide itself, not post-genocide justice)
+    if (flags.rw_participated_directly) {
+      deathChance -= 0.08;
+      modifiers['participated_directly'] = '-8% (full militia member — protected during genocide)';
+    }
+
+    // Continued compliance = embedded in the machinery, militia won't target you
+    if (flags.rw_continued_compliance) {
+      deathChance -= 0.05;
+      modifiers['continued_compliance'] = '-5% (consistent compliance, no suspicion)';
+    }
+
+    // Flight path — leaving Kigali removes you from the killing zone
+    if (flags.rw_fled_kigali) {
+      deathChance -= 0.10;
+      modifiers['fled_kigali'] = '-10% (left the primary killing zone)';
+    }
+
+    if (flags.rw_stayed_hidden) {
+      deathChance -= 0.08;
+      modifiers['stayed_hidden'] = '-8% (maintained low profile in countryside)';
+    }
+
+    // Refusing to help initially is riskier than full compliance
+    if (flags.rw_refused_help && !flags.rw_fled_kigali && !flags.rw_attended_rally) {
+      deathChance += 0.10;
+      modifiers['no_clear_alignment'] = '+10% (neither complied nor fled — suspicious to both sides)';
+    }
+
+    deathChance = Math.max(0.05, Math.min(0.85, deathChance));
+    const roll     = Math.random();
+    const survived = roll > deathChance;
+
+    console.log(`[Survival] HM: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} survived=${survived}`);
+    return { survived, deathChance, modifiers, roll };
+  }
+
+  /**
+   * Tutsi Survivor (Immaculée) survival
+   *
+   * Baseline: 75% death rate
+   * 500,000–800,000 of approximately 1,000,000 Tutsi killed in 100 days.
+   * Every choice the player makes is about concealment vs. exposure.
+   * Being found = almost certain death. Staying hidden = survival.
+   */
+  _survivalTS(flags) {
+    let deathChance = 0.75;
+    const modifiers = {};
+
+    // Going to the church is historically the most dangerous choice —
+    // churches became massacre sites across Rwanda
+    if (flags.rw_trusted_church) {
+      deathChance += 0.15;
+      modifiers['trusted_church'] = '+15% (churches were primary massacre sites — false sanctuary)';
+    }
+
+    // Escaping the church during the massacre — chaos helps, but you're in the open
+    if (flags.rw_escaped_church) {
+      deathChance -= 0.20;
+      modifiers['escaped_church'] = '-20% (escaped during attack chaos — out of massacre site)';
+    }
+
+    // Hiding in the church ceiling — extremely dangerous, but avoids the main hall
+    if (flags.rw_hid_in_church) {
+      deathChance -= 0.10;
+      modifiers['hid_in_church'] = '-10% (concealed above massacre — not in main target zone)';
+    }
+
+    // Surviving the church hiding (stayed silent when militia searched)
+    if (flags.rw_survived_church_hiding) {
+      deathChance -= 0.25;
+      modifiers['survived_church_hiding'] = '-25% (militia searched and missed — maximum concealment)';
+    }
+
+    // Seeking a Hutu friend — concealment with a protector
+    if (flags.rw_sought_hutu_friend) {
+      deathChance -= 0.15;
+      modifiers['sought_hutu_friend'] = '-15% (concealed by Hutu protector — off the streets)';
+    }
+
+    // Hiding with Hutu friend
+    if (flags.rw_hid_with_hutu) {
+      deathChance -= 0.10;
+      modifiers['hid_with_hutu'] = '-10% (in hiding with sympathetic Hutu family)';
+    }
+
+    // Trusting the protector (staying hidden in attic)
+    if (flags.rw_trusted_protector) {
+      deathChance -= 0.15;
+      modifiers['trusted_protector'] = '-15% (remained concealed — protector held cover story)';
+    }
+
+    // Attempting the hotel — dangerous crossing, but safe destination
+    if (flags.rw_attempted_hotel) {
+      deathChance += 0.05;
+      modifiers['attempted_hotel'] = '+5% (crossing roadblocks to reach hotel is high risk)';
+    }
+
+    // Using a false ID — the key survival mechanism at the roadblock
+    if (flags.rw_used_false_id) {
+      deathChance -= 0.30;
+      modifiers['used_false_id'] = '-30% (Hutu identity card — passed militia checkpoint)';
+    }
+
+    // Reaching the hotel — UN protection, off the streets
+    if (flags.rw_reached_hotel) {
+      deathChance -= 0.20;
+      modifiers['reached_hotel'] = '-20% (inside UN-protected enclave — militia held at perimeter)';
+    }
+
+    // Reaching UN protection after church escape
+    if (flags.rw_reached_un_protection) {
+      deathChance -= 0.25;
+      modifiers['reached_un_protection'] = '-25% (UN convoy escort — formal protection status)';
+    }
+
+    // Witnessing the massacre — you're exposed but mobile
+    if (flags.rw_witnessed_massacre) {
+      deathChance += 0.05;
+      modifiers['witnessed_massacre'] = '+5% (escaped massacre but still exposed in streets)';
+    }
+
+    deathChance = Math.max(0.05, Math.min(0.95, deathChance));
+    const roll     = Math.random();
+    const survived = roll > deathChance;
+
+    console.log(`[Survival] TS: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} survived=${survived}`);
+    return { survived, deathChance, modifiers, roll };
+  }
+
+  /**
+   * UN Peacekeeper (Captain Marcus Webb) survival
+   *
+   * Baseline: 5% death rate
+   * Most UNAMIR peacekeepers who stayed survived. The 10 Belgian peacekeepers
+   * killed were a specific targeted event. Webb is Canadian — less targeted,
+   * but defying orders and engaging militia raises his risk significantly.
+   *
+   * Stayed path: moderate risk (present, visible, potential militia target)
+   * Evacuated path: very low risk (off the streets, following orders)
+   * Documented path: low-moderate risk (exposed but militia treat as witness)
+   */
+  _survivalUN(flags) {
+    let deathChance = 0.05;
+    const modifiers = {};
+
+    // Defying withdrawal orders — stays in Kigali during genocide peak
+    if (flags.rw_defied_orders) {
+      deathChance += 0.20;
+      modifiers['defied_orders'] = '+20% (remained in Kigali against UN withdrawal — exposed position)';
+    }
+
+    // Holding the hotel after the attack masses — direct confrontation
+    if (flags.rw_held_hotel) {
+      deathChance += 0.15;
+      modifiers['held_hotel'] = '+15% (held position against massing militia force)';
+    }
+
+    // Held position under attack — highest risk action in the game
+    if (flags.rw_held_position) {
+      deathChance += 0.25;
+      modifiers['held_position'] = '+25% (held hotel perimeter during militia assault)';
+    }
+
+    // Staying after withdrawal (combined with defied orders = very exposed)
+    if (flags.rw_stayed_after_withdrawal) {
+      deathChance += 0.10;
+      modifiers['stayed_after_withdrawal'] = '+10% (isolated with minimal force after UN withdrawal)';
+    }
+
+    // Following the mandate — working within the system, lower exposure
+    if (flags.rw_followed_mandate) {
+      deathChance -= 0.02;
+      modifiers['followed_mandate'] = '-2% (operating within official UN parameters)';
+    }
+
+    // Protecting civilians at hotel (before defiance) — present but formal position
+    if (flags.rw_protected_hotel) {
+      deathChance += 0.03;
+      modifiers['protected_hotel'] = '+3% (deployed to active civilian protection site)';
+    }
+
+    // Evacuation path — off the streets, following orders, lowest risk
+    if (flags.rw_followed_evacuation_orders) {
+      deathChance -= 0.03;
+      modifiers['followed_evacuation_orders'] = '-3% (executing ordered convoy — militia lets UN through)';
+    }
+
+    // Saving Rwandans on convoy — defied orders, risked convoy stop
+    if (flags.rw_saved_rwandans) {
+      deathChance += 0.15;
+      modifiers['saved_rwandans'] = '+15% (took unauthorized Rwandans — militia may stop convoy)';
+    }
+
+    // Left Rwanda — completely safe
+    if (flags.rw_left_rwanda) {
+      deathChance = 0.01;
+      modifiers['left_rwanda'] = '→ 1% (departed Rwanda — out of genocide zone)';
+    }
+
+    // Documentation path — militia allow witnesses but not indefinitely
+    if (flags.rw_chose_documentation) {
+      deathChance += 0.08;
+      modifiers['chose_documentation'] = '+8% (documented atrocities at massacre sites — exposed position)';
+    }
+
+    if (flags.rw_documented_evidence) {
+      deathChance += 0.05;
+      modifiers['documented_evidence'] = '+5% (gathered evidence at active massacre sites)';
+    }
+
+    if (flags.rw_witnessed_massacre) {
+      deathChance += 0.05;
+      modifiers['witnessed_massacre'] = '+5% (present at active massacre site)';
+    }
+
+    // Continued documentation — building a case, militia growing impatient
+    if (flags.rw_continued_documentation) {
+      deathChance += 0.05;
+      modifiers['continued_documentation'] = '+5% (repeated presence at massacre sites raises militia suspicion)';
+    }
+
+    // Returned to duty after evacuation — back in the field
+    if (flags.rw_returned_to_duty) {
+      deathChance += 0.05;
+      modifiers['returned_to_duty'] = '+5% (voluntarily returned to Kigali after evacuation)';
+    }
+
+    deathChance = Math.max(0.01, Math.min(0.80, deathChance));
+    const roll     = Math.random();
+    const survived = roll > deathChance;
+
+    console.log(`[Survival] UN: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} survived=${survived}`);
     return { survived, deathChance, modifiers, roll };
   }
 
@@ -290,7 +568,7 @@ class ConsequenceSystem {
     });
 
     // Score each matching outcome by how many conditions are satisfied
-    let bestScore  = -1;
+    let bestScore   = -1;
     let bestOutcome = null;
 
     for (const rule of matchingPool) {
