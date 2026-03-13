@@ -3,30 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Witness Interactive: Pearl Harbor - Experience December 7, 1941 from three perspectives">
     <title>Witness Interactive: Pearl Harbor</title>
+    <meta name="description" content="Experience history through multiple perspectives. An educational game for AP History students.">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="css/style.css" as="style">
+    <link rel="preload" href="js/main.js" as="script">
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/atmospheric-effects.css">
-    <link rel="stylesheet" href="css/update-notes.css">
     <link rel="stylesheet" href="css/feedback-survey.css">
+    <link rel="stylesheet" href="css/update-notes.css">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="favicon.png">
 </head>
 <body>
-    <!-- Sound Toggle Button (Visual Placeholder) -->
-    <button id="sound-toggle" class="sound-toggle-button" aria-label="Sound toggle (coming soon)" disabled>
-        <span class="sound-icon">🔇</span>
+    <!-- Sound Toggle Button (fixed position, always visible) -->
+    <button id="sound-toggle" class="sound-toggle" aria-label="Toggle sound on/off" disabled>
+        <span class="sound-icon">🔊</span>
     </button>
     
-    <main id="app" role="main" aria-label="Witness Interactive Game">
-        <div id="loading-screen" class="screen active" role="status" aria-live="polite">
-            <div class="loading-content">
-                <h1>Witness Interactive</h1>
-                <div class="loading-spinner" aria-hidden="true"></div>
-                <p>Loading historical experience...</p>
-            </div>
-        </div>
-    </main>
+    <!-- Main App Container -->
+    <div id="app" role="main">
+        <!-- Screens will be dynamically rendered here by UIController -->
+    </div>
     
     <!-- ES6 Module Entry Point -->
-    <script type="module" src="js/main.js?v=2.0"></script>
+    <script type="module" src="js/main.js?v=2.1"></script>
 </body>
 </html>
