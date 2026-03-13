@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rwanda Terminal Scene Test</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        body {
+            padding: 20px;
+            background: var(--color-bg-primary);
+        }
+        .test-info {
+            background: var(--color-bg-secondary);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .test-log {
+            background: #000;
+            color: #0f0;
+            padding: 15px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-info">
+        <h1>Rwanda Terminal Scene Button Test</h1>
+        <p>This test verifies that buttons work on terminal scenes (scenes with nextScene: null)</p>
+        <p><strong>Expected behavior:</strong> Clicking a choice button should trigger role:complete → scene:terminal → outcome screen</p>
+    </div>
+
+    <div id="app">
+        <div id="scene-screen" class="screen active">
+            <div id="scene-content"></div>
+        </div>
+    </div>
+
+    <div class="test-log" id="log"></div>
+
+    <script type="module">
+        import EventBus from './js/engine/EventBus.js';
+        import SceneStateMachine from './js/engine/SceneStateMachine.js';
+        import ConsequenceSystem from './js/engine/ConsequenceSystem.js';
+        import UIController from './js/engine/UIController.js';
+        import uiContent from './js/content/ui-content.js';
+
+        const log = document.getElementById('log');
+        function addLog(message, color = '#0f0') {
+            const entry = document.createElement('div');
+            entry.style.color = color;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.appendChild(entry);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        // Initialize components
+        const eventBus = new EventBus();
+        const consequenceSystem = new ConsequenceSystem(eventBus);
+        const sceneStateMachine = new SceneStateMachine(eventBus);
+        const uiController = new UIController(eventBus, uiContent);
+
+        addLog('✓ Components initialized');
+
+        // Listen for key events
+        eventBus.on('choice:made', (data) => {
+            addLog(`choice:made - nextSceneId: ${data.nextSceneId}`, '#ff0');
+        });
+
+        eventBus.on('role:complete', (data) => {
+            addLog(`role:complete - missionId: ${data.missionId}, roleId: ${data.roleId}`, '#0ff');
+        });
+
+        eventBus.on('scene:terminal', (data) => {
+            addLog(`scene:terminal - roleId: ${data.roleId}`, '#f0f');
+        });
+
+        eventBus.on('scene:transition', (data) => {
+            addLog(`scene:transition - sceneId: ${data.sceneId}`);
+        });
+
+        // Set up choice:made handler (from main.js)
+        eventBus.on('choice:made', (data) => {
+            const { nextSceneId, consequences } = data;
+            sceneStateMachine.transitionTo(nextSceneId);
+        });
+
+        // Set up role:complete handler (THE FIX)
+        eventBus.on('role:complete', (data) => {
+            const { missionId, roleId } = data;
+            eventBus.emit('scene:terminal', {
+                missionId,
+                roleId,
+                role: roleId
+            });
+            addLog(`✓ Converted role:complete to scene:terminal`, '#0f0');
+        });
+
+        // Load terminal scene from Rwanda Hutu Moderate
+        const terminalScene = {
+            id: "rw-hm-scene-04a",
+            narrative: `2007. Thirteen years later. The gacaca court in your sector. You're here to testify. The judges—your neighbors—sit under a tree. Survivors sit in the front rows. You recognize faces. Celestin is here. He survived. His wife and children didn't.
+
+The judge calls your name. "Augustin. You were communal secretary in April 1994. You staffed a roadblock. Tell us what you did."
+
+You stand. Your hands shake like they did that day. You helped Celestin hide. You misdirected the militia. You saved people at the roadblock. But you also complied. You checked identity cards. You followed orders. You were part of the machinery.
+
+Celestin watches you. His son—the one who survived—sits beside him. The crowd is silent. The judge waits. Gacaca offers reduced sentences for full confessions. But what is "full"? What do you say about the choices you made?`,
+            apThemes: ["continuity", "perspective", "complexity"],
+            atmosphericEffect: null,
+            ambientTrack: "rw-countryside-ambient.wav",
+            choices: [
+                {
+                    id: "rw-hm-choice-04a-a",
+                    text: "Testify fully—confess everything",
+                    consequences: { rw_testified_gacaca: true, rw_full_confession: true },
+                    nextScene: null
+                },
+                {
+                    id: "rw-hm-choice-04a-b",
+                    text: "Testify partially—protect some names",
+                    consequences: { rw_testified_gacaca: true, rw_partial_confession: true },
+                    nextScene: null
+                },
+                {
+                    id: "rw-hm-choice-04a-c",
+                    text: "Deny participation—claim innocence",
+                    consequences: { rw_denied_participation: true },
+                    nextScene: null
+                }
+            ]
+        };
+
+        // Load the scene
+        sceneStateMachine.loadRole('rwanda-genocide', 'hutu-moderate', [terminalScene]);
+        addLog('✓ Terminal scene loaded');
+        addLog('Click any choice button to test...');
+    </script>
+</body>
+</html>

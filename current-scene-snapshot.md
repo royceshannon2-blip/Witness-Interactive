@@ -1,0 +1,13 @@
+- generic [active] [ref=e1]:
+  - button "Sound is on. Click to mute." [ref=e2]:
+    - generic [ref=e3]: 🔊
+  - button "Narrator is on. Click to mute." [ref=e4] [cursor=pointer]:
+    - generic [ref=e5]: 🎙️
+  - main "Witness Interactive Game" [ref=e6]:
+    - article "Scene narrative" [ref=e74]:
+      - region "Scene narrative" [ref=e75]:
+        - paragraph [ref=e85]: April 7, evening. The rally is at the communal office. Hundreds of men, some with machetes already. The speaker—a local Hutu Power organizer—shouts about the RPF, about Tutsi plotting to enslave Hutu again. "They killed our president! They want to take everything!" He calls your name. "Augustin, you're a secretary. You have the lists. You know where they live." The crowd turns. Faces you recognize—teachers, farmers, the man who sold you vegetables last week. All watching. "We need people at the roadblocks. Identity cards. We stop them from escaping." He hands you a clipboard. "You'll take the checkpoint at the market. Report at dawn." Your hands are shaking. If you refuse, you're a traitor. If you comply, you're part of this. The crowd chants. RTLM plays from a radio. The smell of banana beer and sweat.
+      - navigation "Available choices" [ref=e77]:
+        - 'button "Choice 1: Accept the roadblock assignment" [ref=e89] [cursor=pointer]': Accept the roadblock assignment
+      - status [ref=e78]:
+        - paragraph [ref=e86]: Scene 3 of 11

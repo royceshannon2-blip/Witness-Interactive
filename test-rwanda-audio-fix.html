@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rwanda Audio Integration Test</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      padding: 20px;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .test-section {
+      margin: 20px 0;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    .test-section h3 {
+      margin-top: 0;
+    }
+    .status {
+      padding: 8px 12px;
+      border-radius: 4px;
+      margin: 5px 0;
+      font-weight: 500;
+    }
+    .status.pass { background: #d4edda; color: #155724; }
+    .status.fail { background: #f8d7da; color: #721c24; }
+    .status.info { background: #d1ecf1; color: #0c5460; }
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border: none;
+      border-radius: 4px;
+      background: #007bff;
+      color: white;
+      font-size: 14px;
+    }
+    button:hover { background: #0056b3; }
+    #game-container {
+      margin-top: 20px;
+      min-height: 400px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rwanda Audio Integration Test</h1>
+  <p>Testing narrator audio and sound effects for Rwanda mission</p>
+
+  <div class="test-section">
+    <h3>Test 1: Audio Files Wired</h3>
+    <div id="test1-results"></div>
+  </div>
+
+  <div class="test-section">
+    <h3>Test 2: AtmosphericEffects Fix</h3>
+    <div id="test2-results"></div>
+  </div>
+
+  <div class="test-section">
+    <h3>Test 3: Play Rwanda Mission</h3>
+    <button onclick="startRwandaMission('hutu-moderate')">Play Hutu Moderate</button>
+    <button onclick="startRwandaMission('tutsi-survivor')">Play Tutsi Survivor</button>
+    <button onclick="startRwandaMission('un-peacekeeper')">Play UN Peacekeeper</button>
+    <div id="test3-results"></div>
+  </div>
+
+  <div id="game-container"></div>
+
+  <script type="module">
+    import { hutuModerateScenes } from './js/content/missions/rwanda/hutu-moderate.js';
+    import { tutsiSurvivorScenes } from './js/content/missions/rwanda/tutsi-survivor.js';
+    import { unPeacekeeperScenes } from './js/content/missions/rwanda/un-peacekeeper.js';
+    import EventBus from './js/engine/EventBus.js';
+    import UIController from './js/engine/UIController.js';
+    import AtmosphericEffects from './js/engine/AtmosphericEffects.js';
+
+    const test1Results = document.getElementById('test1-results');
+    const test2Results = document.getElementById('test2-results');
+    const test3Results = document.getElementById('test3-results');
+
+    // Test 1: Check audio files are wired
+    function test1() {
+      const results = [];
+      
+      // Count narrator audio
+      const hmNarrator = hutuModerateScenes.filter(s => s.narratorAudio).length;
+      const tsNarrator = tutsiSurvivorScenes.filter(s => s.narratorAudio).length;
+      const unNarrator = unPeacekeeperScenes.filter(s => s.narratorAudio).length;
+      
+      results.push(`Hutu Moderate narrator audio: ${hmNarrator}/11 scenes`);
+      results.push(`Tutsi Survivor narrator audio: ${tsNarrator}/12 scenes`);
+      results.push(`UN Peacekeeper narrator audio: ${unNarrator}/0 scenes (expected)`);
+      
+      // Count sound effects
+      const hmSfx = hutuModerateScenes.filter(s => s.soundEffects && s.soundEffects.length > 0).length;
+      const tsSfx = tutsiSurvivorScenes.filter(s => s.soundEffects && s.soundEffects.length > 0).length;
+      const unSfx = unPeacekeeperScenes.filter(s => s.soundEffects && s.soundEffects.length > 0).length;
+      
+      results.push(`Hutu Moderate sound effects: ${hmSfx} scenes`);
+      results.push(`Tutsi Survivor sound effects: ${tsSfx} scenes`);
+      results.push(`UN Peacekeeper sound effects: ${unSfx} scenes`);
+      
+      const pass = hmNarrator === 11 && tsNarrator === 12 && unNarrator === 0;
+      
+      test1Results.innerHTML = results.map(r => 
+        `<div class="status ${pass ? 'pass' : 'fail'}">${r}</div>`
+      ).join('');
+    }
+
+    // Test 2: Check AtmosphericEffects doesn't have applyEffect method
+    function test2() {
+      const eventBus = new EventBus();
+      const effects = new AtmosphericEffects(eventBus);
+      
+      const hasApplyEffect = typeof effects.applyEffect === 'function';
+      const hasApplyImmediate = typeof effects.applyImmediateEffects === 'function';
+      const hasApplyDelayed = typeof effects.applyDelayedEffects === 'function';
+      
+      const results = [
+        `applyEffect method exists: ${hasApplyEffect} (should be false)`,
+        `applyImmediateEffects method exists: ${hasApplyImmediate} (should be true)`,
+        `applyDelayedEffects method exists: ${hasApplyDelayed} (should be true)`
+      ];
+      
+      const pass = !hasApplyEffect && hasApplyImmediate && hasApplyDelayed;
+      
+      test2Results.innerHTML = results.map(r => 
+        `<div class="status ${pass ? 'pass' : 'fail'}">${r}</div>`
+      ).join('') + 
+        `<div class="status ${pass ? 'pass' : 'fail'}">Fix verified: ${pass ? 'PASS' : 'FAIL'}</div>`;
+    }
+
+    // Test 3: Start mission
+    window.startRwandaMission = function(roleId) {
+      test3Results.innerHTML = '<div class="status info">Loading mission...</div>';
+      
+      // Redirect to main game with mission/role selection
+      window.location.href = `index.html?mission=rwanda&role=${roleId}`;
+    };
+
+    // Run tests on load
+    test1();
+    test2();
+  </script>
+</body>
+</html>

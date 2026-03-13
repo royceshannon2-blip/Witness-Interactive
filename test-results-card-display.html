@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Results Card Display Test</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      margin: 20px;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+    .test-section {
+      margin-bottom: 40px;
+      padding: 20px;
+      border: 2px solid #333;
+      border-radius: 8px;
+    }
+    .test-section h2 {
+      margin-top: 0;
+      color: #2c5f2d;
+    }
+    .test-info {
+      padding: 15px;
+      background: #e8f5e9;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    .test-status {
+      padding: 10px;
+      margin: 10px 0;
+      border-left: 4px solid #2c5f2d;
+      background: #f5f5f5;
+    }
+    .test-status.pass {
+      border-color: #2c5f2d;
+      background: #e8f5e9;
+    }
+    .test-status.fail {
+      border-color: #c41e3a;
+      background: #ffebee;
+    }
+  </style>
+</head>
+<body>
+  <h1>Results Card Display Test - Task 7.3</h1>
+  <p>Testing all sections render correctly with different paths, grades, and archetypes.</p>
+
+  <div class="test-section">
+    <h2>Test Instructions</h2>
+    <div class="test-info">
+      <p><strong>Manual Test Procedure:</strong></p>
+      <ol>
+        <li>Open the main game at <a href="http://localhost:8080/index.html" target="_blank">http://localhost:8080/index.html</a></li>
+        <li>Complete a full playthrough for each role and path combination (9 total)</li>
+        <li>After each playthrough, verify the Results Card displays all required sections</li>
+        <li>Check the validation criteria below for each playthrough</li>
+      </ol>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>Validation Criteria</h2>
+    <div id="validation-checklist">
+      <h3>Required Sections (must be present):</h3>
+      <div class="test-status">✓ Path taken section with path name and description</div>
+      <div class="test-status">✓ Other available paths display</div>
+      <div class="test-status">✓ Teammate Grade section (letter, label, description)</div>
+      <div class="test-status">✓ Personality Archetype section (name, role-specific description)</div>
+      <div class="test-status">✓ Final scores display with 3 bars (morale, loyalty, humanity)</div>
+      <div class="test-status">✓ Survival stats panel (death chance %, modifiers)</div>
+      <div class="test-status">✓ Educator note (small, muted text)</div>
+      <div class="test-status">✓ Mobile responsive styles (test at 320px width)</div>
+      
+      <h3>Visual Checks:</h3>
+      <div class="test-status">✓ Grade letter is large and prominent</div>
+      <div class="test-status">✓ Score bars are static (no animation)</div>
+      <div class="test-status">✓ All text is readable and properly formatted</div>
+      <div class="test-status">✓ Sections are visually separated</div>
+      <div class="test-status">✓ Colors use CSS custom properties</div>
+      
+      <h3>Test Combinations:</h3>
+      <div class="test-status">Japanese Aviator + Compliance Path</div>
+      <div class="test-status">Japanese Aviator + Instinct Path</div>
+      <div class="test-status">Japanese Aviator + Witness Path</div>
+      <div class="test-status">American Sailor + Compliance Path</div>
+      <div class="test-status">American Sailor + Instinct Path</div>
+      <div class="test-status">American Sailor + Witness Path</div>
+      <div class="test-status">American Civilian + Compliance Path</div>
+      <div class="test-status">American Civilian + Instinct Path</div>
+      <div class="test-status">American Civilian + Witness Path</div>
+    </div>
+  </div>
+
+  <div class="test-section">
+    <h2>Automated CSS Validation</h2>
+    <div id="css-validation"></div>
+  </div>
+
+  <script>
+    // Automated CSS validation
+    function validateCSS() {
+      const output = document.getElementById('css-validation');
+      const checks = [];
+      
+      // Check if CSS custom properties are defined
+      const root = getComputedStyle(document.documentElement);
+      const customProps = [
+        '--color-morale',
+        '--color-loyalty',
+        '--color-humanity',
+        '--color-primary',
+        '--color-text'
+      ];
+      
+      customProps.forEach(prop => {
+        const value = root.getPropertyValue(prop);
+        if (value) {
+          checks.push({ name: `CSS custom property ${prop}`, pass: true });
+        } else {
+          checks.push({ name: `CSS custom property ${prop}`, pass: false });
+        }
+      });
+      
+      // Check if results card styles exist
+      const testDiv = document.createElement('div');
+      testDiv.className = 'results-card';
+      document.body.appendChild(testDiv);
+      const styles = getComputedStyle(testDiv);
+      
+      if (styles.display !== 'none') {
+        checks.push({ name: 'Results card CSS loaded', pass: true });
+      } else {
+        checks.push({ name: 'Results card CSS loaded', pass: false });
+      }
+      
+      document.body.removeChild(testDiv);
+      
+      // Render results
+      checks.forEach(check => {
+        const div = document.createElement('div');
+        div.className = `test-status ${check.pass ? 'pass' : 'fail'}`;
+        div.textContent = `${check.pass ? '✓' : '✗'} ${check.name}`;
+        output.appendChild(div);
+      });
+      
+      const summary = document.createElement('div');
+      summary.className = 'test-status';
+      summary.style.marginTop = '20px';
+      summary.style.fontWeight = 'bold';
+      const passed = checks.filter(c => c.pass).length;
+      summary.textContent = `CSS Validation: ${passed}/${checks.length} checks passed`;
+      output.appendChild(summary);
+    }
+    
+    // Run validation on load
+    validateCSS();
+  </script>
+</body>
+</html>

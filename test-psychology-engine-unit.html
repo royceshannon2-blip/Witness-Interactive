@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PsychologyEngine Unit Tests</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      background: #1a1a1a;
+      color: #00ff00;
+      padding: 20px;
+      line-height: 1.6;
+    }
+    .pass { color: #00ff00; }
+    .fail { color: #ff0000; }
+    .section { 
+      margin: 20px 0; 
+      padding: 10px;
+      border-left: 3px solid #00ff00;
+    }
+    .summary {
+      margin-top: 30px;
+      padding: 20px;
+      background: #2a2a2a;
+      border: 2px solid #00ff00;
+    }
+  </style>
+</head>
+<body>
+  <h1>PsychologyEngine Unit Tests</h1>
+  <div id="output"></div>
+
+  <script type="module">
+    import PsychologyEngine from './js/engine/PsychologyEngine.js';
+    import { GRADE_CONFIG, ARCHETYPES } from './js/content/missions/pearl-harbor/psychology-data.js';
+
+    const output = document.getElementById('output');
+    let testsPassed = 0;
+    let testsFailed = 0;
+
+    function log(message, isError = false) {
+      const div = document.createElement('div');
+      div.className = isError ? 'fail' : 'pass';
+      div.textContent = message;
+      output.appendChild(div);
+    }
+
+    function section(title) {
+      const div = document.createElement('div');
+      div.className = 'section';
+      div.innerHTML = `<strong>${title}</strong>`;
+      output.appendChild(div);
+    }
+
+    function assert(condition, testName, errorMessage) {
+      if (condition) {
+        log(`✓ ${testName}`);
+        testsPassed++;
+      } else {
+        log(`✗ ${testName}: ${errorMessage}`, true);
+        testsFailed++;
+      }
+    }
+
+    // Mock EventBus
+    class MockEventBus {
+      constructor() {
+        this.events = [];
+      }
+      emit(eventName, data) {
+        this.events.push({ eventName, data });
+      }
+      on(eventName, handler) {
+        // Mock event listener
+      }
+    }
+
+    // Run tests
+    section('Basic Functionality Tests');
+
+    // Test 1: Score initialization
+    const eventBus = new MockEventBus();
+    const engine = new PsychologyEngine(eventBus);
+    engine.init();
+    const initialScores = engine.getScores();
+
+    assert(
+      initialScores.morale === 50 && 
+      initialScores.loyalty === 50 && 
+      initialScores.humanity === 50 && 
+      initialScores.composure === 50,
+      'Test 1: Score initialization',
+      `Expected all scores to be 50, got ${JSON.stringify(initialScores)}`
+    );
+
+    // Test 2: Apply effects
+    engine.applyEffects({ morale: 10, loyalty: -5, humanity: 15, composure: 0 }, 'test-scene-01', 'test-choice-01');
+    const scores1 = engine.getScores();
+
+    assert(
+      scores1.morale === 60 && scores1.loyalty === 45 && scores1.humanity === 65 && scores1.composure === 50,
+      'Test 2: Apply effects',
+      `Expected morale:60, loyalty:45, humanity:65, composure:50, got ${JSON.stringify(scores1)}`
+    );
+
+    // Test 3: Reset functionality
+    engine.applyEffects({ morale: 20, loyalty: 15, humanity: 10, composure: 5 }, 'test', 'test');
+    engine.reset();
+    const scoresAfterReset = engine.getScores();
+    const historyAfterReset = engine.getHistory();
+
+    assert(
+      scoresAfterReset.morale === 50 && 
+      scoresAfterReset.loyalty === 50 && 
+      scoresAfterReset.humanity === 50 && 
+      scoresAfterReset.composure === 50 &&
+      historyAfterReset.length === 0,
+      'Test 3: Reset clears scores and history',
+      `Expected all scores to be 50 and history empty`
+    );
+
+    section('Property 22: Psychology Score Clamping (0-100 bounds)');
+
+    // Test 4: Score clamping (upper bound)
+    engine.init();
+    engine.applyEffects({ morale: 100, loyalty: 100, humanity: 100, composure: 100 }, 'test-scene-02', 'test-choice-02');
+    const scores2 = engine.getScores();
+
+    assert(
+      scores2.morale === 100 && scores2.loyalty === 100 && scores2.humanity === 100 && scores2.composure === 100,
+      'Test 4: Score clamping (upper bound at 100)',
+      `Expected all scores to be 100, got ${JSON.stringify(scores2)}`
+    );
+
+    // Test 5: Score clamping (lower bound)
+    engine.init();
+    engine.applyEffects({ morale: -100, loyalty: -100, humanity: -100, composure: -100 }, 'test-scene-03', 'test-choice-03');
+    const scores3 = engine.getScores();
+
+    assert(
+      scores3.morale === 0 && scores3.loyalty === 0 && scores3.humanity === 0 && scores3.composure === 0,
+      'Test 5: Score clamping (lower bound at 0)',
+      `Expected all scores to be 0, got ${JSON.stringify(scores3)}`
+    );
+
+    // Test 6: Score clamping (exceeding upper bound)
+    engine.init();
+    engine.applyEffects({ morale: 60, loyalty: 60, humanity: 60, composure: 60 }, 'test', 'test');
+    engine.applyEffects({ morale: 50, loyalty: 50, humanity: 50, composure: 50 }, 'test', 'test');
+    const scoresAfterExceed = engine.getScores();
+
+    assert(
+      scoresAfterExceed.morale === 100 && scoresAfterExceed.loyalty === 100 && 
+      scoresAfterExceed.humanity === 100 && scoresAfterExceed.composure === 100,
+      'Test 6: Scores clamped when exceeding 100',
+      `Expected all scores to remain at 100, got ${JSON.stringify(scoresAfterExceed)}`
+    );
+
+    // Test 7: Score clamping (going below zero)
+    engine.init();
+    engine.applyEffects({ morale: -60, loyalty: -60, humanity: -60, composure: -60 }, 'test', 'test');
+    engine.applyEffects({ morale: -50, loyalty: -50, humanity: -50, composure: -50 }, 'test', 'test');
+    const scoresAfterBelow = engine.getScores();
+
+    assert(
+      scoresAfterBelow.morale === 0 && scoresAfterBelow.loyalty === 0 && 
+      scoresAfterBelow.humanity === 0 && scoresAfterBelow.composure === 0,
+      'Test 7: Scores clamped when going below 0',
+      `Expected all scores to remain at 0, got ${JSON.stringify(scoresAfterBelow)}`
+    );
+
+    // Test 8: Mixed clamping
+    engine.init();
+    engine.applyEffects({ morale: 60, loyalty: -60, humanity: 20, composure: -20 }, 'test', 'test');
+    const scoresMixed = engine.getScores();
+
+    assert(
+      scoresMixed.morale === 100 && scoresMixed.loyalty === 0 && 
+      scoresMixed.humanity === 70 && scoresMixed.composure === 30,
+      'Test 8: Mixed clamping (some at bounds, some in range)',
+      `Expected morale:100, loyalty:0, humanity:70, composure:30, got ${JSON.stringify(scoresMixed)}`
+    );
+
+    section('Property 23: Grade Calculation Determinism');
+
+    // Test 9: Grade A determinism
+    const scoresA = { morale: 90, loyalty: 85, humanity: 95, composure: 80 };
+    const gradeA1 = engine.calculateGrade(scoresA, GRADE_CONFIG);
+    const gradeA2 = engine.calculateGrade(scoresA, GRADE_CONFIG);
+
+    assert(
+      gradeA1.letter === 'A' && gradeA2.letter === 'A' && gradeA1.letter === gradeA2.letter,
+      'Test 9: Grade A determinism',
+      `Expected both calls to return 'A', got ${gradeA1.letter} and ${gradeA2.letter}`
+    );
+
+    // Test 10: Grade B determinism
+    const scoresB = { morale: 75, loyalty: 70, humanity: 80, composure: 65 };
+    const gradeB1 = engine.calculateGrade(scoresB, GRADE_CONFIG);
+    const gradeB2 = engine.calculateGrade(scoresB, GRADE_CONFIG);
+
+    assert(
+      gradeB1.letter === 'B' && gradeB2.letter === 'B',
+      'Test 10: Grade B determinism',
+      `Expected both calls to return 'B', got ${gradeB1.letter} and ${gradeB2.letter}`
+    );
+
+    // Test 11: Grade C determinism
+    const scoresC = { morale: 60, loyalty: 55, humanity: 65, composure: 50 };
+    const gradeC1 = engine.calculateGrade(scoresC, GRADE_CONFIG);
+    const gradeC2 = engine.calculateGrade(scoresC, GRADE_CONFIG);
+
+    assert(
+      gradeC1.letter === 'C' && gradeC2.letter === 'C',
+      'Test 11: Grade C determinism',
+      `Expected both calls to return 'C', got ${gradeC1.letter} and ${gradeC2.letter}`
+    );
+
+    // Test 12: Grade D determinism
+    const scoresD = { morale: 45, loyalty: 40, humanity: 50, composure: 35 };
+    const gradeD1 = engine.calculateGrade(scoresD, GRADE_CONFIG);
+    const gradeD2 = engine.calculateGrade(scoresD, GRADE_CONFIG);
+
+    assert(
+      gradeD1.letter === 'D' && gradeD2.letter === 'D',
+      'Test 12: Grade D determinism',
+      `Expected both calls to return 'D', got ${gradeD1.letter} and ${gradeD2.letter}`
+    );
+
+    // Test 13: Grade F determinism
+    const scoresF = { morale: 20, loyalty: 15, humanity: 25, composure: 10 };
+    const gradeF1 = engine.calculateGrade(scoresF, GRADE_CONFIG);
+    const gradeF2 = engine.calculateGrade(scoresF, GRADE_CONFIG);
+
+    assert(
+      gradeF1.letter === 'F' && gradeF2.letter === 'F',
+      'Test 13: Grade F determinism',
+      `Expected both calls to return 'F', got ${gradeF1.letter} and ${gradeF2.letter}`
+    );
+
+    // Test 14: Multiple calls produce identical results
+    const scoresRepeat = { morale: 67, loyalty: 58, humanity: 72, composure: 61 };
+    const grades = [];
+    for (let i = 0; i < 5; i++) {
+      grades.push(engine.calculateGrade(scoresRepeat, GRADE_CONFIG));
+    }
+
+    const allSameLetter = grades.every(g => g.letter === grades[0].letter);
+    const allSameScore = grades.every(g => g.scoreUsed === grades[0].scoreUsed);
+
+    assert(
+      allSameLetter && allSameScore,
+      'Test 14: Multiple calls produce identical results',
+      `Expected all grades to be identical`
+    );
+
+    section('Property 24: Archetype Classification Uniqueness');
+
+    // Test 15: Returns exactly one archetype
+    const scoresArch1 = { morale: 80, loyalty: 90, humanity: 60, composure: 85 };
+    const archetype1 = engine.classifyArchetype(scoresArch1, ARCHETYPES, 'japanese-aviator');
+
+    assert(
+      archetype1 && archetype1.name && typeof archetype1.name === 'string',
+      'Test 15: Archetype classification returns one archetype',
+      `Expected archetype object with name`
+    );
+
+    // Test 16: Same scores produce same archetype
+    const archetype1b = engine.classifyArchetype(scoresArch1, ARCHETYPES, 'japanese-aviator');
+
+    assert(
+      archetype1.name === archetype1b.name,
+      'Test 16: Same scores produce same archetype',
+      `Expected same archetype name`
+    );
+
+    // Test 17: Different roles get role-specific descriptions
+    const archetype1sailor = engine.classifyArchetype(scoresArch1, ARCHETYPES, 'american-sailor');
+
+    assert(
+      archetype1.name === archetype1sailor.name && archetype1.description !== archetype1sailor.description,
+      'Test 17: Different roles get role-specific descriptions',
+      `Expected same archetype name but different descriptions`
+    );
+
+    // Test 18: High loyalty + high composure = The Soldier
+    const scoresSoldier = { morale: 60, loyalty: 95, humanity: 50, composure: 85 };
+    const archetypeSoldier = engine.classifyArchetype(scoresSoldier, ARCHETYPES, 'japanese-aviator');
+
+    assert(
+      archetypeSoldier.name === 'The Soldier',
+      'Test 18: High loyalty + high composure = The Soldier',
+      `Expected 'The Soldier', got ${archetypeSoldier.name}`
+    );
+
+    // Test 19: High humanity + low loyalty = The Reluctant Hero
+    const scoresHero = { morale: 60, loyalty: 25, humanity: 95, composure: 50 };
+    const archetypeHero = engine.classifyArchetype(scoresHero, ARCHETYPES, 'american-sailor');
+
+    assert(
+      archetypeHero.name === 'The Reluctant Hero',
+      'Test 19: High humanity + low loyalty = The Reluctant Hero',
+      `Expected 'The Reluctant Hero', got ${archetypeHero.name}`
+    );
+
+    // Test 20: All score patterns return exactly one archetype
+    const testScorePatterns = [
+      { morale: 100, loyalty: 100, humanity: 100, composure: 100 },
+      { morale: 0, loyalty: 0, humanity: 0, composure: 0 },
+      { morale: 50, loyalty: 50, humanity: 50, composure: 50 },
+      { morale: 90, loyalty: 30, humanity: 60, composure: 45 },
+      { morale: 35, loyalty: 75, humanity: 40, composure: 80 }
+    ];
+
+    let allUnique = true;
+    for (const scores of testScorePatterns) {
+      const arch = engine.classifyArchetype(scores, ARCHETYPES, 'japanese-aviator');
+      if (!arch || !arch.name || typeof arch.name !== 'string' || Array.isArray(arch)) {
+        allUnique = false;
+      }
+    }
+
+    assert(
+      allUnique,
+      'Test 20: All score patterns return exactly one archetype',
+      'Some score patterns did not return a valid single archetype'
+    );
+
+    // Summary
+    const summaryDiv = document.createElement('div');
+    summaryDiv.className = 'summary';
+    summaryDiv.innerHTML = `
+      <h2>Test Summary</h2>
+      <p>Tests Passed: <span class="pass">${testsPassed}</span></p>
+      <p>Tests Failed: <span class="fail">${testsFailed}</span></p>
+      <p>Total Tests: ${testsPassed + testsFailed}</p>
+      ${testsFailed === 0 ? '<p class="pass">✓ All tests passed!</p>' : `<p class="fail">✗ ${testsFailed} test(s) failed</p>`}
+    `;
+    output.appendChild(summaryDiv);
+  </script>
+</body>
+</html>

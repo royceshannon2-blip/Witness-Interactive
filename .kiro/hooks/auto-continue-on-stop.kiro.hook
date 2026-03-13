@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "name": "Auto Continue on Agent Stop",
+  "description": "Automatically sends 'continue' to the agent when it stops, helping to bypass interruptions like high traffic messages and maintain workflow momentum",
+  "version": "1",
+  "when": {
+    "type": "agentStop"
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "continue"
+  }
+}

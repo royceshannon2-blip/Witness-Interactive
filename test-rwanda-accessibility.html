@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rwanda Mission - Accessibility Test</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #e0e0e0;
+    }
+    
+    h1 {
+      color: #4CAF50;
+      border-bottom: 2px solid #4CAF50;
+      padding-bottom: 10px;
+    }
+    
+    h2 {
+      color: #2196F3;
+      margin-top: 30px;
+    }
+    
+    .test-section {
+      background: #2a2a2a;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    
+    .test-item {
+      margin: 15px 0;
+      padding: 10px;
+      background: #333;
+      border-left: 4px solid #2196F3;
+    }
+    
+    .pass {
+      border-left-color: #4CAF50;
+    }
+    
+    .fail {
+      border-left-color: #f44336;
+    }
+    
+    .warning {
+      border-left-color: #ff9800;
+    }
+    
+    button {
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+    }
+    
+    button:hover {
+      background: #1976D2;
+    }
+    
+    button:focus {
+      outline: 3px solid #4CAF50;
+      outline-offset: 2px;
+    }
+    
+    .status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      margin-left: 10px;
+    }
+    
+    .status.pass {
+      background: #4CAF50;
+      color: white;
+    }
+    
+    .status.fail {
+      background: #f44336;
+      color: white;
+    }
+    
+    .status.pending {
+      background: #ff9800;
+      color: white;
+    }
+    
+    code {
+      background: #1a1a1a;
+      padding: 2px 6px;
+      border-radius: 3px;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .instructions {
+      background: #1a3a5a;
+      border-left: 4px solid #2196F3;
+      padding: 15px;
+      margin: 15px 0;
+    }
+    
+    .checklist {
+      list-style: none;
+      padding: 0;
+    }
+    
+    .checklist li {
+      padding: 8px;
+      margin: 5px 0;
+      background: #333;
+      border-radius: 4px;
+    }
+    
+    .checklist input[type="checkbox"] {
+      margin-right: 10px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+    
+    iframe {
+      width: 100%;
+      height: 600px;
+      border: 2px solid #444;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    
+    .viewport-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 15px 0;
+    }
+    
+    .contrast-checker {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    
+    .contrast-sample {
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    
+    .results {
+      background: #2a2a2a;
+      padding: 15px;
+      border-radius: 8px;
+      margin: 15px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Rwanda Mission - Accessibility Testing</h1>
+  
+  <div class="instructions">
+    <h3>📋 Testing Instructions</h3>
+    <p>This page helps you manually test the Rwanda Genocide Mission for WCAG AA accessibility compliance.</p>
+    <p><strong>Requirements:</strong> NFR-3.1 - All content must be screen-reader compatible, keyboard navigable, mobile responsive, and meet WCAG AA color contrast standards.</p>
+  </div>
+
+  <!-- Test 1: Screen Reader Compatibility -->
+  <div class="test-section">
+    <h2>Test 1: Screen Reader Compatibility (NVDA/JAWS)</h2>
+    
+    <div class="instructions">
+      <p><strong>Setup:</strong></p>
+      <ol>
+        <li>Install NVDA (free) from <a href="https://www.nvaccess.org/download/" target="_blank">nvaccess.org</a></li>
+        <li>Start NVDA (Ctrl+Alt+N)</li>
+        <li>Open the game in a new tab: <a href="http://localhost:8000" target="_blank">http://localhost:8000</a></li>
+      </ol>
+    </div>
+    
+    <h3>Hutu Moderate Role</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="sr-1-1"> Screen reader announces "Rwanda, 1994" button</li>
+      <li><input type="checkbox" id="sr-1-2"> "Hutu Moderate" role button is announced with description</li>
+      <li><input type="checkbox" id="sr-1-3"> Narrative text is announced when scene loads</li>
+      <li><input type="checkbox" id="sr-1-4"> Choice buttons have clear accessible names</li>
+      <li><input type="checkbox" id="sr-1-5"> Timer countdown is announced (if present)</li>
+    </ul>
+    
+    <h3>Tutsi Survivor Role</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="sr-2-1"> "Tutsi Survivor" role is announced</li>
+      <li><input type="checkbox" id="sr-2-2"> Timed choice timer is announced via ARIA live region</li>
+      <li><input type="checkbox" id="sr-2-3"> Scene transitions are announced</li>
+    </ul>
+    
+    <h3>UN Peacekeeper Role</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="sr-3-1"> "UN Peacekeeper" role is announced</li>
+      <li><input type="checkbox" id="sr-3-2"> All narrative text is accessible</li>
+      <li><input type="checkbox" id="sr-3-3"> Outcome screen is accessible</li>
+      <li><input type="checkbox" id="sr-3-4"> Historical ripple timeline is accessible</li>
+    </ul>
+    
+    <button onclick="checkScreenReaderTests()">Check Screen Reader Tests</button>
+    <div id="sr-results" class="results"></div>
+  </div>
+
+  <!-- Test 2: Keyboard Navigation -->
+  <div class="test-section">
+    <h2>Test 2: Keyboard Navigation</h2>
+    
+    <div class="instructions">
+      <p><strong>Test with keyboard only (no mouse):</strong></p>
+      <ol>
+        <li>Use <code>Tab</code> to move forward through interactive elements</li>
+        <li>Use <code>Shift+Tab</code> to move backward</li>
+        <li>Use <code>Enter</code> or <code>Space</code> to activate buttons</li>
+        <li>Use <code>Escape</code> to close modals (if any)</li>
+      </ol>
+    </div>
+    
+    <h3>Tab Navigation</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="kb-1-1"> Tab key moves focus through all interactive elements</li>
+      <li><input type="checkbox" id="kb-1-2"> Focus order is logical (top to bottom, left to right)</li>
+      <li><input type="checkbox" id="kb-1-3"> Focus indicator is visible on all elements</li>
+      <li><input type="checkbox" id="kb-1-4"> No keyboard traps (can always move focus away)</li>
+    </ul>
+    
+    <h3>Enter/Space Activation</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="kb-2-1"> Enter key activates focused buttons</li>
+      <li><input type="checkbox" id="kb-2-2"> Space key activates focused buttons</li>
+      <li><input type="checkbox" id="kb-2-3"> Both keys work consistently</li>
+    </ul>
+    
+    <h3>Full Keyboard Playthrough</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="kb-3-1"> Can start game with keyboard only</li>
+      <li><input type="checkbox" id="kb-3-2"> Can select Rwanda mission with keyboard</li>
+      <li><input type="checkbox" id="kb-3-3"> Can select role with keyboard</li>
+      <li><input type="checkbox" id="kb-3-4"> Can play through 3-5 scenes with keyboard only</li>
+      <li><input type="checkbox" id="kb-3-5"> Can complete mission using only keyboard</li>
+    </ul>
+    
+    <button onclick="checkKeyboardTests()">Check Keyboard Tests</button>
+    <div id="kb-results" class="results"></div>
+  </div>
+
+  <!-- Test 3: Mobile Viewport Testing -->
+  <div class="test-section">
+    <h2>Test 3: Mobile Viewport Testing</h2>
+    
+    <div class="instructions">
+      <p><strong>Test on different viewport sizes:</strong></p>
+      <p>Open DevTools (F12), click device toolbar icon, and test these viewports:</p>
+    </div>
+    
+    <div class="viewport-buttons">
+      <button onclick="testViewport(320, 568)">📱 320px (iPhone SE)</button>
+      <button onclick="testViewport(375, 667)">📱 375px (iPhone 8)</button>
+      <button onclick="testViewport(768, 1024)">📱 768px (iPad)</button>
+      <button onclick="testViewport(1280, 720)">💻 1280px (Desktop)</button>
+    </div>
+    
+    <h3>320px Viewport (Small Mobile)</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="mv-1-1"> Mission button is visible and tappable</li>
+      <li><input type="checkbox" id="mv-1-2"> Role selection buttons fit on screen</li>
+      <li><input type="checkbox" id="mv-1-3"> No horizontal scrolling</li>
+      <li><input type="checkbox" id="mv-1-4"> Narrative text is readable</li>
+      <li><input type="checkbox" id="mv-1-5"> Choice buttons are tappable (min 44×44px)</li>
+      <li><input type="checkbox" id="mv-1-6"> Timer display is visible</li>
+      <li><input type="checkbox" id="mv-1-7"> No content is cut off</li>
+    </ul>
+    
+    <h3>768px Viewport (Tablet)</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="mv-2-1"> Layout adapts to tablet size</li>
+      <li><input type="checkbox" id="mv-2-2"> Content is centered or well-distributed</li>
+      <li><input type="checkbox" id="mv-2-3"> Text is readable without zooming</li>
+      <li><input type="checkbox" id="mv-2-4"> Buttons are appropriately sized</li>
+      <li><input type="checkbox" id="mv-2-5"> No awkward spacing or gaps</li>
+    </ul>
+    
+    <h3>1280px Viewport (Desktop)</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="mv-3-1"> Content is centered</li>
+      <li><input type="checkbox" id="mv-3-2"> Max-width constraints are applied</li>
+      <li><input type="checkbox" id="mv-3-3"> Text is readable</li>
+      <li><input type="checkbox" id="mv-3-4"> Layout is balanced</li>
+      <li><input type="checkbox" id="mv-3-5"> No excessive whitespace</li>
+    </ul>
+    
+    <button onclick="checkMobileTests()">Check Mobile Tests</button>
+    <div id="mv-results" class="results"></div>
+  </div>
+
+  <!-- Test 4: Color Contrast (WCAG AA) -->
+  <div class="test-section">
+    <h2>Test 4: Color Contrast (WCAG AA)</h2>
+    
+    <div class="instructions">
+      <p><strong>WCAG AA Requirements:</strong></p>
+      <ul>
+        <li>Normal text (16px): 4.5:1 contrast ratio</li>
+        <li>Large text (18px+): 3:1 contrast ratio</li>
+        <li>UI components: 3:1 contrast ratio</li>
+      </ul>
+      <p><strong>Tools:</strong></p>
+      <ul>
+        <li>Chrome DevTools Lighthouse (F12 → Lighthouse tab)</li>
+        <li><a href="https://webaim.org/resources/contrastchecker/" target="_blank">WebAIM Contrast Checker</a></li>
+        <li>Browser extension: WAVE or axe DevTools</li>
+      </ul>
+    </div>
+    
+    <h3>Contrast Samples</h3>
+    <div class="contrast-checker">
+      <div class="contrast-sample" style="background: #1a1a1a; color: #e0e0e0;">
+        <p>Narrative Text</p>
+        <small>#e0e0e0 on #1a1a1a</small>
+      </div>
+      <div class="contrast-sample" style="background: #2196F3; color: white;">
+        <p>Choice Button</p>
+        <small>#ffffff on #2196F3</small>
+      </div>
+      <div class="contrast-sample" style="background: #333; color: #ff9800;">
+        <p>Timer Display</p>
+        <small>#ff9800 on #333</small>
+      </div>
+      <div class="contrast-sample" style="background: #2a2a2a; color: #4CAF50;">
+        <p>Focus Indicator</p>
+        <small>#4CAF50 on #2a2a2a</small>
+      </div>
+    </div>
+    
+    <h3>Contrast Checklist</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="cc-1"> Narrative text: 4.5:1 or higher</li>
+      <li><input type="checkbox" id="cc-2"> Choice button text: 4.5:1 or higher</li>
+      <li><input type="checkbox" id="cc-3"> Choice button border: 3:1 or higher</li>
+      <li><input type="checkbox" id="cc-4"> Focus indicator: 3:1 or higher</li>
+      <li><input type="checkbox" id="cc-5"> Timer display: 4.5:1 or higher</li>
+      <li><input type="checkbox" id="cc-6"> Text remains readable during atmospheric effects</li>
+      <li><input type="checkbox" id="cc-7"> Opacity doesn't drop below 0.7 during effects</li>
+    </ul>
+    
+    <button onclick="runLighthouseTest()">Run Lighthouse Accessibility Audit</button>
+    <button onclick="checkContrastTests()">Check Contrast Tests</button>
+    <div id="cc-results" class="results"></div>
+  </div>
+
+  <!-- Test 5: Focus Management -->
+  <div class="test-section">
+    <h2>Test 5: Focus Management</h2>
+    
+    <h3>Focus Visibility</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="fm-1-1"> Focus indicator is always visible</li>
+      <li><input type="checkbox" id="fm-1-2"> Focus indicator has sufficient contrast</li>
+      <li><input type="checkbox" id="fm-1-3"> Focus indicator is not hidden by other elements</li>
+    </ul>
+    
+    <h3>Focus Order</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="fm-2-1"> Focus moves in logical order</li>
+      <li><input type="checkbox" id="fm-2-2"> Focus doesn't jump unexpectedly</li>
+      <li><input type="checkbox" id="fm-2-3"> Focus order matches visual order</li>
+    </ul>
+    
+    <h3>Focus During Transitions</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="fm-3-1"> Focus is not lost during scene transitions</li>
+      <li><input type="checkbox" id="fm-3-2"> Focus moves to meaningful element after transition</li>
+      <li><input type="checkbox" id="fm-3-3"> Focus is not on body element</li>
+    </ul>
+    
+    <button onclick="checkFocusTests()">Check Focus Tests</button>
+    <div id="fm-results" class="results"></div>
+  </div>
+
+  <!-- Test 6: Reduced Motion Support -->
+  <div class="test-section">
+    <h2>Test 6: Reduced Motion Support</h2>
+    
+    <div class="instructions">
+      <p><strong>Enable Reduced Motion:</strong></p>
+      <ul>
+        <li><strong>Windows:</strong> Settings → Ease of Access → Display → Show animations (OFF)</li>
+        <li><strong>Mac:</strong> System Preferences → Accessibility → Display → Reduce motion (ON)</li>
+        <li><strong>Browser:</strong> DevTools (F12) → Rendering → Emulate CSS media feature prefers-reduced-motion: reduce</li>
+      </ul>
+    </div>
+    
+    <h3>Reduced Motion Checklist</h3>
+    <ul class="checklist">
+      <li><input type="checkbox" id="rm-1"> Typewriter animation is disabled (text appears instantly)</li>
+      <li><input type="checkbox" id="rm-2"> Scene transitions are instant or very fast</li>
+      <li><input type="checkbox" id="rm-3"> Atmospheric effects are reduced or disabled</li>
+      <li><input type="checkbox" id="rm-4"> Timer pulse effects are disabled</li>
+      <li><input type="checkbox" id="rm-5"> Choice button hover effects are reduced</li>
+      <li><input type="checkbox" id="rm-6"> Game still works correctly</li>
+      <li><input type="checkbox" id="rm-7"> No features are broken</li>
+    </ul>
+    
+    <button onclick="checkReducedMotionTests()">Check Reduced Motion Tests</button>
+    <div id="rm-results" class="results"></div>
+  </div>
+
+  <!-- Final Summary -->
+  <div class="test-section">
+    <h2>📊 Test Summary</h2>
+    
+    <button onclick="generateSummary()" style="background: #4CAF50; font-size: 18px; padding: 15px 30px;">
+      Generate Test Summary
+    </button>
+    
+    <div id="summary-results" class="results"></div>
+  </div>
+
+  <script>
+    function checkScreenReaderTests() {
+      const total = 12;
+      const checked = document.querySelectorAll('[id^="sr-"]:checked').length;
+      const percentage = Math.round((checked / total) * 100);
+      
+      const resultsDiv = document.getElementById('sr-results');
+      resultsDiv.innerHTML = `
+        <h3>Screen Reader Test Results</h3>
+        <p><strong>${checked} / ${total}</strong> tests passed (${percentage}%)</p>
+        ${percentage === 100 ? '<p class="status pass">✅ All screen reader tests passed!</p>' : 
+          percentage >= 80 ? '<p class="status warning">⚠️ Most tests passed, review failures</p>' :
+          '<p class="status fail">❌ Multiple failures, needs attention</p>'}
+      `;
+    }
+    
+    function checkKeyboardTests() {
+      const total = 12;
+      const checked = document.querySelectorAll('[id^="kb-"]:checked').length;
+      const percentage = Math.round((checked / total) * 100);
+      
+      const resultsDiv = document.getElementById('kb-results');
+      resultsDiv.innerHTML = `
+        <h3>Keyboard Navigation Test Results</h3>
+        <p><strong>${checked} / ${total}</strong> tests passed (${percentage}%)</p>
+        ${percentage === 100 ? '<p class="status pass">✅ All keyboard tests passed!</p>' : 
+          percentage >= 80 ? '<p class="status warning">⚠️ Most tests passed, review failures</p>' :
+          '<p class="status fail">❌ Multiple failures, needs attention</p>'}
+      `;
+    }
+    
+    function checkMobileTests() {
+      const total = 17;
+      const checked = document.querySelectorAll('[id^="mv-"]:checked').length;
+      const percentage = Math.round((checked / total) * 100);
+      
+      const resultsDiv = document.getElementById('mv-results');
+      resultsDiv.innerHTML = `
+        <h3>Mobile Viewport Test Results</h3>
+        <p><strong>${checked} / ${total}</strong> tests passed (${percentage}%)</p>
+        ${percentage === 100 ? '<p class="status pass">✅ All mobile tests passed!</p>' : 
+          percentage >= 80 ? '<p class="status warning">⚠️ Most tests passed, review failures</p>' :
+          '<p class="status fail">❌ Multiple failures, needs attention</p>'}
+      `;
+    }
+    
+    function checkContrastTests() {
+      const total = 7;
+      const checked = document.querySelectorAll('[id^="cc-"]:checked').length;
+      const percentage = Math.round((checked / total) * 100);
+      
+      const resultsDiv = document.getElementById('cc-results');
+      resultsDiv.innerHTML = `
+        <h3>Color Contrast Test Results</h3>
+        <p><strong>${checked} / ${total}</strong> tests passed (${percentage}%)</p>
+        ${percentage === 100 ? '<p class="status pass">✅ All contrast tests passed!</p>' : 
+          percentage >= 80 ? '<p class="status warning">⚠️ Most tests passed, review failures</p>' :
+          '<p class="status fail">❌ Multiple failures, needs attention</p>'}
+      `;
+    }
+    
+    function checkFocusTests() {
+      const total = 9;
+      const checked = document.querySelectorAll('[id^="fm-"]:checked').length;
+      const percentage = Math.round((checked / total) * 100);
+      
+      const resultsDiv = document.getElementById('fm-results');
+      resultsDiv.innerHTML = `
+        <h3>Focus Management Test Results</h3>
+        <p><strong>${checked} / ${total}</strong> tests passed (${percentage}%)</p>
+        ${percentage === 100 ? '<p class="status pass">✅ All focus tests passed!</p>' : 
+          percentage >= 80 ? '<p class="status warning">⚠️ Most tests passed, review failures</p>' :
+          '<p class="status fail">❌ Multiple failures, needs attention</p>'}
+      `;
+    }
+    
+    function checkReducedMotionTests() {
+      const total = 7;
+      const checked = document.querySelectorAll('[id^="rm-"]:checked').length;
+      const percentage = Math.round((checked / total) * 100);
+      
+      const resultsDiv = document.getElementById('rm-results');
+      resultsDiv.innerHTML = `
+        <h3>Reduced Motion Test Results</h3>
+        <p><strong>${checked} / ${total}</strong> tests passed (${percentage}%)</p>
+        ${percentage === 100 ? '<p class="status pass">✅ All reduced motion tests passed!</p>' : 
+          percentage >= 80 ? '<p class="status warning">⚠️ Most tests passed, review failures</p>' :
+          '<p class="status fail">❌ Multiple failures, needs attention</p>'}
+      `;
+    }
+    
+    function testViewport(width, height) {
+      alert(`To test ${width}x${height} viewport:\n\n1. Open DevTools (F12)\n2. Click device toolbar icon (Ctrl+Shift+M)\n3. Set dimensions to ${width}x${height}\n4. Test the Rwanda mission\n5. Check all items in the checklist`);
+    }
+    
+    function runLighthouseTest() {
+      alert('To run Lighthouse accessibility audit:\n\n1. Open DevTools (F12)\n2. Click "Lighthouse" tab\n3. Select "Accessibility" category\n4. Click "Generate report"\n5. Review results\n\nTarget: 90+ score (ideally 100)');
+    }
+    
+    function generateSummary() {
+      const allCheckboxes = document.querySelectorAll('input[type="checkbox"]');
+      const totalTests = allCheckboxes.length;
+      const passedTests = document.querySelectorAll('input[type="checkbox"]:checked').length;
+      const percentage = Math.round((passedTests / totalTests) * 100);
+      
+      const srTests = document.querySelectorAll('[id^="sr-"]:checked').length;
+      const kbTests = document.querySelectorAll('[id^="kb-"]:checked').length;
+      const mvTests = document.querySelectorAll('[id^="mv-"]:checked').length;
+      const ccTests = document.querySelectorAll('[id^="cc-"]:checked').length;
+      const fmTests = document.querySelectorAll('[id^="fm-"]:checked').length;
+      const rmTests = document.querySelectorAll('[id^="rm-"]:checked').length;
+      
+      const resultsDiv = document.getElementById('summary-results');
+      resultsDiv.innerHTML = `
+        <h3>🎯 Overall Accessibility Test Results</h3>
+        <p style="font-size: 24px;"><strong>${passedTests} / ${totalTests}</strong> tests passed</p>
+        <p style="font-size: 32px; font-weight: bold;">${percentage}%</p>
+        
+        <h4>Breakdown by Category:</h4>
+        <ul>
+          <li>Screen Reader: ${srTests}/12 (${Math.round((srTests/12)*100)}%)</li>
+          <li>Keyboard Navigation: ${kbTests}/12 (${Math.round((kbTests/12)*100)}%)</li>
+          <li>Mobile Viewports: ${mvTests}/17 (${Math.round((mvTests/17)*100)}%)</li>
+          <li>Color Contrast: ${ccTests}/7 (${Math.round((ccTests/7)*100)}%)</li>
+          <li>Focus Management: ${fmTests}/9 (${Math.round((fmTests/9)*100)}%)</li>
+          <li>Reduced Motion: ${rmTests}/7 (${Math.round((rmTests/7)*100)}%)</li>
+        </ul>
+        
+        ${percentage === 100 ? 
+          '<h3 class="status pass">✅ WCAG AA COMPLIANCE ACHIEVED!</h3><p>All accessibility tests passed. The Rwanda mission meets WCAG 2.1 Level AA standards.</p>' : 
+          percentage >= 90 ? 
+          '<h3 class="status pass">✅ EXCELLENT ACCESSIBILITY</h3><p>Nearly all tests passed. Minor issues to address.</p>' :
+          percentage >= 80 ? 
+          '<h3 class="status warning">⚠️ GOOD ACCESSIBILITY</h3><p>Most tests passed. Review and fix failures.</p>' :
+          '<h3 class="status fail">❌ NEEDS IMPROVEMENT</h3><p>Multiple accessibility issues found. Requires attention.</p>'}
+        
+        <h4>Next Steps:</h4>
+        <ol>
+          <li>Review all unchecked items</li>
+          <li>Fix identified issues</li>
+          <li>Re-test failed categories</li>
+          <li>Document results in ACCESSIBILITY_TEST_REPORT.md</li>
+        </ol>
+      `;
+    }
+  </script>
+</body>
+</html>

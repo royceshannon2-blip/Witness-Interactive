@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Japanese Aviator Branching Path Test</title>
+  <style>
+    body { font-family: monospace; padding: 20px; background: #1a1a1a; color: #0f0; }
+    .pass { color: #0f0; }
+    .fail { color: #f00; }
+    .path { margin: 20px 0; padding: 10px; border: 1px solid #333; }
+    .scene { margin-left: 20px; color: #888; }
+  </style>
+</head>
+<body>
+  <h1>Japanese Aviator Branching Path Validation</h1>
+  <div id="results"></div>
+
+  <script type="module">
+    import japaneseAviatorRole from './js/content/missions/pearl-harbor/japanese-aviator.js';
+
+    const results = document.getElementById('results');
+    let passCount = 0;
+    let failCount = 0;
+
+    function log(message, isPass = true) {
+      const div = document.createElement('div');
+      div.className = isPass ? 'pass' : 'fail';
+      div.textContent = (isPass ? '✓ ' : '✗ ') + message;
+      results.appendChild(div);
+      if (isPass) passCount++; else failCount++;
+    }
+
+    function logPath(message) {
+      const div = document.createElement('div');
+      div.className = 'path';
+      div.textContent = message;
+      results.appendChild(div);
+    }
+
+    function logScene(message) {
+      const div = document.createElement('div');
+      div.className = 'scene';
+      div.textContent = message;
+      results.appendChild(div);
+    }
+
+    // Build scene map
+    const scenes = japaneseAviatorRole.scenes;
+    const sceneMap = new Map();
+    scenes.forEach(scene => sceneMap.set(scene.id, scene));
+
+    log(`Loaded ${scenes.length} scenes`);
+
+    // Test 1: Verify all required scenes exist
+    const requiredScenes = [
+      'ja-scene-01',
+      'ja-scene-02a', 'ja-scene-02b', 'ja-scene-02c',
+      'ja-scene-03a', 'ja-scene-03b', 'ja-scene-03c',
+      'ja-scene-04a', 'ja-scene-04b', 'ja-scene-04c',
+      'ja-scene-05'
+    ];
+
+    requiredScenes.forEach(sceneId => {
+      if (sceneMap.has(sceneId)) {
+        log(`Scene ${sceneId} exists`);
+      } else {
+        log(`Scene ${sceneId} MISSING`, false);
+      }
+    });
+
+    // Test 2: Verify scene-01 branches correctly
+    const scene01 = sceneMap.get('ja-scene-01');
+    if (scene01) {
+      const nextScenes = scene01.choices.map(c => c.nextScene);
+      if (nextScenes.includes('ja-scene-02a') && 
+          nextScenes.includes('ja-scene-02b') && 
+          nextScenes.includes('ja-scene-02c')) {
+        log('Scene-01 branches to 02a/b/c correctly');
+      } else {
+        log(`Scene-01 branches incorrectly: ${nextScenes.join(', ')}`, false);
+      }
+    }
+
+    // Test 3: Trace compliance path (01 → 02a → 03a → 04a → 05)
+    logPath('\\n--- Compliance Path (01 → 02a → 03a → 04a → 05) ---');
+    const compliancePath = ['ja-scene-01', 'ja-scene-02a', 'ja-scene-03a', 'ja-scene-04a', 'ja-scene-05'];
+    let complianceValid = true;
+
+    for (let i = 0; i < compliancePath.length - 1; i++) {
+      const currentScene = sceneMap.get(compliancePath[i]);
+      const nextSceneId = compliancePath[i + 1];
+      
+      if (!currentScene) {
+        logScene(`${compliancePath[i]} MISSING`);
+        complianceValid = false;
+        continue;
+      }
+
+      const hasPath = currentScene.choices.some(c => c.nextScene === nextSceneId);
+      if (hasPath) {
+        logScene(`${compliancePath[i]} → ${nextSceneId} ✓`);
+      } else {
+        logScene(`${compliancePath[i]} → ${nextSceneId} BROKEN`);
+        complianceValid = false;
+      }
+    }
+
+    // Check convergence
+    const scene05 = sceneMap.get('ja-scene-05');
+    if (scene05 && scene05.choices[0].nextScene === 'outcome') {
+      logScene('ja-scene-05 → outcome ✓');
+    } else {
+      logScene('ja-scene-05 → outcome BROKEN');
+      complianceValid = false;
+    }
+
+    log(complianceValid ? 'Compliance path complete' : 'Compliance path BROKEN', complianceValid);
+
+    // Test 4: Trace instinct path (01 → 02b → 03b → 04b → 05)
+    logPath('\\n--- Instinct Path (01 → 02b → 03b → 04b → 05) ---');
+    const instinctPath = ['ja-scene-01', 'ja-scene-02b', 'ja-scene-03b', 'ja-scene-04b', 'ja-scene-05'];
+    let instinctValid = true;
+
+    for (let i = 0; i < instinctPath.length - 1; i++) {
+      const currentScene = sceneMap.get(instinctPath[i]);
+      const nextSceneId = instinctPath[i + 1];
+      
+      if (!currentScene) {
+        logScene(`${instinctPath[i]} MISSING`);
+        instinctValid = false;
+        continue;
+      }
+
+      const hasPath = currentScene.choices.some(c => c.nextScene === nextSceneId);
+      if (hasPath) {
+        logScene(`${instinctPath[i]} → ${nextSceneId} ✓`);
+      } else {
+        logScene(`${instinctPath[i]} → ${nextSceneId} BROKEN`);
+        instinctValid = false;
+      }
+    }
+
+    if (scene05 && scene05.choices[0].nextScene === 'outcome') {
+      logScene('ja-scene-05 → outcome ✓');
+    } else {
+      logScene('ja-scene-05 → outcome BROKEN');
+      instinctValid = false;
+    }
+
+    log(instinctValid ? 'Instinct path complete' : 'Instinct path BROKEN', instinctValid);
+
+    // Test 5: Trace witness path (01 → 02c → 03c → 04c → 05)
+    logPath('\\n--- Witness Path (01 → 02c → 03c → 04c → 05) ---');
+    const witnessPath = ['ja-scene-01', 'ja-scene-02c', 'ja-scene-03c', 'ja-scene-04c', 'ja-scene-05'];
+    let witnessValid = true;
+
+    for (let i = 0; i < witnessPath.length - 1; i++) {
+      const currentScene = sceneMap.get(witnessPath[i]);
+      const nextSceneId = witnessPath[i + 1];
+      
+      if (!currentScene) {
+        logScene(`${witnessPath[i]} MISSING`);
+        witnessValid = false;
+        continue;
+      }
+
+      const hasPath = currentScene.choices.some(c => c.nextScene === nextSceneId);
+      if (hasPath) {
+        logScene(`${witnessPath[i]} → ${nextSceneId} ✓`);
+      } else {
+        logScene(`${witnessPath[i]} → ${nextSceneId} BROKEN`);
+        witnessValid = false;
+      }
+    }
+
+    if (scene05 && scene05.choices[0].nextScene === 'outcome') {
+      logScene('ja-scene-05 → outcome ✓');
+    } else {
+      logScene('ja-scene-05 → outcome BROKEN');
+      witnessValid = false;
+    }
+
+    log(witnessValid ? 'Witness path complete' : 'Witness path BROKEN', witnessValid);
+
+    // Test 6: Verify no broken nextScene references
+    logPath('\\n--- Checking for Broken References ---');
+    let brokenRefs = 0;
+    scenes.forEach(scene => {
+      scene.choices.forEach(choice => {
+        if (choice.nextScene !== 'outcome' && !sceneMap.has(choice.nextScene)) {
+          logScene(`${scene.id} → ${choice.nextScene} BROKEN REFERENCE`);
+          brokenRefs++;
+        }
+      });
+    });
+
+    if (brokenRefs === 0) {
+      log('No broken nextScene references');
+    } else {
+      log(`${brokenRefs} broken references found`, false);
+    }
+
+    // Test 7: Verify convergence scene properties
+    if (scene05) {
+      const hasCorrectThemes = scene05.apThemes.includes('causation') && 
+                               scene05.apThemes.includes('continuity');
+      log(hasCorrectThemes ? 'Convergence scene has correct AP themes' : 'Convergence scene missing required themes', hasCorrectThemes);
+
+      const hasSingleChoice = scene05.choices.length === 1;
+      log(hasSingleChoice ? 'Convergence scene has single terminal choice' : 'Convergence scene has multiple choices', hasSingleChoice);
+
+      const wordCount = scene05.narrative.split(/\\s+/).length;
+      const correctLength = wordCount >= 120 && wordCount <= 150;
+      log(correctLength ? `Convergence scene length correct (${wordCount} words)` : `Convergence scene length incorrect (${wordCount} words, expected 120-150)`, correctLength);
+    }
+
+    // Summary
+    logPath(`\\n--- SUMMARY ---`);
+    log(`Total tests passed: ${passCount}`);
+    log(`Total tests failed: ${failCount}`);
+    
+    if (failCount === 0) {
+      logPath('\\n✓ ALL TESTS PASSED - Japanese Aviator branching paths are valid');
+    } else {
+      logPath(`\\n✗ ${failCount} TESTS FAILED - Fix issues before proceeding`);
+    }
+  </script>
+</body>
+</html>

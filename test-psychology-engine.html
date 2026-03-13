@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PsychologyEngine Test</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #00ff00;
+    }
+    .test-result {
+      margin: 10px 0;
+      padding: 5px;
+    }
+    .pass { color: #00ff00; }
+    .fail { color: #ff0000; }
+  </style>
+</head>
+<body>
+  <h1>PsychologyEngine Test Suite</h1>
+  <div id="results"></div>
+
+  <script type="module">
+    import PsychologyEngine from './js/engine/PsychologyEngine.js';
+    import { GRADE_CONFIG, ARCHETYPES } from './js/content/missions/pearl-harbor/psychology-data.js';
+
+    const results = document.getElementById('results');
+
+    function log(message, pass = true) {
+      const div = document.createElement('div');
+      div.className = `test-result ${pass ? 'pass' : 'fail'}`;
+      div.textContent = message;
+      results.appendChild(div);
+    }
+
+    // Mock EventBus
+    class MockEventBus {
+      constructor() {
+        this.events = [];
+        this.listeners = {};
+      }
+      emit(eventName, data) {
+        this.events.push({ eventName, data });
+        if (this.listeners[eventName]) {
+          this.listeners[eventName].forEach(fn => fn(data));
+        }
+      }
+      on(eventName, callback) {
+        if (!this.listeners[eventName]) {
+          this.listeners[eventName] = [];
+        }
+        this.listeners[eventName].push(callback);
+      }
+    }
+
+    // Run tests
+    log('=== PsychologyEngine Unit Tests ===');
+
+    // Test 1: Score initialization
+    log('\nTest 1: Score initialization');
+    const eventBus = new MockEventBus();
+    const engine = new PsychologyEngine(eventBus);
+    engine.init();
+    const initialScores = engine.getScores();
+
+    if (initialScores.morale === 50 && 
+        initialScores.loyalty === 50 && 
+        initialScores.humanity === 50 && 
+        initialScores.composure === 50) {
+      log('✓ All scores initialized to 50', true);
+    } else {
+      log('✗ Scores not initialized correctly: ' + JSON.stringify(initialScores), false);
+    }
+
+    // Test 2: Apply effects
+    log('\nTest 2: Apply effects');
+    engine.applyEffects({ morale: 10, loyalty: -5, humanity: 15, composure: 0 }, 'test-scene-01', 'test-choice-01');
+    const scores1 = engine.getScores();
+
+    if (scores1.morale === 60 && scores1.loyalty === 45 && scores1.humanity === 65 && scores1.composure === 50) {
+      log('✓ Effects applied correctly', true);
+    } else {
+      log('✗ Effects not applied correctly: ' + JSON.stringify(scores1), false);
+    }
+
+    // Test 3: Score clamping (upper bound)
+    log('\nTest 3: Score clamping (upper bound)');
+    engine.applyEffects({ morale: 100, loyalty: 100, humanity: 100, composure: 100 }, 'test-scene-02', 'test-choice-02');
+    const scores2 = engine.getScores();
+
+    if (scores2.morale === 100 && scores2.loyalty === 100 && scores2.humanity === 100 && scores2.composure === 100) {
+      log('✓ Scores clamped to 100', true);
+    } else {
+      log('✗ Scores not clamped correctly: ' + JSON.stringify(scores2), false);
+    }
+
+    // Test 4: Score clamping (lower bound)
+    log('\nTest 4: Score clamping (lower bound)');
+    engine.init();
+    engine.applyEffects({ morale: -100, loyalty: -100, humanity: -100, composure: -100 }, 'test-scene-03', 'test-choice-03');
+    const scores3 = engine.getScores();
+
+    if (scores3.morale === 0 && scores3.loyalty === 0 && scores3.humanity === 0 && scores3.composure === 0) {
+      log('✓ Scores clamped to 0', true);
+    } else {
+      log('✗ Scores not clamped correctly: ' + JSON.stringify(scores3), false);
+    }
+
+    // Test 5: Reset functionality
+    log('\nTest 5: Reset functionality');
+    engine.init();
+    engine.applyEffects({ morale: 20, loyalty: 15, humanity: 10, composure: 5 }, 'test', 'test');
+    engine.reset();
+    const scoresAfterReset = engine.getScores();
+    const historyAfterReset = engine.getHistory();
+
+    if (scoresAfterReset.morale === 50 && 
+        scoresAfterReset.loyalty === 50 && 
+        scoresAfterReset.humanity === 50 && 
+        scoresAfterReset.composure === 50 &&
+        historyAfterReset.length === 0) {
+      log('✓ Reset clears scores and history', true);
+    } else {
+      log('✗ Reset did not clear state correctly', false);
+    }
+
+    // Test 6: Event emission
+    log('\nTest 6: Event emission');
+    engine.init();
+    eventBus.events = [];
+    engine.applyEffects({ morale: 5, loyalty: 5, humanity: 5, composure: 5 }, 'scene-x', 'choice-y');
+    
+    const emittedEvent = eventBus.events.find(e => e.eventName === 'psychology:scores-updated');
+    if (emittedEvent && emittedEvent.data.sceneId === 'scene-x' && emittedEvent.data.choiceId === 'choice-y') {
+      log('✓ psychology:scores-updated event emitted correctly', true);
+    } else {
+      log('✗ Event not emitted correctly', false);
+    }
+
+    // Test 7: Grade calculation
+    log('\nTest 7: Grade calculation');
+    engine.init();
+    engine.setConfiguration(GRADE_CONFIG, ARCHETYPES);
+    const testScores = { morale: 90, loyalty: 85, humanity: 88, composure: 80 };
+    const grade = engine.calculateGrade(testScores, GRADE_CONFIG);
+    
+    if (grade.letter === 'A' && grade.label === 'Exceptional') {
+      log('✓ Grade calculated correctly (A - Exceptional)', true);
+    } else {
+      log('✗ Grade calculation failed: ' + JSON.stringify(grade), false);
+    }
+
+    // Test 8: Archetype classification
+    log('\nTest 8: Archetype classification');
+    engine.setCurrentRole('japanese-aviator');
+    const testScores2 = { morale: 50, loyalty: 90, humanity: 40, composure: 75 };
+    const archetype = engine.classifyArchetype(testScores2, ARCHETYPES, 'japanese-aviator');
+    
+    if (archetype.name && archetype.description && archetype.dominantTrait === 'loyalty') {
+      log('✓ Archetype classified correctly (dominant: loyalty)', true);
+    } else {
+      log('✗ Archetype classification failed: ' + JSON.stringify(archetype), false);
+    }
+
+    // Test 9: Terminal event handling
+    log('\nTest 9: Terminal event handling');
+    engine.init();
+    engine.setConfiguration(GRADE_CONFIG, ARCHETYPES);
+    engine.setCurrentRole('american-sailor');
+    engine.applyEffects({ morale: 30, loyalty: 25, humanity: 35, composure: 20 }, 'final-scene', 'final-choice');
+    
+    eventBus.events = [];
+    eventBus.emit('scene:terminal', { sceneId: 'terminal-scene' });
+    
+    const gradeEvent = eventBus.events.find(e => e.eventName === 'psychology:grade-calculated');
+    if (gradeEvent && gradeEvent.data.grade && gradeEvent.data.archetype) {
+      log('✓ Terminal event triggers grade/archetype calculation', true);
+    } else {
+      log('✗ Terminal event handling failed', false);
+    }
+
+    log('\n=== All Tests Complete ===');
+  </script>
+</body>
+</html>

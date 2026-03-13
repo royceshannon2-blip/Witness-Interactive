@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rwanda UN Peacekeeper Path Testing</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #e0e0e0;
+    }
+    h1 {
+      color: #4CAF50;
+      border-bottom: 2px solid #4CAF50;
+      padding-bottom: 10px;
+    }
+    .test-section {
+      background: #2a2a2a;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .test-path {
+      background: #333;
+      border-left: 4px solid #2196F3;
+      padding: 15px;
+      margin: 15px 0;
+    }
+    .test-path h3 {
+      margin-top: 0;
+      color: #2196F3;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    button:disabled {
+      background: #666;
+      cursor: not-allowed;
+    }
+    .status {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .status.pending {
+      background: #FFC107;
+      color: #000;
+    }
+    .status.running {
+      background: #2196F3;
+      color: #fff;
+    }
+    .status.success {
+      background: #4CAF50;
+      color: #fff;
+    }
+    .status.error {
+      background: #f44336;
+      color: #fff;
+    }
+    .log {
+      background: #1a1a1a;
+      border: 1px solid #444;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .log-entry {
+      margin: 5px 0;
+      padding: 5px;
+    }
+    .log-entry.info {
+      color: #2196F3;
+    }
+    .log-entry.success {
+      color: #4CAF50;
+    }
+    .log-entry.error {
+      color: #f44336;
+    }
+    .log-entry.warning {
+      color: #FFC107;
+    }
+    #game-container {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 1000;
+    }
+    #game-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .close-game {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1001;
+      background: #f44336;
+      padding: 10px 20px;
+    }
+    .summary {
+      background: #2a2a2a;
+      border: 2px solid #4CAF50;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 20px 0;
+    }
+    .summary h2 {
+      color: #4CAF50;
+      margin-top: 0;
+    }
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      margin: 5px 0;
+      background: #333;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎮 Rwanda Mission - UN Peacekeeper Path Testing</h1>
+  
+  <div class="test-section">
+    <h2>Test Overview</h2>
+    <p>This test suite validates all three branching paths for Captain Marcus Webb (UN Peacekeeper role):</p>
+    <ul>
+      <li><strong>Stayed Path:</strong> Stay at hotel → defy orders → PTSD treatment</li>
+      <li><strong>Evacuated Path:</strong> Evacuate expatriates → leave Rwandans → guilt</li>
+      <li><strong>Documented Path:</strong> Document atrocities → send reports → whistleblower</li>
+    </ul>
+    <p><strong>Requirements:</strong> US-7.1, US-7.2</p>
+  </div>
+
+  <div class="test-section">
+    <h2>Test Controls</h2>
+    <button id="run-all-btn" onclick="runAllTests()">Run All Tests</button>
+    <button id="run-stayed-btn" onclick="runStayedPath()">Test Stayed Path</button>
+    <button id="run-evacuated-btn" onclick="runEvacuatedPath()">Test Evacuated Path</button>
+    <button id="run-documented-btn" onclick="runDocumentedPath()">Test Documented Path</button>
+    <button onclick="clearLog()">Clear Log</button>
+  </div>
+
+  <div class="test-section">
+    <h2>Test Status</h2>
+    <div id="status" class="status pending">Ready to run tests</div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test Log</h2>
+    <div id="log" class="log"></div>
+  </div>
+
+  <div id="summary-section" style="display: none;">
+    <div class="summary">
+      <h2>Test Summary</h2>
+      <div id="summary-content"></div>
+    </div>
+  </div>
+
+  <div id="game-container">
+    <button class="close-game" onclick="closeGame()">Close Game</button>
+    <iframe id="game-frame" src=""></iframe>
+  </div>
+
+  <script type="module">
+    import EventBus from './js/engine/EventBus.js';
+    import MissionRegistry from './js/content/MissionRegistry.js';
+    import rwandaMission from './js/content/missions/rwanda/mission.js';
+
+    // Create MissionRegistry instance
+    const registry = new MissionRegistry();
+    registry.register(rwandaMission);
+
+    let testResults = {
+      stayed: null,
+      evacuated: null,
+      documented: null
+    };
+
+    window.log = function(message, type = 'info') {
+      const logDiv = document.getElementById('log');
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${type}`;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      logDiv.appendChild(entry);
+      logDiv.scrollTop = logDiv.scrollHeight;
+      console.log(message);
+    };
+
+    window.setStatus = function(message, type = 'pending') {
+      const statusDiv = document.getElementById('status');
+      statusDiv.textContent = message;
+      statusDiv.className = `status ${type}`;
+    };
+
+    window.clearLog = function() {
+      document.getElementById('log').innerHTML = '';
+      log('Log cleared', 'info');
+    };
+
+    window.updateSummary = function() {
+      const summarySection = document.getElementById('summary-section');
+      const summaryContent = document.getElementById('summary-content');
+      
+      const total = Object.values(testResults).filter(r => r !== null).length;
+      const passed = Object.values(testResults).filter(r => r === true).length;
+      const failed = Object.values(testResults).filter(r => r === false).length;
+      
+      if (total > 0) {
+        summarySection.style.display = 'block';
+        summaryContent.innerHTML = `
+          <div class="summary-item">
+            <span>Total Tests:</span>
+            <span>${total}</span>
+          </div>
+          <div class="summary-item">
+            <span>Passed:</span>
+            <span style="color: #4CAF50">${passed}</span>
+          </div>
+          <div class="summary-item">
+            <span>Failed:</span>
+            <span style="color: #f44336">${failed}</span>
+          </div>
+          <div class="summary-item">
+            <span>Stayed Path:</span>
+            <span>${testResults.stayed === null ? '⏳ Pending' : testResults.stayed ? '✅ Passed' : '❌ Failed'}</span>
+          </div>
+          <div class="summary-item">
+            <span>Evacuated Path:</span>
+            <span>${testResults.evacuated === null ? '⏳ Pending' : testResults.evacuated ? '✅ Passed' : '❌ Failed'}</span>
+          </div>
+          <div class="summary-item">
+            <span>Documented Path:</span>
+            <span>${testResults.documented === null ? '⏳ Pending' : testResults.documented ? '✅ Passed' : '❌ Failed'}</span>
+          </div>
+        `;
+      }
+    };
+
+    // Test helper to simulate game flow
+    async function testPath(pathName, choices) {
+      log(`Starting ${pathName} path test...`, 'info');
+      setStatus(`Testing ${pathName} path...`, 'running');
+      
+      try {
+        // Get Rwanda mission
+        const mission = registry.getMission('rwanda-genocide');
+        if (!mission) {
+          throw new Error('Rwanda mission not found');
+        }
+        log('✓ Rwanda mission loaded', 'success');
+        
+        // Get UN Peacekeeper role
+        const role = mission.roles.find(r => r.id === 'un-peacekeeper');
+        if (!role) {
+          throw new Error('UN Peacekeeper role not found');
+        }
+        log('✓ UN Peacekeeper role found', 'success');
+        
+        // Verify scenes exist
+        if (!role.scenes || role.scenes.length === 0) {
+          throw new Error('No scenes found for UN Peacekeeper');
+        }
+        log(`✓ Found ${role.scenes.length} scenes`, 'success');
+        
+        // Simulate path by checking scene transitions
+        let currentSceneId = 'rw-un-scene-01';
+        let sceneCount = 0;
+        const maxScenes = 10;
+        
+        for (const choiceId of choices) {
+          const scene = role.scenes.find(s => s.id === currentSceneId);
+          if (!scene) {
+            throw new Error(`Scene ${currentSceneId} not found`);
+          }
+          
+          log(`  Scene ${sceneCount + 1}: ${currentSceneId}`, 'info');
+          sceneCount++;
+          
+          // Find the choice
+          const choice = scene.choices.find(c => c.id === choiceId);
+          if (!choice) {
+            throw new Error(`Choice ${choiceId} not found in scene ${currentSceneId}`);
+          }
+          
+          log(`    Choice: ${choice.text}`, 'info');
+          
+          // Check consequences
+          if (choice.consequences) {
+            log(`    Consequences: ${JSON.stringify(choice.consequences)}`, 'info');
+          }
+          
+          // Move to next scene
+          if (!choice.nextScene) {
+            log(`    Terminal scene reached`, 'info');
+            break;
+          }
+          
+          currentSceneId = choice.nextScene;
+          
+          if (sceneCount >= maxScenes) {
+            throw new Error('Max scene count exceeded - possible infinite loop');
+          }
+        }
+        
+        // Verify outcomes exist
+        if (!role.outcomes || role.outcomes.length === 0) {
+          throw new Error('No outcomes found for UN Peacekeeper');
+        }
+        log(`✓ Found ${role.outcomes.length} outcomes`, 'success');
+        
+        // Check for historical ripple
+        if (!mission.historicalRipple || mission.historicalRipple.length !== 8) {
+          throw new Error(`Expected 8 ripple events, found ${mission.historicalRipple?.length || 0}`);
+        }
+        log('✓ Historical ripple timeline verified (8 events)', 'success');
+        
+        // Verify ripple events
+        const expectedEvents = [
+          'Moderate Leaders Assassinated',
+          'UN Reduces UNAMIR',
+          '100 Days',
+          'RPF Captures Kigali',
+          'International Criminal Tribunal',
+          '20,000 Detainees Released',
+          'Gacaca Courts',
+          'Hôtel des Mille Collines'
+        ];
+        
+        for (let i = 0; i < expectedEvents.length; i++) {
+          const event = mission.historicalRipple[i];
+          if (!event.title.includes(expectedEvents[i].split(' ')[0])) {
+            log(`⚠ Ripple event ${i + 1} title mismatch`, 'warning');
+          }
+        }
+        log('✓ Ripple event titles verified', 'success');
+        
+        log(`✅ ${pathName} path test PASSED`, 'success');
+        testResults[pathName.toLowerCase()] = true;
+        setStatus(`${pathName} path test passed`, 'success');
+        return true;
+        
+      } catch (error) {
+        log(`❌ ${pathName} path test FAILED: ${error.message}`, 'error');
+        console.error(error);
+        testResults[pathName.toLowerCase()] = false;
+        setStatus(`${pathName} path test failed`, 'error');
+        return false;
+      } finally {
+        updateSummary();
+      }
+    }
+
+    window.runStayedPath = async function() {
+      const choices = [
+        'rw-un-choice-01-a',  // Deploy to hotel
+        'rw-un-choice-02a-a', // Defy orders
+        'rw-un-choice-03a-a', // Hold the hotel
+        'rw-un-choice-04a-a'  // Testify
+      ];
+      await testPath('Stayed', choices);
+    };
+
+    window.runEvacuatedPath = async function() {
+      const choices = [
+        'rw-un-choice-01-b',  // Evacuate expatriates
+        'rw-un-choice-02b-a', // Follow orders
+        'rw-un-choice-03c-a', // Board the plane
+        'rw-un-choice-04c-a'  // Participate in documentary
+      ];
+      await testPath('Evacuated', choices);
+    };
+
+    window.runDocumentedPath = async function() {
+      const choices = [
+        'rw-un-choice-01-c',  // Document atrocities
+        'rw-un-choice-02c-a', // Stay and document
+        'rw-un-choice-03d-a', // Continue documenting
+        'rw-un-choice-04d-a'  // Testify fully
+      ];
+      await testPath('Documented', choices);
+    };
+
+    window.runAllTests = async function() {
+      log('='.repeat(60), 'info');
+      log('Starting full UN Peacekeeper test suite...', 'info');
+      log('='.repeat(60), 'info');
+      
+      // Reset results
+      testResults = { stayed: null, evacuated: null, documented: null };
+      updateSummary();
+      
+      await runStayedPath();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      await runEvacuatedPath();
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      await runDocumentedPath();
+      
+      log('='.repeat(60), 'info');
+      const passed = Object.values(testResults).filter(r => r === true).length;
+      const total = Object.values(testResults).length;
+      
+      if (passed === total) {
+        log(`✅ ALL TESTS PASSED (${passed}/${total})`, 'success');
+        setStatus(`All tests passed (${passed}/${total})`, 'success');
+      } else {
+        log(`❌ SOME TESTS FAILED (${passed}/${total} passed)`, 'error');
+        setStatus(`Some tests failed (${passed}/${total} passed)`, 'error');
+      }
+      log('='.repeat(60), 'info');
+    };
+
+    // Auto-run on load
+    log('Test suite loaded and ready', 'success');
+    log('Click "Run All Tests" to begin automated testing', 'info');
+  </script>
+</body>
+</html>

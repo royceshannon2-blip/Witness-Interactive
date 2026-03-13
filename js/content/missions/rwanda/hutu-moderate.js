@@ -267,19 +267,19 @@ Celestin watches you. His son, the one who survived, sits beside him. The crowd 
         id: "rw-hm-choice-04a-a",
         text: "Testify fully, confess everything",
         consequences: { rw_testified_gacaca: true, rw_full_confession: true },
-        nextScene: null
+        nextScene: "outcome"
       },
       {
         id: "rw-hm-choice-04a-b",
         text: "Testify partially, protect some names",
         consequences: { rw_testified_gacaca: true, rw_partial_confession: true },
-        nextScene: null
+        nextScene: "outcome"
       },
       {
         id: "rw-hm-choice-04a-c",
         text: "Deny participation, claim innocence",
         consequences: { rw_denied_participation: true },
-        nextScene: null
+        nextScene: "outcome"
       }
     ]
   },
@@ -302,19 +302,19 @@ Or you could deny it. Claim you were forced. Claim you had no choice. Some perpe
         id: "rw-hm-choice-04b-a",
         text: "Confess fully, accept responsibility",
         consequences: { rw_confessed_complicity: true, rw_accepted_guilt: true },
-        nextScene: null
+        nextScene: "outcome"
       },
       {
         id: "rw-hm-choice-04b-b",
         text: "Claim you were forced, minimize role",
         consequences: { rw_minimized_role: true },
-        nextScene: null
+        nextScene: "outcome"
       },
       {
         id: "rw-hm-choice-04b-c",
         text: "Deny everything, fight the charges",
         consequences: { rw_denied_charges: true },
-        nextScene: null
+        nextScene: "outcome"
       }
     ]
   },
@@ -337,19 +337,19 @@ A gacaca judge visits. "Augustin. We need testimony about what happened in Kigal
         id: "rw-hm-choice-04d-a",
         text: "Testify as a witness, help survivors",
         consequences: { rw_testified_as_witness: true, rw_helped_justice: true },
-        nextScene: null
+        nextScene: "outcome"
       },
       {
         id: "rw-hm-choice-04d-b",
         text: "Refuse, stay silent about the past",
         consequences: { rw_refused_testimony: true, rw_stayed_silent: true },
-        nextScene: null
+        nextScene: "outcome"
       },
       {
         id: "rw-hm-choice-04d-c",
         text: "Relocate again, avoid the questions",
         consequences: { rw_relocated_village: true, rw_avoided_past: true },
-        nextScene: null
+        nextScene: "outcome"
       }
     ]
   }
@@ -423,7 +423,6 @@ The memorial doesn't list your name. The history books don't record you as a vic
   }
 ];
 
-// Export role data
 export default {
   scenes: hutuModerateScenes,
   outcomes: hutuModerateOutcomes

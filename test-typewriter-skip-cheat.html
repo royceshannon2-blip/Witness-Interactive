@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typewriter Skip Cheat Code Test</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #e0e0e0;
+        }
+        
+        .test-container {
+            background: #2a2a2a;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #4CAF50;
+            margin-bottom: 10px;
+        }
+        
+        .instructions {
+            background: #333;
+            padding: 15px;
+            border-left: 4px solid #4CAF50;
+            margin-bottom: 20px;
+        }
+        
+        .narrative-text {
+            font-size: 18px;
+            line-height: 1.6;
+            min-height: 100px;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #1a1a1a;
+            border-radius: 4px;
+        }
+        
+        .choice-buttons {
+            display: none;
+            gap: 10px;
+        }
+        
+        .choice-buttons.visible {
+            display: flex;
+        }
+        
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+        }
+        
+        button:hover {
+            background: #45a049;
+        }
+        
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            background: #333;
+            border-radius: 4px;
+        }
+        
+        .status-item {
+            margin: 5px 0;
+        }
+        
+        .success {
+            color: #4CAF50;
+        }
+        
+        .warning {
+            color: #ff9800;
+        }
+        
+        .error {
+            color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1>🎮 Typewriter Skip Cheat Code Test</h1>
+        
+        <div class="instructions">
+            <strong>Instructions:</strong>
+            <ol>
+                <li>Click "Start Typewriter Animation" below</li>
+                <li>While text is typing, press <strong>Ctrl+Shift+6</strong></li>
+                <li>Text should complete instantly and buttons should appear</li>
+                <li>Try pressing the cheat when no animation is running (should do nothing)</li>
+            </ol>
+        </div>
+        
+        <button id="startBtn">Start Typewriter Animation</button>
+        
+        <div class="narrative-text" id="narrativeText"></div>
+        
+        <div class="choice-buttons" id="choiceButtons">
+            <button onclick="resetTest()">✓ Choices Appeared!</button>
+            <button onclick="resetTest()">Reset Test</button>
+        </div>
+        
+        <div class="status">
+            <div class="status-item">Animation Active: <span id="statusActive" class="warning">No</span></div>
+            <div class="status-item">Characters Typed: <span id="statusChars">0</span></div>
+            <div class="status-item">Last Event: <span id="statusEvent">-</span></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import TypewriterEffect from './js/engine/TypewriterEffect.js';
+        
+        const typewriter = new TypewriterEffect();
+        const narrativeText = document.getElementById('narrativeText');
+        const choiceButtons = document.getElementById('choiceButtons');
+        const startBtn = document.getElementById('startBtn');
+        
+        const statusActive = document.getElementById('statusActive');
+        const statusChars = document.getElementById('statusChars');
+        const statusEvent = document.getElementById('statusEvent');
+        
+        const testText = "December 7, 1941. The morning sun rises over Pearl Harbor, casting golden light across the calm waters. You stand on the deck of the USS Arizona, unaware that in moments, your world will change forever. The distant hum of aircraft engines grows louder...";
+        
+        // Update status display
+        function updateStatus() {
+            const isActive = typewriter.isActive();
+            statusActive.textContent = isActive ? 'Yes' : 'No';
+            statusActive.className = isActive ? 'success' : 'warning';
+            
+            const currentLength = narrativeText.textContent.length;
+            statusChars.textContent = `${currentLength} / ${testText.length}`;
+        }
+        
+        // Monitor text changes
+        const observer = new MutationObserver(() => {
+            updateStatus();
+        });
+        
+        observer.observe(narrativeText, { 
+            characterData: true, 
+            childList: true, 
+            subtree: true 
+        });
+        
+        // Start animation
+        startBtn.addEventListener('click', () => {
+            narrativeText.textContent = '';
+            choiceButtons.classList.remove('visible');
+            statusEvent.textContent = 'Animation started';
+            
+            typewriter.revealText(narrativeText, testText, 30, () => {
+                choiceButtons.classList.add('visible');
+                statusEvent.textContent = 'Animation completed naturally';
+                updateStatus();
+            });
+            
+            updateStatus();
+        });
+        
+        // Dev cheat code: Ctrl+Shift+6 skips typewriter
+        document.addEventListener('keydown', (e) => {
+            if (e.ctrlKey && e.shiftKey && e.key === '^') {
+                if (typewriter.isActive()) {
+                    console.log('[Dev] Typewriter skipped');
+                    statusEvent.textContent = '🎮 Cheat code activated! (Ctrl+Shift+6)';
+                    statusEvent.className = 'success';
+                    typewriter.skipToEnd();
+                } else {
+                    console.log('[Dev] No active typewriter animation');
+                    statusEvent.textContent = 'Cheat pressed but no animation active';
+                    statusEvent.className = 'warning';
+                }
+            }
+        });
+        
+        // Reset test
+        window.resetTest = () => {
+            narrativeText.textContent = '';
+            choiceButtons.classList.remove('visible');
+            statusEvent.textContent = 'Test reset';
+            statusEvent.className = '';
+            updateStatus();
+        };
+        
+        // Initial status
+        updateStatus();
+    </script>
+</body>
+</html>

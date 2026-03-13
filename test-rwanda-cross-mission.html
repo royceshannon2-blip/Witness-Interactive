@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cross-Mission Integration Test</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background: #1a1a1a;
+      color: #e0e0e0;
+    }
+    h1 { color: #4CAF50; }
+    h2 { color: #2196F3; border-bottom: 2px solid #2196F3; padding-bottom: 10px; }
+    .test-section {
+      background: #2a2a2a;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 8px;
+      border-left: 4px solid #4CAF50;
+    }
+    .pass { color: #4CAF50; font-weight: bold; }
+    .fail { color: #f44336; font-weight: bold; }
+    .info { color: #2196F3; }
+    pre {
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 4px;
+      overflow-x: auto;
+      border: 1px solid #444;
+    }
+    button {
+      background: #2196F3;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 10px 5px;
+    }
+    button:hover { background: #1976D2; }
+    #results { margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h1>🔬 Cross-Mission Integration Test</h1>
+  <p class="info">Testing Rwanda + Pearl Harbor mission coexistence</p>
+
+  <div class="test-section">
+    <h2>Test 1: Flag Namespace Isolation</h2>
+    <p>Verify that ph_ and rw_ flags don't collide</p>
+    <button onclick="testFlagIsolation()">Run Test</button>
+    <div id="flag-results"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 2: Mission Metadata Validation</h2>
+    <p>Verify both missions are registered correctly</p>
+    <button onclick="testMissionMetadata()">Run Test</button>
+    <div id="metadata-results"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 3: Scene ID Prefix Validation</h2>
+    <p>Verify scene IDs use correct prefixes (ph_ vs rw_)</p>
+    <button onclick="testSceneIdPrefixes()">Run Test</button>
+    <div id="scene-results"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 4: Ripple Event Validation</h2>
+    <p>Verify both missions have distinct ripple events</p>
+    <button onclick="testRippleEvents()">Run Test</button>
+    <div id="ripple-results"></div>
+  </div>
+
+  <button onclick="runAllTests()" style="background: #4CAF50; font-size: 18px;">▶ Run All Tests</button>
+
+  <script type="module">
+    // Import missions
+    import pearlHarborMission from './js/content/missions/pearl-harbor/mission.js';
+    import rwandaMission from './js/content/missions/rwanda/mission.js';
+
+    window.pearlHarborMission = pearlHarborMission;
+    window.rwandaMission = rwandaMission;
+
+    window.testFlagIsolation = function() {
+      const resultsDiv = document.getElementById('flag-results');
+      let html = '<h3>Results:</h3>';
+      let allPassed = true;
+
+      // Simulate ConsequenceSystem
+      const flags = {};
+      
+      // Set Pearl Harbor flags
+      flags['ph_sounded_alarm'] = true;
+      flags['ph_fought_fires'] = true;
+      flags['ph_abandoned_ship'] = false;
+      
+      // Set Rwanda flags
+      flags['rw_helped_celestin'] = true;
+      flags['rw_misdirected_militia'] = true;
+      flags['rw_staffed_roadblock'] = false;
+
+      // Test 1: No collisions
+      const phFlags = Object.keys(flags).filter(k => k.startsWith('ph_'));
+      const rwFlags = Object.keys(flags).filter(k => k.startsWith('rw_'));
+      
+      html += `<p>Pearl Harbor flags: ${phFlags.length} (${phFlags.join(', ')})</p>`;
+      html += `<p>Rwanda flags: ${rwFlags.length} (${rwFlags.join(', ')})</p>`;
+      
+      if (phFlags.length > 0 && rwFlags.length > 0) {
+        html += '<p class="pass">✓ Flag namespaces are isolated</p>';
+      } else {
+        html += '<p class="fail">✗ Flag namespace isolation failed</p>';
+        allPassed = false;
+      }
+
+      // Test 2: No shared keys
+      const sharedKeys = phFlags.filter(k => rwFlags.includes(k));
+      if (sharedKeys.length === 0) {
+        html += '<p class="pass">✓ No flag collisions detected</p>';
+      } else {
+        html += `<p class="fail">✗ Flag collisions: ${sharedKeys.join(', ')}</p>`;
+        allPassed = false;
+      }
+
+      html += `<pre>${JSON.stringify(flags, null, 2)}</pre>`;
+      html += allPassed ? '<h3 class="pass">ALL TESTS PASSED ✓</h3>' : '<h3 class="fail">SOME TESTS FAILED ✗</h3>';
+      resultsDiv.innerHTML = html;
+    };
+
+    window.testMissionMetadata = function() {
+      const resultsDiv = document.getElementById('metadata-results');
+      let html = '<h3>Results:</h3>';
+      let allPassed = true;
+
+      // Test Pearl Harbor mission
+      html += '<h4>Pearl Harbor Mission:</h4>';
+      html += `<p>ID: ${pearlHarborMission.id}</p>`;
+      html += `<p>Title: ${pearlHarborMission.title}</p>`;
+      html += `<p>Date: ${pearlHarborMission.historicalDate}</p>`;
+      html += `<p>Roles: ${pearlHarborMission.roles.length}</p>`;
+      html += `<p>Ripple Events: ${pearlHarborMission.historicalRipple.length}</p>`;
+
+      if (pearlHarborMission.id === 'pearl-harbor' && pearlHarborMission.roles.length === 3) {
+        html += '<p class="pass">✓ Pearl Harbor metadata valid</p>';
+      } else {
+        html += '<p class="fail">✗ Pearl Harbor metadata invalid</p>';
+        allPassed = false;
+      }
+
+      // Test Rwanda mission
+      html += '<h4>Rwanda Mission:</h4>';
+      html += `<p>ID: ${rwandaMission.id}</p>`;
+      html += `<p>Title: ${rwandaMission.title}</p>`;
+      html += `<p>Date: ${rwandaMission.historicalDate}</p>`;
+      html += `<p>Roles: ${rwandaMission.roles.length}</p>`;
+      html += `<p>Ripple Events: ${rwandaMission.historicalRipple.length}</p>`;
+
+      if (rwandaMission.id === 'rwanda-genocide' && rwandaMission.roles.length === 3) {
+        html += '<p class="pass">✓ Rwanda metadata valid</p>';
+      } else {
+        html += '<p class="fail">✗ Rwanda metadata invalid</p>';
+        allPassed = false;
+      }
+
+      // Test mission IDs are unique
+      if (pearlHarborMission.id !== rwandaMission.id) {
+        html += '<p class="pass">✓ Mission IDs are unique</p>';
+      } else {
+        html += '<p class="fail">✗ Mission ID collision detected</p>';
+        allPassed = false;
+      }
+
+      html += allPassed ? '<h3 class="pass">ALL TESTS PASSED ✓</h3>' : '<h3 class="fail">SOME TESTS FAILED ✗</h3>';
+      resultsDiv.innerHTML = html;
+    };
+
+
+    window.testSceneIdPrefixes = function() {
+      const resultsDiv = document.getElementById('scene-results');
+      let html = '<h3>Results:</h3>';
+      let allPassed = true;
+
+      // Test Pearl Harbor scene IDs
+      const phScenes = [];
+      pearlHarborMission.roles.forEach(role => {
+        role.scenes.forEach(scene => phScenes.push(scene.id));
+      });
+
+      const phPrefixes = ['ph-ja-', 'ph-as-', 'ph-ac-'];
+      const phValid = phScenes.every(id => phPrefixes.some(prefix => id.startsWith(prefix)));
+
+      html += `<p>Pearl Harbor scenes: ${phScenes.length}</p>`;
+      html += `<p>Sample IDs: ${phScenes.slice(0, 3).join(', ')}</p>`;
+      
+      if (phValid) {
+        html += '<p class="pass">✓ Pearl Harbor scene IDs use correct prefixes</p>';
+      } else {
+        html += '<p class="fail">✗ Pearl Harbor scene ID prefix violation</p>';
+        allPassed = false;
+      }
+
+      // Test Rwanda scene IDs
+      const rwScenes = [];
+      rwandaMission.roles.forEach(role => {
+        role.scenes.forEach(scene => rwScenes.push(scene.id));
+      });
+
+      const rwPrefixes = ['rw-hm-', 'rw-ts-', 'rw-un-'];
+      const rwValid = rwScenes.every(id => rwPrefixes.some(prefix => id.startsWith(prefix)));
+
+      html += `<p>Rwanda scenes: ${rwScenes.length}</p>`;
+      html += `<p>Sample IDs: ${rwScenes.slice(0, 3).join(', ')}</p>`;
+      
+      if (rwValid) {
+        html += '<p class="pass">✓ Rwanda scene IDs use correct prefixes</p>';
+      } else {
+        html += '<p class="fail">✗ Rwanda scene ID prefix violation</p>';
+        allPassed = false;
+      }
+
+      // Test no scene ID collisions
+      const allScenes = [...phScenes, ...rwScenes];
+      const uniqueScenes = new Set(allScenes);
+      
+      if (allScenes.length === uniqueScenes.size) {
+        html += '<p class="pass">✓ No scene ID collisions</p>';
+      } else {
+        html += '<p class="fail">✗ Scene ID collisions detected</p>';
+        allPassed = false;
+      }
+
+      html += allPassed ? '<h3 class="pass">ALL TESTS PASSED ✓</h3>' : '<h3 class="fail">SOME TESTS FAILED ✗</h3>';
+      resultsDiv.innerHTML = html;
+    };
+
+    window.testRippleEvents = function() {
+      const resultsDiv = document.getElementById('ripple-results');
+      let html = '<h3>Results:</h3>';
+      let allPassed = true;
+
+      // Test Pearl Harbor ripple events
+      const phRipple = pearlHarborMission.historicalRipple;
+      html += `<p>Pearl Harbor ripple events: ${phRipple.length}</p>`;
+      html += `<p>First event: ${phRipple[0].title} (${phRipple[0].date})</p>`;
+      html += `<p>Last event: ${phRipple[phRipple.length - 1].title}</p>`;
+
+      if (phRipple.length === 8) {
+        html += '<p class="pass">✓ Pearl Harbor has 8 ripple events</p>';
+      } else {
+        html += `<p class="fail">✗ Pearl Harbor ripple count: ${phRipple.length} (expected 8)</p>`;
+        allPassed = false;
+      }
+
+      // Test Rwanda ripple events
+      const rwRipple = rwandaMission.historicalRipple;
+      html += `<p>Rwanda ripple events: ${rwRipple.length}</p>`;
+      html += `<p>First event: ${rwRipple[0].title} (${rwRipple[0].date})</p>`;
+      html += `<p>Last event: ${rwRipple[rwRipple.length - 1].title}</p>`;
+
+      if (rwRipple.length === 8) {
+        html += '<p class="pass">✓ Rwanda has 8 ripple events</p>';
+      } else {
+        html += `<p class="fail">✗ Rwanda ripple count: ${rwRipple.length} (expected 8)</p>`;
+        allPassed = false;
+      }
+
+      // Test ripple event IDs are unique
+      const phRippleIds = phRipple.map(e => e.id);
+      const rwRippleIds = rwRipple.map(e => e.id);
+      const allRippleIds = [...phRippleIds, ...rwRippleIds];
+      const uniqueRippleIds = new Set(allRippleIds);
+
+      if (allRippleIds.length === uniqueRippleIds.size) {
+        html += '<p class="pass">✓ No ripple event ID collisions</p>';
+      } else {
+        html += '<p class="fail">✗ Ripple event ID collisions detected</p>';
+        allPassed = false;
+      }
+
+      html += allPassed ? '<h3 class="pass">ALL TESTS PASSED ✓</h3>' : '<h3 class="fail">SOME TESTS FAILED ✗</h3>';
+      resultsDiv.innerHTML = html;
+    };
+
+    window.runAllTests = function() {
+      testFlagIsolation();
+      testMissionMetadata();
+      testSceneIdPrefixes();
+      testRippleEvents();
+    };
+  </script>
+</body>
+</html>
