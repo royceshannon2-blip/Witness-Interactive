@@ -214,6 +214,16 @@ async function initializeApp() {
         }
     });
     
+    // Dev cheat code: Ctrl+Shift+6 skips typewriter animation instantly
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key === '^') {
+            if (typewriterEffect.isActive()) {
+                console.log('[Dev] Typewriter skipped');
+                typewriterEffect.skipToEnd();
+            }
+        }
+    });
+    
     // 17. Set up choice:made handler to transition scenes
     eventBus.on('choice:made', (data) => {
         const { nextSceneId, consequences } = data;
@@ -225,8 +235,22 @@ async function initializeApp() {
         console.log(`✓ Transitioning to scene "${nextSceneId}"`, consequences);
     });
     
+    // 18. Set up role:complete handler to trigger outcome generation
+    eventBus.on('role:complete', (data) => {
+        const { missionId, roleId } = data;
+        
+        // Emit scene:terminal to trigger outcome generation
+        eventBus.emit('scene:terminal', {
+            missionId,
+            roleId,
+            role: roleId
+        });
+        
+        console.log(`✓ Role complete: ${roleId} in ${missionId}`);
+    });
+    
     // Update loading progress
-    eventBus.emit('module:progress', { percent: 75 });
+    eventBus.emit('module:progress', { percent: 80 });
     
     // Verify no global variables from our engine components
     const suspiciousGlobals = Object.keys(window).filter(key => {
