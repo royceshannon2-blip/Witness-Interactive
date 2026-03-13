@@ -214,6 +214,16 @@ async function initializeApp() {
         }
     });
     
+    // Dev cheat code: Ctrl+Shift+6 skips typewriter animation instantly
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.shiftKey && e.key === '^') {
+            if (typewriterEffect.isActive()) {
+                console.log('[Dev] Typewriter skipped');
+                typewriterEffect.skipToEnd();
+            }
+        }
+    });
+    
     // 17. Set up choice:made handler to transition scenes
     eventBus.on('choice:made', (data) => {
         const { nextSceneId, consequences } = data;
