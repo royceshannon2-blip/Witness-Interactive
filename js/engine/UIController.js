@@ -218,7 +218,8 @@ class UIController {
     if (!mission) return null;
     const role = mission.roles.find(r => r.id === this.currentRoleId);
     if (!role || !role.outcomes) return null;
-    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes);
+    const survivalResult = this.consequenceSystem.determineSurvival(this.currentRoleId);
+    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes, survivalResult.survived);
     if (!outcomeId) return null;
     return role.outcomes.find(o => o.id === outcomeId);
   }
@@ -757,7 +758,8 @@ class UIController {
       return;
     }
     
-    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes);
+    const survivalResult = this.consequenceSystem.determineSurvival(this.currentRoleId);
+    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes, survivalResult.survived);
     if (!outcomeId) {
       outcomeResultContainer.innerHTML = '<p>Error: Unable to determine outcome based on your choices.</p>';
       return;
