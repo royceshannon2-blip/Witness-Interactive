@@ -1,6 +1,6 @@
 {
-  "version": "1.5.0",
-  "date": "2026-03-15",
+  "version": "1.5.1",
+  "date": "2026-03-12",
   "new": [
     "New mission: Rwanda, 1994 - Experience the genocide from three perspectives",
     "Play as Hutu Moderate, Tutsi Survivor, or UN Peacekeeper",
@@ -8,5 +8,8 @@
     "Gacaca courts and post-genocide justice themes",
     "True branching where your choices lead to genuinely different scenes"
   ],
-  "fixed": []
+  "fixed": [
+    "Fixed text formatting issues in Hutu Moderate storyline that caused infinite loops",
+    "Improved narrative text readability across all Rwanda scenes"
+  ]
 }
