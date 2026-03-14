@@ -240,7 +240,7 @@ class MissionBriefing {
   <div class="pc-body">
     <div class="pc-photo-col">
       <div class="pc-photo-box">
-        <img src="images/rwanda-tutsi-photo.jpg" alt="Identity photo" class="pc-photo-img" />
+        <img src="images/rwanda-tutsi-photo.png" alt="Identity photo" class="pc-photo-img" />
         <div class="pc-photo-label">${t.photoLabel}</div>
       </div>
       <svg class="pc-stamp" viewBox="0 0 44 44">
@@ -308,7 +308,7 @@ class MissionBriefing {
   <div class="pc-body">
     <div class="pc-photo-col">
       <div class="pc-photo-box">
-        <img src="images/rwanda-hutu-photo.jpg" alt="Identity photo" class="pc-photo-img" />
+        <img src="images/rwanda-hutu-photo.png" alt="Identity photo" class="pc-photo-img" />
         <div class="pc-photo-label">${t.photoLabel}</div>
       </div>
       <svg class="pc-stamp" viewBox="0 0 44 44">
@@ -340,7 +340,7 @@ class MissionBriefing {
   <div class="pc-body" style="padding-left:18px;">
     <div class="pc-photo-col">
       <div class="pc-photo-box pc-photo-un">
-        <img src="images/rwanda-un-photo.jpg" alt="Personnel photo" class="pc-photo-img" />
+        <img src="images/rwanda-un-photo.png" alt="Personnel photo" class="pc-photo-img" />
         <div class="pc-photo-label" style="color:#3a5a7a;">${t.photoLabel}</div>
       </div>
       <svg class="pc-stamp" viewBox="0 0 44 44">
