@@ -72,7 +72,7 @@ class UIController {
     this.eventBus.on('sound:muted', this.handleSoundMuted.bind(this));
     this.eventBus.on('narrator:muted', this.handleNarratorMuted.bind(this));
     this.eventBus.on('scene:error', () => {
-      console.warn('UIController: scene:error received ΓÇö re-rendering current scene');
+      console.warn('UIController: scene:error received — re-rendering current scene');
       if (this.currentSceneData && this.currentSceneData.scene) {
         this.renderScene(
           this.currentSceneData.scene,
@@ -118,7 +118,7 @@ class UIController {
       
       const narratorIcon = document.createElement('span');
       narratorIcon.className = 'narrator-icon';
-      narratorIcon.textContent = '≡ƒöè';
+      narratorIcon.textContent = '🔊';
       narratorToggleButton.appendChild(narratorIcon);
       
       const soundToggleButton = document.getElementById('sound-toggle');
@@ -157,10 +157,10 @@ class UIController {
     if (!soundIcon) return;
     
     if (muted) {
-      soundIcon.textContent = '≡ƒöç';
+      soundIcon.textContent = '🔇';
       soundToggleButton.setAttribute('aria-label', 'Sound is muted. Click to unmute.');
     } else {
-      soundIcon.textContent = '≡ƒöè';
+      soundIcon.textContent = '🔊';
       soundToggleButton.setAttribute('aria-label', 'Sound is on. Click to mute.');
     }
   }
@@ -173,11 +173,11 @@ class UIController {
     if (!narratorIcon) return;
     
     if (muted) {
-      narratorIcon.textContent = '≡ƒöç';
+      narratorIcon.textContent = '🔇';
       narratorToggleButton.setAttribute('aria-label', 'Narrator is muted. Click to unmute.');
       narratorToggleButton.classList.add('muted');
     } else {
-      narratorIcon.textContent = '≡ƒöè';
+      narratorIcon.textContent = '🔊';
       narratorToggleButton.setAttribute('aria-label', 'Narrator is on. Click to mute.');
       narratorToggleButton.classList.remove('muted');
     }
