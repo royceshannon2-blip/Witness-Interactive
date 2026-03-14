@@ -128,7 +128,7 @@ const rwandaMission = {
     {
       id: 'rw-ripple-08',
       date: '1994-Present',
-      title: 'HÃ´tel des Mille Collines Legacy',
+      title: 'Hôtel des Mille Collines Legacy',
       description: 'The hotel where 1,200 people sheltered during the genocide became a symbol of survival and moral complexity. Paul Rusesabagina, the manager, was later convicted in Rwanda of terrorism charges. Debates over heroism, complicity, and memory continue.',
       apTheme: 'perspective',
       animationDelay: 8000
