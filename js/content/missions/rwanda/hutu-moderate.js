@@ -382,11 +382,13 @@ Rwanda's reconciliation asks you to live next to people who made different choic
       historicalRate: "Thousands of Hutu moderates who sheltered Tutsi or refused to participate were killed during the genocide",
       yourChoices: "You helped Celestin hide, but at the roadblock you followed orders. The militia discovered your earlier choice."
     },
-    epilogue: `You didn't survive. You helped Celestin at first, hid him, misdirected the militia. But at the roadblock, you followed orders. You waved people through to their deaths. The militia commander praised you. Then someone recognized you. "That's Augustin. He hid a Tutsi last week." The commander's face changed. "You're a traitor." They killed you at the roadblock you'd been staffing. Quick. Brutal. An example.
+    epilogue: `You were killed. Hutu moderates who refused to participate were among the first targets of the genocide—killed before the mass killing of Tutsi began, specifically because they represented an alternative. The Presidential Guard's first actions on April 7th were to assassinate Prime Minister Agathe Uwilingiyimana and other Hutu politicians who opposed Habyarimana's extremist faction.
 
-Celestin survived, he'd already fled when you were discovered. Your family fled to Zaire. When the gacaca courts began, survivors testified about you. Some said you helped. Some said you complied. Both were true. The memorial lists your name in a complicated category: Hutu moderates killed after initial resistance. Your children grew up with that ambiguity.
+The logic was deliberate: remove Hutu who might refuse, organize, or protect others before they could act. Rwanda's prefects, communal secretaries, and local officials who resisted were killed at roadblocks or in their homes in the first 48 hours. Lists of these individuals had been compiled in advance—the same lists referenced in General Dallaire's genocide fax, which he sent to UN headquarters in January 1994 and which New York ignored.
 
-You tried to help and then you didn't. You chose risk and then you chose safety. Neither choice saved you. Most people who made mixed choices like yours survived by being less visible. You weren't lucky. You carried those contradictions to the end.`
+You were on a list. Your refusal was noted. This is documented history: over the 100 days, approximately ten thousand Hutu were killed for refusing to participate or for sheltering Tutsi. They are part of the genocide's total death toll, though they appear in the historical record less clearly than the Tutsi dead.
+
+Celestin survived. He testified at gacaca in 2008. He named you as someone who refused. The court noted it. Your family knows.`
   },
 
   {

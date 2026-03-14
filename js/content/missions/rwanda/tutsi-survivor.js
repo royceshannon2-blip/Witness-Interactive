@@ -665,13 +665,15 @@ When the researcher came in 2009 asking for your testimony for the school curric
       historicalRate: "Churches became massacre sites across Rwanda. An estimated 800,000 Tutsi died in 100 days—approximately 75% of the Tutsi population.",
       yourChoices: "You went to the church because it was supposed to be safe. Father Michel said so. It had always meant sanctuary."
     },
-    epilogue: `You didn't survive. The church was supposed to be sanctuary. Father Michel said so. He was killed at the door. The militia poured in with machetes and grenades and you tried to run but there was nowhere to go.
+    epilogue: `You died at the church. So did approximately three hundred other people who came there for the same reason you did: because churches had always meant sanctuary, and the logic of the situation pointed here. You were not naive. You were reasoning correctly from every prior experience of what churches meant. The genocide deliberately inverted that logic.
 
-Your name is on the wall. The church became a memorial after the RPF arrived—clothes preserved, skulls on shelves, three hundred names carved into stone. Students visit. They learn that across Rwanda, churches became massacre sites. That sanctuary was weaponized. That tens of thousands died in places of worship in a single week.
+Tutsi gathered at churches across Rwanda in April 1994 because they were the largest enclosed spaces in most communities, because they had historically offered protection during earlier waves of violence, and because priests and pastors told people to come. In many cases, local clergy cooperated with the militia. In others, they resisted and were killed first. Father Michel was killed at the door before the militia entered.
 
-Marie survived. She testified at gacaca in 2006. She said you were her closest friend. She said you trusted people—really trusted them, not naively, but as a choice you made again and again because the alternative was to stop believing anything meant anything. She said she gave you her identity card before she left that morning. She thinks about it every April 7th.
+Over 200 churches became massacre sites during the 100 days. The pattern was not accidental — gathering places were targeted because they concentrated people who would otherwise be spread across thousands of hiding spots. Roadblocks controlled movement. Churches concentrated targets.
 
-Your story is in the memorial's educational materials. Not your name—there are too many names and the guide can only carry so many. But your path: the girl who went to the church because she believed it was safe, because that had always meant something. The guide tells visitors that trust was weaponized during the genocide. That the places people ran to became the places they were found. That understanding this is part of understanding what happened.`
+Your name is on the memorial wall. The church itself was preserved as a genocide site: clothes, skulls, three hundred names carved in stone. Students visit. Researchers study the spatial logic — why gathering places became killing grounds, how the architecture of sanctuary became the architecture of massacre. Understanding this is part of understanding how genocide works: not as random violence, but as organized logic applied to human behavior.
+
+Marie survived. She testified at gacaca in 2006.`
   },
 
   {
