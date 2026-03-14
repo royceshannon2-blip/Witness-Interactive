@@ -43,9 +43,9 @@ export default [
     ],
     correctIndex: 0,
     explanations: [
-      "Correct. Identity cards made ethnic targeting systematic and efficient. At roadblocks, militia checked cards and killed those marked 'Tutsi.' This bureaucratic systemâ€”inherited from Belgian colonial ruleâ€”transformed administrative documents into instruments of mass murder. Survivors testified that showing a Tutsi card meant immediate death.",
+      "Correct. Identity cards made ethnic targeting systematic and efficient. At roadblocks, militia checked cards and killed those marked 'Tutsi.' This bureaucratic system - inherited from Belgian colonial rule - transformed administrative documents into instruments of mass murder. Survivors testified that showing a Tutsi card meant immediate death.",
       "Incorrect. During the genocide, cards were not used for census purposes. They were used at roadblocks to identify and kill Tutsi. The systematic checking of cards made the genocide more efficient and widespread.",
-      "Incorrect. Cards did the oppositeâ€”they exposed Tutsi to danger. Showing a Tutsi identity card at a roadblock typically resulted in death. Some Tutsi survived by using false Hutu cards or hiding their real cards.",
+      "Incorrect. Cards did the opposite - they exposed Tutsi to danger. Showing a Tutsi identity card at a roadblock typically resulted in death. Some Tutsi survived by using false Hutu cards or hiding their real cards.",
       "Incorrect. While militia sometimes used physical stereotypes, identity cards were systematically checked at roadblocks. Many Tutsi and Hutu were physically indistinguishable, making cards the primary identification method. Survivors testified that cards determined life or death."
     ],
     apTheme: "complexity"
@@ -64,7 +64,7 @@ export default [
     correctIndex: 1,
     explanations: [
       "Incorrect. Not all Hutu were equally guilty. Some actively rescued Tutsi and were killed for it. Others fled or hid. Collective guilt ignores the moral complexity and individual choices people made under extreme pressure.",
-      "Correct. The 'bystander' category is problematic because inaction often enabled violence. Hutu who staffed roadblocks, attended rallies, or simply didn't intervene contributed to the genocide's success. Gacaca courts later struggled with thisâ€”how to judge those who didn't kill but didn't help? The line between passive complicity and active participation is morally and legally complex.",
+      "Correct. The 'bystander' category is problematic because inaction often enabled violence. Hutu who staffed roadblocks, attended rallies, or simply didn't intervene contributed to the genocide's success. Gacaca courts later struggled with this - how to judge those who didn't kill but didn't help? The line between passive complicity and active participation is morally and legally complex.",
       "Incorrect. While participation was widespread, not all Hutu actively killed. Many fled, hid, or tried to avoid involvement. Some were killed for refusing to participate. The genocide's complexity includes the range of Hutu responses, not just active killing.",
       "Incorrect. The bystander concept applies to both Rwandans and international actors. Within Rwanda, many Hutu occupied a gray area between perpetrator and rescuer. Internationally, countries like the US and France were criticized as bystanders who could have intervened but didn't."
     ],
@@ -86,7 +86,7 @@ export default [
     correctIndex: 1,
     explanations: [
       "Incorrect. Churches were not RPF military sites. They were civilian sanctuaries where Tutsi sought protection based on historical precedent. The RPF was advancing from the north; churches were targeted by Interahamwe militia and government forces.",
-      "Correct. Genocides exploit trust by weaponizing institutions victims rely on. Tutsi fled to churches because they had historically been safe. Militia and even some priests betrayed this trust, turning sanctuaries into massacre sites. This pattern appears in other genocidesâ€”trusted institutions become traps when perpetrators exploit victims' reliance on traditional safety.",
+      "Correct. Genocides exploit trust by weaponizing institutions victims rely on. Tutsi fled to churches because they had historically been safe. Militia and even some priests betrayed this trust, turning sanctuaries into massacre sites. This pattern appears in other genocides - trusted institutions become traps when perpetrators exploit victims' reliance on traditional safety.",
       "Incorrect. While churches were physically easy to surround, the symbolic betrayal was crucial. Victims went to churches specifically because they trusted them as sanctuaries. The exploitation of this trust made the genocide more effective and psychologically devastating.",
       "Incorrect. Not all religious leaders supported the genocide. Some priests and pastors were killed for protecting Tutsi. However, some clergy did participate or enable killings. The Catholic Church later apologized for members who failed to protect victims or actively participated."
     ],
@@ -105,10 +105,10 @@ export default [
     ],
     correctIndex: 1,
     explanations: [
-      "Incorrect. Who shot down the plane remains disputedâ€”both Hutu extremists and RPF have been accused. Regardless, the genocide was pre-planned. Dallaire's genocide fax (January 1994) warned of arms caches and hit lists months before the plane crash. The crash was a trigger, not the cause.",
-      "Correct. Hutu Power extremists opposed the Arusha Accords because they required power-sharing with the RPF and Tutsi political parties. During the accords' implementation period, extremists stockpiled weapons, created hit lists, and used RTLM to spread anti-Tutsi propaganda. The genocide was planned during 'peace'â€”the accords failed because hardliners never intended to honor them.",
+      "Incorrect. Who shot down the plane remains disputed - both Hutu extremists and RPF have been accused. Regardless, the genocide was pre-planned. Dallaire's genocide fax (January 1994) warned of arms caches and hit lists months before the plane crash. The crash was a trigger, not the cause.",
+      "Correct. Hutu Power extremists opposed the Arusha Accords because they required power-sharing with the RPF and Tutsi political parties. During the accords' implementation period, extremists stockpiled weapons, created hit lists, and used RTLM to spread anti-Tutsi propaganda. The genocide was planned during 'peace' - the accords failed because hardliners never intended to honor them.",
       "Incorrect. The Arusha Accords were signed in August 1993. UNAMIR was deployed to monitor their implementation. The accords existed but were undermined by extremists who opposed power-sharing and used the transition period to plan violence.",
-      "Incorrect. UNAMIR was deployed to monitor the accords, but its mandate was limited to peacekeeping, not enforcement. The failure wasn't refusal to enforceâ€”it was that the mandate didn't allow intervention to stop mass violence. Dallaire requested a stronger mandate but was denied."
+      "Incorrect. UNAMIR was deployed to monitor the accords, but its mandate was limited to peacekeeping, not enforcement. The failure wasn't refusal to enforce - it was that the mandate didn't allow intervention to stop mass violence. Dallaire requested a stronger mandate but was denied."
     ],
     apTheme: "causation"
   },
@@ -147,8 +147,8 @@ export default [
     ],
     correctIndex: 1,
     explanations: [
-      "Incorrect. The intelligence came from a high-level informant within the Interahamwe and was considered credible. The denial wasn't about reliabilityâ€”it was about mandate limitations and political unwillingness to expand UNAMIR's role.",
-      "Correct. UNAMIR's mandate was peacekeeping (monitoring the Arusha Accords), not peace enforcement. Seizing weapons would require a Chapter VII mandate allowing force. The UN denied Dallaire's request, instructing him to share intelligence with President Habyarimana insteadâ€”the very government planning the genocide. This reveals how restrictive mandates prevented intervention.",
+      "Incorrect. The intelligence came from a high-level informant within the Interahamwe and was considered credible. The denial wasn't about reliability - it was about mandate limitations and political unwillingness to expand UNAMIR's role.",
+      "Correct. UNAMIR's mandate was peacekeeping (monitoring the Arusha Accords), not peace enforcement. Seizing weapons would require a Chapter VII mandate allowing force. The UN denied Dallaire's request, instructing him to share intelligence with President Habyarimana instead - the very government planning the genocide. This reveals how restrictive mandates prevented intervention.",
       "Incorrect. The fax reached UN headquarters and was reviewed by officials including Kofi Annan (then head of peacekeeping). The Security Council was informed. The denial was deliberate policy, not a communication failure.",
       "Incorrect. The UN explicitly denied Dallaire's request. He was ordered not to seize weapons and to inform Rwandan authorities instead. Dallaire followed orders. The failure was the UN's restrictive mandate and political unwillingness to act, not Dallaire's inaction."
     ],
@@ -169,8 +169,8 @@ export default [
     explanations: [
       "Incorrect. While mandates can be inadequate, they're not designed to fail. They reflect political compromises in the Security Council. Countries debate how much intervention is justified, how much it costs, and whether it violates sovereignty. Restrictive mandates result from political caution, not conspiracy.",
       "Correct. UNAMIR's restrictive mandate reflected Security Council members' unwillingness to commit resources or risk troops for Rwanda. After Somalia (1993), the US opposed robust peacekeeping. France had ties to the Hutu government. The mandate prioritized state sovereignty and political caution over civilian protection. This reveals a core tension: peacekeeping requires political will, not just troops.",
-      "Incorrect. Individual peacekeepers acting independently couldn't stop a nationwide genocide. Some peacekeepers did defy orders to protect enclaves (like the hotel), saving thousands. But stopping the genocide required a robust mandate, more troops, and political willâ€”none of which existed. Blaming peacekeepers ignores systemic failures.",
-      "Incorrect. Peacekeepers are trained for combat. UNAMIR included experienced soldiers. The issue wasn't trainingâ€”it was mandate and numbers. Dallaire estimated 5,000 well-armed troops with a robust mandate could have stopped the genocide. He had 2,500, then 270, with orders not to intervene."
+      "Incorrect. Individual peacekeepers acting independently couldn't stop a nationwide genocide. Some peacekeepers did defy orders to protect enclaves (like the hotel), saving thousands. But stopping the genocide required a robust mandate, more troops, and political will - none of which existed. Blaming peacekeepers ignores systemic failures.",
+      "Incorrect. Peacekeepers are trained for combat. UNAMIR included experienced soldiers. The issue wasn't training - it was mandate and numbers. Dallaire estimated 5,000 well-armed troops with a robust mandate could have stopped the genocide. He had 2,500, then 270, with orders not to intervene."
     ],
     apTheme: "complexity"
   },
@@ -187,10 +187,10 @@ export default [
     ],
     correctIndex: 1,
     explanations: [
-      "Incorrect. The Genocide Convention applies globally, not just to Europe. It was created in response to the Holocaust but covers genocide anywhere. Rwanda clearly fell under its scopeâ€”the ICTR later prosecuted perpetrators for genocide under this convention.",
-      "Correct. The US and other countries deliberately avoided calling Rwanda a 'genocide' during the 100 days. Spokespersons said 'acts of genocide' instead. This semantic evasion was politicalâ€”acknowledging genocide would trigger legal obligations to intervene under the convention. Countries prioritized avoiding intervention over fulfilling legal duties. This reveals how international law depends on political will to enforce.",
-      "Incorrect. The Genocide Convention remains in force today. It's a permanent international treaty. Countries that signed it (including the US, France, UK) were legally bound in 1994. The issue wasn't expirationâ€”it was unwillingness to act.",
-      "Incorrect. The violence clearly met the legal definition: systematic killing of Tutsi as an ethnic group with intent to destroy them. The ICTR later confirmed this. The issue wasn't legal ambiguityâ€”it was political unwillingness to acknowledge genocide while it was happening, which would require intervention."
+      "Incorrect. The Genocide Convention applies globally, not just to Europe. It was created in response to the Holocaust but covers genocide anywhere. Rwanda clearly fell under its scope - the ICTR later prosecuted perpetrators for genocide under this convention.",
+      "Correct. The US and other countries deliberately avoided calling Rwanda a 'genocide' during the 100 days. Spokespersons said 'acts of genocide' instead. This semantic evasion was political - acknowledging genocide would trigger legal obligations to intervene under the convention. Countries prioritized avoiding intervention over fulfilling legal duties. This reveals how international law depends on political will to enforce.",
+      "Incorrect. The Genocide Convention remains in force today. It's a permanent international treaty. Countries that signed it (including the US, France, UK) were legally bound in 1994. The issue wasn't expiration - it was unwillingness to act.",
+      "Incorrect. The violence clearly met the legal definition: systematic killing of Tutsi as an ethnic group with intent to destroy them. The ICTR later confirmed this. The issue wasn't legal ambiguity - it was political unwillingness to acknowledge genocide while it was happening, which would require intervention."
     ],
     apTheme: "perspective"
   }

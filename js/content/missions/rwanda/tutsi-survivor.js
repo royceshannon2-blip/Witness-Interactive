@@ -2,7 +2,7 @@
  * Rwanda Genocide Mission - Tutsi Survivor (Immacul├⌐e) Role
  *
  * Historical Context:
- * - Immacul├⌐e is a 19-year-old university student in Kigali
+ * - Immaculée is a 19-year-old university student in Kigali
  * - April 7, 1994: Genocide begins, roadblocks everywhere, identity cards = death sentences
  * - Tutsi faced impossible choices: hide, flee to enclaves, trust churches (often massacre sites)
  * - 500,000-800,000 Tutsi killed in 100 days
@@ -20,13 +20,13 @@
 const tutsiSurvivorScenes = [
   {
     id: "rw-ts-scene-01",
-    narrative: `April 7, 1994. Morning. You're Immacul├⌐e, nineteen, university student. The radio woke you before dawn—President Habyarimana's plane shot down. Now RTLM broadcasts instructions. Roadblocks. Identity cards. The language they use for people like you.
+    narrative: `April 7, 1994. Morning. You're Immaculée, nineteen, university student. The radio woke you before dawn—President Habyarimana's plane shot down. Now RTLM broadcasts instructions. Roadblocks. Identity cards. The language they use for people like you.
 
 Your roommate, Marie, is Hutu. She's packing. "My brother says get out of Kigali. Now." She looks at you. "You should... I don't know. The church? Father Michel always said it was sanctuary."
 
 Your identity card is in your pocket. The one that says "Tutsi." The one that's a death sentence at every roadblock. Your parents are in Butare—you can't reach them. The phone lines are dead. Outside, you hear trucks. Shouting. The smell of smoke.
 
-Three options. The church—Father Michel knows you. Your friend Jeanne's house—she's Hutu, married to a Tutsi, might hide you. Or the H├┤tel des Mille Collines—rumors say UN peacekeepers are there, protecting people. All three mean crossing roadblocks.`,
+Three options. The church—Father Michel knows you. Your friend Jeanne's house—she's Hutu, married to a Tutsi, might hide you. Or the Hôtel des Mille Collines—rumors say UN peacekeepers are there, protecting people. All three mean crossing roadblocks.`,
     apThemes: ["causation", "perspective", "complexity"],
     atmosphericEffect: "dawn",
     ambientTrack: "rw-radio-rtlm-ambient.wav",
@@ -83,7 +83,7 @@ The militia pours in. Machetes. Grenades. People running. The altar is no protec
 
   {
     id: "rw-ts-scene-02b",
-    narrative: `April 7, afternoon. You made it to Jeanne's house. She opened the door, pulled you inside fast. "Immacul├⌐e. God. I heard the radio." Her husband, Paul, is Tutsi too. He's in the back room with their children. "We're all targets now."
+    narrative: `April 7, afternoon. You made it to Jeanne's house. She opened the door, pulled you inside fast. "Immaculée. God. I heard the radio." Her husband, Paul, is Tutsi too. He's in the back room with their children. "We're all targets now."
 
 Jeanne's hands shake as she makes tea. "My brother is Interahamwe. He came by this morning. Asked if I'd seen any... if I knew where people were hiding." She looks at you. "I said no. But he'll come back. They always come back."
 
@@ -106,7 +106,7 @@ Outside, you hear the roadblock. Voices. Machetes on pavement. The radio plays f
 
   {
     id: "rw-ts-scene-02c",
-    narrative: `April 7, late afternoon. You're trying to reach the H├┤tel des Mille Collines. Marie gave you her student ID—Hutu name, Hutu card. "If they ask, you're my cousin." It might work. It might not.
+    narrative: `April 7, late afternoon. You're trying to reach the Hôtel des Mille Collines. Marie gave you her student ID—Hutu name, Hutu card. "If they ask, you're my cousin." It might work. It might not.
 
 The streets are chaos. Bodies already. Roadblocks every few blocks. Militia checking cards, pulling people from cars. You see a woman dragged away. Her children screaming. You keep walking. Head down. Don't run. Running means guilt.
 
@@ -329,7 +329,7 @@ Jeanne saved your life. She's asking you to attend. But her brother helped kill 
 
   {
     id: "rw-ts-scene-04d",
-    narrative: `2007. Kigali. You survived the hotel. Twelve hundred people crammed into the H├┤tel des Mille Collines. You used Marie's Hutu identity card to get past the roadblock. You gave her name to the UN peacekeeper. You lived as someone else for three months. When the RPF captured Kigali, you reclaimed your real name. Immacul├⌐e. Tutsi. Survivor.
+    narrative: `2007. Kigali. You survived the hotel. Twelve hundred people crammed into the Hôtel des Mille Collines. You used Marie's Hutu identity card to get past the roadblock. You gave her name to the UN peacekeeper. You lived as someone else for three months. When the RPF captured Kigali, you reclaimed your real name. Immaculée. Tutsi. Survivor.
 
 Now it's thirteen years later. The hotel still operates. Tourists come to see where people sheltered. They take photos. They ask questions. The manager became famous. Then controversial. The narrative is complicated.
 
@@ -416,7 +416,7 @@ Your friend Marie survived. She testified at the gacaca courts about what happen
       rw_reached_hotel: true,
       rw_used_false_id: true
     },
-    epilogue: `You survived. You made it to the H├┤tel des Mille Collines. You showed Marie's Hutu identity card at the roadblock. The militia commander looked at you, looked at the card, waved you through. You lived as someone else for three months—Marie's name, Marie's identity, Marie's safety. Twelve hundred people crammed into that hotel. UN peacekeepers held the perimeter. The militia threatened daily but never breached the gates. When the RPF captured Kigali, you reclaimed your real name. Immacul├⌐e. Tutsi. Survivor.
+    epilogue: `You survived. You made it to the Hôtel des Mille Collines. You showed Marie's Hutu identity card at the roadblock. The militia commander looked at you, looked at the card, waved you through. You lived as someone else for three months—Marie's name, Marie's identity, Marie's safety. Twelve hundred people crammed into that hotel. UN peacekeepers held the perimeter. The militia threatened daily but never breached the gates. When the RPF captured Kigali, you reclaimed your real name. Immaculée. Tutsi. Survivor.
 
 The years after were complicated. You carried guilt for using a false identity—you survived because you could pass, because you had a Hutu friend, because you were lucky. Thousands who looked like you didn't have those options. The hotel became famous. Tourists visit. They take photos. They ask questions. You're invited to speak at conferences, to share your story, to educate. Sometimes you do. Sometimes you can't.
 

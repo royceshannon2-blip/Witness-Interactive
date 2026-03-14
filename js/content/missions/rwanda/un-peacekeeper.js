@@ -54,7 +54,7 @@ Your mandate is clear: peacekeeping, not peace enforcement. You can't fire unles
 
   {
     id: "rw-un-scene-02a",
-    narrative: `April 8. H├┤tel des Mille Collines. You deployed here with eight peacekeepers. Twelve hundred Tutsi refugees inside. Interahamwe militia outside. They want in. They're chanting. Threatening. Testing the perimeter. Your orders are to hold the position but not engage unless fired upon. The hotel manager, Rusesabagina, is negotiating. Bribing. Calling in favors. It's working. Barely.
+    narrative: `April 8. Hôtel des Mille Collines. You deployed here with eight peacekeepers. Twelve hundred Tutsi refugees inside. Interahamwe militia outside. They want in. They're chanting. Threatening. Testing the perimeter. Your orders are to hold the position but not engage unless fired upon. The hotel manager, Rusesabagina, is negotiating. Bribing. Calling in favors. It's working. Barely.
 
 A militia commander approaches your checkpoint. "UN. You're leaving soon, yes? Like the Belgians?" He's right. New York is talking about full withdrawal. The Security Council voted to cut UNAMIR from 2,500 to 270 troops. You might be ordered out tomorrow. The militia knows this. "When you leave, we come in. Those people are ours."
 
@@ -362,7 +362,7 @@ const unPeacekeeperOutcomes = [
       rw_stayed_after_withdrawal: true,
       rw_held_hotel: true
     },
-    epilogue: `You survived. You defied orders. When the UN withdrew most of UNAMIR, you stayed. Eight peacekeepers. Twelve hundred refugees at the H├┤tel des Mille Collines. The militia surrounded you. They cut water. They cut power. They threatened daily. But they didn't attack. Your presence—blue helmets, UN flag—held them back. When the RPF captured Kigali in July, everyone survived. Twelve hundred people lived because you didn't leave.
+    epilogue: `You survived. You defied orders. When the UN withdrew most of UNAMIR, you stayed. Eight peacekeepers. Twelve hundred refugees at the Hôtel des Mille Collines. The militia surrounded you. They cut water. They cut power. They threatened daily. But they didn't attack. Your presence—blue helmets, UN flag—held them back. When the RPF captured Kigali in July, everyone survived. Twelve hundred people lived because you didn't leave.
 
 Canada gave you a medal. The UN called you a hero. General Dallaire wrote about you. But you have PTSD. Nightmares. Flashbacks. The faces of people you couldn't save at other sites. You saved twelve hundred. Hundreds of thousands died. The math doesn't comfort you. Your therapist says you did what you could. Your family says you're a hero. You don't feel like one.
 

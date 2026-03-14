@@ -189,7 +189,7 @@ You think about the burning ships, the men in the water, the carriers that weren
   }
 ];
 
-// ΓöÇΓöÇΓöÇ OUTCOMES ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// === OUTCOMES =========================================================
 // Survival is determined by ConsequenceSystem.determineSurvival('japanese-aviator')
 // before these are evaluated. Each outcome has a `survived` field.
 // The system picks the best-scoring match within the correct survived bucket.
@@ -199,7 +199,7 @@ You think about the burning ships, the men in the water, the carriers that weren
 // collision, engine failure from combat damage.
 
 const japaneseAviatorOutcomes = [
-  // ΓöÇΓöÇ DEATH OUTCOMES ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // == DEATH OUTCOMES ===================================================
 
   {
     id: "ja-outcome-died-low-fuel",
@@ -275,7 +275,7 @@ The attack succeeds. Pearl Harbor burns. Eight battleships are sunk or damaged, 
 But the carriers were at sea. The fuel depots and repair facilities survived. Within six months, at the Battle of Midway, four Japanese fleet carriers — including some that launched your attack — will be sunk in a single day. The war you helped start will end with Japan's unconditional surrender. You died in the opening hour of a war Japan could not win.`
   },
 
-  // ΓöÇΓöÇ SURVIVAL OUTCOMES ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // == SURVIVAL OUTCOMES ================================================
 
   {
     id: "ja-outcome-survived-conflicted",

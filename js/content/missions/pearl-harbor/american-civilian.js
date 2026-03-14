@@ -174,7 +174,7 @@ You think about this morning—the coffee, the peaceful Sunday, the plans for ch
   }
 ];
 
-// ΓöÇΓöÇΓöÇ OUTCOMES ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// === OUTCOMES =========================================================
 // DEATH RATE CONTEXT:
 // 49 civilians killed on Oahu out of roughly 150,000+ civilians on the island.
 // But our player is in a high-risk residential zone adjacent to Pearl Harbor
@@ -183,7 +183,7 @@ You think about this morning—the coffee, the peaceful Sunday, the plans for ch
 // a fact largely suppressed in early news coverage.
 
 const americanCivilianOutcomes = [
-  // ΓöÇΓöÇ DEATH OUTCOMES ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // == DEATH OUTCOMES ===================================================
 
   {
     id: "ac-outcome-died-friendly-fire",
@@ -257,7 +257,7 @@ The newspapers won't report it this way. The stories will be about Battleship Ro
 But the records exist. December 7, 1941, 49 civilians killed on Oahu, most by friendly fire. You are one of them. Not a sailor, not a soldier. A civilian, in your own neighborhood, on a Sunday morning you thought would be ordinary.`
   },
 
-  // ΓöÇΓöÇ SURVIVAL OUTCOMES ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // == SURVIVAL OUTCOMES ================================================
 
   {
     id: "ac-outcome-survived-hero",

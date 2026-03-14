@@ -179,7 +179,7 @@ You stand on Ford Island, covered in oil and ash, watching your ship burn. You t
   }
 ];
 
-// ΓöÇΓöÇΓöÇ OUTCOMES ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+// === OUTCOMES =========================================================
 // DEATH RATE CONTEXT:
 // 1,177 of 1,512 Arizona crew died = 77.8% fatality rate.
 // The 335 survivors were almost exclusively men who were topside
@@ -187,7 +187,7 @@ You stand on Ford Island, covered in oil and ash, watching your ship burn. You t
 // Anyone below deck at 0806 had virtually no chance of survival.
 
 const americanSailorOutcomes = [
-  // ΓöÇΓöÇ DEATH OUTCOMES ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // == DEATH OUTCOMES ===================================================
 
   {
     id: "as-outcome-died-below-deck",
@@ -267,7 +267,7 @@ A memorial stands above the wreck now. Your name is on the white marble wall ins
 December 7, 1941. You served. You were there. You did not come home. And the country you served went to war, won that war, and built a memorial above your grave so that no one would ever forget.`
   },
 
-  // ΓöÇΓöÇ SURVIVAL OUTCOMES ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+  // == SURVIVAL OUTCOMES ================================================
 
   {
     id: "as-outcome-survived-hero",

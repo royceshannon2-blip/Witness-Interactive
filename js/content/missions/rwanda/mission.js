@@ -53,7 +53,7 @@ const rwandaMission = {
     {
       id: 'tutsi-survivor',
       name: 'Tutsi Survivor',
-      description: 'ImmaculÃ©e, 19-year-old university student fighting to survive',
+      description: 'Immaculée, 19-year-old university student fighting to survive',
       scenes: tutsiSurvivor.scenes,
       outcomes: tutsiSurvivor.outcomes
     },
@@ -88,7 +88,7 @@ const rwandaMission = {
     {
       id: 'rw-ripple-03',
       date: '1994-04-06 to 1994-07-04',
-      title: '100 Days: 500,000â€“800,000 Killed',
+      title: '100 Days: 500,000"“800,000 Killed',
       description: 'Between April and July 1994, extremist Hutu militias, soldiers, and ordinary citizens killed between 500,000 and 800,000 Tutsi and thousands of Hutu moderates. Machetes, clubs, and small arms. Churches became massacre sites. Identity cards determined life or death.',
       apTheme: 'complexity',
       animationDelay: 3000
@@ -97,7 +97,7 @@ const rwandaMission = {
       id: 'rw-ripple-04',
       date: '1994-07-04',
       title: 'RPF Captures Kigali',
-      description: 'The Rwandan Patriotic Front, led by Paul Kagame, captured Kigali and ended the genocide. Two million Hutu refugeesâ€”including many perpetratorsâ€”fled to Zaire and Tanzania. The RPF formed a Government of National Unity.',
+      description: 'The Rwandan Patriotic Front, led by Paul Kagame, captured Kigali and ended the genocide. Two million Hutu refugees"”including many perpetrators"”fled to Zaire and Tanzania. The RPF formed a Government of National Unity.',
       apTheme: 'causation',
       animationDelay: 4000
     },
@@ -121,7 +121,7 @@ const rwandaMission = {
       id: 'rw-ripple-07',
       date: '2005-2012',
       title: 'Gacaca Courts Conclude',
-      description: 'Rwanda created 11,000 community gacaca courts with lay judges to try 1.2â€“1.5 million genocide cases. Survivors testified publicly. Perpetrators confessed for reduced sentences. The system prioritized speed and coexistence over due process. Ethnic identity was banned from politics.',
+      description: 'Rwanda created 11,000 community gacaca courts with lay judges to try 1.2"“1.5 million genocide cases. Survivors testified publicly. Perpetrators confessed for reduced sentences. The system prioritized speed and coexistence over due process. Ethnic identity was banned from politics.',
       apTheme: 'continuity',
       animationDelay: 7000
     },
