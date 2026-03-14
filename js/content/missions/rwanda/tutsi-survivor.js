@@ -124,7 +124,7 @@ Jeanne grips your arm. "You could go with him. Or—" she looks at the ceiling p
       {
         id: "rw-ts-choice-02b-a",
         text: "Stay—hide in the attic",
-        consequences: { rw_hid_with_jeanne: true },
+        consequences: { rw_hid_with_hutu: true },
         nextScene: "rw-ts-scene-03c"
       },
       {
@@ -616,7 +616,7 @@ Théoneste—the man who led the militia to the church door—attended Kwibuka. 
   {
     id: "rw-ts-outcome-attic",
     survived: true,
-    conditions: { rw_hid_with_jeanne: true },
+    conditions: { rw_hid_with_hutu: true },
     epilogue: `You survived the attic. Three weeks. Jeanne lied to her brother every day. When Théoneste questioned Didier in the kitchen, you trusted the eight-year-old to hold—or you came down and faced the moment yourself. Either way, you were alive when the RPF arrived in July.
 
 Paul was killed at a roadblock on April 12th. Five days after you hid. Jeanne told you months after liberation, quietly, once, without looking at you. Her brother staffed that roadblock. You found out at the gacaca hearing in 2007 when a neighbor's testimony placed Théoneste at that checkpoint on that date. Jeanne sat four rows ahead of you in the hearing room. You didn't speak afterward.
