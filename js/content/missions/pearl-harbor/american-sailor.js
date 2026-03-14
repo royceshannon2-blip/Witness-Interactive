@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Pearl Harbor Mission - American Sailor (USS Arizona) Role
  *
  * Historical Context:

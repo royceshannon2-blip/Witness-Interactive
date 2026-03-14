@@ -599,12 +599,18 @@ class ConsequenceSystem {
   /**
    * Score how many conditions in a rule are satisfied by current flags.
    * Returns the count of matching conditions (not all-or-nothing).
+   * 
+   * Undefined flags are treated as false, so outcomes requiring a flag
+   * to be false will correctly match even if the player never triggered
+   * that event.
    */
   _scoreConditions(conditions) {
     let score = 0;
     for (const [flag, expected] of Object.entries(conditions)) {
       const actual = this.getFlag(flag);
-      if (actual !== undefined && actual === expected) score++;
+      // Treat undefined flags as false
+      const effectiveActual = actual !== undefined ? actual : false;
+      if (effectiveActual === expected) score++;
     }
     return score;
   }

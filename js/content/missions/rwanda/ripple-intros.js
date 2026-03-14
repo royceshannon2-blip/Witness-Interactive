@@ -1,7 +1,7 @@
 /**
  * Rwanda Genocide Mission - Path-Specific Ripple Intros
  *
- * 9 intros total: 3 roles × 3 paths
+ * 9 intros total: 3 roles Ã— 3 paths
  * Each intro: 80-120 words, second person, reflective tone
  * Connects personal choices to macro-historical consequences
  * No congratulatory tone; acknowledges complexity and cost
@@ -11,9 +11,9 @@
 
 export const RIPPLE_INTROS = {
   "hutu-moderate": {
-    rescue: `You helped Celestin. You hid him when the militias came. You lied to neighbors who asked questions. You risked your family for someone else's. Some Hutu who did what you did were killed alongside those they protected. Some survived and carried guilt for those they couldn't save. Rwanda's reconciliation asks people like you to live next to people who didn't make your choice. The history that follows is shaped by thousands of small decisions like yours—and by the millions who made different ones.`,
+    rescue: `You helped Celestin. You hid him when the militias came. You lied to neighbors who asked questions. You risked your family for someone else's. Some Hutu who did what you did were killed alongside those they protected. Some survived and carried guilt for those they couldn't save. Rwanda's reconciliation asks people like you to live next to people who didn't make your choice. The history that follows is shaped by thousands of small decisions like yoursâ€”and by the millions who made different ones.`,
 
-    compliance: `You followed orders. You staffed the roadblock. You checked identity cards. You waved some through and stopped others. Most Hutu officials did what you did—not from hatred, but from fear, pressure, or belief in what the radio said. Gacaca courts later asked people like you to confess and explain. Some did. Some didn't. The history that follows is shaped by the choices of ordinary people who became part of something larger than themselves.`,
+    compliance: `You followed orders. You staffed the roadblock. You checked identity cards. You waved some through and stopped others. Most Hutu officials did what you didâ€”not from hatred, but from fear, pressure, or belief in what the radio said. Gacaca courts later asked people like you to confess and explain. Some did. Some didn't. The history that follows is shaped by the choices of ordinary people who became part of something larger than themselves.`,
 
     flight: `You fled Kigali. You left before the worst began. You survived by not being there. Millions of Hutu refugees fled to Zaire and Tanzania after July 1994, some perpetrators, some bystanders, some who opposed the genocide. The camps became political, militarized, and eventually ignited the Congo wars. The history that follows is shaped by those who stayed, those who fled, and those who returned.`
   },
@@ -31,7 +31,7 @@ export const RIPPLE_INTROS = {
 
     evacuated: `You followed orders. You evacuated expatriates and left Rwandans behind. You saw people begging to board the convoys. You followed the mandate. Most peacekeepers did what you did. Some carried guilt for decades. Some defended the decision as the only realistic option. The history that follows is shaped by the international community's choice to withdraw rather than intervene.`,
 
-    documented: `You documented what you saw. You sent reports, took photos, gathered testimony. You defied orders to stay silent. You tried to make the world see what was happening. The genocide fax, the media coverage, the evidence that later convicted RTLM leaders—all came from people like you. The history that follows is shaped by those who documented atrocities and by the world's choice to ignore them until it was too late.`
+    documented: `You documented what you saw. You sent reports, took photos, gathered testimony. You defied orders to stay silent. You tried to make the world see what was happening. The genocide fax, the media coverage, the evidence that later convicted RTLM leadersâ€”all came from people like you. The history that follows is shaped by those who documented atrocities and by the world's choice to ignore them until it was too late.`
   }
 };
 

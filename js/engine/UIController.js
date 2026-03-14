@@ -1,4 +1,4 @@
-﻿/**
+/**
  * UIController - DOM Manipulation and Screen Rendering
  * 
  * Handles all DOM manipulation and screen rendering for the game.

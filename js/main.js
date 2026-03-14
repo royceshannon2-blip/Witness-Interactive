@@ -78,7 +78,7 @@ async function initializeApp() {
     missionRegistry.register(pearlHarborMission);
     console.log('✓ Pearl Harbor mission loaded');
     
-    // 7. Load Rwanda Genocide mission
+    // 7b. Load Rwanda Genocide mission
     missionRegistry.register(rwandaMission);
     console.log('✓ Rwanda Genocide mission loaded');
     

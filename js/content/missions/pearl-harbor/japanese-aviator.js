@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Pearl Harbor Mission - Japanese Naval Aviator Role
  *
  * Historical Context:

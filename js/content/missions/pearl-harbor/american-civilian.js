@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Pearl Harbor Mission - American Civilian Role
  *
  * Historical Context:
