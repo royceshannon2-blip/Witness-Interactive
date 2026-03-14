@@ -1,7 +1,7 @@
 /**
  * Rwanda Genocide Mission - Path-Specific Ripple Intros
  *
- * 9 intros total: 3 roles Ã— 3 paths
+ * 9 intros total: 3 roles × 3 paths
  * Each intro: 80-120 words, second person, reflective tone
  * Connects personal choices to macro-historical consequences
  * No congratulatory tone; acknowledges complexity and cost

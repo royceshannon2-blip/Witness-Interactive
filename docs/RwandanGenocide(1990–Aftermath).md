@@ -1,8 +1,8 @@
-Rwandan Genocide (1990ΓÇôAftermath): Structures, Lived Decisions, and Narrative Hooks for Classroom Games
+Rwandan Genocide (1990–Aftermath): Structures, Lived Decisions, and Narrative Hooks for Classroom Games
 
-\#\# Executive overview
+## Executive overview
 
-Between April and July 1994, extremist Hutu elites in Rwanda oversaw the systematic killing of between 500,000 and 1,000,000 Tutsi and thousands of Hutu moderates in roughly 100 days, one of the fastest genocides in modern history. The violence grew out of a longer civil war (1990ΓÇô1993), colonial legacies of ethnic hierarchy, a radical Hutu Power movement, and the collapse of a powerΓÇæsharing peace agreement (the Arusha Accords).\[1\]\[2\]\[3\]\[4\]\[5\]\[6\]
+Between April and July 1994, extremist Hutu elites in Rwanda oversaw the systematic killing of between 500,000 and 1,000,000 Tutsi and thousands of Hutu moderates in roughly 100 days, one of the fastest genocides in modern history. The violence grew out of a longer civil war (1990–1993), colonial legacies of ethnic hierarchy, a radical Hutu Power movement, and the collapse of a power-sharing peace agreement (the Arusha Accords).\[1\]\[2\]\[3\]\[4\]\[5\]\[6\]
 
 For classroom narrative design, it is useful to see the genocide as the intersection of: a centralized authoritarian state with fineΓÇægrained control down to village level, a rebel movement of exiled Tutsi (the Rwandan Patriotic Front, RPF/RPA), mass mobilisation via hate radio and local officials, and ordinary people forced into "impossible choices" amid fear, propaganda, and threat of death.  The aftermath combined ambitious efforts at justice and nationΓÇæbuilding (ICTR, national courts, gacaca, a new civic identity) with deep tensions around accountability, free speech, and unresolved trauma.\[7\]\[8\]\[9\]\[10\]\[11\]\[6\]\[1\]
 
