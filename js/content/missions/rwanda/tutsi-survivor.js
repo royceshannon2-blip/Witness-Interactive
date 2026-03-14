@@ -29,7 +29,7 @@ Your identity card is in your pocket. The one that says "Tutsi." The one that's 
 Three options. The church—Father Michel knows you. Your friend Jeanne's house—she's Hutu, married to a Tutsi, might hide you. Or the Hôtel des Mille Collines—rumors say UN peacekeepers are there, protecting people. All three mean crossing roadblocks.`,
     apThemes: ["causation", "perspective", "complexity"],
     atmosphericEffect: "dawn",
-    ambientTrack: "rw-radio-rtlm-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-01.mp3",
     choices: [
       {
@@ -62,7 +62,7 @@ But you hear trucks outside. Militia voices. Interahamwe. They're surrounding th
 The militia pours in. Machetes. Grenades. People running. The altar is no protection. The pews are no shield. You see what happens to those who stay in the main hall. You have seconds. The ceiling—there's a crawlspace above the sacristy. Or run. Try to escape in the chaos. Twelve seconds to choose.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: "shake",
-    ambientTrack: "rw-church-interior-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-02a.mp3",
     timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-ts-choice-02a-b" },
     choices: [
@@ -92,7 +92,7 @@ The house is small. One bedroom. A kitchen. An attic—barely big enough for one
 Outside, you hear the roadblock. Voices. Machetes on pavement. The radio plays from somewhere—RTLM, always RTLM. Jeanne grips your hand. "The attic. Now. Don't make a sound. Not for anything."`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-hiding-silence-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-02b.mp3",
     choices: [
       {
@@ -115,7 +115,7 @@ The hotel is three blocks away. You can see it. UN vehicles outside. Blue helmet
 You have two cards in your pocket. Your real one—Tutsi. Marie's—Hutu. The militia commander is young, maybe twenty. He looks tired. Bored. Methodical. You're next in line. He holds out his hand. "Identity card."`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: "smoke",
-    ambientTrack: "rw-roadblock-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-02c.mp3",
     choices: [
       {
@@ -138,7 +138,7 @@ You have to move. The RPF is advancing from the north. If you can survive until 
 A UN convoy passes. White vehicles. You could flag them down. Or keep hiding. Wait for dark. You're a witness now. That's a burden. That's also a purpose.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-machete-distant-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-03a.mp3",
     choices: [
       {
@@ -161,7 +161,7 @@ Through a crack, you see the church floor. Bodies everywhere. Militia comes back
 The old man coughs. Quiet, but not quiet enough. Below, footsteps stop. "You hear that?" A militia voice. "Check the ceiling." Your heart pounds. The old man looks at you. Terror. Apology.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-hiding-silence-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-03b.mp3",
     choices: [
       {
@@ -184,7 +184,7 @@ Her children know you're up here. Six and eight. They don't speak about it. They
 At night, Jeanne brings food. Bread. Water. "Paul is talking about leaving. Going to the hotel." She looks at you. "But if we leave, you're alone. And if my brother comes..." The attic is safety and trap.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-hiding-silence-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-03c.mp3",
     choices: [
       {
@@ -207,7 +207,7 @@ A Belgian peacekeeper registers you. "Name. Age." You give Marie's name. Safer. 
 You find a corner in a conference room. Thirty people in a space meant for ten. An old woman whispers, "The militia is outside. They want us. The UN won't fight." She's right. You hear them. Chanting. Threatening. The peacekeepers hold the perimeter but don't engage. You're safe. For now.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-hotel-interior-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-03d.mp3",
     timedChoice: { enabled: true, duration: 10000, defaultChoice: "rw-ts-choice-03d-a" },
     choices: [
@@ -233,7 +233,7 @@ You remember everything. The screams. The smell. The faces. Speaking it aloud ma
 The prosecutor waits. The judges wait. The defendant stares at the table. You have the microphone. You have the truth. What you say here becomes part of the historical record. Justice depends on witnesses like you. But so does your ability to move forward.`,
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-courtroom-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-04a.mp3",
     choices: [
       {
@@ -268,7 +268,7 @@ But you remember who hid you and who hunted you. You remember the old man who co
 Some survivors find meaning in speaking. Others find it exhausting. The ceremony is tomorrow. Hundreds will attend. Cameras. Students. Government officials. Your story could educate. Or it could reopen wounds that barely healed.`,
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-memorial-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-04b.mp3",
     choices: [
       {
@@ -303,7 +303,7 @@ Jeanne invites you to a reconciliation meeting. Her brother will be there. Other
 Jeanne saved your life. She's asking you to attend. But her brother helped kill people like you. The meeting is tonight. The village expects you. Reconciliation is policy. But it's also personal. And it's complicated.`,
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-village-evening-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-04c.mp3",
     choices: [
       {
@@ -338,7 +338,7 @@ You're invited to speak at a survivor's conference here. The organizers want you
 The conference is next week. Journalists will attend. Students. Researchers. Your story could help people understand. Or it could reduce your survival to a lesson. You're more than what happened to you. But what happened is also part of who you are.`,
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-hotel-modern-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-04d.mp3",
     choices: [
       {

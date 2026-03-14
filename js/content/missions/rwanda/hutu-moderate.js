@@ -27,9 +27,8 @@ A knock at the door. It's Celestin, your Tutsi neighbor. His hands shake. "They'
 Your wife catches your eye from the kitchen. Fear. The radio mentioned moderate politicians being targeted. Your name is on lists too—you refused to attend the last Hutu Power rally. Outside, you hear vehicles, shouting. The smell of smoke drifts through the window.`,
     apThemes: ["causation", "perspective", "complexity"],
     atmosphericEffect: "smoke",
-    ambientTrack: "rw-radio-rtlm-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-01.mp3",
-    timedChoice: { enabled: true, duration: 10000, defaultChoice: "rw-hm-choice-01-c" },
     choices: [
       {
         id: "rw-hm-choice-01-a",
@@ -63,7 +62,7 @@ The militia leader knocks. "We're looking for cockroaches. You seen any?" He smi
 You have seconds. The roadblock at the end of the street—you know the commander. Or you could lie. Or you could run.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-crowd-night-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-02a.mp3",
     choices: [
       {
@@ -92,7 +91,7 @@ He calls your name. "Augustin, you're a secretary. You have the lists. You know 
 Your hands are shaking. If you refuse, you're a traitor. If you comply, you're part of this. The crowd chants. RTLM plays from a radio. The smell of banana beer and sweat.`,
     apThemes: ["causation", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-radio-rtlm-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-02b.mp3",
     choices: [
       {
@@ -115,7 +114,7 @@ You have a cousin in the countryside, near Gitarama. Maybe it's safer there. May
 The sun rises. Smoke columns across Kigali. You hear screaming from the next street. Your wife grabs your hand. "Augustin. We go now or we die here."`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: "smoke",
-    ambientTrack: "rw-machete-distant-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-02c.mp3",
     choices: [
       {
@@ -138,7 +137,7 @@ You know what happens next. You've seen the bodies in the ditches. The commander
 Your hands shake as you take the first identity card. The woman holding it looks at you. She's someone's mother. Someone's wife. The militia behind you tap their machetes on the truck bed. Twelve seconds to decide.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-roadblock-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-03a.mp3",
     timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-hm-choice-03a-b" },
     choices: [
@@ -168,7 +167,7 @@ A group approaches. More Tutsi. More identity cards. The militia expects you to 
 The radio crackles. RTLM praises the "work" being done. Lists more names. More locations. The genocide is organized, methodical. You're part of the machinery now.`,
     apThemes: ["causation", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-roadblock-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-03b.mp3",
     timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-hm-choice-03b-a" },
     choices: [
@@ -192,7 +191,7 @@ At night, you go home. Your wife asks what you did today. You don't answer. Your
 You tell yourself you're surviving. You tell yourself you had no choice. But you know the truth. You chose this. Every day, you choose this.`,
     apThemes: ["causation", "perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-roadblock-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-03c.mp3",
     choices: [
       {
@@ -215,7 +214,7 @@ One night, your cousin pulls you aside. "They're asking about you. Why you left 
 You're not safe here either. Nowhere is safe. The RPF is advancing from the north. The genocide continues. You're in hiding, but you're Hutu—you're not the primary target. Just a coward. A traitor to the cause.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-countryside-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-03d.mp3",
     choices: [
       {
@@ -238,7 +237,7 @@ You stand. Your hands shake like they did that day. You helped Celestin hide. Yo
 Celestin watches you. His son—the one who survived—sits beside him. The crowd is silent. The judge waits. Gacaca offers reduced sentences for full confessions. But what is "full"? What do you say about the choices you made?`,
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-countryside-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-04a.mp3",
     choices: [
       {
@@ -273,7 +272,7 @@ You could confess. Gacaca offers reduced sentences—community service instead o
 Or you could deny it. Claim you were forced. Claim you had no choice. Some perpetrators do this. Some get away with it. Some don't. The judge waits. The survivors wait. What do you say about what you did?`,
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-countryside-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-04b.mp3",
     choices: [
       {
@@ -308,7 +307,7 @@ The government's "no ethnicity" policy means you're just "Rwandan" now. No Hutu.
 A gacaca judge visits. "Augustin. We need testimony about what happened in Kigali. You were there. You were a secretary. You knew things." He's not accusing you. He's asking you to help. To speak. To remember. What do you say?`,
     apThemes: ["continuity", "perspective"],
     atmosphericEffect: null,
-    ambientTrack: "rw-countryside-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-04d.mp3",
     choices: [
       {

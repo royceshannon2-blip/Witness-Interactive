@@ -28,7 +28,7 @@ UNAMIR headquarters in Kigali. Radio chatter. Reports of roadblocks. Presidentia
 Your mandate is clear: peacekeeping, not peace enforcement. You can't fire unless fired upon. You can't protect civilians unless they're in designated safe zones. But civilians are being killed at roadblocks three blocks from here. The radio crackles. Three options. The H├┤tel des Mille Collines is requesting protection—twelve hundred Tutsi sheltering there. Or evacuate foreign nationals as ordered. Or stay mobile, document what's happening, send evidence to New York. Fifteen seconds to decide.`,
     apThemes: ["causation", "perspective", "complexity"],
     atmosphericEffect: "dawn",
-    ambientTrack: "rw-military-radio-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-01.mp3",
     choices: [
       {
@@ -61,7 +61,7 @@ A militia commander approaches your checkpoint. "UN. You're leaving soon, yes? L
 Your radio crackles. Dallaire's voice. "All units. Prepare for possible evacuation order. Stand by." The militia commander smiles. The refugees inside can hear this. They're terrified. You have a choice. Defy orders and stay no matter what. Or follow the mandate, hold position until ordered to withdraw. Fifteen seconds.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-hotel-interior-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-02a.mp3",
     timedChoice: { enabled: true, duration: 15000, defaultChoice: "rw-un-choice-02a-b" },
     choices: [
@@ -89,7 +89,7 @@ At one checkpoint, Rwandans are begging to board. "Please. Take us. We worked fo
 A woman holds up a child. "Please. Just the children." Your sergeant looks at you. The convoy is idling. The airport is twenty minutes away. The militia commander is walking over. You have seconds. Follow orders—foreign nationals only. Or take Rwandans and risk the convoy. Twelve seconds to decide.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: "smoke",
-    ambientTrack: "rw-convoy-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-02b.mp3",
     timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-un-choice-02b-a" },
     choices: [
@@ -117,7 +117,7 @@ You reach a church. Screaming inside. Grenades. Machetes. Hundreds of people. Th
 Your radio crackles. Dallaire. "All units. Avoid direct confrontation. Document and report only." The militia commander is waiting. The screaming inside the church is getting quieter. You have your camera. You have your weapon. You have your orders. What do you do?`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: "smoke",
-    ambientTrack: "rw-church-exterior-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-02c.mp3",
     choices: [
       {
@@ -138,7 +138,7 @@ Dallaire calls. "Webb. You're not supposed to be there. New York is furious." Yo
 The militia commander returns. "Captain. Your government will abandon you. The UN will abandon you. Why die for these people?" He's not wrong. Canada might court-martial you. The UN might disavow you. But if you leave now, twelve hundred people die. You've made your choice. You're staying. The question is: how long can you hold?`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-hotel-interior-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-03a.mp3",
     choices: [
       {
@@ -159,7 +159,7 @@ The RPF is advancing. If you can hold until they arrive... weeks. Maybe days. Th
 A militia attack on the hotel seems imminent. You can see them massing. Your radio is silent—New York doesn't want to know. You have four peacekeepers, limited ammunition, and twelve hundred civilians. You followed orders this far. Now you have to decide: hold at all costs, or prepare to evacuate if it's hopeless.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-hotel-interior-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-03b.mp3",
     choices: [
       {
@@ -180,7 +180,7 @@ Your orders are to return to HQ. Dallaire is consolidating the remaining 270 pea
 You're at the airport. You could board a plane. Go home. File your report. Or you could go back. Rejoin Dallaire's skeleton crew. Document what's happening. Be a witness. Your tour is over. Your duty is done. But your conscience isn't quiet.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-evacuation-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-03c.mp3",
     choices: [
       {
@@ -207,7 +207,7 @@ You send reports to New York. To Dallaire. To anyone who will listen. The media 
 You continue documenting. Roadblocks. Massacres. Refugee movements. You're building a case. For tribunals. For history. For justice. But justice is later. Right now, people are dying. You're a witness. That's important. But is it enough? You could do more. You could protect enclaves. You could defy orders. Or you keep documenting. Keep gathering evidence. Keep making the world see.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: "smoke",
-    ambientTrack: "rw-military-radio-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-03d.mp3",
     choices: [
       {
@@ -230,7 +230,7 @@ But you have PTSD. Nightmares. Flashbacks. The smell of smoke. The sound of mach
 The Canadian government is holding an inquiry into Rwanda. They want you to testify. To explain what happened. Why the UN failed. Why the world watched. Your testimony could change policy. Could prevent future genocides. Or it could just be more words. More reports. More evidence that gets ignored. You're tired. You've testified before. But maybe this time it matters.`,
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-office-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-04a.mp3",
     choices: [
       {
@@ -263,7 +263,7 @@ Now you're back. First time since 1994. The hotel still operates. Tourists come.
 A survivor approaches. "Captain Webb. You stayed. You didn't have to. You saved my family." She's crying. You're crying. You saved twelve hundred. You couldn't save hundreds of thousands. The math still doesn't comfort you. But maybe it's not about math. Maybe it's about the twelve hundred who lived. The ceremony is tomorrow. You're invited to speak. To share your story. To help people understand.`,
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-hotel-modern-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-04b.mp3",
     choices: [
       {
@@ -296,7 +296,7 @@ You have PTSD. Guilt. Nightmares. Your therapist says you followed orders. Your 
 You've become an advocate. You speak at universities. You write op-eds. You push for stronger peacekeeping mandates. "Never again" means nothing if we don't act. Your advocacy matters. It changes policy. It educates people. But it doesn't bring back the Rwandans you left behind. A documentary filmmaker wants to interview you. To tell your story. To show the cost of inaction. Do you participate?`,
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-office-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-04c.mp3",
     choices: [
       {
@@ -329,7 +329,7 @@ Now you're testifying again. A war crimes trial. The defendant organized the chu
 Some peacekeepers who documented felt like they did nothing. You gathered evidence while people died. But evidence matters. Justice matters. The historical record matters. Your documentation helped convict perpetrators. It helped survivors get justice. It helped the world understand. The prosecutor waits. The judges wait. The defendant stares at you. You have the microphone. You have the truth.`,
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
-    ambientTrack: "rw-courtroom-ambient.wav",
+    ambientTrack: null,
     narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-04d.mp3",
     choices: [
       {
