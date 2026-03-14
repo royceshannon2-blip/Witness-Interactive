@@ -11,28 +11,10 @@
 const uiContent = {
   landing: {
     title: "Witness Interactive",
-    subtitle: "Pearl Harbor",
-    tagline: "December 7, 1941 — A Date Which Will Live in Infamy",
-    context: "Experience the attack on Pearl Harbor from three different perspectives. Your choices matter. History remembers.",
-    buttonText: "Begin Experience",
-    socialProof: {
-      stat: "Join 100+ students",
-      label: "who've experienced Pearl Harbor through multiple perspectives",
-      testimonials: [
-        {
-          quote: "This made Pearl Harbor real in a way textbooks never did.",
-          author: "High school junior, AP US History"
-        },
-        {
-          quote: "I played all three roles. Each one taught me something different about perspective.",
-          author: "College freshman, History major"
-        },
-        {
-          quote: "The branching choices really made me think about what I would do in that situation.",
-          author: "AP History student"
-        }
-      ]
-    }
+    subtitle: "History doesn't repeat itself. But you can witness it.",
+    tagline: "Choose a moment. Inhabit a perspective. Live with the consequences.",
+    context: "Every mission puts you inside a pivotal moment in history — not as an observer, but as someone who had to decide. Your choices reflect real decisions real people made. Some survived. Some didn't. All of them were changed.",
+    buttonText: "Choose Your Mission"
   },
   
   timeline: {

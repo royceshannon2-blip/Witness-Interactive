@@ -44,7 +44,7 @@ import uiContent from './content/ui-content.js';
  * Bootstraps all engine components and loads mission content
  */
 async function initializeApp() {
-    console.log('Witness Interactive: Pearl Harbor - Initializing...');
+    console.log('Witness Interactive - Initializing...');
     
     // 1. Initialize EventBus (central communication hub)
     const eventBus = new EventBus();
@@ -374,8 +374,7 @@ async function initializeApp() {
         
         console.log('\n=== Application Bootstrap Complete ===');
         console.log('All components initialized successfully.');
-        console.log('Pearl Harbor mission loaded and ready to play.');
-        console.log('Navigate to landing screen to begin.');
+        console.log('All missions loaded and ready.');
     }, 800);
 }
 
