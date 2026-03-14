@@ -6,10 +6,17 @@
  * when the student clicks "Enter the mission".
  *
  * Architecture: Engine logic only, content imported from content layer.
+ * CSS in css/style.css, all text content in briefing-content.js
  * Requirements: US-2.1, TR-2.2
  */
 
-import { BRIEFING_PAGES, BRIEFING_CARDS, BRIEFING_FINALS } from '../content/missions/rwanda/briefing-content.js';
+import { 
+  BRIEFING_PAGES, 
+  BRIEFING_CARDS, 
+  BRIEFING_FINALS,
+  BRIEFING_UI_TEXT,
+  BRIEFING_CARD_TEMPLATES
+} from '../content/missions/rwanda/briefing-content.js';
 
 class MissionBriefing {
   constructor(eventBus) {
@@ -21,7 +28,7 @@ class MissionBriefing {
     return missionId === 'rwanda-genocide';
   }
 
-  show(missionId, roleId, onComplete) {
+  show(_missionId, roleId, onComplete) {
     const roleKey = this._getRoleKey(roleId);
     const pages = BRIEFING_PAGES[roleKey];
     const card  = BRIEFING_CARDS[roleKey];
@@ -77,7 +84,7 @@ class MissionBriefing {
       }
 
       this._typeSequence(tasks, () => {
-        btn.textContent = isLast ? 'See your identity card \u2014' : 'Continue \u2192';
+        btn.textContent = isLast ? BRIEFING_UI_TEXT.buttons.seeCard : BRIEFING_UI_TEXT.buttons.continue;
         btn.style.opacity  = '1';
         btn.style.pointerEvents = 'all';
         typing = false;
@@ -215,42 +222,41 @@ class MissionBriefing {
   }
 
   _buildCardHTML(roleKey) {
-    if (roleKey === 'tutsi') return this._buildTutsiCard();
-    if (roleKey === 'hutu')  return this._buildHutuCard();
-    if (roleKey === 'un')    return this._buildUnCard();
+    const template = BRIEFING_CARD_TEMPLATES[roleKey];
+    if (!template) return '';
+
+    if (roleKey === 'tutsi') return this._buildTutsiCard(template);
+    if (roleKey === 'hutu')  return this._buildHutuCard(template);
+    if (roleKey === 'un')    return this._buildUnCard(template);
     return '';
   }
 
-  _buildTutsiCard() {
+  _buildTutsiCard(t) {
     return `<div class="physical-card tutsi-card">
   <div class="pc-header-band pc-green">
-    <span class="pc-republic">R\u00e9publique Rwandaise</span>
-    <span class="pc-type">Carte d'Identit\u00e9 Nationale</span>
+    <span class="pc-republic">${t.headerBand.republic}</span>
+    <span class="pc-type">${t.headerBand.type}</span>
   </div>
   <div class="pc-body">
     <div class="pc-photo-col">
       <div class="pc-photo-box">
         <svg viewBox="0 0 50 60" fill="none" width="50" height="60"><ellipse cx="25" cy="18" rx="11" ry="13" fill="#5a4a28"/><path d="M5 60 Q5 38 25 36 Q45 38 45 60" fill="#5a4a28"/></svg>
-        <div class="pc-photo-label">Photo</div>
+        <div class="pc-photo-label">${t.photoLabel}</div>
       </div>
       <svg class="pc-stamp" viewBox="0 0 44 44">
         <circle cx="22" cy="22" r="20" fill="none" stroke="rgba(60,30,120,0.6)" stroke-width="1.5"/>
         <circle cx="22" cy="22" r="16" fill="rgba(60,30,120,0.12)" stroke="rgba(60,30,120,0.4)" stroke-width="0.8"/>
-        <text x="22" y="14" text-anchor="middle" font-size="4" fill="rgba(60,30,120,0.75)" font-family="Times New Roman" letter-spacing="0.5">COMMUNE</text>
-        <text x="22" y="23" text-anchor="middle" font-size="5.5" font-weight="700" fill="rgba(60,30,120,0.85)" font-family="Times New Roman">KACYIRU</text>
-        <text x="22" y="30" text-anchor="middle" font-size="3.5" fill="rgba(60,30,120,0.65)" font-family="Times New Roman">KIGALI \u00b7 1992</text>
+        <text x="22" y="14" text-anchor="middle" font-size="4" fill="rgba(60,30,120,0.75)" font-family="Times New Roman" letter-spacing="0.5">${t.stamp.line1}</text>
+        <text x="22" y="23" text-anchor="middle" font-size="5.5" font-weight="700" fill="rgba(60,30,120,0.85)" font-family="Times New Roman">${t.stamp.line2}</text>
+        <text x="22" y="30" text-anchor="middle" font-size="3.5" fill="rgba(60,30,120,0.65)" font-family="Times New Roman">${t.stamp.line3}</text>
       </svg>
     </div>
     <div class="pc-fields">
-      <div class="pc-field"><span class="pc-lbl">Full Name / Amazina</span><span class="pc-val id-field-value"></span></div>
-      <div class="pc-field"><span class="pc-lbl">Date of Birth / Italiki</span><span class="pc-val id-field-value"></span></div>
-      <div class="pc-field"><span class="pc-lbl">Occupation / Umwuga</span><span class="pc-val id-field-value"></span></div>
-      <div class="pc-field"><span class="pc-lbl">Ethnicity / Ubwoko</span><span class="pc-val pc-ethnicity-tutsi id-field-value"></span></div>
-      <div class="pc-field pc-field-last"><span class="pc-lbl">Sector / Akagari</span><span class="pc-val id-field-value"></span></div>
+      ${t.fields.map(f => `<div class="pc-field"><span class="pc-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('\n      ')}
     </div>
   </div>
   <div class="pc-footer pc-green-footer">
-    <span>Issued: 14 Aug 1992</span><span>Valid until: 14 Aug 1997</span><span>No. 0441892-T</span>
+    <span>${t.footer.issued}</span><span>${t.footer.valid}</span><span>${t.footer.number}</span>
   </div>
   <div class="pc-age-tint"></div>
   <svg class="pc-distress" viewBox="0 0 480 230" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -293,47 +299,43 @@ class MissionBriefing {
 </div>`;
   }
 
-  _buildHutuCard() {
+  _buildHutuCard(t) {
     return `<div class="physical-card hutu-card">
   <div class="pc-header-band pc-green">
-    <span class="pc-republic">R\u00e9publique Rwandaise</span>
-    <span class="pc-type">Carte d'Identit\u00e9 Nationale</span>
+    <span class="pc-republic">${t.headerBand.republic}</span>
+    <span class="pc-type">${t.headerBand.type}</span>
   </div>
   <div class="pc-body">
     <div class="pc-photo-col">
       <div class="pc-photo-box">
         <svg viewBox="0 0 50 60" fill="none" width="50" height="60"><ellipse cx="25" cy="18" rx="10" ry="12" fill="#6a5a30"/><rect x="12" y="32" width="26" height="28" rx="2" fill="#6a5a30"/><rect x="16" y="30" width="18" height="8" rx="1" fill="#8a7a50"/></svg>
-        <div class="pc-photo-label">Photo</div>
+        <div class="pc-photo-label">${t.photoLabel}</div>
       </div>
       <svg class="pc-stamp" viewBox="0 0 44 44">
         <circle cx="22" cy="22" r="20" fill="none" stroke="rgba(60,30,120,0.65)" stroke-width="1.5"/>
         <circle cx="22" cy="22" r="16" fill="rgba(60,30,120,0.1)" stroke="rgba(60,30,120,0.4)" stroke-width="0.8"/>
-        <text x="22" y="14" text-anchor="middle" font-size="3.5" fill="rgba(60,30,120,0.78)" font-family="Times New Roman">COMMUNE</text>
-        <text x="22" y="23" text-anchor="middle" font-size="4.8" font-weight="700" fill="rgba(60,30,120,0.88)" font-family="Times New Roman">NYAMIRAMBO</text>
-        <text x="22" y="30" text-anchor="middle" font-size="3.5" fill="rgba(60,30,120,0.65)" font-family="Times New Roman">KIGALI \u00b7 1988</text>
+        <text x="22" y="14" text-anchor="middle" font-size="3.5" fill="rgba(60,30,120,0.78)" font-family="Times New Roman">${t.stamp.line1}</text>
+        <text x="22" y="23" text-anchor="middle" font-size="4.8" font-weight="700" fill="rgba(60,30,120,0.88)" font-family="Times New Roman">${t.stamp.line2}</text>
+        <text x="22" y="30" text-anchor="middle" font-size="3.5" fill="rgba(60,30,120,0.65)" font-family="Times New Roman">${t.stamp.line3}</text>
       </svg>
     </div>
     <div class="pc-fields">
-      <div class="pc-field"><span class="pc-lbl">Full Name / Amazina</span><span class="pc-val id-field-value"></span></div>
-      <div class="pc-field"><span class="pc-lbl">Date of Birth / Italiki</span><span class="pc-val id-field-value"></span></div>
-      <div class="pc-field"><span class="pc-lbl">Occupation / Umwuga</span><span class="pc-val id-field-value"></span></div>
-      <div class="pc-field"><span class="pc-lbl">Ethnicity / Ubwoko</span><span class="pc-val pc-ethnicity-hutu id-field-value"></span></div>
-      <div class="pc-field pc-field-last"><span class="pc-lbl">Sector / Akagari</span><span class="pc-val id-field-value"></span></div>
+      ${t.fields.map(f => `<div class="pc-field"><span class="pc-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('\n      ')}
     </div>
   </div>
   <div class="pc-footer pc-green-footer">
-    <span>Issued: 02 Jun 1988</span><span>Valid until: 02 Jun 1993</span><span>No. 0229881-H</span>
+    <span>${t.footer.issued}</span><span>${t.footer.valid}</span><span>${t.footer.number}</span>
   </div>
   <div class="pc-age-tint pc-age-pristine"></div>
 </div>`;
   }
 
-  _buildUnCard() {
+  _buildUnCard(t) {
     return `<div class="physical-card un-card">
   <div class="un-stripe"></div>
   <div class="pc-header-band pc-un">
-    <span class="pc-republic" style="letter-spacing:2px;">UNITED NATIONS \u00b7 NATIONS UNIES</span>
-    <span class="pc-type">Personnel Identification</span>
+    <span class="pc-republic" style="letter-spacing:2px;">${t.headerBand.republic}</span>
+    <span class="pc-type">${t.headerBand.type}</span>
   </div>
   <div class="pc-body" style="padding-left:18px;">
     <div class="pc-photo-col">
@@ -342,119 +344,39 @@ class MissionBriefing {
           <svg viewBox="0 0 50 50" width="40" height="40"><circle cx="25" cy="25" r="22" fill="none" stroke="#4a6a8a" stroke-width="1.5"/><ellipse cx="25" cy="25" rx="8" ry="22" fill="none" stroke="#4a6a8a" stroke-width="1"/><line x1="3" y1="25" x2="47" y2="25" stroke="#4a6a8a" stroke-width="1"/><line x1="25" y1="3" x2="25" y2="47" stroke="#4a6a8a" stroke-width="1"/></svg>
           <svg viewBox="0 0 50 40" fill="none" width="36" height="28" style="margin-top:4px;"><ellipse cx="25" cy="12" rx="9" ry="11" fill="#4a6a8a"/><rect x="13" y="25" width="24" height="20" rx="1" fill="#3a5a7a"/><rect x="17" y="23" width="16" height="7" fill="#5580a0"/></svg>
         </div>
-        <div class="pc-photo-label" style="color:#3a5a7a;">Photo</div>
+        <div class="pc-photo-label" style="color:#3a5a7a;">${t.photoLabel}</div>
       </div>
       <svg class="pc-stamp" viewBox="0 0 44 44">
         <circle cx="22" cy="22" r="20" fill="none" stroke="rgba(0,88,154,0.6)" stroke-width="1.5"/>
         <circle cx="22" cy="22" r="16" fill="rgba(0,88,154,0.1)" stroke="rgba(0,88,154,0.35)" stroke-width="0.8"/>
-        <text x="22" y="13" text-anchor="middle" font-size="3.2" fill="rgba(0,88,154,0.8)" font-family="Arial">UNITED NATIONS</text>
-        <text x="22" y="23" text-anchor="middle" font-size="5" font-weight="700" fill="rgba(0,88,154,0.9)" font-family="Arial">UNAMIR</text>
-        <text x="22" y="30" text-anchor="middle" font-size="3.2" fill="rgba(0,88,154,0.7)" font-family="Arial">RWANDA 1994</text>
+        <text x="22" y="13" text-anchor="middle" font-size="3.2" fill="rgba(0,88,154,0.8)" font-family="Arial">${t.stamp.line1}</text>
+        <text x="22" y="23" text-anchor="middle" font-size="5" font-weight="700" fill="rgba(0,88,154,0.9)" font-family="Arial">${t.stamp.line2}</text>
+        <text x="22" y="30" text-anchor="middle" font-size="3.2" fill="rgba(0,88,154,0.7)" font-family="Arial">${t.stamp.line3}</text>
       </svg>
     </div>
     <div class="pc-fields">
-      <div class="pc-field"><span class="pc-lbl un-lbl">Full Name</span><span class="pc-val un-val id-field-value"></span></div>
-      <div class="pc-field"><span class="pc-lbl un-lbl">Rank / Service</span><span class="pc-val un-val id-field-value"></span></div>
-      <div class="pc-field"><span class="pc-lbl un-lbl">Mission</span><span class="pc-val un-val id-field-value"></span></div>
-      <div class="pc-field"><span class="pc-lbl un-lbl">Status</span><span class="pc-val pc-status-un id-field-value"></span></div>
-      <div class="pc-field pc-field-last"><span class="pc-lbl un-lbl">Clearance</span><span class="pc-val un-val id-field-value"></span></div>
+      ${t.fields.map(f => `<div class="pc-field"><span class="pc-lbl un-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('\n      ')}
     </div>
   </div>
   <div class="un-rank-bar">
-    <div class="un-rank-badge">CAPT \u00b7 O-3</div>
+    <div class="un-rank-badge">${t.rankBar.badge}</div>
     <div class="un-medals">
       <div class="un-medal un-medal-blue"></div>
       <div class="un-medal un-medal-purple"></div>
     </div>
-    <span class="un-brassard">Olive drab brassard \u00b7 UN emblem \u00b7 EN/FR</span>
+    <span class="un-brassard">${t.rankBar.brassard}</span>
   </div>
   <div class="pc-footer pc-un-footer">
-    <span>Issued: 14 Jan 1994</span><span>Mission: Jan\u2013Jul 1994</span><span>ID: UN-CA-1994-0847</span>
+    <span>${t.footer.issued}</span><span>${t.footer.valid}</span><span>${t.footer.number}</span>
   </div>
 </div>`;
   }
 
   _buildHTML(roleKey) {
     const cardHTML = this._buildCardHTML(roleKey);
-    return `<style>
-#mission-briefing-overlay{position:fixed;inset:0;background:#0a0e1a;z-index:9999;display:flex;align-items:flex-start;justify-content:center;overflow-y:auto;padding:1rem 0.5rem 2rem;font-family:Georgia,'Times New Roman',Times,serif;animation:mb-fade-in 0.6s ease forwards}
-@keyframes mb-fade-in{from{opacity:0}to{opacity:1}}
-.mb-paper{background:#111418;width:100%;max-width:96vw;border:1px solid rgba(212,175,55,0.25);display:flex;flex-direction:column;box-shadow:0 0 60px rgba(0,0,0,0.8);position:relative}
-.mb-paper::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(to right,transparent,rgba(212,175,55,0.6),transparent)}
-.mb-mast{border-bottom:1px solid rgba(212,175,55,0.3);padding:1.2rem 1.4rem 0.8rem;text-align:center;background:#0d1017}
-.mb-mast-name{font-family:'Times New Roman',Times,serif;font-size:1.9rem;font-weight:700;color:#d4af37;letter-spacing:2px;line-height:1;font-variant:small-caps;text-shadow:0 0 20px rgba(212,175,55,0.3)}
-.mb-rule-double{border-top:2px solid rgba(212,175,55,0.5);border-bottom:1px solid rgba(212,175,55,0.2);height:4px;margin:6px 0 4px}
-.mb-meta{display:flex;justify-content:space-between;font-size:0.6rem;color:#8a7a5a;font-style:italic}
-#mb-content{padding:1.2rem 1.4rem 1rem;flex:1;display:flex;flex-direction:column}
-.mb-dateline-el{font-size:0.58rem;font-style:italic;color:#8a7a5a;letter-spacing:0.8px;text-transform:uppercase;margin-bottom:0.5rem;min-height:0.8em}
-.mb-col-rule{display:flex;align-items:center;gap:6px;margin-bottom:0.7rem}
-.mb-col-rule::before,.mb-col-rule::after{content:'';flex:1;height:1px;background:rgba(212,175,55,0.3)}
-.mb-col-dot{width:4px;height:4px;background:#d4af37;transform:rotate(45deg);flex-shrink:0;opacity:0.7}
-.mb-headline{font-family:'Times New Roman',Times,serif;font-weight:700;color:#e8dcc4;line-height:1.15;margin-bottom:0;min-height:1.4em}
-.mb-headline.sz-lg{font-size:1.55rem}.mb-headline.sz-xl{font-size:1.85rem}.mb-headline.sz-xxl{font-size:2.1rem;letter-spacing:-0.5px}
-.mb-headline.alert{color:#c0392b}.mb-headline.urgent{color:#c0392b}
-.mb-deck-el{font-size:0.8rem;font-style:italic;color:#b8a888;line-height:1.5;margin-top:0.5rem;padding-top:0.4rem;border-top:1px solid rgba(212,175,55,0.2);min-height:1em}
-.mb-byline{font-size:0.57rem;color:#8a7a5a;letter-spacing:1.2px;text-transform:uppercase;margin:0.5rem 0 0.6rem;padding-bottom:0.4rem;border-bottom:1px solid rgba(212,175,55,0.15)}
-.mb-body-el{font-size:0.82rem;color:#c8b898;line-height:1.85;flex:1;white-space:pre-wrap;word-break:break-word}
-.mb-ticker-el{border-top:1px solid rgba(212,175,55,0.3);border-bottom:1px solid rgba(212,175,55,0.15);padding:0.35rem 0;margin-top:0.8rem;font-size:0.6rem;color:#d4af37;font-style:italic;text-align:center;min-height:1.2em}
-.mb-cont-btn{display:block;width:100%;background:transparent;color:#d4af37;border:1px solid rgba(212,175,55,0.4);cursor:pointer;font-family:Georgia,serif;font-size:0.8rem;font-style:italic;padding:0.7rem;margin-top:0.9rem;transition:all 0.2s ease}
-.mb-cont-btn:hover{background:rgba(212,175,55,0.08);border-color:#d4af37;color:#e8c84a}
-#mb-card-section{padding:1.2rem 1.4rem 1.4rem;display:none;background:#0d1017;border-top:1px solid rgba(212,175,55,0.2)}
-.mb-card-eyebrow{font-size:0.57rem;letter-spacing:2px;text-transform:uppercase;color:#8a7a5a;text-align:center;margin-bottom:1rem;font-style:italic}
-#mb-id-note{font-size:0.8rem;font-style:italic;color:#b8a888;line-height:1.8;margin-top:1.1rem;padding-top:0.8rem;border-top:1px solid rgba(212,175,55,0.15);min-height:1em}
-#mb-final-bar{padding:0.9rem 0 0;border-top:1px solid rgba(212,175,55,0.3);margin-top:0.9rem;display:none}
-#mb-final-text{font-family:'Times New Roman',Times,serif;font-size:0.9rem;font-style:italic;color:#c8b898;line-height:1.7;text-align:center;min-height:1em}
-#mb-final-text strong{font-style:normal;font-weight:700;color:#d4af37}
-.mb-cursor{display:inline-block;width:2px;height:0.85em;background:#d4af37;vertical-align:middle;animation:mb-blink 0.65s step-end infinite}
-@keyframes mb-blink{0%,100%{opacity:1}50%{opacity:0}}
-.physical-card{position:relative;width:100%;font-family:'Times New Roman',Times,serif;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,0.9)}
-.tutsi-card{background:#b8a870;border:1px solid #7a6a40}
-.hutu-card{background:#c8bc8a;border:1px solid #8a7a50}
-.un-card{background:#e0e8f0;border:1px solid #4a6a8a}
-.un-stripe{position:absolute;left:0;top:0;bottom:0;width:6px;background:#00589a;z-index:5}
-.pc-header-band{padding:7px 12px;display:flex;justify-content:space-between;align-items:center}
-.pc-green{background:#1a3a1a}.pc-un{background:#00589a}
-.pc-republic{font-size:0.55rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#c8d8b0}
-.pc-un .pc-republic{color:#d0e8f8;letter-spacing:2px}
-.pc-type{font-size:0.5rem;letter-spacing:1px;color:#8aaa70;font-style:italic}
-.pc-un .pc-type{color:#80b8e0}
-.pc-body{padding:12px 14px 14px;display:grid;grid-template-columns:90px 1fr;gap:12px}
-.pc-photo-col{position:relative;width:90px}
-.pc-photo-box{width:90px;height:110px;background:#a08858;border:1px solid #6a5030;display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-.pc-photo-un{background:#b8c8d4;border-color:#4a6a8a}
-.pc-photo-label{position:absolute;bottom:2px;left:0;right:0;text-align:center;font-size:0.42rem;color:#4a3a10;font-style:italic}
-.pc-stamp{position:absolute;bottom:-10px;right:-12px;width:50px;height:50px;z-index:10;opacity:0.68}
-.pc-fields{display:flex;flex-direction:column;gap:6px;padding-top:2px}
-.pc-field{display:flex;flex-direction:column;gap:1px;border-bottom:0.5px solid rgba(70,50,20,0.3);padding-bottom:4px}
-.pc-field-last{border-bottom:none}
-.pc-lbl{font-size:0.48rem;letter-spacing:0.8px;text-transform:uppercase;color:#4a3a10;font-family:-apple-system,sans-serif;font-style:italic}
-.un-lbl{color:#3a5a7a}
-.pc-val{font-size:0.75rem;font-weight:700;color:#1a0e04;line-height:1.15}
-.un-val{color:#0a1a2a}
-.pc-ethnicity-tutsi{color:#8b0000;font-size:0.95rem;letter-spacing:1.5px}
-.pc-ethnicity-hutu{color:#1a5010;font-size:0.95rem;letter-spacing:1.5px}
-.pc-status-un{color:#00589a;font-size:0.78rem;letter-spacing:0.5px}
-.pc-footer{padding:5px 14px;display:flex;justify-content:space-between}
-.pc-green-footer{background:#162e16}
-.pc-footer span{font-size:0.45rem;color:#7a9a68;letter-spacing:0.5px;font-family:-apple-system,sans-serif}
-.pc-un-footer{background:#00589a}
-.pc-un-footer span{color:#80b8e0}
-.pc-age-tint{position:absolute;inset:0;pointer-events:none;z-index:2;background:rgba(90,55,10,0.2)}
-.pc-age-pristine{background:rgba(90,55,10,0.04)}
-.pc-distress{position:absolute;inset:0;pointer-events:none;z-index:8;width:100%;height:100%}
-.un-rank-bar{background:#eef2f6;border-top:1px solid rgba(74,106,138,0.3);padding:6px 18px;display:flex;align-items:center;gap:12px}
-.un-rank-badge{font-size:0.55rem;font-weight:700;letter-spacing:1px;color:#00589a;font-family:-apple-system,sans-serif;border:1px solid #00589a;padding:2px 7px}
-.un-medals{display:flex;gap:4px;align-items:center}
-.un-medal{width:12px;height:16px;border-radius:0 0 1px 1px;position:relative}
-.un-medal::before{content:'';position:absolute;top:-3px;left:50%;transform:translateX(-50%);width:8px;height:4px;background:#d4af37;border-radius:50%}
-.un-medal-blue{background:linear-gradient(to bottom,#5588aa,#003366)}
-.un-medal-purple{background:linear-gradient(to bottom,#8877aa,#443366)}
-.un-brassard{font-size:0.45rem;font-family:-apple-system,sans-serif;color:#3a5a7a;letter-spacing:0.5px;font-style:italic}
-@media(max-width:480px){.mb-mast-name{font-size:1.5rem}.mb-headline.sz-xxl{font-size:1.7rem}.mb-headline.sz-xl{font-size:1.5rem}.mb-headline.sz-lg{font-size:1.3rem}.mb-body-el{font-size:0.78rem}#mb-content{padding:1rem}#mb-card-section{padding:0.8rem 1rem 1rem}.pc-body{grid-template-columns:75px 1fr}}
-</style>
-<div class="mb-paper">
+    return `<div class="mb-paper">
   <div class="mb-mast">
-    <div class="mb-mast-name">La Gazette de Kigali</div>
+    <div class="mb-mast-name">${BRIEFING_UI_TEXT.masthead.name}</div>
     <div class="mb-rule-double"></div>
     <div class="mb-meta">
       <span id="m-vol">Vol. LXI</span>
@@ -467,18 +389,18 @@ class MissionBriefing {
     <div class="mb-col-rule"><div class="mb-col-dot"></div></div>
     <div class="mb-headline sz-lg" id="hl"></div>
     <div class="mb-deck-el" id="mb-deck"></div>
-    <div class="mb-byline">Special Correspondent \u2014 Rwanda Bureau</div>
+    <div class="mb-byline">${BRIEFING_UI_TEXT.masthead.byline}</div>
     <div class="mb-body-el" id="mb-body"></div>
     <div class="mb-ticker-el" id="mb-ticker"></div>
     <button class="mb-cont-btn" id="mb-cont" style="opacity:0;pointer-events:none"></button>
   </div>
   <div id="mb-card-section">
-    <div class="mb-card-eyebrow">\u2014 Pi\u00e8ce d'identit\u00e9 officielle \u2014</div>
+    <div class="mb-card-eyebrow">${BRIEFING_UI_TEXT.cardEyebrow}</div>
     ${cardHTML}
     <div id="mb-id-note"></div>
     <div id="mb-final-bar">
       <div id="mb-final-text"></div>
-      <button class="mb-cont-btn" id="mb-begin" style="margin-top:0.8rem;opacity:0;pointer-events:none">Enter the mission \u2192</button>
+      <button class="mb-cont-btn" id="mb-begin" style="margin-top:0.8rem;opacity:0;pointer-events:none">${BRIEFING_UI_TEXT.buttons.enterMission}</button>
     </div>
   </div>
 </div>`;

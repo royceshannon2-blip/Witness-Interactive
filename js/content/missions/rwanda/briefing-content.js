@@ -229,3 +229,97 @@ export const BRIEFING_FINALS = {
   hutu: 'Your name is <strong>Augustin</strong>. It is the evening of April 6th. There is a knock at your door. You already know who it is.',
   un: 'Your name is <strong>Captain Marcus Webb</strong>. It is 6am. You have just been told the ten Belgian peacekeepers assigned to protect the Prime Minister were murdered an hour ago.'
 };
+
+// UI Text Constants
+export const BRIEFING_UI_TEXT = {
+  masthead: {
+    name: 'La Gazette de Kigali',
+    byline: 'Special Correspondent — Rwanda Bureau'
+  },
+  buttons: {
+    continue: 'Continue →',
+    seeCard: 'See your identity card —',
+    enterMission: 'Enter the mission →'
+  },
+  cardEyebrow: '— Pièce d\'identité officielle —'
+};
+
+// Identity Card Structures
+export const BRIEFING_CARD_TEMPLATES = {
+  tutsi: {
+    headerBand: {
+      republic: 'République Rwandaise',
+      type: 'Carte d\'Identité Nationale'
+    },
+    fields: [
+      { label: 'Full Name / Amazina', cssClass: 'pc-val' },
+      { label: 'Date of Birth / Italiki', cssClass: 'pc-val' },
+      { label: 'Occupation / Umwuga', cssClass: 'pc-val' },
+      { label: 'Ethnicity / Ubwoko', cssClass: 'pc-val pc-ethnicity-tutsi' },
+      { label: 'Sector / Akagari', cssClass: 'pc-val' }
+    ],
+    footer: {
+      issued: 'Issued: 14 Aug 1992',
+      valid: 'Valid until: 14 Aug 1997',
+      number: 'No. 0441892-T'
+    },
+    photoLabel: 'Photo',
+    stamp: {
+      line1: 'COMMUNE',
+      line2: 'KACYIRU',
+      line3: 'KIGALI · 1992'
+    }
+  },
+  hutu: {
+    headerBand: {
+      republic: 'République Rwandaise',
+      type: 'Carte d\'Identité Nationale'
+    },
+    fields: [
+      { label: 'Full Name / Amazina', cssClass: 'pc-val' },
+      { label: 'Date of Birth / Italiki', cssClass: 'pc-val' },
+      { label: 'Occupation / Umwuga', cssClass: 'pc-val' },
+      { label: 'Ethnicity / Ubwoko', cssClass: 'pc-val pc-ethnicity-hutu' },
+      { label: 'Sector / Akagari', cssClass: 'pc-val' }
+    ],
+    footer: {
+      issued: 'Issued: 02 Jun 1988',
+      valid: 'Valid until: 02 Jun 1993',
+      number: 'No. 0229881-H'
+    },
+    photoLabel: 'Photo',
+    stamp: {
+      line1: 'COMMUNE',
+      line2: 'NYAMIRAMBO',
+      line3: 'KIGALI · 1988'
+    }
+  },
+  un: {
+    headerBand: {
+      republic: 'UNITED NATIONS · NATIONS UNIES',
+      type: 'Personnel Identification'
+    },
+    fields: [
+      { label: 'Full Name', cssClass: 'pc-val un-val' },
+      { label: 'Rank / Service', cssClass: 'pc-val un-val' },
+      { label: 'Mission', cssClass: 'pc-val un-val' },
+      { label: 'Status', cssClass: 'pc-val pc-status-un' },
+      { label: 'Clearance', cssClass: 'pc-val un-val' }
+    ],
+    footer: {
+      issued: 'Issued: 14 Jan 1994',
+      valid: 'Mission: Jan–Jul 1994',
+      number: 'ID: UN-CA-1994-0847'
+    },
+    photoLabel: 'Photo',
+    stamp: {
+      line1: 'UNITED NATIONS',
+      line2: 'UNAMIR',
+      line3: 'RWANDA 1994'
+    },
+    rankBar: {
+      badge: 'CAPT · O-3',
+      brassard: 'Olive drab brassard · UN emblem · EN/FR'
+    }
+  }
+};
