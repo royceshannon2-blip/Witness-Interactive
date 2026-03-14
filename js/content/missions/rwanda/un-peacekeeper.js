@@ -35,13 +35,21 @@ const unPeacekeeperScenes = [
   // ============================================================
   {
     id: "rw-un-scene-01",
-    narrative: `April 7, 1994. Dawn. You're Captain Marcus Webb, Canadian Forces, UNAMIR. United Nations Assistance Mission for Rwanda. You've been here six months monitoring the Arusha Accords ceasefire. Yesterday, President Habyarimana's plane was shot down. Now everything is falling apart.
+    narrative: `April 7, 1994. 5:47 AM. You are Captain Marcus Webb, Canadian Forces, UNAMIR.
 
-UNAMIR headquarters, Kigali. Radio chatter. Reports of roadblocks going up across the city. Presidential Guard killing moderate Hutu politicians. Prime Minister Uwilingiyimana is dead. Ten Belgian peacekeepers murdered trying to protect her. General Dallaire sent the genocide fax three months ago—warning New York of planned massacres, arms caches, hit lists. New York ignored it. The mandate is clear: monitor and report only. Do not intervene in internal conflicts.
+You woke to gunfire at 4 AM. By 5 AM you knew the Prime Minister was dead. Ten Belgian peacekeepers—men you knew, men you'd eaten with—were killed protecting her. Their bodies are at a roadblock on Boulevard de la Révolution.
 
-But civilians are being killed at roadblocks three blocks from here. The radio crackles. Three options in front of you. The Hôtel des Mille Collines is requesting protection—twelve hundred Tutsi sheltering there, militia surrounding the building. Or evacuate foreign nationals as ordered—get the expatriates out before the city closes. Or stay mobile, document what's happening, build the evidence record. Fifteen seconds.`,
+One of them was Lieutenant Pieter Claes. Twenty-six years old. He showed you photographs of his daughter three weeks ago. She was learning to walk. He was going home in six weeks.
+
+Now you're at UNAMIR headquarters with the radio on. Dallaire has been on the line with New York since midnight. The mandate is explicit: monitor and report. Do not intervene in internal conflicts. New York is not changing that mandate.
+
+Through the window, three blocks away, you can see a roadblock. Interahamwe — the Hutu militia — are pulling people from cars. Checking identity cards. You've watched for eleven minutes. Four people have been pulled aside. You haven't seen them again.
+
+The Hôtel des Mille Collines has radioed requesting protection. Twelve hundred Tutsi are sheltering there. The militia is surrounding the building. Expatriate evacuation orders have just come through. And you have a vehicle, a radio, and a camera.
+
+Pieter's photograph of his daughter is still on the break room table.`,
     apThemes: ["causation", "perspective", "complexity"],
-    atmosphericEffect: "dawn",
+    atmosphericEffect: "smoke",
     ambientTrack: "656124__itsthegoodstuff__nature-ambiance.wav",
     soundEffects: [
       { src: "audio/ambient/rw-sfx-gunshot-muffled.mp3", triggerAfterMs: 10000 }
