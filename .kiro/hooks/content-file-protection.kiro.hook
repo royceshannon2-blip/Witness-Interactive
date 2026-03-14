@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "name": "Content File Protection",
+  "description": "Prevents accidental deletion, emptying, or overwriting of critical content files in js/content/missions/. These files contain thousands of words of narrative content and must never be wiped or replaced with empty files.",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "js/content/missions/**/*.js"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "CRITICAL FILE PROTECTION CHECK:\n\nYou are editing a mission content file. These files contain narrative scenes, outcomes, and game content that took hours to write.\n\nBEFORE making ANY changes:\n1. Read the ENTIRE current file content first\n2. Verify the file is NOT empty (if it's empty, STOP and restore from git history)\n3. If making edits, use strReplace to modify specific sections - NEVER use fsWrite to overwrite the entire file\n4. If the file appears corrupted or empty, use 'git show HEAD:path/to/file.js' to check the last good version\n5. NEVER create empty placeholder files in js/content/missions/ - these files must have full content\n\nProtected files include:\n- js/content/missions/rwanda/un-peacekeeper.js (57KB, 12 scenes, 4 outcomes)\n- js/content/missions/rwanda/tutsi-survivor.js (54KB, 13 scenes, 5 outcomes)\n- js/content/missions/rwanda/hutu-moderate.js (48KB, 12 scenes, 4 outcomes)\n- js/content/missions/pearl-harbor/*.js (all role files)\n\nIf you accidentally empty a file:\n1. IMMEDIATELY stop\n2. Run: git show HEAD:path/to/file.js > path/to/file.js\n3. Verify restoration with: Get-ChildItem path/to/file.js | Select-Object Length\n4. Report the incident\n\nProceed with your edit ONLY if you have verified the file currently has content and you are using strReplace for targeted changes."
+  }
+}
