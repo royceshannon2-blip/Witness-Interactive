@@ -28,6 +28,7 @@ import AtmosphericEffects from './engine/AtmosphericEffects.js';
 import TimedChoiceSystem from './engine/TimedChoiceSystem.js';
 import AmbientSoundManager from './engine/AmbientSoundManager.js';
 import NarratorAudioManager from './engine/NarratorAudioManager.js';
+import MissionBriefing from './engine/MissionBriefing.js';
 
 // UI imports
 import FeedbackSurveyPanel from './ui/FeedbackSurveyPanel.js';
@@ -64,6 +65,10 @@ async function initializeApp() {
     // 4. Initialize SceneStateMachine (manages scene transitions)
     const sceneStateMachine = new SceneStateMachine(eventBus);
     console.log('✓ SceneStateMachine initialized');
+    
+    // 4.5. Initialize MissionBriefing (newspaper-style mission briefings)
+    const missionBriefing = new MissionBriefing(eventBus);
+    console.log('✓ MissionBriefing initialized');
     
     // 5. Initialize MissionRegistry (mission catalog)
     const missionRegistry = new MissionRegistry();
@@ -201,9 +206,16 @@ async function initializeApp() {
         // Reset consequence flags for new role playthrough
         consequenceSystem.reset();
         
-        // Load the role's scenes into the SceneStateMachine
-        sceneStateMachine.loadRole(missionId, roleId, role.scenes);
-        console.log(`✓ Loaded role "${roleId}" with ${role.scenes.length} scenes`);
+        // Define proceed function to load role scenes
+        const proceed = () => {
+            sceneStateMachine.loadRole(missionId, roleId, role.scenes);
+            console.log(`✓ Loaded role "${roleId}" with ${role.scenes.length} scenes`);
+        };
+        
+        // Show briefing if available, otherwise proceed directly
+        missionBriefing.hasBriefing(missionId)
+            ? missionBriefing.show(missionId, roleId, proceed)
+            : proceed();
     });
 
     // Dev cheat code: Ctrl+Shift+K auto-advances scene
