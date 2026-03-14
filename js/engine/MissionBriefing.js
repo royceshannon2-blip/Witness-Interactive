@@ -240,7 +240,7 @@ class MissionBriefing {
   <div class="pc-body">
     <div class="pc-photo-col">
       <div class="pc-photo-box">
-        <svg viewBox="0 0 50 60" fill="none" width="50" height="60"><ellipse cx="25" cy="18" rx="11" ry="13" fill="#5a4a28"/><path d="M5 60 Q5 38 25 36 Q45 38 45 60" fill="#5a4a28"/></svg>
+        <img src="images/rwanda-tutsi-photo.jpg" alt="Identity photo" class="pc-photo-img" />
         <div class="pc-photo-label">${t.photoLabel}</div>
       </div>
       <svg class="pc-stamp" viewBox="0 0 44 44">
@@ -308,7 +308,7 @@ class MissionBriefing {
   <div class="pc-body">
     <div class="pc-photo-col">
       <div class="pc-photo-box">
-        <svg viewBox="0 0 50 60" fill="none" width="50" height="60"><ellipse cx="25" cy="18" rx="10" ry="12" fill="#6a5a30"/><rect x="12" y="32" width="26" height="28" rx="2" fill="#6a5a30"/><rect x="16" y="30" width="18" height="8" rx="1" fill="#8a7a50"/></svg>
+        <img src="images/rwanda-hutu-photo.jpg" alt="Identity photo" class="pc-photo-img" />
         <div class="pc-photo-label">${t.photoLabel}</div>
       </div>
       <svg class="pc-stamp" viewBox="0 0 44 44">
@@ -340,10 +340,7 @@ class MissionBriefing {
   <div class="pc-body" style="padding-left:18px;">
     <div class="pc-photo-col">
       <div class="pc-photo-box pc-photo-un">
-        <div style="text-align:center;">
-          <svg viewBox="0 0 50 50" width="40" height="40"><circle cx="25" cy="25" r="22" fill="none" stroke="#4a6a8a" stroke-width="1.5"/><ellipse cx="25" cy="25" rx="8" ry="22" fill="none" stroke="#4a6a8a" stroke-width="1"/><line x1="3" y1="25" x2="47" y2="25" stroke="#4a6a8a" stroke-width="1"/><line x1="25" y1="3" x2="25" y2="47" stroke="#4a6a8a" stroke-width="1"/></svg>
-          <svg viewBox="0 0 50 40" fill="none" width="36" height="28" style="margin-top:4px;"><ellipse cx="25" cy="12" rx="9" ry="11" fill="#4a6a8a"/><rect x="13" y="25" width="24" height="20" rx="1" fill="#3a5a7a"/><rect x="17" y="23" width="16" height="7" fill="#5580a0"/></svg>
-        </div>
+        <img src="images/rwanda-un-photo.jpg" alt="Personnel photo" class="pc-photo-img" />
         <div class="pc-photo-label" style="color:#3a5a7a;">${t.photoLabel}</div>
       </div>
       <svg class="pc-stamp" viewBox="0 0 44 44">
