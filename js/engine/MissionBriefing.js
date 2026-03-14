@@ -25,10 +25,10 @@ class MissionBriefing {
 
   /**
    * Returns true if this mission has a briefing defined.
-   * Currently only Rwanda ('rwanda') has one.
+   * Currently only Rwanda ('rwanda-genocide') has one.
    */
   hasBriefing(missionId) {
-    return missionId === 'rwanda';
+    return missionId === 'rwanda-genocide';
   }
 
   /**

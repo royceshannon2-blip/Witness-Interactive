@@ -20,13 +20,13 @@
 const tutsiSurvivorScenes = [
   {
     id: "rw-ts-scene-01",
-    narrative: `April 7, 1994. Morning. You're Immacul├⌐e, nineteen, university student. The radio woke you before dawnΓÇöPresident Habyarimana's plane shot down. Now RTLM broadcasts instructions. Roadblocks. Identity cards. The language they use for people like you.
+    narrative: `April 7, 1994. Morning. You're Immacul├⌐e, nineteen, university student. The radio woke you before dawn—President Habyarimana's plane shot down. Now RTLM broadcasts instructions. Roadblocks. Identity cards. The language they use for people like you.
 
 Your roommate, Marie, is Hutu. She's packing. "My brother says get out of Kigali. Now." She looks at you. "You should... I don't know. The church? Father Michel always said it was sanctuary."
 
-Your identity card is in your pocket. The one that says "Tutsi." The one that's a death sentence at every roadblock. Your parents are in ButareΓÇöyou can't reach them. The phone lines are dead. Outside, you hear trucks. Shouting. The smell of smoke.
+Your identity card is in your pocket. The one that says "Tutsi." The one that's a death sentence at every roadblock. Your parents are in Butare—you can't reach them. The phone lines are dead. Outside, you hear trucks. Shouting. The smell of smoke.
 
-Three options. The churchΓÇöFather Michel knows you. Your friend Jeanne's houseΓÇöshe's Hutu, married to a Tutsi, might hide you. Or the H├┤tel des Mille CollinesΓÇörumors say UN peacekeepers are there, protecting people. All three mean crossing roadblocks.`,
+Three options. The church—Father Michel knows you. Your friend Jeanne's house—she's Hutu, married to a Tutsi, might hide you. Or the H├┤tel des Mille Collines—rumors say UN peacekeepers are there, protecting people. All three mean crossing roadblocks.`,
     apThemes: ["causation", "perspective", "complexity"],
     atmosphericEffect: "dawn",
     ambientTrack: "rw-radio-rtlm-ambient.wav",
@@ -55,11 +55,11 @@ Three options. The churchΓÇöFather Michel knows you. Your friend Jeanne's hou
 
   {
     id: "rw-ts-scene-02a",
-    narrative: `April 7, mid-morning. You're at the church. Father Michel is here, but so are hundreds of othersΓÇöTutsi families, children crying, old people praying. The church smells like fear-sweat and incense. Everyone trusts this place. Churches are sanctuary. Always have been.
+    narrative: `April 7, mid-morning. You're at the church. Father Michel is here, but so are hundreds of others—Tutsi families, children crying, old people praying. The church smells like fear-sweat and incense. Everyone trusts this place. Churches are sanctuary. Always have been.
 
-But you hear trucks outside. Militia voices. Interahamwe. They're surrounding the church. Father Michel is arguing with someone at the door. "This is God's house! You cannotΓÇö" A gunshot. Screaming.
+But you hear trucks outside. Militia voices. Interahamwe. They're surrounding the church. Father Michel is arguing with someone at the door. "This is God's house! You cannot—" A gunshot. Screaming.
 
-The militia pours in. Machetes. Grenades. People running. The altar is no protection. The pews are no shield. You see what happens to those who stay in the main hall. You have seconds. The ceilingΓÇöthere's a crawlspace above the sacristy. Or run. Try to escape in the chaos. Twelve seconds to choose.`,
+The militia pours in. Machetes. Grenades. People running. The altar is no protection. The pews are no shield. You see what happens to those who stay in the main hall. You have seconds. The ceiling—there's a crawlspace above the sacristy. Or run. Try to escape in the chaos. Twelve seconds to choose.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: "shake",
     ambientTrack: "rw-church-interior-ambient.wav",
@@ -68,7 +68,7 @@ The militia pours in. Machetes. Grenades. People running. The altar is no protec
     choices: [
       {
         id: "rw-ts-choice-02a-a",
-        text: "RunΓÇöescape through side door",
+        text: "Run—escape through side door",
         consequences: { rw_escaped_church: true, rw_witnessed_massacre: true, rw_testimony_path: 4 },
         nextScene: "rw-ts-scene-03a"
       },
@@ -87,9 +87,9 @@ The militia pours in. Machetes. Grenades. People running. The altar is no protec
 
 Jeanne's hands shake as she makes tea. "My brother is Interahamwe. He came by this morning. Asked if I'd seen any... if I knew where people were hiding." She looks at you. "I said no. But he'll come back. They always come back."
 
-The house is small. One bedroom. A kitchen. An atticΓÇöbarely big enough for one person, accessed through a ceiling panel. Jeanne's brother knows this house. He knows every hiding place. But maybe he won't look. Maybe family means something.
+The house is small. One bedroom. A kitchen. An attic—barely big enough for one person, accessed through a ceiling panel. Jeanne's brother knows this house. He knows every hiding place. But maybe he won't look. Maybe family means something.
 
-Outside, you hear the roadblock. Voices. Machetes on pavement. The radio plays from somewhereΓÇöRTLM, always RTLM. Jeanne grips your hand. "The attic. Now. Don't make a sound. Not for anything."`,
+Outside, you hear the roadblock. Voices. Machetes on pavement. The radio plays from somewhere—RTLM, always RTLM. Jeanne grips your hand. "The attic. Now. Don't make a sound. Not for anything."`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
     ambientTrack: "rw-hiding-silence-ambient.wav",
@@ -106,13 +106,13 @@ Outside, you hear the roadblock. Voices. Machetes on pavement. The radio plays f
 
   {
     id: "rw-ts-scene-02c",
-    narrative: `April 7, late afternoon. You're trying to reach the H├┤tel des Mille Collines. Marie gave you her student IDΓÇöHutu name, Hutu card. "If they ask, you're my cousin." It might work. It might not.
+    narrative: `April 7, late afternoon. You're trying to reach the H├┤tel des Mille Collines. Marie gave you her student ID—Hutu name, Hutu card. "If they ask, you're my cousin." It might work. It might not.
 
 The streets are chaos. Bodies already. Roadblocks every few blocks. Militia checking cards, pulling people from cars. You see a woman dragged away. Her children screaming. You keep walking. Head down. Don't run. Running means guilt.
 
 The hotel is three blocks away. You can see it. UN vehicles outside. Blue helmets. Safety. But there's a roadblock between you and the gate. Interahamwe, maybe ten men. They're checking everyone. Cards. Questions. Some people get through. Some don't.
 
-You have two cards in your pocket. Your real oneΓÇöTutsi. Marie'sΓÇöHutu. The militia commander is young, maybe twenty. He looks tired. Bored. Methodical. You're next in line. He holds out his hand. "Identity card."`,
+You have two cards in your pocket. Your real one—Tutsi. Marie's—Hutu. The militia commander is young, maybe twenty. He looks tired. Bored. Methodical. You're next in line. He holds out his hand. "Identity card."`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: "smoke",
     ambientTrack: "rw-roadblock-ambient.wav",
@@ -154,7 +154,7 @@ A UN convoy passes. White vehicles. You could flag them down. Or keep hiding. Wa
     id: "rw-ts-scene-03b",
     narrative: `April 8. You've been in the church ceiling for twenty-four hours. The crawlspace is barely three feet high. You can't stand. Can't move without noise. Below, the massacre continued for hours. Then silence. Then militia returned to loot. Then silence again.
 
-Someone else is up here. An old man, maybe seventy. He doesn't speak. Just breathes. Shallow. Scared. The smell is terribleΓÇöblood, smoke, bodies below. Your water bottle empty. Stomach cramps with hunger and fear.
+Someone else is up here. An old man, maybe seventy. He doesn't speak. Just breathes. Shallow. Scared. The smell is terrible—blood, smoke, bodies below. Your water bottle empty. Stomach cramps with hunger and fear.
 
 Through a crack, you see the church floor. Bodies everywhere. Militia comes back periodically. Checking. Making sure no one survived. They haven't looked up yet. But they will.
 
@@ -166,7 +166,7 @@ The old man coughs. Quiet, but not quiet enough. Below, footsteps stop. "You hea
     choices: [
       {
         id: "rw-ts-choice-03b-a",
-        text: "Stay absolutely silentΓÇödon't move",
+        text: "Stay absolutely silent—don't move",
         consequences: { rw_survived_church_hiding: true, rw_hidden_path: 2 },
         nextScene: "rw-ts-scene-04b"
       }
@@ -198,9 +198,9 @@ At night, Jeanne brings food. Bread. Water. "Paul is talking about leaving. Goin
 
   {
     id: "rw-ts-scene-03d",
-    narrative: `April 7, evening. You showed Marie's card. The militia commander looked at it. Looked at you. "This says Hutu." You nod. "You don't look Hutu." Your heart stops. "I'm mixed. My motherΓÇö" He waves you through. "Go. Quickly."
+    narrative: `April 7, evening. You showed Marie's card. The militia commander looked at it. Looked at you. "This says Hutu." You nod. "You don't look Hutu." Your heart stops. "I'm mixed. My mother—" He waves you through. "Go. Quickly."
 
-You made it to the hotel. The H├┤tel des Mille Collines. UN peacekeepers at the gate. Blue helmets. Canadian accents. Inside, chaosΓÇötwelve hundred people crammed into a building meant for two hundred. Families in hallways. Children crying. Too many people in too small a space.
+You made it to the hotel. The H├┤tel des Mille Collines. UN peacekeepers at the gate. Blue helmets. Canadian accents. Inside, chaos—twelve hundred people crammed into a building meant for two hundred. Families in hallways. Children crying. Too many people in too small a space.
 
 A Belgian peacekeeper registers you. "Name. Age." You give Marie's name. Safer. He doesn't question it. "You're lucky. We're not sure how long we can hold this position."
 
@@ -213,7 +213,7 @@ You find a corner in a conference room. Thirty people in a space meant for ten. 
     choices: [
       {
         id: "rw-ts-choice-03d-a",
-        text: "Stay at the hotelΓÇöwait for RPF",
+        text: "Stay at the hotel—wait for RPF",
         consequences: { rw_reached_hotel: true, rw_enclave_path: 3 },
         nextScene: "rw-ts-scene-04d"
       }
@@ -224,7 +224,7 @@ You find a corner in a conference room. Thirty people in a space meant for ten. 
 
   {
     id: "rw-ts-scene-04a",
-    narrative: `2006. Arusha, Tanzania. The International Criminal Tribunal for Rwanda. You're here to testify. You flagged down that UN convoy. You survived. You carried what you saw at the churchΓÇöFather Michel killed, grenades, machetes, children. The prosecutor needs your testimony to convict the militia commander who organized the massacre.
+    narrative: `2006. Arusha, Tanzania. The International Criminal Tribunal for Rwanda. You're here to testify. You flagged down that UN convoy. You survived. You carried what you saw at the church—Father Michel killed, grenades, machetes, children. The prosecutor needs your testimony to convict the militia commander who organized the massacre.
 
 The courtroom is formal. Translators. Judges from three countries. The defendant sits behind glass. He looks older. Tired. He doesn't look at you. The prosecutor asks you to describe what you saw. Every detail. Names. Times. Who gave orders. Who carried them out.
 
@@ -238,7 +238,7 @@ The prosecutor waits. The judges wait. The defendant stares at the table. You ha
     choices: [
       {
         id: "rw-ts-choice-04a-a",
-        text: "Testify fullyΓÇöevery detail",
+        text: "Testify fully—every detail",
         consequences: { rw_testified_ictr: true, rw_chose_justice: true },
         nextScene: "outcome"
       },
@@ -261,9 +261,9 @@ The prosecutor waits. The judges wait. The defendant stares at the table. You ha
     id: "rw-ts-scene-04b",
     narrative: `2008. Kigali. You survived the church ceiling. You stayed silent when the militia searched below. The old man next to you coughed, but they didn't hear. Or they didn't care. After three days, the RPF arrived. You climbed down. Bodies everywhere. You were one of seven survivors from a church that held three hundred.
 
-Now it's fourteen years later. The church is a genocide memorial. Skulls on shelves. Clothes preserved. Names on walls. You come here once a year. April 7th. KwibukaΓÇöremembrance. The government organizes ceremonies. Speeches about unity and reconciliation. "We are all Rwandans now. No Hutu. No Tutsi."
+Now it's fourteen years later. The church is a genocide memorial. Skulls on shelves. Clothes preserved. Names on walls. You come here once a year. April 7th. Kwibuka—remembrance. The government organizes ceremonies. Speeches about unity and reconciliation. "We are all Rwandans now. No Hutu. No Tutsi."
 
-But you remember who hid you and who hunted you. You remember the old man who coughed. He died two days after liberationΓÇöstarvation, dehydration. You lived. He didn't. Survivor guilt is a weight that doesn't lift. The memorial guide asks if you want to speak at the ceremony. Share your story. Help the next generation understand.
+But you remember who hid you and who hunted you. You remember the old man who coughed. He died two days after liberation—starvation, dehydration. You lived. He didn't. Survivor guilt is a weight that doesn't lift. The memorial guide asks if you want to speak at the ceremony. Share your story. Help the next generation understand.
 
 Some survivors find meaning in speaking. Others find it exhausting. The ceremony is tomorrow. Hundreds will attend. Cameras. Students. Government officials. Your story could educate. Or it could reopen wounds that barely healed.`,
     apThemes: ["continuity", "perspective", "complexity"],
@@ -279,7 +279,7 @@ Some survivors find meaning in speaking. Others find it exhausting. The ceremony
       },
       {
         id: "rw-ts-choice-04b-b",
-        text: "Attend silentlyΓÇöprivate mourning",
+        text: "Attend silently—private mourning",
         consequences: { rw_mourned_privately: true, rw_chose_privacy: true },
         nextScene: "outcome"
       },
@@ -298,7 +298,7 @@ Some survivors find meaning in speaking. Others find it exhausting. The ceremony
 
 Now it's sixteen years later. The government's gacaca courts have concluded. Community justice. Perpetrators confessed for reduced sentences. Survivors testified. Jeanne's brother confessed to participating in roadblock killings. He served six years. He's back in the village now. The government says reconciliation is necessary. "We must live together. We are all Rwandans."
 
-Jeanne invites you to a reconciliation meeting. Her brother will be there. Other perpetrators. Other survivors. The facilitator will ask everyone to speak. To acknowledge what happened. To commit to coexistence. Some survivors find these meetings healing. Others find them insultingΓÇöforced forgiveness for atrocities.
+Jeanne invites you to a reconciliation meeting. Her brother will be there. Other perpetrators. Other survivors. The facilitator will ask everyone to speak. To acknowledge what happened. To commit to coexistence. Some survivors find these meetings healing. Others find them insulting—forced forgiveness for atrocities.
 
 Jeanne saved your life. She's asking you to attend. But her brother helped kill people like you. The meeting is tonight. The village expects you. Reconciliation is policy. But it's also personal. And it's complicated.`,
     apThemes: ["continuity", "perspective", "complexity"],
@@ -320,7 +320,7 @@ Jeanne saved your life. She's asking you to attend. But her brother helped kill 
       },
       {
         id: "rw-ts-choice-04c-c",
-        text: "DeclineΓÇöyou're not ready",
+        text: "Decline—you're not ready",
         consequences: { rw_declined_reconciliation: true, rw_chose_boundaries: true },
         nextScene: "outcome"
       }
@@ -333,7 +333,7 @@ Jeanne saved your life. She's asking you to attend. But her brother helped kill 
 
 Now it's thirteen years later. The hotel still operates. Tourists come to see where people sheltered. They take photos. They ask questions. The manager became famous. Then controversial. The narrative is complicated.
 
-You're invited to speak at a survivor's conference here. The organizers want you to share your story. How you survived with a borrowed identity. How you reclaimed yourself. Some survivors embrace public testimony. Others find it performativeΓÇötrauma as education, survival as inspiration.
+You're invited to speak at a survivor's conference here. The organizers want you to share your story. How you survived with a borrowed identity. How you reclaimed yourself. Some survivors embrace public testimony. Others find it performative—trauma as education, survival as inspiration.
 
 The conference is next week. Journalists will attend. Students. Researchers. Your story could help people understand. Or it could reduce your survival to a lesson. You're more than what happened to you. But what happened is also part of who you are.`,
     apThemes: ["continuity", "perspective", "complexity"],
@@ -370,11 +370,11 @@ const tutsiSurvivorOutcomes = [
     conditions: {
       rw_trusted_protector: true
     },
-    epilogue: `You survived. You hid in Jeanne's attic for three weeks, silent and terrified while her Interahamwe brother searched below. She risked everything to protect youΓÇöher family, her life, her children. She lied to her brother every day. When the RPF captured Kigali in July, you emerged. Thin. Traumatized. Alive. Most people who hid didn't survive. You did because someone chose to help you.
+    epilogue: `You survived. You hid in Jeanne's attic for three weeks, silent and terrified while her Interahamwe brother searched below. She risked everything to protect you—her family, her life, her children. She lied to her brother every day. When the RPF captured Kigali in July, you emerged. Thin. Traumatized. Alive. Most people who hid didn't survive. You did because someone chose to help you.
 
-The years after were complicated. Jeanne's brother served six years for roadblock killings. He came back to the village. The government's reconciliation policy asked you to live next to him. To attend meetings. To speak about coexistence. You did, sometimes. Other times you couldn't. Survivor guilt is a weight that doesn't liftΓÇöyou lived because Jeanne helped you, because you were lucky, because her brother never looked up.
+The years after were complicated. Jeanne's brother served six years for roadblock killings. He came back to the village. The government's reconciliation policy asked you to live next to him. To attend meetings. To speak about coexistence. You did, sometimes. Other times you couldn't. Survivor guilt is a weight that doesn't lift—you lived because Jeanne helped you, because you were lucky, because her brother never looked up.
 
-The gacaca courts asked you to testify. You told what you knewΓÇöwho helped, who hunted, who looked away. You spoke about Jeanne's courage. Some survivors found power in testimony. You found exhaustion. The memorial lists the names of those who didn't survive. Your family. Your neighbors. Your friends. You visit once a year. April 7th. Kwibuka. You remember. You carry their names forward. You survived, and that's both gift and burden.`
+The gacaca courts asked you to testify. You told what you knew—who helped, who hunted, who looked away. You spoke about Jeanne's courage. Some survivors found power in testimony. You found exhaustion. The memorial lists the names of those who didn't survive. Your family. Your neighbors. Your friends. You visit once a year. April 7th. Kwibuka. You remember. You carry their names forward. You survived, and that's both gift and burden.`
   },
 
   {
@@ -383,9 +383,9 @@ The gacaca courts asked you to testify. You told what you knewΓÇöwho helped, 
     conditions: {
       rw_survived_church_hiding: true
     },
-    epilogue: `You survived. You hid in the church ceiling for three days, silent and terrified while militia searched below. The crawlspace was barely three feet high. You couldn't stand. Couldn't move. An old man hid with youΓÇöhe coughed, but they didn't hear. Or they didn't care. When the RPF arrived, you climbed down. Bodies everywhere. You were one of seven survivors from a church that held three hundred. Most people who hid didn't survive. You did because you stayed silent.
+    epilogue: `You survived. You hid in the church ceiling for three days, silent and terrified while militia searched below. The crawlspace was barely three feet high. You couldn't stand. Couldn't move. An old man hid with you—he coughed, but they didn't hear. Or they didn't care. When the RPF arrived, you climbed down. Bodies everywhere. You were one of seven survivors from a church that held three hundred. Most people who hid didn't survive. You did because you stayed silent.
 
-The years after were complicated. The church became a genocide memorial. Skulls on shelves. Clothes preserved. Names on walls. You visit once a year. April 7th. KwibukaΓÇöremembrance. The government organizes ceremonies about unity and reconciliation. But you remember who hid you and who hunted you. You remember the old man who coughed. He died two days after liberationΓÇöstarvation, dehydration. You lived. He didn't.
+The years after were complicated. The church became a genocide memorial. Skulls on shelves. Clothes preserved. Names on walls. You visit once a year. April 7th. Kwibuka—remembrance. The government organizes ceremonies about unity and reconciliation. But you remember who hid you and who hunted you. You remember the old man who coughed. He died two days after liberation—starvation, dehydration. You lived. He didn't.
 
 Survivor guilt is a weight that doesn't lift. The memorial guide asks if you want to speak at ceremonies. Share your story. Help the next generation understand. Sometimes you do. Sometimes you can't. The memorial lists the names of those who didn't survive. Your family. Your neighbors. Your friends. You remember. You carry their names forward. You survived, and that's both gift and burden.`
   },
@@ -402,11 +402,11 @@ Survivor guilt is a weight that doesn't lift. The memorial guide asks if you wan
       historicalRate: "Churches became massacre sites across Rwanda. Thousands of Tutsi who sought sanctuary in churches were killed there.",
       yourChoices: "You trusted the church as sanctuary. You stayed in the main hall when the militia attacked. You didn't escape."
     },
-    epilogue: `You didn't survive. You went to the churchΓÇöFather Michel, sanctuary, safety. Churches had always been safe. But not this time. The Interahamwe surrounded the building. They killed Father Michel at the door. They poured in with machetes and grenades. You tried to run but there was nowhere to go. The pews offered no protection. The altar was no shield. You died with hundreds of others in a place that was supposed to be sacred.
+    epilogue: `You didn't survive. You went to the church—Father Michel, sanctuary, safety. Churches had always been safe. But not this time. The Interahamwe surrounded the building. They killed Father Michel at the door. They poured in with machetes and grenades. You tried to run but there was nowhere to go. The pews offered no protection. The altar was no shield. You died with hundreds of others in a place that was supposed to be sacred.
 
 Your body was found weeks later when the RPF arrived. Your family identified you by your clothes. The church became a genocide memorial. Your name is on the wall with three hundred others who died there that day. Students visit now. They see the skulls on shelves, the clothes preserved, the names. They learn that churches became massacre sites, that sanctuary was a lie, that trust was weaponized.
 
-Your friend Marie survived. She testified at the gacaca courts about what happened. She said you were kind, that you trusted people, that you believed in safety. The memorial guide tells your story to visitorsΓÇöhow you went to the church, how you died there, how trust became a trap. You're remembered. You're a name on a wall. You carried that trust to the end.`
+Your friend Marie survived. She testified at the gacaca courts about what happened. She said you were kind, that you trusted people, that you believed in safety. The memorial guide tells your story to visitors—how you went to the church, how you died there, how trust became a trap. You're remembered. You're a name on a wall. You carried that trust to the end.`
   },
 
   {
@@ -416,11 +416,11 @@ Your friend Marie survived. She testified at the gacaca courts about what happen
       rw_reached_hotel: true,
       rw_used_false_id: true
     },
-    epilogue: `You survived. You made it to the H├┤tel des Mille Collines. You showed Marie's Hutu identity card at the roadblock. The militia commander looked at you, looked at the card, waved you through. You lived as someone else for three monthsΓÇöMarie's name, Marie's identity, Marie's safety. Twelve hundred people crammed into that hotel. UN peacekeepers held the perimeter. The militia threatened daily but never breached the gates. When the RPF captured Kigali, you reclaimed your real name. Immacul├⌐e. Tutsi. Survivor.
+    epilogue: `You survived. You made it to the H├┤tel des Mille Collines. You showed Marie's Hutu identity card at the roadblock. The militia commander looked at you, looked at the card, waved you through. You lived as someone else for three months—Marie's name, Marie's identity, Marie's safety. Twelve hundred people crammed into that hotel. UN peacekeepers held the perimeter. The militia threatened daily but never breached the gates. When the RPF captured Kigali, you reclaimed your real name. Immacul├⌐e. Tutsi. Survivor.
 
-The years after were complicated. You carried guilt for using a false identityΓÇöyou survived because you could pass, because you had a Hutu friend, because you were lucky. Thousands who looked like you didn't have those options. The hotel became famous. Tourists visit. They take photos. They ask questions. You're invited to speak at conferences, to share your story, to educate. Sometimes you do. Sometimes you can't.
+The years after were complicated. You carried guilt for using a false identity—you survived because you could pass, because you had a Hutu friend, because you were lucky. Thousands who looked like you didn't have those options. The hotel became famous. Tourists visit. They take photos. They ask questions. You're invited to speak at conferences, to share your story, to educate. Sometimes you do. Sometimes you can't.
 
-Marie survived too. She knows you used her card. She never asked for it back. She never told anyone. You see her sometimesΓÇöat memorials, at reconciliation meetings. You don't talk about 1994. You don't need to. She knows what she gave you. You know what it cost her. You both carry that forward. You survived, and that's both gift and burden.`
+Marie survived too. She knows you used her card. She never asked for it back. She never told anyone. You see her sometimes—at memorials, at reconciliation meetings. You don't talk about 1994. You don't need to. She knows what she gave you. You know what it cost her. You both carry that forward. You survived, and that's both gift and burden.`
   },
 
   {
@@ -430,7 +430,7 @@ Marie survived too. She knows you used her card. She never asked for it back. Sh
       rw_witnessed_massacre: true,
       rw_escaped_church: true
     },
-    epilogue: `You survived. You witnessed the church massacreΓÇöFather Michel killed, grenades, machetes, children. You escaped through the side door during the chaos. You flagged down a UN convoy. You carried what you saw. Most people in that church didn't survive. You did, and you remember everything. The screams. The smell. The faces. You're a witness. That's a burden. That's also a purpose.
+    epilogue: `You survived. You witnessed the church massacre—Father Michel killed, grenades, machetes, children. You escaped through the side door during the chaos. You flagged down a UN convoy. You carried what you saw. Most people in that church didn't survive. You did, and you remember everything. The screams. The smell. The faces. You're a witness. That's a burden. That's also a purpose.
 
 The International Criminal Tribunal for Rwanda called you to testify in 2006. You flew to Arusha, Tanzania. You sat in a formal courtroom with translators and judges from three countries. You described what you saw. Every detail. Names. Times. Who gave orders. Who carried them out. The defense attorney cross-examined you. He questioned your memory, your motives, your credibility. You held steady. Your testimony helped convict the militia commander who organized the massacre.
 

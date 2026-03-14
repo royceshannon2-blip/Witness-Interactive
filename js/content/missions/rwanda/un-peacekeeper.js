@@ -23,9 +23,9 @@ const unPeacekeeperScenes = [
     id: "rw-un-scene-01",
     narrative: `April 7, 1994. Dawn. You're Captain Marcus Webb, Canadian Forces, UNAMIR. United Nations Assistance Mission for Rwanda. You've been here six months monitoring the ceasefire between the government and RPF. Yesterday, President Habyarimana's plane was shot down. Now everything's falling apart.
 
-UNAMIR headquarters in Kigali. Radio chatter. Reports of roadblocks. Presidential guard killing moderate politicians. Prime Minister Uwilingiyimana is dead. Ten Belgian peacekeepers murdered trying to protect her. Your commander, General Dallaire, sent the genocide fax three months agoΓÇöwarning of planned massacres, arms caches, hit lists. New York ignored it. "Monitor and report only. Do not intervene."
+UNAMIR headquarters in Kigali. Radio chatter. Reports of roadblocks. Presidential guard killing moderate politicians. Prime Minister Uwilingiyimana is dead. Ten Belgian peacekeepers murdered trying to protect her. Your commander, General Dallaire, sent the genocide fax three months ago—warning of planned massacres, arms caches, hit lists. New York ignored it. "Monitor and report only. Do not intervene."
 
-Your mandate is clear: peacekeeping, not peace enforcement. You can't fire unless fired upon. You can't protect civilians unless they're in designated safe zones. But civilians are being killed at roadblocks three blocks from here. The radio crackles. Three options. The H├┤tel des Mille Collines is requesting protectionΓÇötwelve hundred Tutsi sheltering there. Or evacuate foreign nationals as ordered. Or stay mobile, document what's happening, send evidence to New York. Fifteen seconds to decide.`,
+Your mandate is clear: peacekeeping, not peace enforcement. You can't fire unless fired upon. You can't protect civilians unless they're in designated safe zones. But civilians are being killed at roadblocks three blocks from here. The radio crackles. Three options. The H├┤tel des Mille Collines is requesting protection—twelve hundred Tutsi sheltering there. Or evacuate foreign nationals as ordered. Or stay mobile, document what's happening, send evidence to New York. Fifteen seconds to decide.`,
     apThemes: ["causation", "perspective", "complexity"],
     atmosphericEffect: "dawn",
     ambientTrack: "rw-military-radio-ambient.wav",
@@ -33,7 +33,7 @@ Your mandate is clear: peacekeeping, not peace enforcement. You can't fire unles
     choices: [
       {
         id: "rw-un-choice-01-a",
-        text: "Deploy to hotelΓÇöprotect civilians",
+        text: "Deploy to hotel—protect civilians",
         consequences: { rw_chose_protection: true, rw_stayed_path: 4 },
         nextScene: "rw-un-scene-02a"
       },
@@ -45,7 +45,7 @@ Your mandate is clear: peacekeeping, not peace enforcement. You can't fire unles
       },
       {
         id: "rw-un-choice-01-c",
-        text: "Document atrocitiesΓÇögather evidence",
+        text: "Document atrocities—gather evidence",
         consequences: { rw_chose_documentation: true, rw_documented_path: 4 },
         nextScene: "rw-un-scene-02c"
       }
@@ -67,13 +67,13 @@ Your radio crackles. Dallaire's voice. "All units. Prepare for possible evacuati
     choices: [
       {
         id: "rw-un-choice-02a-a",
-        text: "Defy ordersΓÇöstay no matter what",
+        text: "Defy orders—stay no matter what",
         consequences: { rw_defied_orders: true, rw_stayed_after_withdrawal: true, rw_stayed_path: 3 },
         nextScene: "rw-un-scene-03a"
       },
       {
         id: "rw-un-choice-02a-b",
-        text: "Hold positionΓÇöfollow mandate for now",
+        text: "Hold position—follow mandate for now",
         consequences: { rw_followed_mandate: true, rw_protected_hotel: true, rw_stayed_path: 2 },
         nextScene: "rw-un-scene-03b"
       }
@@ -86,7 +86,7 @@ Your radio crackles. Dallaire's voice. "All units. Prepare for possible evacuati
 
 At one checkpoint, Rwandans are begging to board. "Please. Take us. We worked for the embassy. We have families." Your orders are clear: foreign nationals only. No Rwandans. The militia is watching. If you take Rwandans, the convoy might be stopped. Everyone might die. If you don't, these people will be killed at the roadblock. You can see it in the militia's eyes.
 
-A woman holds up a child. "Please. Just the children." Your sergeant looks at you. The convoy is idling. The airport is twenty minutes away. The militia commander is walking over. You have seconds. Follow ordersΓÇöforeign nationals only. Or take Rwandans and risk the convoy. Twelve seconds to decide.`,
+A woman holds up a child. "Please. Just the children." Your sergeant looks at you. The convoy is idling. The airport is twenty minutes away. The militia commander is walking over. You have seconds. Follow orders—foreign nationals only. Or take Rwandans and risk the convoy. Twelve seconds to decide.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: "smoke",
     ambientTrack: "rw-convoy-ambient.wav",
@@ -95,13 +95,13 @@ A woman holds up a child. "Please. Just the children." Your sergeant looks at yo
     choices: [
       {
         id: "rw-un-choice-02b-a",
-        text: "Follow ordersΓÇöexpatriates only",
+        text: "Follow orders—expatriates only",
         consequences: { rw_evacuated_expatriates: true, rw_left_rwandans: true, rw_evacuated_path: 3 },
         nextScene: "rw-un-scene-03c"
       },
       {
         id: "rw-un-choice-02b-b",
-        text: "Take RwandansΓÇörisk the convoy",
+        text: "Take Rwandans—risk the convoy",
         consequences: { rw_saved_rwandans: true, rw_defied_orders: true, rw_evacuated_path: 2 },
         nextScene: "rw-un-scene-03c"
       }
@@ -122,7 +122,7 @@ Your radio crackles. Dallaire. "All units. Avoid direct confrontation. Document 
     choices: [
       {
         id: "rw-un-choice-02c-a",
-        text: "Stay and documentΓÇöbe a witness",
+        text: "Stay and document—be a witness",
         consequences: { rw_documented_evidence: true, rw_witnessed_massacre: true, rw_documented_path: 3 },
         nextScene: "rw-un-scene-03d"
       }
@@ -131,7 +131,7 @@ Your radio crackles. Dallaire. "All units. Avoid direct confrontation. Document 
 
   {
     id: "rw-un-scene-03a",
-    narrative: `April 15. You defied orders. When the withdrawal came, you stayed. Eight peacekeepers. Twelve hundred refugees. The hotel is an island. Militia surrounds it. They cut water. They cut power. They threaten daily. But they don't attack. Your presenceΓÇöblue helmets, UN flagΓÇöholds them back. Barely.
+    narrative: `April 15. You defied orders. When the withdrawal came, you stayed. Eight peacekeepers. Twelve hundred refugees. The hotel is an island. Militia surrounds it. They cut water. They cut power. They threaten daily. But they don't attack. Your presence—blue helmets, UN flag—holds them back. Barely.
 
 Dallaire calls. "Webb. You're not supposed to be there. New York is furious." You know. You don't care. "If you stay, you're on your own. No reinforcements. No resupply. No extraction if it goes bad." You understand. The refugees understand too. They know you stayed when you could have left. That means something.
 
@@ -143,7 +143,7 @@ The militia commander returns. "Captain. Your government will abandon you. The U
     choices: [
       {
         id: "rw-un-choice-03a-a",
-        text: "Hold the hotelΓÇöwait for RPF",
+        text: "Hold the hotel—wait for RPF",
         consequences: { rw_held_hotel: true, rw_saved_civilians: true },
         nextScene: "rw-un-scene-04a"
       }
@@ -156,7 +156,7 @@ The militia commander returns. "Captain. Your government will abandon you. The U
 
 The RPF is advancing. If you can hold until they arrive... weeks. Maybe days. The militia knows this. They're getting desperate. More aggressive. Testing the perimeter. Your ammunition is limited. Your mandate is still "monitor and report." But the refugees are counting on you. Dallaire is counting on you. History is watching.
 
-A militia attack on the hotel seems imminent. You can see them massing. Your radio is silentΓÇöNew York doesn't want to know. You have four peacekeepers, limited ammunition, and twelve hundred civilians. You followed orders this far. Now you have to decide: hold at all costs, or prepare to evacuate if it's hopeless.`,
+A militia attack on the hotel seems imminent. You can see them massing. Your radio is silent—New York doesn't want to know. You have four peacekeepers, limited ammunition, and twelve hundred civilians. You followed orders this far. Now you have to decide: hold at all costs, or prepare to evacuate if it's hopeless.`,
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
     ambientTrack: "rw-hotel-interior-ambient.wav",
@@ -164,7 +164,7 @@ A militia attack on the hotel seems imminent. You can see them massing. Your rad
     choices: [
       {
         id: "rw-un-choice-03b-a",
-        text: "Hold at all costsΓÇöno retreat",
+        text: "Hold at all costs—no retreat",
         consequences: { rw_held_position: true, rw_protected_civilians: true },
         nextScene: "rw-un-scene-04b"
       }
@@ -173,9 +173,9 @@ A militia attack on the hotel seems imminent. You can see them massing. Your rad
 
   {
     id: "rw-un-scene-03c",
-    narrative: `April 12. Airport. You evacuated the expatriates. Mission complete. They're boarding planes. Going home. Safe. You followed orders. You did your job. But the Rwandans at the checkpointΓÇöthe ones begging to boardΓÇöyou can't stop seeing their faces. The woman with the child. The embassy workers. They're dead now. You know they're dead.
+    narrative: `April 12. Airport. You evacuated the expatriates. Mission complete. They're boarding planes. Going home. Safe. You followed orders. You did your job. But the Rwandans at the checkpoint—the ones begging to board—you can't stop seeing their faces. The woman with the child. The embassy workers. They're dead now. You know they're dead.
 
-Your orders are to return to HQ. Dallaire is consolidating the remaining 270 peacekeepers. The mission is over. The genocide continues. New York is debating whether to even call it genocideΓÇöif they do, the Genocide Convention obligates intervention. So they don't call it that. They call it "acts of genocide." Semantics. Politics. People are dying.
+Your orders are to return to HQ. Dallaire is consolidating the remaining 270 peacekeepers. The mission is over. The genocide continues. New York is debating whether to even call it genocide—if they do, the Genocide Convention obligates intervention. So they don't call it that. They call it "acts of genocide." Semantics. Politics. People are dying.
 
 You're at the airport. You could board a plane. Go home. File your report. Or you could go back. Rejoin Dallaire's skeleton crew. Document what's happening. Be a witness. Your tour is over. Your duty is done. But your conscience isn't quiet.`,
     apThemes: ["perspective", "complexity"],
@@ -185,13 +185,13 @@ You're at the airport. You could board a plane. Go home. File your report. Or yo
     choices: [
       {
         id: "rw-un-choice-03c-a",
-        text: "Board the planeΓÇögo home",
+        text: "Board the plane—go home",
         consequences: { rw_went_home: true, rw_left_rwanda: true },
         nextScene: "rw-un-scene-04c"
       },
       {
         id: "rw-un-choice-03c-b",
-        text: "Return to HQΓÇöstay and document",
+        text: "Return to HQ—stay and document",
         consequences: { rw_returned_to_duty: true, rw_documented_evidence: true },
         nextScene: "rw-un-scene-04c"
       }
@@ -212,7 +212,7 @@ You continue documenting. Roadblocks. Massacres. Refugee movements. You're build
     choices: [
       {
         id: "rw-un-choice-03d-a",
-        text: "Continue documentingΓÇöbuild the case",
+        text: "Continue documenting—build the case",
         consequences: { rw_continued_documentation: true, rw_sent_genocide_fax: true },
         nextScene: "rw-un-scene-04d"
       }
@@ -223,7 +223,7 @@ You continue documenting. Roadblocks. Massacres. Refugee movements. You're build
 
   {
     id: "rw-un-scene-04a",
-    narrative: `2008. Ottawa, Canada. Fourteen years later. You stayed. You defied orders. You held the hotel until the RPF arrived in July. Twelve hundred people survived because you didn't leave. Canada didn't court-martial youΓÇöthey gave you a medal. The UN called you a hero. General Dallaire wrote about you in his book.
+    narrative: `2008. Ottawa, Canada. Fourteen years later. You stayed. You defied orders. You held the hotel until the RPF arrived in July. Twelve hundred people survived because you didn't leave. Canada didn't court-martial you—they gave you a medal. The UN called you a hero. General Dallaire wrote about you in his book.
 
 But you have PTSD. Nightmares. Flashbacks. The smell of smoke. The sound of machetes on pavement. The faces of people you couldn't save at other sites. You saved twelve hundred. Hundreds of thousands died. The math doesn't comfort you. Your therapist says you did what you could. Your family says you're a hero. You don't feel like one.
 
@@ -235,19 +235,19 @@ The Canadian government is holding an inquiry into Rwanda. They want you to test
     choices: [
       {
         id: "rw-un-choice-04a-a",
-        text: "TestifyΓÇöpush for policy change",
+        text: "Testify—push for policy change",
         consequences: { rw_testified_inquiry: true, rw_advocated_change: true },
         nextScene: "outcome"
       },
       {
         id: "rw-un-choice-04a-b",
-        text: "DeclineΓÇöfocus on healing",
+        text: "Decline—focus on healing",
         consequences: { rw_declined_testimony: true, rw_chose_healing: true },
         nextScene: "outcome"
       },
       {
         id: "rw-un-choice-04a-c",
-        text: "Testify but privatelyΓÇöno media",
+        text: "Testify but privately—no media",
         consequences: { rw_testified_privately: true, rw_avoided_spotlight: true },
         nextScene: "outcome"
       }
@@ -268,19 +268,19 @@ A survivor approaches. "Captain Webb. You stayed. You didn't have to. You saved 
     choices: [
       {
         id: "rw-un-choice-04b-a",
-        text: "Speak at ceremonyΓÇöshare your story",
+        text: "Speak at ceremony—share your story",
         consequences: { rw_spoke_publicly: true, rw_honored_survivors: true },
         nextScene: "outcome"
       },
       {
         id: "rw-un-choice-04b-b",
-        text: "Attend silentlyΓÇölet survivors speak",
+        text: "Attend silently—let survivors speak",
         consequences: { rw_attended_silently: true, rw_centered_survivors: true },
         nextScene: "outcome"
       },
       {
         id: "rw-un-choice-04b-c",
-        text: "Meet survivors privatelyΓÇöno ceremony",
+        text: "Meet survivors privately—no ceremony",
         consequences: { rw_met_privately: true, rw_avoided_ceremony: true },
         nextScene: "outcome"
       }
@@ -289,7 +289,7 @@ A survivor approaches. "Captain Webb. You stayed. You didn't have to. You saved 
 
   {
     id: "rw-un-scene-04c",
-    narrative: `2006. Toronto, Canada. Twelve years later. You evacuated the expatriates. You followed orders. You left Rwandans at the checkpoint. You went home. You filed your report. You did your job. But the facesΓÇöthe woman with the child, the embassy workersΓÇöthey haunt you. You know they died. You know you could have saved them. You chose not to.
+    narrative: `2006. Toronto, Canada. Twelve years later. You evacuated the expatriates. You followed orders. You left Rwandans at the checkpoint. You went home. You filed your report. You did your job. But the faces—the woman with the child, the embassy workers—they haunt you. You know they died. You know you could have saved them. You chose not to.
 
 You have PTSD. Guilt. Nightmares. Your therapist says you followed orders. Your family says you did what you could. But you know the truth. You had a choice. You chose safety over risk. You chose orders over conscience. Most peacekeepers made the same choice. That doesn't make it easier.
 
@@ -301,13 +301,13 @@ You've become an advocate. You speak at universities. You write op-eds. You push
     choices: [
       {
         id: "rw-un-choice-04c-a",
-        text: "ParticipateΓÇötell the full truth",
+        text: "Participate—tell the full truth",
         consequences: { rw_participated_documentary: true, rw_shared_guilt: true },
         nextScene: "outcome"
       },
       {
         id: "rw-un-choice-04c-b",
-        text: "DeclineΓÇökeep advocating privately",
+        text: "Decline—keep advocating privately",
         consequences: { rw_declined_documentary: true, rw_private_advocacy: true },
         nextScene: "outcome"
       },
@@ -334,7 +334,7 @@ Some peacekeepers who documented felt like they did nothing. You gathered eviden
     choices: [
       {
         id: "rw-un-choice-04d-a",
-        text: "Testify fullyΓÇöevery detail",
+        text: "Testify fully—every detail",
         consequences: { rw_testified_tribunal: true, rw_provided_evidence: true },
         nextScene: "outcome"
       },
@@ -362,11 +362,11 @@ const unPeacekeeperOutcomes = [
       rw_stayed_after_withdrawal: true,
       rw_held_hotel: true
     },
-    epilogue: `You survived. You defied orders. When the UN withdrew most of UNAMIR, you stayed. Eight peacekeepers. Twelve hundred refugees at the H├┤tel des Mille Collines. The militia surrounded you. They cut water. They cut power. They threatened daily. But they didn't attack. Your presenceΓÇöblue helmets, UN flagΓÇöheld them back. When the RPF captured Kigali in July, everyone survived. Twelve hundred people lived because you didn't leave.
+    epilogue: `You survived. You defied orders. When the UN withdrew most of UNAMIR, you stayed. Eight peacekeepers. Twelve hundred refugees at the H├┤tel des Mille Collines. The militia surrounded you. They cut water. They cut power. They threatened daily. But they didn't attack. Your presence—blue helmets, UN flag—held them back. When the RPF captured Kigali in July, everyone survived. Twelve hundred people lived because you didn't leave.
 
 Canada gave you a medal. The UN called you a hero. General Dallaire wrote about you. But you have PTSD. Nightmares. Flashbacks. The faces of people you couldn't save at other sites. You saved twelve hundred. Hundreds of thousands died. The math doesn't comfort you. Your therapist says you did what you could. Your family says you're a hero. You don't feel like one.
 
-You testified at inquiries. You advocated for stronger peacekeeping mandates. You spoke at universities. Your story changed policy. It educated people. But it didn't bring back those who died. You return to Rwanda sometimes. Survivors thank you. They say you gave them life. You carry that forwardΓÇöboth the lives you saved and the weight of those you couldn't. You stayed when you could have left. That matters.`
+You testified at inquiries. You advocated for stronger peacekeeping mandates. You spoke at universities. Your story changed policy. It educated people. But it didn't bring back those who died. You return to Rwanda sometimes. Survivors thank you. They say you gave them life. You carry that forward—both the lives you saved and the weight of those you couldn't. You stayed when you could have left. That matters.`
   },
 
   {
@@ -383,7 +383,7 @@ You testified at inquiries. You advocated for stronger peacekeeping mandates. Yo
     },
     epilogue: `You didn't survive. You defied orders. You stayed when the UN withdrew. You held the hotel with four peacekeepers against hundreds of militia. For weeks, your presence kept them back. Then they attacked in force. Grenades. Automatic weapons. You held them off long enough for most refugees to escape through the back. But you were killed in the assault. Quick. Defending the gate.
 
-The RPF arrived two days later. Most of the refugees survived because you bought them time. Your body was recovered. Canada gave you a posthumous medal. The UN named a peacekeeping award after you. General Dallaire spoke at your funeral. He said you embodied what UNAMIR should have beenΓÇöprotection over politics, conscience over orders.
+The RPF arrived two days later. Most of the refugees survived because you bought them time. Your body was recovered. Canada gave you a posthumous medal. The UN named a peacekeeping award after you. General Dallaire spoke at your funeral. He said you embodied what UNAMIR should have been—protection over politics, conscience over orders.
 
 Your family grieved. Your children grew up knowing you died a hero. The survivors you protected remember your name. The hotel has a plaque. Students visit. They learn that some peacekeepers stayed, that some died defending civilians, that courage matters even when mandates fail. You're remembered. You're honored. You carried that choice to the end.`
   },
@@ -395,7 +395,7 @@ Your family grieved. Your children grew up knowing you died a hero. The survivor
       rw_evacuated_expatriates: true,
       rw_left_rwandans: true
     },
-    epilogue: `You survived. You evacuated the expatriates. You followed orders. You left Rwandans at the checkpointΓÇöthe woman with the child, the embassy workers, people begging to board. You went home. You filed your report. You did your job. But the faces haunt you. You know they died. You know you could have saved them. You chose not to.
+    epilogue: `You survived. You evacuated the expatriates. You followed orders. You left Rwandans at the checkpoint—the woman with the child, the embassy workers, people begging to board. You went home. You filed your report. You did your job. But the faces haunt you. You know they died. You know you could have saved them. You chose not to.
 
 You have PTSD. Guilt. Nightmares. Your therapist says you followed orders. Your family says you did what you could. But you know the truth. You had a choice. You chose safety over risk. You chose orders over conscience. Most peacekeepers made the same choice. That doesn't make it easier. The guilt doesn't lift.
 
@@ -413,7 +413,7 @@ You became an advocate. You speak at universities. You write op-eds. You push fo
 
 Some peacekeepers who documented felt like they did nothing. You gathered evidence while people died. But evidence matters. Justice matters. The historical record matters. Your documentation helped convict perpetrators. It helped survivors get justice. It helped the world understand. Without witnesses like you, there would be no accountability. No trials. No historical record.
 
-You testified at The Hague. You spoke at inquiries. You educated students. Your photos are in museums. Your testimony is in archives. You didn't save lives in the moment. But you saved truth. You saved justice. You saved memory. The survivors you photographedΓÇösome lived, some diedΓÇöthey're remembered because you documented them. You carried that responsibility forward. You were a witness. That matters.`
+You testified at The Hague. You spoke at inquiries. You educated students. Your photos are in museums. Your testimony is in archives. You didn't save lives in the moment. But you saved truth. You saved justice. You saved memory. The survivors you photographed—some lived, some died—they're remembered because you documented them. You carried that responsibility forward. You were a witness. That matters.`
   }
 ];
 
