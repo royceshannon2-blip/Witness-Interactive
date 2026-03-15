@@ -50,10 +50,9 @@ class MissionBriefing {
     this.container.innerHTML = this._buildHTML(roleKey);
     document.getElementById('app').appendChild(this.container);
     
-    // Show intro message first time, then apply glossary highlighting
-    glossaryTooltip.showIntro().then(() => {
-      glossaryTooltip.apply(this.container);
-    });
+    // Show intro tooltip immediately (non-blocking)
+    // Do NOT apply glossary highlighting yet — it mutates innerHTML and corrupts the typewriter
+    glossaryTooltip.showIntro();
 
     let pageIdx = 0;
     let typing  = false;
@@ -92,6 +91,8 @@ class MissionBriefing {
       }
 
       this._typeSequence(tasks, () => {
+        // Apply glossary highlights only after typing completes for this page
+        glossaryTooltip.apply(this.container);
         btn.textContent = isLast ? BRIEFING_UI_TEXT.buttons.seeCard : BRIEFING_UI_TEXT.buttons.continue;
         btn.style.opacity  = '1';
         btn.style.pointerEvents = 'all';
