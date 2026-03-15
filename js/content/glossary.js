@@ -8,7 +8,9 @@ export const GLOSSARY = {
   // People and Groups
   "Tutsi": "One of Rwanda's three ethnic groups and the primary targets of the 1994 genocide. Under Belgian colonial rule, Tutsi were given administrative privileges over Hutu, creating lasting resentment. About 75% of Rwanda's Tutsi population — 500,000–800,000 people — were killed in 100 days.",
   "Hutu": "Rwanda's majority ethnic group (~85% of the population). Most genocide perpetrators were Hutu, but thousands of Hutu who protected Tutsi or refused to participate were also killed.",
+  "Hutu moderates": "Hutu people who opposed the genocide, refused to participate, or sheltered Tutsi. The genocide's architects targeted them first — Prime Minister Uwilingiyimana and other moderate leaders were assassinated on April 7, and thousands more were killed as 'accomplices' or 'traitors.'",
   "Hutu moderate": "A Hutu person who opposed the genocide, refused to participate, or sheltered Tutsi. The genocide's architects targeted moderates first because they represented the most immediate internal obstacle.",
+  "moderate Hutu": "A Hutu person who opposed the genocide, refused to participate, or sheltered Tutsi. The genocide's architects targeted moderates first because they represented the most immediate internal obstacle.",
   "Twa": "Rwanda's third ethnic group, a small minority with distinct historical identity.",
   
   // Organizations
