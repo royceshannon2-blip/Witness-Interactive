@@ -23,6 +23,7 @@ import SceneTransition from './SceneTransition.js';
 import AtmosphericEffects from './AtmosphericEffects.js';
 import TimedChoiceSystem from './TimedChoiceSystem.js';
 import { HapticFeedback } from './HapticFeedback.js';
+import glossaryTooltip from './GlossaryTooltip.js';
 
 class UIController {
   constructor(eventBus, timelineSelector, missionRegistry, consequenceSystem, resultsCard, uiContent, components = {}) {
@@ -481,6 +482,8 @@ class UIController {
           scene.narrative,
           30,
           () => {
+            // Apply glossary highlighting after typewriter completes
+            glossaryTooltip.apply(narrativeContainer);
             this.enableChoices();
             this.eventBus.emit('typewriter:complete', { sceneId: scene.id });
             // Start timer AFTER choices are enabled
@@ -490,6 +493,7 @@ class UIController {
           }
         );
       } else {
+        glossaryTooltip.apply(narrativeContainer);
         this.enableChoices();
         this.eventBus.emit('typewriter:complete', { sceneId: scene.id });
         // Start timer AFTER choices are enabled
@@ -498,6 +502,7 @@ class UIController {
         }
       }
     } else {
+      glossaryTooltip.apply(narrativeContainer);
       this.enableChoices();
       this.eventBus.emit('typewriter:complete', { sceneId: scene.id });
       // Start timer AFTER choices are enabled

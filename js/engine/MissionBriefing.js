@@ -17,6 +17,7 @@ import {
   BRIEFING_UI_TEXT,
   BRIEFING_CARD_TEMPLATES
 } from '../content/missions/rwanda/briefing-content.js';
+import glossaryTooltip from './GlossaryTooltip.js';
 
 class MissionBriefing {
   constructor(eventBus) {
@@ -46,6 +47,11 @@ class MissionBriefing {
     this.container.id = 'mission-briefing-overlay';
     this.container.innerHTML = this._buildHTML(roleKey);
     document.getElementById('app').appendChild(this.container);
+    
+    // Show intro message first time, then apply glossary highlighting
+    glossaryTooltip.showIntro().then(() => {
+      glossaryTooltip.apply(this.container);
+    });
 
     let pageIdx = 0;
     let typing  = false;

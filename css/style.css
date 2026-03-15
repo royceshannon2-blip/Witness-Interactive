@@ -3109,3 +3109,121 @@ body.effect-shake #app {
         padding: 1rem 0.5rem 3rem;
     }
 }
+
+/* ============================================
+   Glossary Tooltips
+   ============================================ */
+.glossary-term {
+  border-bottom: 1px dashed rgba(212, 175, 55, 0.6);
+  cursor: help;
+  color: inherit;
+  position: relative;
+  display: inline;
+}
+
+.glossary-term:hover,
+.glossary-term:focus {
+  border-bottom-color: #d4af37;
+  color: #e8c84a;
+  outline: none;
+}
+
+.glossary-tooltip {
+  position: fixed;
+  z-index: 99999;
+  background: #0d1017;
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  max-width: 320px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  color: #c8b898;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-style: normal;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.8);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.glossary-tooltip.visible {
+  opacity: 1;
+}
+
+.glossary-tooltip strong {
+  display: block;
+  color: #d4af37;
+  font-size: 0.88rem;
+  margin-bottom: 0.3rem;
+  font-family: 'Times New Roman', Times, serif;
+}
+
+/* Feature intro message */
+.glossary-intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 14, 26, 0.85);
+  animation: glossary-intro-fade 0.3s ease forwards;
+}
+
+@keyframes glossary-intro-fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.glossary-intro-box {
+  background: #111418;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 4px;
+  padding: 2rem 2.5rem;
+  max-width: 460px;
+  text-align: center;
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.8);
+}
+
+.glossary-intro-box h3 {
+  color: #d4af37;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 1.1rem;
+  margin-bottom: 0.8rem;
+  letter-spacing: 1px;
+}
+
+.glossary-intro-box p {
+  color: #c8b898;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin-bottom: 1.2rem;
+  font-family: Georgia, serif;
+  font-style: italic;
+}
+
+.glossary-intro-demo {
+  display: inline;
+  border-bottom: 1px dashed rgba(212, 175, 55, 0.6);
+  color: #e8c84a;
+  font-style: normal;
+  font-family: Georgia, serif;
+}
+
+.glossary-intro-btn {
+  background: transparent;
+  color: #d4af37;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 0.6rem 1.8rem;
+  font-family: Georgia, serif;
+  font-size: 0.85rem;
+  font-style: italic;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.glossary-intro-btn:hover {
+  background: rgba(212, 175, 55, 0.08);
+  border-color: #d4af37;
+}
