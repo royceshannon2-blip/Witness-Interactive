@@ -617,6 +617,51 @@ The RPF soldiers had lists. Witnesses had been talking since the first days of t
 The gacaca courts recorded the charges posthumously. Category Two perpetrator, killed during RPF advance. The record notes that witnesses also described you hiding Celestin in the first days. Both entries are in the same file. Celestin's son can read it. Your children can read it. The file holds both things without resolving them. That's the only kind of accounting Rwanda has for people who did both.`
   },
 
+  {
+    id: "rw-hm-outcome-rescue-comply-survived-confessor",
+    survived: true,
+    conditions: {
+      rw_helped_celestin: true,
+      rw_complied_at_roadblock: true,
+      rw_confessed_complicity: true
+    },
+    epilogue: `You survived. You hid Celestin — that part is true. You misdirected the militia when they came to your door. Then at the roadblock you followed orders. You checked identity cards and waved people through to their deaths. You told yourself you'd already done enough by hiding Celestin. You told yourself the balance was even. The gacaca courts did not agree with that accounting.
+
+You confessed. Fully, at the hearing. You described what you did at the roadblock — not the hiding, the other part. The judges gave you community service. Celestin testified on your behalf about the attic. His testimony and the witnesses from the roadblock sit in the same file. Both are true. Neither cancels the other.
+
+Rwanda's reconciliation asks you to hold contradictions without resolving them. You hid a man and then you helped kill others. You confessed to the second part. Celestin's son knows both things about you. You live in the same sector. He doesn't speak to you about either. You carry both forward.`
+  },
+
+  {
+    id: "rw-hm-outcome-rescue-comply-survived-minimized",
+    survived: true,
+    conditions: {
+      rw_helped_celestin: true,
+      rw_complied_at_roadblock: true,
+      rw_minimized_role: true
+    },
+    epilogue: `You survived. You hid Celestin, misdirected the militia, and then at the roadblock you followed orders. At the gacaca court you claimed you were forced. That you had no choice once you were assigned to the checkpoint. You emphasized the hiding, minimized the compliance. The judges had heard this pattern before.
+
+You received a reduced sentence. Community service. The reduction came partly from Celestin's testimony — he spoke about the attic, about the risk you took. The judges weighed that against the roadblock witnesses. The accounting was complicated. It always is when someone did both.
+
+You did your community service. You rebuilt homes in the sector where you'd staffed the roadblock. Survivors worked alongside you who recognized you from the checkpoint. Some spoke to you. Some didn't. The gacaca record shows Category Two with mitigating circumstances. That's the official version. Everyone in the sector knows both the mitigation and the circumstance.`
+  },
+
+  {
+    id: "rw-hm-outcome-rescue-comply-survived-denied",
+    survived: true,
+    conditions: {
+      rw_helped_celestin: true,
+      rw_complied_at_roadblock: true,
+      rw_denied_charges: true
+    },
+    epilogue: `You survived. You hid Celestin. You also followed orders at the roadblock. At the gacaca court you denied the second part — claimed the witnesses were wrong, claimed you'd only been present, not participating. Celestin testified about the attic. You hoped that would be enough. It wasn't, quite.
+
+The judges acquitted you on the roadblock charges — insufficient evidence to convict specifically. The denial worked, legally. The roadblock witnesses described a man matching your description but couldn't all agree on the specific moments. The record shows acquittal.
+
+What the record doesn't show is the sector's memory. People who were at that checkpoint remember you. Celestin knows about the attic. He also knows what people say about the roadblock. He's never asked you directly. You've never offered. Rwanda's official identity says you're just Rwandan now — no categories, no distinctions. The unofficial memory is more specific. You live inside the gap between the two.`
+  },
+
   // FALLBACK OUTCOMES - catch-all for paths not covered by specific outcomes
   {
     id: "rw-hm-fallback-survived",
