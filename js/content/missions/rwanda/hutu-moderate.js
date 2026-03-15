@@ -443,7 +443,7 @@ The gacaca courts heard testimony about you in 2007. Survivors described what yo
       historicalRate: "Thousands of Hutu moderates who sheltered Tutsi or refused to participate were killed during the genocide",
       yourChoices: "You helped Celestin hide, but at the roadblock you followed orders. The militia discovered your earlier choice."
     },
-    epilogue: `You didn't survive. You helped Celestin at first—hid him, misdirected the militia. But at the roadblock, you followed orders. You waved people through to their deaths. The militia commander praised you. Then someone recognized you. "That's Augustin. He hid a Tutsi last week." The commander's face changed. "You're a traitor." They killed you at the roadblock you'd been staffing.
+    epilogue: `You didn't survive. You helped Celestin at first—hid him, misdirected the militia. But at the roadblock, you followed orders. You checked identity cards and separated people as instructed. The militia commander praised you. Then someone recognized you. "That's Augustin. He hid a Tutsi last week." The commander's face changed. "You're a traitor." They killed you at the roadblock you'd been staffing.
 
 Celestin survived—he'd already fled when you were discovered. Your family fled to Zaire. When the gacaca courts began, survivors testified about you. Some said you helped. Some said you complied. Both were true. The memorial lists your name in a complicated category: "Hutu moderates killed after initial resistance." Your children grew up with that ambiguity.
 
