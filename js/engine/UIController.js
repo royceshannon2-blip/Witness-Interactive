@@ -335,10 +335,13 @@ class UIController {
 
   renderRoleSelectionScreen(data) {
     const c = this.content.roleSelection;
+    const mission = this.missionRegistry.getMission(this.currentMissionId);
+    const subtitle = mission?.roleSelectionSubtitle || c.subtitle;
+    
     return `
       <article class="role-selection-content" role="article" aria-labelledby="role-selection-title">
         <h2 id="role-selection-title" class="text-center text-gold">${c.title}</h2>
-        <p class="text-center">${c.subtitle}</p>
+        <p class="text-center">${subtitle}</p>
         <section id="all-roles-completed-message" class="panel panel-parchment mt-lg hidden" role="region" aria-live="polite">
           <h3 class="text-gold text-center">${c.allRolesCompletedTitle}</h3>
           <p class="text-center">${c.allRolesCompletedMessage}</p>

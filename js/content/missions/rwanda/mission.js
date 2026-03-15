@@ -41,6 +41,9 @@ const rwandaMission = {
   // One-line teaser for timeline tooltip
   teaser: 'Experience the 100 days that shook the world from three impossible perspectives',
   
+  // Role selection screen subtitle
+  roleSelectionSubtitle: 'Experience the Rwanda Genocide through different eyes',
+  
   // Three playable roles
   roles: [
     {

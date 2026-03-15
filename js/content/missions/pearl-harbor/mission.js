@@ -41,6 +41,9 @@ const pearlHarborMission = {
   // One-line teaser for timeline tooltip
   teaser: 'Experience the attack that brought America into World War II from three perspectives',
   
+  // Role selection screen subtitle
+  roleSelectionSubtitle: 'Experience Pearl Harbor through different eyes',
+  
   // Three playable roles
   roles: [
     {
