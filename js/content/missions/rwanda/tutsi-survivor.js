@@ -451,7 +451,8 @@ Marie survived too. She knows you used her card. She never asked for it back. Sh
     survived: true,
     conditions: {
       rw_witnessed_massacre: true,
-      rw_escaped_church: true
+      rw_escaped_church: true,
+      rw_reached_un_protection: true
     },
     epilogue: `You survived. You witnessed the church massacre—Father Michel killed, grenades, machetes, children. You escaped through the side door during the chaos. You flagged down a UN convoy. You carried what you saw. Most people in that church didn't survive. You did, and you remember everything. The screams. The smell. The faces. You're a witness. That's a burden. That's also a purpose.
 
@@ -485,7 +486,8 @@ The church became a genocide memorial. The RPF arrived weeks later and documente
     survived: true,
     conditions: {
       rw_stayed_hidden_ditch: true,
-      rw_witnessed_massacre: true
+      rw_witnessed_massacre: true,
+      rw_escaped_church: true
     },
     epilogue: `You survived. You stayed in the drainage ditch through the night. Sewage and smoke and the sound of the city dying around you. You didn't flag down the convoy. You waited for dark, then moved — through back streets, through abandoned buildings, through the parts of Kigali where the militia hadn't reached yet. You survived by being invisible.
 

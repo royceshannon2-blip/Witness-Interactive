@@ -483,6 +483,26 @@ You tried to help and then you didn't. You chose risk and then you chose safety.
   },
 
   {
+    id: "rw-hm-outcome-compliance-killed-confessor",
+    survived: false,
+    conditions: {
+      rw_staffed_roadblock: true,
+      rw_continued_compliance: true,
+      rw_confessed_complicity: true
+    },
+    deathContext: {
+      cause: "Killed by RPF forces during the advance on Kigali",
+      historicalRate: "Thousands of Hutu perpetrators were killed by RPF forces as they captured territory in July 1994",
+      yourChoices: "You staffed the roadblock and followed orders for days. The RPF arrived before you reached the gacaca courts."
+    },
+    epilogue: `You didn't survive to confess. You attended the rally, staffed the roadblock, checked cards for days. The RPF advanced faster than the militia commanders had promised. You were still at the roadblock when they arrived — or found in the weeks afterward. You were on the lists. Multiple witnesses.
+
+The gacaca courts didn't open until 2005. You didn't reach 2005. The confession you would have made never happened. Whether you would have actually confessed — fully, without minimizing — is something only you knew. The record doesn't contain your answer.
+
+Your family fled to Zaire. Your children came back in 1996. The charges that would have been filed against you are in the gacaca record alongside the note that you died before proceedings. Some perpetrators who died this way had family members testify on their behalf — partial accounts, second-hand, incomplete. Yours didn't. The record is a list of charges and an absence where the accounting should be. That's the version that exists.`
+  },
+
+  {
     id: "rw-hm-outcome-compliance-survived-confessor",
     survived: true,
     conditions: {
