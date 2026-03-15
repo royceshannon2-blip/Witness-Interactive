@@ -2515,7 +2515,7 @@ body.effect-shake #app {
     align-items: flex-start;
     justify-content: center;
     overflow-y: auto;
-    padding: 1rem 0.5rem 2rem;
+    padding: 2.5rem 1rem 4rem;
     font-family: Georgia, 'Times New Roman', Times, serif;
     animation: mb-fade-in 0.6s ease forwards;
 }
@@ -2528,7 +2528,8 @@ body.effect-shake #app {
 .mb-paper {
     background: #111418;
     width: 100%;
-    max-width: 96vw;
+    max-width: 680px;
+    margin: 0 auto;
     border: 1px solid rgba(212, 175, 55, 0.25);
     display: flex;
     flex-direction: column;
@@ -2699,7 +2700,7 @@ body.effect-shake #app {
 }
 
 #mb-card-section {
-    padding: 1.2rem 1.4rem 1.4rem;
+    padding: 2rem 1.4rem 2.5rem;
     display: none;
     background: #0d1017;
     border-top: 1px solid rgba(212, 175, 55, 0.2);
@@ -2767,6 +2768,8 @@ body.effect-shake #app {
 .physical-card {
     position: relative;
     width: 100%;
+    max-width: 420px;
+    margin: 0 auto;
     font-family: 'Times New Roman', Times, serif;
     overflow: hidden;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.9);
@@ -3086,10 +3089,14 @@ body.effect-shake #app {
     }
     
     #mb-card-section {
-        padding: 0.8rem 1rem 1rem;
+        padding: 1.2rem 1rem 1.8rem;
     }
     
     .pc-body {
         grid-template-columns: 75px 1fr;
+    }
+    
+    #mission-briefing-overlay {
+        padding: 1rem 0.5rem 3rem;
     }
 }
