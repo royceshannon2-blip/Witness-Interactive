@@ -23,6 +23,8 @@ class MissionBriefing {
   constructor(eventBus) {
     this.eventBus = eventBus;
     this.container = null;
+    this._activeIv  = null;   // active setInterval handle
+    this._seqToken  = 0;      // increments each time a new sequence starts
   }
 
   hasBriefing(missionId) {
@@ -120,6 +122,12 @@ class MissionBriefing {
   }
 
   _cleanup() {
+    if (this._activeIv) {
+      clearInterval(this._activeIv);
+      this._activeIv = null;
+    }
+    // Invalidate any in-flight sequence
+    this._seqToken = (this._seqToken || 0) + 1;
     const old = document.getElementById('mission-briefing-overlay');
     if (old) old.remove();
     this.container = null;
@@ -131,21 +139,40 @@ class MissionBriefing {
   }
 
   _typeSequence(tasks, done) {
+    // Kill any previously running interval before starting a new sequence.
+    // Without this, old intervals race with the new sequence and the `done`
+    // callback (which reveals the continue button) never fires reliably.
+    if (this._activeIv) {
+      clearInterval(this._activeIv);
+      this._activeIv = null;
+    }
+
+    // Capture a sequence token so a stale interval from a cancelled sequence
+    // can detect it has been superseded and bail out.
+    const token = ++this._seqToken;
+
     let i = 0;
     const run = () => {
+      // Bail if this sequence has been superseded or container is gone
+      if (token !== this._seqToken || !this.container) return;
+
       if (i >= tasks.length) { if (done) done(); return; }
-      const t = tasks[i++];
-      const el = this.container.querySelector('#' + t.id);
+      const t     = tasks[i++];
+      const el    = this.container.querySelector('#' + t.id);
       if (!el) { setTimeout(run, 10); return; }
       const text  = t.text;
       const speed = t.speed || 18;
       let   j     = 0;
       el.innerHTML = '<span class="mb-cursor"></span>';
-      const iv = setInterval(() => {
+
+      this._activeIv = setInterval(() => {
+        // Bail if superseded mid-interval
+        if (token !== this._seqToken) { clearInterval(this._activeIv); return; }
         j++;
         el.innerHTML = text.slice(0, j) + '<span class="mb-cursor"></span>';
         if (j >= text.length) {
-          clearInterval(iv);
+          clearInterval(this._activeIv);
+          this._activeIv = null;
           el.innerHTML = text;
           setTimeout(run, t.pause || 40);
         }
