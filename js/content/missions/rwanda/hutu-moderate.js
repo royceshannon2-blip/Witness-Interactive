@@ -416,6 +416,21 @@ Celestin testified about what you did for him. That testimony is in the record a
   },
 
   {
+    id: "rw-hm-outcome-rescue-survived-partial",
+    survived: true,
+    conditions: {
+      rw_helped_celestin: true,
+      rw_saved_at_roadblock: true,
+      rw_partial_confession: true
+    },
+    epilogue: `You survived. Celestin survived. You hid him, misdirected the militia, falsified cards at the roadblock. And at the gacaca court you told part of the truth — the part about hiding Celestin, the part about the cards. You didn't tell everything. You left out the names you knew from the communal secretary records. The meetings you'd attended before you decided to resist. The things you'd seen before you decided to act.
+
+The judges accepted the partial account. You received community service. Celestin testified fully — he didn't know what you'd omitted. His testimony covered what he'd witnessed, which was your courage. The parts you left out were things he hadn't seen.
+
+Rwanda's reconciliation process was designed for full confession. You gave a partial one and received the same reduced sentence. The system worked as designed — incentivize disclosure, accept what comes. What you kept to yourself stays with you. The record has the version you gave it. You carry the rest privately. Whether that's guilt or pragmatism, only you can say.`
+  },
+
+  {
     id: "rw-hm-outcome-rescue-survived",
     survived: true,
     conditions: {
