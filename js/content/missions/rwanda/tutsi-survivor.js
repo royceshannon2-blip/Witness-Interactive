@@ -157,6 +157,12 @@ A UN convoy passes. White vehicles. You could flag them down. Or keep hiding. Wa
         text: "Flag down the UN convoy",
         consequences: { rw_reached_un_protection: true },
         nextScene: "rw-ts-scene-04a"
+      },
+      {
+        id: "rw-ts-choice-03a-b",
+        text: "Stay hidden—wait for dark",
+        consequences: { rw_stayed_hidden_ditch: true, rw_witnessed_massacre: true },
+        nextScene: "rw-ts-scene-04b"
       }
     ]
   },
