@@ -547,6 +547,25 @@ Your family fled to Zaire. Your children grew up in the camps. They came back in
   },
 
   {
+    id: "rw-hm-outcome-compliance-killed-minimized",
+    survived: false,
+    conditions: {
+      rw_staffed_roadblock: true,
+      rw_minimized_role: true
+    },
+    deathContext: {
+      cause: "Killed by RPF forces or identified by survivors before gacaca proceedings",
+      historicalRate: "Thousands of Hutu perpetrators were killed or died before the gacaca courts opened in 2005",
+      yourChoices: "You staffed the roadblock and followed orders. You were identified before you could claim you were forced."
+    },
+    epilogue: `You didn't survive to claim you were forced. You attended the rally, staffed the roadblock, checked cards for days. The RPF advanced and found you still at the checkpoint, or found you in the weeks after — survivors had been talking since the first days of the advance, naming people, describing what happened at specific locations on specific dates. Your name came up.
+
+You never got to court. You never got to explain the coercion, the pressure, the lack of alternatives. Those arguments might have worked — gacaca courts did reduce sentences for perpetrators who could demonstrate they'd been threatened into participation. You didn't get the chance to make the case.
+
+The gacaca record lists you as a perpetrator killed during the RPF advance or the immediate aftermath. Category Two. No mitigating testimony on file because there was no hearing. Your family fled to Zaire. Your children came back in 1996. The charges and the outcome are in the record. The context you would have provided is not. That's the version that exists.`
+  },
+
+  {
     id: "rw-hm-outcome-compliance-survived",
     survived: true,
     conditions: {
