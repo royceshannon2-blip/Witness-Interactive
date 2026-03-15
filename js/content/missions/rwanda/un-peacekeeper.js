@@ -29,7 +29,7 @@ Your mandate is clear: peacekeeping, not peace enforcement. You can't fire unles
     apThemes: ["causation", "perspective", "complexity"],
     atmosphericEffect: "dawn",
     ambientTrack: null,
-    narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-01.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-un-choice-01-a",
@@ -62,7 +62,7 @@ Your radio crackles. Dallaire's voice. "All units. Prepare for possible evacuati
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
     ambientTrack: null,
-    narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-02a.mp3",
+    narratorAudio: null,
     timedChoice: { enabled: true, duration: 15000, defaultChoice: "rw-un-choice-02a-b" },
     choices: [
       {
@@ -90,7 +90,7 @@ A woman holds up a child. "Please. Just the children." Your sergeant looks at yo
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: "smoke",
     ambientTrack: null,
-    narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-02b.mp3",
+    narratorAudio: null,
     timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-un-choice-02b-a" },
     choices: [
       {
@@ -118,7 +118,7 @@ Your radio crackles. Dallaire. "All units. Avoid direct confrontation. Document 
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: "smoke",
     ambientTrack: null,
-    narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-02c.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-un-choice-02c-a",
@@ -139,7 +139,7 @@ The militia commander returns. "Captain. Your government will abandon you. The U
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
     ambientTrack: null,
-    narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-03a.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-un-choice-03a-a",
@@ -160,7 +160,7 @@ A militia attack on the hotel seems imminent. You can see them massing. Your rad
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
     ambientTrack: null,
-    narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-03b.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-un-choice-03b-a",
@@ -181,7 +181,7 @@ You're at the airport. You could board a plane. Go home. File your report. Or yo
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: null,
     ambientTrack: null,
-    narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-03c.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-un-choice-03c-a",
@@ -208,7 +208,7 @@ You continue documenting. Roadblocks. Massacres. Refugee movements. You're build
     apThemes: ["perspective", "complexity"],
     atmosphericEffect: "smoke",
     ambientTrack: null,
-    narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-03d.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-un-choice-03d-a",
@@ -231,7 +231,7 @@ The Canadian government is holding an inquiry into Rwanda. They want you to test
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
     ambientTrack: null,
-    narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-04a.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-un-choice-04a-a",
@@ -264,7 +264,7 @@ A survivor approaches. "Captain Webb. You stayed. You didn't have to. You saved 
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
     ambientTrack: null,
-    narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-04b.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-un-choice-04b-a",
@@ -297,7 +297,7 @@ You've become an advocate. You speak at universities. You write op-eds. You push
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
     ambientTrack: null,
-    narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-04c.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-un-choice-04c-a",
@@ -332,7 +332,7 @@ Some peacekeepers who documented felt like they did nothing. You gathered eviden
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
     ambientTrack: null,
-    narratorAudio: "audio/narration/un-peacekeeper/rw-un-scene-04d.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-un-choice-04d-a",
