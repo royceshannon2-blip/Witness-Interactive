@@ -360,7 +360,8 @@ The gacaca courts ran until 2012. Some people who fled, like you, testified as w
     survived: true,
     conditions: {
       rw_fled_kigali: true,
-      rw_testified_as_witness: true
+      rw_testified_as_witness: true,
+      rw_stayed_hidden: true
     },
     epilogue: `You survived. You fled Kigali before the worst began, and you testified when the gacaca courts came to your village. You knew things — communal secretary, access to records, knowledge of who organized what. You gave it. Names. Structures. How the roadblocks were coordinated. You didn't participate. You also didn't look away entirely.
 
@@ -374,7 +375,8 @@ You didn't return to Kigali. The person you were there — communal secretary, l
     survived: true,
     conditions: {
       rw_fled_kigali: true,
-      rw_refused_testimony: true
+      rw_refused_testimony: true,
+      rw_stayed_hidden: true
     },
     epilogue: `You survived. You fled and you stayed quiet. When the gacaca judge came to your village asking what you knew about the coordination of roadblocks in Kigali, you said you didn't remember. That was a lie. You were a communal secretary. You remembered everything.
 
