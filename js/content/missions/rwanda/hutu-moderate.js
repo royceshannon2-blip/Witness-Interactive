@@ -399,6 +399,21 @@ Celestin's wife and two children were killed at a roadblock you couldn't control
   },
 
   {
+    id: "rw-hm-outcome-rescue-survived-denied",
+    survived: true,
+    conditions: {
+      rw_helped_celestin: true,
+      rw_saved_at_roadblock: true,
+      rw_denied_participation: true
+    },
+    epilogue: `You survived. You hid Celestin. You falsified cards at the roadblock. And then at the gacaca court you denied the parts that felt too dangerous to admit — not the saving, but the context around it. The lists you had access to as communal secretary. The names you knew. The things you saw and didn't report. You told the court what made you look like a resister and omitted what complicated that story.
+
+The judges accepted it. You weren't on trial — you were a witness, and witnesses weren't required to incriminate themselves. The gacaca system had no mechanism to compel full disclosure from people it wasn't charging. You used that gap.
+
+Celestin testified about what you did for him. That testimony is in the record alongside your incomplete account. Researchers who study the gacaca archives can read both. The gap between them is visible to anyone who looks. You saved Celestin's life and you protected your own reputation at the same time. Both are true. You carry the complete truth privately. The record carries the version you gave it. Rwanda asks its citizens to live with exactly that kind of complexity, one week at a time.`
+  },
+
+  {
     id: "rw-hm-outcome-rescue-survived",
     survived: true,
     conditions: {
@@ -463,6 +478,55 @@ You tried to help and then you didn't. You chose risk and then you chose safety.
 The confession bought you community service instead of prison. You rebuilt homes. You attended reconciliation meetings. You said the words. Some were true. Some felt like performance. The gacaca courts ran from 2005 to 2012, and every session was a renegotiation of what accountability means in a country trying to stay alive.
 
 Celestin's son knows what you did. You live in the same sector. You see each other at the market. He doesn't speak to you. You don't blame him. You confessed because the gacaca system offered reduced sentences, and because part of you needed someone to hear it. Both reasons were true at the same time. Rwanda's new identity says you're just Rwandan now. You know what you were in April 1994. You carry that forward, one week at a time.`
+  },
+
+  {
+    id: "rw-hm-outcome-compliance-survived-denied",
+    survived: true,
+    conditions: {
+      rw_staffed_roadblock: true,
+      rw_continued_compliance: true,
+      rw_denied_charges: true
+    },
+    epilogue: `You survived. You attended the rally, staffed the roadblock, checked cards for days. At the gacaca court you denied everything. Claimed you were forced. Claimed you had no choice. The judges heard this many times — it was the most common defense. Some perpetrators who denied were convicted anyway when witnesses outnumbered them. Some were acquitted for lack of evidence.
+
+You were acquitted. Not enough witnesses willing to testify against you specifically. The gacaca record shows your name, the charges, and the outcome: insufficient evidence. That record is public. Anyone in Rwanda can access it. Your children can access it. Celestin's son can access it.
+
+Rwanda's reconciliation process asked perpetrators to confess in exchange for reduced sentences. You didn't take that offer. You live with the acquittal and everything it didn't resolve. The gacaca courts closed in 2012. The cases they couldn't close stayed open in other ways — in the market, in the sector meetings, in the faces of people who were there and remember what you did regardless of what the record says. You carry that forward. The record says one thing. The neighborhood knows another.`
+  },
+
+  {
+    id: "rw-hm-outcome-compliance-survived-minimized",
+    survived: true,
+    conditions: {
+      rw_staffed_roadblock: true,
+      rw_continued_compliance: true,
+      rw_minimized_role: true
+    },
+    epilogue: `You survived. You attended the rally, staffed the roadblock, checked cards for days. At the gacaca court you claimed you were forced. That you had no choice. That you were following orders from people above you who gave you no alternative. Some of this was true. None of it was the whole truth.
+
+The gacaca judges heard partial confessions like yours constantly — the kind that acknowledged presence without acknowledging agency. They gave you a reduced sentence anyway. Community service. Eighteen months rebuilding infrastructure in the sector where you'd staffed the roadblock. You worked next to survivors who knew exactly what you'd done and exactly what you'd said at the court. They didn't speak to you. You didn't blame them.
+
+Rwanda's reconciliation process was designed for full confessions, not partial ones. The reduced sentence was the incentive to tell the whole truth. You took the reduced sentence and gave a partial truth. The system accepted it because it needed to keep moving. You live in what that acceptance cost everyone, including you. Some things don't get resolved by a court's decision. You carry the partial accounting forward, one week at a time.`
+  },
+
+  {
+    id: "rw-hm-outcome-compliance-killed-denied",
+    survived: false,
+    conditions: {
+      rw_staffed_roadblock: true,
+      rw_denied_charges: true
+    },
+    deathContext: {
+      cause: "Killed by RPF forces or vigilante justice before gacaca proceedings",
+      historicalRate: "Thousands of perpetrators were killed by RPF forces or in acts of revenge before the gacaca courts began in 2005",
+      yourChoices: "You staffed the roadblock and followed orders. You were identified by survivors before you could deny the charges in court."
+    },
+    epilogue: `You didn't survive to deny anything. The RPF advanced faster than the militia commanders had promised. You were still at the roadblock when they arrived — or found in the weeks afterward when survivors began identifying perpetrators to RPF soldiers. You were on the lists. Multiple witnesses.
+
+The gacaca courts didn't open until 2005. You didn't reach 2005. What happened to you in 1994 or shortly after was documented in RPF records and later in ICTR proceedings as part of the broader accounting of what occurred during and immediately after the genocide. Your death is noted. The charges that would have been filed against you are noted alongside it.
+
+Your family fled to Zaire. Your children grew up in the camps. They came back in 1996 when the camps collapsed. They were told you were a victim. Survivors in the sector knew otherwise. The gacaca record lists the charges and notes that you died before proceedings. That is the official account. The neighborhood account is more specific. Both exist. Neither resolves the other.`
   },
 
   {
