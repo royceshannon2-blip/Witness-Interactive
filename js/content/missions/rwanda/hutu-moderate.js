@@ -582,6 +582,41 @@ Your family was separated from you at the checkpoint. Your wife and children wer
 The gacaca courts later recorded your name in the category of Hutu moderates killed during the genocide — people who neither participated nor resisted, who simply tried to leave and couldn't. Your children grew up knowing you tried to protect them by leaving. That you were killed for who you were, not for what you did. You carried that identity to the end.`
   },
 
+  {
+    id: "rw-hm-outcome-revealed-participated-survived",
+    survived: true,
+    conditions: {
+      rw_helped_celestin: true,
+      rw_revealed_celestin: true,
+      rw_participated_directly: true
+    },
+    epilogue: `You survived. You hid Celestin first — brought him in, told him he was safe. Then you revealed him. The militia dragged him out of your attic. You heard what happened. Then you went to the roadblock and you participated. Not just checked cards. Participated. You told yourself the first choice cancelled out the second. It didn't work that way.
+
+The gacaca courts have a specific category for people like you: Category One if you organized or planned; Category Two if you participated directly. You were Category Two. Multiple witnesses. The judges didn't care that you'd hidden Celestin first. The law looks at what you did across the whole period, not just the moment that makes you look better.
+
+You confessed or denied — either way the witnesses were consistent. You received a sentence. Community service, if you confessed enough. Prison, if you didn't. Either way you came back to a sector where people knew both things about you: that you hid Celestin and that you revealed him. Rwanda's reconciliation asks you to live with both. You do. One week at a time.`
+  },
+
+  {
+    id: "rw-hm-outcome-revealed-participated-killed",
+    survived: false,
+    conditions: {
+      rw_helped_celestin: true,
+      rw_revealed_celestin: true,
+      rw_participated_directly: true
+    },
+    deathContext: {
+      cause: "Killed by RPF forces during the advance on Kigali",
+      historicalRate: "Thousands of Hutu perpetrators were killed by RPF forces as they captured territory in July 1994",
+      yourChoices: "You hid Celestin then revealed him. You participated directly in killings at the roadblock. The RPF identified you."
+    },
+    epilogue: `You didn't survive. You hid Celestin and then you revealed him. Both things happened. You participated at the roadblock after that — not reluctantly, not under immediate threat, but because the machinery was moving and you moved with it. The RPF arrived faster than the militia commanders had promised. You were still at the roadblock.
+
+The RPF soldiers had lists. Witnesses had been talking since the first days of the advance. Your name was on the lists for the roadblock. What happened to Celestin was also documented — neighbors had seen. You were identified and shot. Quick.
+
+The gacaca courts recorded the charges posthumously. Category Two perpetrator, killed during RPF advance. The record notes that witnesses also described you hiding Celestin in the first days. Both entries are in the same file. Celestin's son can read it. Your children can read it. The file holds both things without resolving them. That's the only kind of accounting Rwanda has for people who did both.`
+  },
+
   // FALLBACK OUTCOMES - catch-all for paths not covered by specific outcomes
   {
     id: "rw-hm-fallback-survived",
