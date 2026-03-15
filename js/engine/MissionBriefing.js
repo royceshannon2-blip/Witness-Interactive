@@ -91,12 +91,17 @@ class MissionBriefing {
       }
 
       this._typeSequence(tasks, () => {
-        // Apply glossary highlights only after typing completes for this page
-        glossaryTooltip.apply(this.container);
         btn.textContent = isLast ? BRIEFING_UI_TEXT.buttons.seeCard : BRIEFING_UI_TEXT.buttons.continue;
         btn.style.opacity  = '1';
         btn.style.pointerEvents = 'all';
         typing = false;
+        
+        // Apply glossary only to text content elements, NOT the whole container.
+        // Passing this.container rewrites all innerHTML including the button, resetting it to hidden.
+        ['mb-dateline', 'hl', 'mb-deck', 'mb-body', 'mb-ticker'].forEach(id => {
+          const el = this.container.querySelector('#' + id);
+          if (el) glossaryTooltip.apply(el);
+        });
       });
     };
 
