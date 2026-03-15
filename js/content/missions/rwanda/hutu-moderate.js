@@ -244,7 +244,7 @@ Celestin watches you. His son—the one who survived—sits beside him. The crow
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
     ambientTrack: null,
-    narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-04a.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-hm-choice-04a-a",
@@ -279,7 +279,7 @@ Or you could deny it. Claim you were forced. Claim you had no choice. Some perpe
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
     ambientTrack: null,
-    narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-04b.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-hm-choice-04b-a",
@@ -314,7 +314,7 @@ A gacaca judge visits. "Augustin. We need testimony about what happened in Kigal
     apThemes: ["continuity", "perspective"],
     atmosphericEffect: null,
     ambientTrack: null,
-    narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-04d.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-hm-choice-04d-a",

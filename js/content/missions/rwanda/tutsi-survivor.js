@@ -362,7 +362,7 @@ The conference is next week. Journalists will attend. Students. Researchers. You
     apThemes: ["continuity", "perspective", "complexity"],
     atmosphericEffect: null,
     ambientTrack: null,
-    narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-04d.mp3",
+    narratorAudio: null,
     choices: [
       {
         id: "rw-ts-choice-04d-a",
