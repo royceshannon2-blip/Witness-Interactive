@@ -465,7 +465,8 @@ Some survivors find power in testimony. You found both power and exhaustion. Spe
     survived: false,
     conditions: {
       rw_witnessed_massacre: true,
-      rw_escaped_church: true
+      rw_escaped_church: true,
+      rw_trusted_church: true
     },
     deathContext: {
       cause: "Killed at a roadblock while trying to reach safety after escaping the church",
@@ -497,7 +498,8 @@ The gacaca courts and the ICTR both needed witnesses. You had to decide whether 
     id: "rw-ts-outcome-hidden-ditch-killed",
     survived: false,
     conditions: {
-      rw_stayed_hidden_ditch: true
+      rw_stayed_hidden_ditch: true,
+      rw_witnessed_massacre: true
     },
     deathContext: {
       cause: "Found while hiding and killed",
@@ -515,7 +517,8 @@ The RPF arrived weeks later. They documented the church. They found the ditch. T
     id: "rw-ts-outcome-ceiling-killed",
     survived: false,
     conditions: {
-      rw_survived_church_hiding: true
+      rw_survived_church_hiding: true,
+      rw_trusted_church: true
     },
     deathContext: {
       cause: "Found in church ceiling crawlspace by returning militia",
@@ -533,7 +536,8 @@ Your name is on the wall with three hundred others. You lasted longer than most.
     id: "rw-ts-outcome-attic-killed",
     survived: false,
     conditions: {
-      rw_trusted_protector: true
+      rw_trusted_protector: true,
+      rw_hid_with_hutu: true
     },
     deathContext: {
       cause: "Discovered by Jeanne's Interahamwe brother during a house search",
@@ -551,7 +555,8 @@ You were hidden by someone who risked everything to protect you. That protection
     id: "rw-ts-outcome-enclave-killed",
     survived: false,
     conditions: {
-      rw_reached_hotel: true
+      rw_reached_hotel: true,
+      rw_used_false_id: true
     },
     deathContext: {
       cause: "Killed when militia breached the hotel perimeter",
