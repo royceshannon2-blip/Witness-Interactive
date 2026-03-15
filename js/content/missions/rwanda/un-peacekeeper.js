@@ -470,6 +470,63 @@ The UN investigated. The report noted that you had violated your mandate, endang
 Canada gave you a posthumous commendation. Your family received it. Dallaire spoke at a memorial service and said your name alongside the ten Belgians killed on April 7th. He said the genocide produced too many names like yours — people who tried to act within a system designed to prevent action. You carried that choice to the end. The seven people you tried to save are also names now.`
   },
 
+  {
+    id: "rw-un-outcome-mandate-held-killed",
+    survived: false,
+    conditions: {
+      rw_protected_hotel: true,
+      rw_held_position: true
+    },
+    deathContext: {
+      cause: "Killed when militia attacked the hotel after UN force was reduced",
+      historicalRate: "Some peacekeepers who remained to protect civilians were killed during militia attacks on protected sites",
+      yourChoices: "You followed your mandate and held position at the hotel. When the force was reduced to four peacekeepers, the militia attacked."
+    },
+    epilogue: `You didn't survive. You followed your orders exactly — held position, protected the designated safe zone, did not defy the mandate. When the Security Council cut UNAMIR to 270 soldiers and your detachment was reduced to four, you stayed at the gate. You'd done everything correctly within the rules you were given.
+
+The militia waited for the numbers to drop. They were patient and they were organized and they had been watching the peacekeeping force shrink for two weeks. When they came through the gate you were outnumbered and under-authorized and the rules of engagement did not allow you to do what would have been necessary to stop them.
+
+Canada gave you a posthumous service medal. The UN noted your compliance with the mandate in its post-genocide review — the same review that concluded the mandate itself had been inadequate. You followed the rules. The rules were wrong. Both things are recorded in the same document. Dallaire wrote later that the soldiers who died in Rwanda following their mandates deserved better mandates. He was right. You were one of the people he was writing about.`
+  },
+
+  {
+    id: "rw-un-outcome-evacuated-killed",
+    survived: false,
+    conditions: {
+      rw_evacuated_expatriates: true,
+      rw_left_rwandans: true
+    },
+    deathContext: {
+      cause: "Killed during the evacuation convoy by militia who stopped the vehicles",
+      historicalRate: "Several evacuation convoys were stopped and threatened by militia during the withdrawal from Rwanda",
+      yourChoices: "You followed orders and evacuated expatriates only. The convoy was stopped by militia on the way to the airport."
+    },
+    epilogue: `You didn't survive. You followed your orders. Foreign nationals only — no Rwandans. You left the people at the checkpoint behind. The woman with the child. The embassy workers. You drove away from them and toward the airport and your orders and your conscience were at war for the twenty minutes it took to reach the roadblock that stopped the convoy.
+
+The militia commander wanted something — money, a radio, proof of something. The negotiation failed. Three peacekeepers were killed at that roadblock before the convoy was allowed to proceed. You were one of them.
+
+The foreign nationals made it to the airport. They went home. They were debriefed. Some of them testified later about what they saw during the evacuation — the roadblocks, the bodies, the people left behind at checkpoints. They mentioned peacekeepers who died protecting them. Your name is in those depositions. You followed your orders to the end. The orders asked you to prioritize certain lives over others. You did. Then you died doing it. The gap between those two facts is what the subsequent inquiries spent years trying to understand.`
+  },
+
+  {
+    id: "rw-un-outcome-documented-killed",
+    survived: false,
+    conditions: {
+      rw_documented_evidence: true,
+      rw_sent_genocide_fax: true
+    },
+    deathContext: {
+      cause: "Killed by militia while documenting atrocities",
+      historicalRate: "Journalists and peacekeepers who stayed to document the genocide faced significant danger, and several were killed",
+      yourChoices: "You stayed to document what was happening. You sent reports to New York. The militia viewed your documentation as a threat."
+    },
+    epilogue: `You didn't survive. You stayed. You documented. You sent the reports — photos, testimony, names, dates, the specific language the militia commanders used when they thought no one official was listening. You sent them to Dallaire, to New York, to the media contacts you had. The world received your reports and debated their implications while you were still in the field generating more of them.
+
+The militia commander at the church had been patient with you for two weeks. You were a witness and witnesses made them nervous and nervous people do unpredictable things. On a Tuesday he decided your presence was more threatening than your UN status was protective.
+
+Your documentation survived you. The photos you took were entered into evidence at the ICTR. The reports you filed are in the UN archives. Three militia leaders were convicted partly on the basis of evidence you collected. You didn't live to testify. Your camera did it for you. Dallaire cited your work specifically in his memoir — not your name, because your family asked for privacy, but your work. The evidence existed. The convictions followed. You were the reason.`
+  },
+
   // FALLBACK OUTCOMES - catch-all for paths not covered by specific outcomes
   {
     id: "rw-un-fallback-survived",

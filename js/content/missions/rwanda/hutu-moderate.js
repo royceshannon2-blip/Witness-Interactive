@@ -498,6 +498,24 @@ Your family fled to Zaire. Your wife told your children you were a victim, that 
 The memorial doesn't list your name. The history books don't record you as a victim. You're a statistic—one of the perpetrators killed during the RPF advance. Celestin's son grew up knowing you revealed his father's hiding place. Your own children grew up knowing what you did. There's no reconciliation for you. You're just gone. You carried those choices to the end.`
   },
 
+  {
+    id: "rw-hm-outcome-flight-killed",
+    survived: false,
+    conditions: {
+      rw_fled_kigali: true
+    },
+    deathContext: {
+      cause: "Killed at a roadblock while fleeing Kigali",
+      historicalRate: "Thousands of Tutsi and Hutu moderates were killed at roadblocks while attempting to flee Kigali in the first days of the genocide",
+      yourChoices: "You told Celestin to leave and fled before dawn. The roads out of Kigali were controlled by Interahamwe. You didn't make it through."
+    },
+    epilogue: `You didn't survive. You fled before dawn — told Celestin to go, packed your family, took the road toward Gitarama. The roadblocks were everywhere. Identity cards. Machetes. The Interahamwe had been positioned on every route out of Kigali the night before — they were ready. You were stopped two kilometers outside the city. The militia commander looked at your card. Looked at your face. Someone in the crowd recognized you from the communal office. "He's on the list. He refused the rally."
+
+Your family was separated from you at the checkpoint. Your wife and children were waved through — Hutu cards, no flags against them. You were not. They made it to Gitarama. They survived.
+
+The gacaca courts later recorded your name in the category of Hutu moderates killed during the genocide — people who neither participated nor resisted, who simply tried to leave and couldn't. Your children grew up knowing you tried to protect them by leaving. That you were killed for who you were, not for what you did. You carried that identity to the end.`
+  },
+
   // FALLBACK OUTCOMES - catch-all for paths not covered by specific outcomes
   {
     id: "rw-hm-fallback-survived",

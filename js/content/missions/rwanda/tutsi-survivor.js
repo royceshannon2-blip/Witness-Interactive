@@ -460,6 +460,111 @@ The International Criminal Tribunal for Rwanda called you to testify in 2006. Yo
 Some survivors find power in testimony. You found both power and exhaustion. Speaking the truth made it real again. But it also made it matter. The historical record includes your voice. Justice depended on witnesses like you. The memorial lists the names of those who died. You visit once a year. You speak their names. You carry their stories forward. You survived to remember, and that's both gift and burden.`
   },
 
+  {
+    id: "rw-ts-outcome-testimony-killed",
+    survived: false,
+    conditions: {
+      rw_witnessed_massacre: true,
+      rw_escaped_church: true
+    },
+    deathContext: {
+      cause: "Killed at a roadblock while trying to reach safety after escaping the church",
+      historicalRate: "Most Tutsi who escaped church massacres were caught at subsequent roadblocks",
+      yourChoices: "You escaped the church. You saw what happened. You tried to reach safety or flag down help. You were caught."
+    },
+    epilogue: `You didn't survive. You escaped the church — ran through the side door while the militia was still inside. You saw what happened. Father Michel. The grenades. The children. You carried that out with you into the street and tried to survive long enough for it to matter.
+
+You didn't make it to safety. A roadblock two blocks from the church. Your identity card. The militia commander didn't hesitate. You'd seen too much and you were the wrong ethnicity and the two facts combined into one outcome in about thirty seconds.
+
+The church became a genocide memorial. The RPF arrived weeks later and documented what happened there. Witnesses testified at the ICTR about the massacre — people who escaped through other doors, who survived different roadblocks. Your story was told by them. The memorial lists your name with the three hundred who died that day. You were nineteen years old. You had seen everything. You just didn't survive long enough to say it.`
+  },
+
+  {
+    id: "rw-ts-outcome-hidden-ditch-survived",
+    survived: true,
+    conditions: {
+      rw_stayed_hidden_ditch: true,
+      rw_witnessed_massacre: true
+    },
+    epilogue: `You survived. You stayed in the drainage ditch through the night. Sewage and smoke and the sound of the city dying around you. You didn't flag down the convoy. You waited for dark, then moved — through back streets, through abandoned buildings, through the parts of Kigali where the militia hadn't reached yet. You survived by being invisible.
+
+The RPF captured Kigali on July 4th, 1994. You were alive. Thin. Traumatized. A witness to something most people in the world didn't believe was happening while it happened. You'd seen the church. You knew exactly what had occurred there and who had done it.
+
+The gacaca courts and the ICTR both needed witnesses. You had to decide whether to speak — whether your testimony was yours to give or yours to keep. Whether speaking would bring justice or just re-traumatize you for someone else's education. Rwanda's reconciliation process asked survivors to participate in their own healing as a public act. Some found that necessary. You found it complicated. Both things were true at the same time.`
+  },
+
+  {
+    id: "rw-ts-outcome-hidden-ditch-killed",
+    survived: false,
+    conditions: {
+      rw_stayed_hidden_ditch: true
+    },
+    deathContext: {
+      cause: "Found while hiding and killed",
+      historicalRate: "Most Tutsi in Kigali who attempted to hide without shelter were found within days",
+      yourChoices: "You stayed hidden in the drainage ditch rather than flagging the UN convoy. The militia searched the area."
+    },
+    epilogue: `You didn't survive. You stayed hidden — didn't flag the convoy, didn't move until dark. The drainage ditch felt safer than the open street. For a few hours, it was. Then the militia began systematic searches of the area around the church, looking for survivors. They found you before morning.
+
+You had seen what happened in the church. You were a witness to one of the worst single massacres of the genocide. That testimony died with you in the ditch. The ICTR reconstructed what happened at the church from other witnesses — people who had escaped through different routes, who had survived different hiding places. Your account was never recorded.
+
+The RPF arrived weeks later. They documented the church. They found the ditch. The memorial lists the names of everyone who died in that area in April 1994. Your name is there. You were nineteen years old. You had survived the massacre and then didn't survive the night. That distance — one massacre to the next morning — is the distance that separated most people who lived from most people who didn't.`
+  },
+
+  {
+    id: "rw-ts-outcome-ceiling-killed",
+    survived: false,
+    conditions: {
+      rw_survived_church_hiding: true
+    },
+    deathContext: {
+      cause: "Found in church ceiling crawlspace by returning militia",
+      historicalRate: "Militia systematically searched churches for survivors in the days following massacres",
+      yourChoices: "You hid in the ceiling crawlspace. The militia returned to search for survivors."
+    },
+    epilogue: `You didn't survive. You held absolutely still in the ceiling for twenty-four hours. The old man beside you held still too. The militia came back — they always came back — and this time they looked up. You heard them moving the ladder. The old man looked at you. You both knew.
+
+The church was documented by the RPF when they arrived in July. The crawlspace above the sacristy was noted in their records — evidence of people who had tried to hide there. The church became a genocide memorial. Tourists visit now. They see the skulls arranged on shelves, the clothes preserved, the names on the walls. The guide explains that some survivors hid in the ceiling for days before being found.
+
+Your name is on the wall with three hundred others. You lasted longer than most. You were quiet when it counted. It wasn't enough, and that wasn't a failure — it was the arithmetic of what happened there. Three hundred names. You are one of them. You were nineteen years old and you held still until you couldn't anymore.`
+  },
+
+  {
+    id: "rw-ts-outcome-attic-killed",
+    survived: false,
+    conditions: {
+      rw_trusted_protector: true
+    },
+    deathContext: {
+      cause: "Discovered by Jeanne's Interahamwe brother during a house search",
+      historicalRate: "Many Hutu who sheltered Tutsi were betrayed by family members who were militia",
+      yourChoices: "You hid in Jeanne's attic. Her brother was Interahamwe. He eventually searched the house."
+    },
+    epilogue: `You didn't survive. Jeanne's brother came back a fourth time and this time he didn't ask — he searched. He knew the house. He knew where the ceiling panel was. Jeanne tried to stop him. He pushed past her. He found you in the attic.
+
+Jeanne was arrested for sheltering a Tutsi. She survived the genocide — released when the RPF arrived — but her brother served six years for roadblock killings and for what happened to you. The gacaca courts heard testimony about that attic. Jeanne's children testified about the weeks you spent up there. About the silence. About how they'd learned not to speak.
+
+You were hidden by someone who risked everything to protect you. That protection wasn't enough, and that failure wasn't Jeanne's — it was the systematic, organized nature of what was happening. Militia members were searching houses. Family members were informing on family members. Jeanne's courage was real. The genocide was more organized than her courage could contain. Your name is in the gacaca record alongside hers. She still visits the memorial on April 7th. She says your name out loud every year.`
+  },
+
+  {
+    id: "rw-ts-outcome-enclave-killed",
+    survived: false,
+    conditions: {
+      rw_reached_hotel: true
+    },
+    deathContext: {
+      cause: "Killed when militia breached the hotel perimeter",
+      historicalRate: "While most people in the Hôtel des Mille Collines survived, the threat of militia breach was constant and some protected sites were overrun",
+      yourChoices: "You made it to the hotel with Marie's identity card. You were inside the UN-protected perimeter when the militia breached it."
+    },
+    epilogue: `You didn't survive. You made it to the hotel — showed Marie's card, got through the roadblock, registered under her name. Twelve hundred people in a building meant for two hundred. UN peacekeepers at the gate. For weeks it held.
+
+Then the withdrawal order came. The Security Council cut UNAMIR to 270 soldiers. The peacekeepers at the gate were reduced to four. The militia commander outside had been waiting for exactly this. He walked through the gate on a Tuesday morning and his men came with him.
+
+Most people in the hotel survived. The RPF arrived in time for most of them. You were in the wrong corridor at the wrong moment — the militia moved fast and the remaining peacekeepers couldn't cover every room. The hotel became famous after the genocide. A film was made about it. The manager who negotiated for the people inside became an international figure. The twelve hundred who survived are cited in every account of the genocide as evidence that protection was possible. You were inside that protection. It just didn't hold long enough to include you.`
+  },
+
   // FALLBACK OUTCOMES - catch-all for paths not covered by specific outcomes
   {
     id: "rw-ts-fallback-survived",
