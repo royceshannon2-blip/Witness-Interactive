@@ -483,23 +483,26 @@ class UIController {
           () => {
             this.enableChoices();
             this.eventBus.emit('typewriter:complete', { sceneId: scene.id });
-            if (scene.timedChoice && this.timedChoiceSystem) {
-              this.startTimedChoice(scene.timedChoice);
+            // Start timer AFTER choices are enabled
+            if (this.currentSceneData?.timedChoice?.enabled && this.timedChoiceSystem) {
+              this.startTimedChoice(this.currentSceneData.timedChoice);
             }
           }
         );
       } else {
         this.enableChoices();
         this.eventBus.emit('typewriter:complete', { sceneId: scene.id });
-        if (scene.timedChoice && this.timedChoiceSystem) {
-          this.startTimedChoice(scene.timedChoice);
+        // Start timer AFTER choices are enabled
+        if (this.currentSceneData?.timedChoice?.enabled && this.timedChoiceSystem) {
+          this.startTimedChoice(this.currentSceneData.timedChoice);
         }
       }
     } else {
       this.enableChoices();
       this.eventBus.emit('typewriter:complete', { sceneId: scene.id });
-      if (scene.timedChoice && this.timedChoiceSystem) {
-        this.startTimedChoice(scene.timedChoice);
+      // Start timer AFTER choices are enabled
+      if (this.currentSceneData?.timedChoice?.enabled && this.timedChoiceSystem) {
+        this.startTimedChoice(this.currentSceneData.timedChoice);
       }
     }
     
@@ -558,7 +561,14 @@ class UIController {
       timedChoiceConfig.duration,
       timedChoiceConfig.defaultChoice,
       (choiceId) => {
-        if (defaultChoiceButton) {
+        // Ensure button is enabled before clicking
+        if (defaultChoiceButton && !defaultChoiceButton.disabled) {
+          defaultChoiceButton.click();
+        } else if (defaultChoiceButton) {
+          // Button still disabled — enable it first then click
+          defaultChoiceButton.disabled = false;
+          defaultChoiceButton.style.pointerEvents = 'auto';
+          defaultChoiceButton.style.opacity = '1';
           defaultChoiceButton.click();
         }
       }
