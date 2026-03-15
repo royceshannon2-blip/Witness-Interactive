@@ -435,6 +435,28 @@ Marie survived too. She knows you used her card. She never asked for it back. Sh
 The International Criminal Tribunal for Rwanda called you to testify in 2006. You flew to Arusha, Tanzania. You sat in a formal courtroom with translators and judges from three countries. You described what you saw. Every detail. Names. Times. Who gave orders. Who carried them out. The defense attorney cross-examined you. He questioned your memory, your motives, your credibility. You held steady. Your testimony helped convict the militia commander who organized the massacre.
 
 Some survivors find power in testimony. You found both power and exhaustion. Speaking the truth made it real again. But it also made it matter. The historical record includes your voice. Justice depended on witnesses like you. The memorial lists the names of those who died. You visit once a year. You speak their names. You carry their stories forward. You survived to remember, and that's both gift and burden.`
+  },
+
+  // FALLBACK OUTCOMES - catch-all for paths not covered by specific outcomes
+  {
+    id: "rw-ts-fallback-survived",
+    survived: true,
+    conditions: {},
+    epilogue: `You survived. The RPF captured Kigali on July 4th, 1994. The genocide ended. Of Rwanda's Tutsi population — roughly 930,000 people — approximately 75% were killed in 100 days. You were among those who lived.
+
+How you survived involved a series of choices that this system couldn't reduce to a single clear path. Most survivors' stories are like that — not one decision but dozens, not one person who helped but several, not one close call but a sequence of them that could have broken anywhere and didn't.
+
+The years after survival have their own weight. Kwibuka — Rwanda's national remembrance, held each April 7th — asks survivors to remember publicly and together. Some find that necessary. Some find it impossible. Some find it both at once. You carry what happened. Rwanda is being rebuilt by people who mostly weren't alive in 1994. That future is partly yours and partly something you'll watch from the edges. You're alive. That is the beginning of whatever comes next.`
+  },
+  {
+    id: "rw-ts-fallback-killed",
+    survived: false,
+    conditions: {},
+    epilogue: `You didn't survive. The genocide killed approximately 800,000 people in 100 days — an average of 8,000 per day, the fastest mass killing in recorded history. You were one of them.
+
+The specific circumstances — which church, which roadblock, which choice that ended in the wrong place at the wrong moment — aren't fully captured in the path this story traced. The genocide was methodical but not perfectly predictable. Survival often came down to location, to who happened to be at a particular checkpoint, to whether a neighbor spoke or stayed silent. You encountered the wrong version of those variables.
+
+Your name belongs in the memorial. Rwanda has the Kigali Genocide Memorial, which holds the remains of over 250,000 victims and lists names on its walls. April 7th — Kwibuka — is the day Rwanda remembers. Your story is part of what that day is for. You were 19 years old, a student, a person who had plans. 1994 ended them. That is what the genocide did, one person at a time, 800,000 times.`
   }
 ];
 
