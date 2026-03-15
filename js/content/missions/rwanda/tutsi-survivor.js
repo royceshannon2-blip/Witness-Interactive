@@ -64,6 +64,10 @@ The militia pours in. Machetes. Grenades. People running. The altar is no protec
     atmosphericEffect: "shake",
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-02a.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-gunshot-muffled.mp3', triggerAfterMs: 2800 },
+      { file: 'rw-sfx-grenade-muffled.mp3', triggerAfterMs: 5200 }
+    ],
     timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-ts-choice-02a-b" },
     choices: [
       {
@@ -94,6 +98,10 @@ Outside, you hear the roadblock. Voices. Machetes on pavement. The radio plays f
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-02b.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-door-knock.mp3', triggerAfterMs: 800 },
+      { file: 'rw-sfx-floorboard-creak.mp3', triggerAfterMs: 3000 }
+    ],
     choices: [
       {
         id: "rw-ts-choice-02b-a",
@@ -140,6 +148,9 @@ A UN convoy passes. White vehicles. You could flag them down. Or keep hiding. Wa
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-03a.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-un-vehicle-pass.mp3', triggerAfterMs: 4500 }
+    ],
     choices: [
       {
         id: "rw-ts-choice-03a-a",
@@ -163,6 +174,10 @@ The old man coughs. Quiet, but not quiet enough. Below, footsteps stop. "You hea
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-03b.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-boots-stone.mp3', triggerAfterMs: 3200 },
+      { file: 'rw-sfx-suppressed-cough.mp3', triggerAfterMs: 5800 }
+    ],
     choices: [
       {
         id: "rw-ts-choice-03b-a",

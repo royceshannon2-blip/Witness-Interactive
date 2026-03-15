@@ -119,6 +119,10 @@ Your radio crackles. Dallaire. "All units. Avoid direct confrontation. Document 
     atmosphericEffect: "smoke",
     ambientTrack: null,
     narratorAudio: null,
+    soundEffects: [
+      { file: 'rw-sfx-camera-shutter.mp3', triggerAfterMs: 1500 },
+      { file: 'rw-sfx-camera-shutter.mp3', triggerAfterMs: 3800 }
+    ],
     choices: [
       {
         id: "rw-un-choice-02c-a",

@@ -64,6 +64,10 @@ You have seconds. The roadblock at the end of the street—you know the commande
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-02a.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-door-knock.mp3', triggerAfterMs: 2200 },
+      { file: 'rw-sfx-floorboard-creak.mp3', triggerAfterMs: 4800 }
+    ],
     choices: [
       {
         id: "rw-hm-choice-02a-a",
