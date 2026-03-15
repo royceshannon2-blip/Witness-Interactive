@@ -34,19 +34,19 @@ Your mandate is clear: peacekeeping, not peace enforcement. You can't fire unles
       {
         id: "rw-un-choice-01-a",
         text: "Deploy to hotel—protect civilians",
-        consequences: { rw_chose_protection: true, rw_stayed_path: 4 },
+        consequences: { rw_chose_protection: true },
         nextScene: "rw-un-scene-02a"
       },
       {
         id: "rw-un-choice-01-b",
         text: "Evacuate expatriates as ordered",
-        consequences: { rw_followed_evacuation_orders: true, rw_evacuated_path: 4 },
+        consequences: { rw_followed_evacuation_orders: true },
         nextScene: "rw-un-scene-02b"
       },
       {
         id: "rw-un-choice-01-c",
         text: "Document atrocities—gather evidence",
-        consequences: { rw_chose_documentation: true, rw_documented_path: 4 },
+        consequences: { rw_chose_documentation: true },
         nextScene: "rw-un-scene-02c"
       }
     ]
@@ -68,13 +68,13 @@ Your radio crackles. Dallaire's voice. "All units. Prepare for possible evacuati
       {
         id: "rw-un-choice-02a-a",
         text: "Defy orders—stay no matter what",
-        consequences: { rw_defied_orders: true, rw_stayed_after_withdrawal: true, rw_stayed_path: 3 },
+        consequences: { rw_defied_orders: true, rw_stayed_after_withdrawal: true },
         nextScene: "rw-un-scene-03a"
       },
       {
         id: "rw-un-choice-02a-b",
         text: "Hold position—follow mandate for now",
-        consequences: { rw_followed_mandate: true, rw_protected_hotel: true, rw_stayed_path: 2 },
+        consequences: { rw_followed_mandate: true, rw_protected_hotel: true },
         nextScene: "rw-un-scene-03b"
       }
     ]
@@ -96,13 +96,13 @@ A woman holds up a child. "Please. Just the children." Your sergeant looks at yo
       {
         id: "rw-un-choice-02b-a",
         text: "Follow orders—expatriates only",
-        consequences: { rw_evacuated_expatriates: true, rw_left_rwandans: true, rw_evacuated_path: 3 },
+        consequences: { rw_evacuated_expatriates: true, rw_left_rwandans: true },
         nextScene: "rw-un-scene-03c"
       },
       {
         id: "rw-un-choice-02b-b",
         text: "Take Rwandans—risk the convoy",
-        consequences: { rw_saved_rwandans: true, rw_defied_orders: true, rw_evacuated_path: 2 },
+        consequences: { rw_saved_rwandans: true, rw_defied_orders: true },
         nextScene: "rw-un-scene-03c"
       }
     ]
@@ -123,7 +123,7 @@ Your radio crackles. Dallaire. "All units. Avoid direct confrontation. Document 
       {
         id: "rw-un-choice-02c-a",
         text: "Stay and document—be a witness",
-        consequences: { rw_documented_evidence: true, rw_witnessed_massacre: true, rw_documented_path: 3 },
+        consequences: { rw_documented_evidence: true, rw_witnessed_massacre: true },
         nextScene: "rw-un-scene-03d"
       }
     ]
@@ -322,7 +322,9 @@ You've become an advocate. You speak at universities. You write op-eds. You push
 
   {
     id: "rw-un-scene-04d",
-    narrative: `2012. The Hague, Netherlands. Eighteen years later. You documented everything. Churches. Roadblocks. Massacres. Identity card checks. You sent reports to New York. To Dallaire. To the media. The world saw. The world didn't act. But your evidence mattered later. The International Criminal Tribunal for Rwanda used your photos, your testimony, your reports. Militia leaders were convicted. RTLM broadcasters were convicted. Justice was slow. But it came.
+    narrative: `July 4, 1994. The RPF captured Kigali. The genocide ended after 100 days. Twelve years later.
+
+2012. The Hague, Netherlands. You documented everything. Churches. Roadblocks. Massacres. Identity card checks. You sent reports to New York. To Dallaire. To the media. The world saw. The world didn't act. But your evidence mattered later. The International Criminal Tribunal for Rwanda used your photos, your testimony, your reports. Militia leaders were convicted. RTLM broadcasters were convicted. Justice was slow. But it came.
 
 Now you're testifying again. A war crimes trial. The defendant organized the church massacre you documented. Your photos are evidence. Your testimony is crucial. The defense attorney will question your credibility, your motives, your methods. But you were there. You saw. You documented. The truth is in your camera. The truth is in your notebook. The truth is in your memory.
 

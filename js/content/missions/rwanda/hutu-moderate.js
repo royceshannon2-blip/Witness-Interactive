@@ -33,19 +33,19 @@ Your wife catches your eye from the kitchen. Fear. The radio mentioned moderate 
       {
         id: "rw-hm-choice-01-a",
         text: "Hide Celestin in the attic",
-        consequences: { rw_helped_celestin: true, rw_rescue_path: 4 },
+        consequences: { rw_helped_celestin: true },
         nextScene: "rw-hm-scene-02a"
       },
       {
         id: "rw-hm-choice-01-b",
         text: "Attend the Hutu Power rally",
-        consequences: { rw_attended_rally: true, rw_compliance_path: 3 },
+        consequences: { rw_attended_rally: true },
         nextScene: "rw-hm-scene-02b"
       },
       {
         id: "rw-hm-choice-01-c",
         text: "Tell him to leave quickly",
-        consequences: { rw_refused_help: true, rw_self_preservation: 2 },
+        consequences: { rw_fled_kigali: true },
         nextScene: "rw-hm-scene-02c"
       }
     ]
@@ -68,13 +68,13 @@ You have seconds. The roadblock at the end of the street—you know the commande
       {
         id: "rw-hm-choice-02a-a",
         text: "Misdirect them to another house",
-        consequences: { rw_misdirected_militia: true, rw_rescue_path: 3 },
+        consequences: { rw_misdirected_militia: true },
         nextScene: "rw-hm-scene-03a"
       },
       {
         id: "rw-hm-choice-02a-b",
         text: "Comply—reveal Celestin's location",
-        consequences: { rw_revealed_celestin: true, rw_compliance_path: 4 },
+        consequences: { rw_revealed_celestin: true },
         nextScene: "rw-hm-scene-03b"
       }
     ]
@@ -97,7 +97,7 @@ Your hands are shaking. If you refuse, you're a traitor. If you comply, you're p
       {
         id: "rw-hm-choice-02b-a",
         text: "Accept the roadblock assignment",
-        consequences: { rw_staffed_roadblock: true, rw_compliance_path: 4 },
+        consequences: { rw_staffed_roadblock: true },
         nextScene: "rw-hm-scene-03c"
       }
     ]
@@ -120,7 +120,7 @@ The sun rises. Smoke columns across Kigali. You hear screaming from the next str
       {
         id: "rw-hm-choice-02c-a",
         text: "Flee Kigali before dawn",
-        consequences: { rw_fled_kigali: true, rw_flight_path: 4 },
+        consequences: { rw_fled_kigali: true },
         nextScene: "rw-hm-scene-03d"
       }
     ]
@@ -144,13 +144,13 @@ Your hands shake as you take the first identity card. The woman holding it looks
       {
         id: "rw-hm-choice-03a-a",
         text: "Misdirect again—claim cards are valid",
-        consequences: { rw_saved_at_roadblock: true, rw_rescue_path: 2 },
+        consequences: { rw_saved_at_roadblock: true },
         nextScene: "rw-hm-scene-04a"
       },
       {
         id: "rw-hm-choice-03a-b",
         text: "Wave them through—follow orders",
-        consequences: { rw_complied_at_roadblock: true, rw_compliance_path: 2 },
+        consequences: { rw_complied_at_roadblock: true },
         nextScene: "rw-hm-scene-04b"
       }
     ]
@@ -174,7 +174,7 @@ The radio crackles. RTLM praises the "work" being done. Lists more names. More l
       {
         id: "rw-hm-choice-03b-a",
         text: "Participate in the killings",
-        consequences: { rw_participated_directly: true, rw_compliance_path: 3 },
+        consequences: { rw_participated_directly: true },
         nextScene: "rw-hm-scene-04b"
       }
     ]
@@ -197,7 +197,7 @@ You tell yourself you're surviving. You tell yourself you had no choice. But you
       {
         id: "rw-hm-choice-03c-a",
         text: "Continue staffing the roadblock",
-        consequences: { rw_continued_compliance: true, rw_compliance_path: 2 },
+        consequences: { rw_continued_compliance: true },
         nextScene: "rw-hm-scene-04b"
       }
     ]
@@ -220,7 +220,7 @@ You're not safe here either. Nowhere is safe. The RPF is advancing from the nort
       {
         id: "rw-hm-choice-03d-a",
         text: "Stay hidden in the countryside",
-        consequences: { rw_stayed_hidden: true, rw_flight_path: 2 },
+        consequences: { rw_stayed_hidden: true },
         nextScene: "rw-hm-scene-04d"
       }
     ]
@@ -228,7 +228,9 @@ You're not safe here either. Nowhere is safe. The RPF is advancing from the nort
 
   {
     id: "rw-hm-scene-04a",
-    narrative: `2007. Thirteen years later. The gacaca court in your sector. You're here to testify. The judges—your neighbors—sit under a tree. Survivors sit in the front rows. You recognize faces. Celestin is here. He survived. His wife and children didn't.
+    narrative: `July 4, 1994. The RPF captured Kigali. The genocide ended after 100 days. Thirteen years passed.
+
+2007. The gacaca court — a community justice process where perpetrators could confess in exchange for reduced sentences — in your sector. You're here to testify. The judges—your neighbors—sit under a tree. Survivors sit in the front rows. You recognize faces. Celestin is here. He survived. His wife and children didn't.
 
 The judge calls your name. "Augustin. You were communal secretary in April 1994. You staffed a roadblock. Tell us what you did."
 
@@ -302,7 +304,7 @@ Or you could deny it. Claim you were forced. Claim you had no choice. Some perpe
 
 Some people know you fled. Some call you a coward. Some call you smart. You didn't kill anyone. You didn't staff roadblocks. You just... left. Is that guilt? Is that innocence?
 
-The government's "no ethnicity" policy means you're just "Rwandan" now. No Hutu. No Tutsi. Just citizens. But everyone remembers. Everyone knows. Your children ask why you left Kigali. Why you don't talk about 1994. Why you flinch when the radio plays.
+The government's "no ethnicity" policy means you're just "Rwandan" now. Rwanda's post-genocide government abolished official ethnic categories — no more Hutu, Tutsi, or Twa on identity cards, only Rwandan. No Hutu. No Tutsi. Just citizens. But everyone remembers. Everyone knows. Your children ask why you left Kigali. Why you don't talk about 1994. Why you flinch when the radio plays.
 
 A gacaca judge visits. "Augustin. We need testimony about what happened in Kigali. You were there. You were a secretary. You knew things." He's not accusing you. He's asking you to help. To speak. To remember. What do you say?`,
     apThemes: ["continuity", "perspective"],

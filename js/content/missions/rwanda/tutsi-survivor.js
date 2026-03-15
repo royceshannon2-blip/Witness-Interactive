@@ -35,19 +35,19 @@ Three options. The church—Father Michel knows you. Your friend Jeanne's house�
       {
         id: "rw-ts-choice-01-a",
         text: "Go to the church",
-        consequences: { rw_trusted_church: true, rw_testimony_path: 2 },
+        consequences: { rw_trusted_church: true },
         nextScene: "rw-ts-scene-02a"
       },
       {
         id: "rw-ts-choice-01-b",
         text: "Seek your friend Jeanne's house",
-        consequences: { rw_sought_hutu_friend: true, rw_hidden_path: 4 },
+        consequences: { rw_sought_hutu_friend: true },
         nextScene: "rw-ts-scene-02b"
       },
       {
         id: "rw-ts-choice-01-c",
         text: "Try to reach the hotel",
-        consequences: { rw_attempted_hotel: true, rw_enclave_path: 4 },
+        consequences: { rw_attempted_hotel: true },
         nextScene: "rw-ts-scene-02c"
       }
     ]
@@ -69,13 +69,13 @@ The militia pours in. Machetes. Grenades. People running. The altar is no protec
       {
         id: "rw-ts-choice-02a-a",
         text: "Run—escape through side door",
-        consequences: { rw_escaped_church: true, rw_witnessed_massacre: true, rw_testimony_path: 4 },
+        consequences: { rw_escaped_church: true, rw_witnessed_massacre: true },
         nextScene: "rw-ts-scene-03a"
       },
       {
         id: "rw-ts-choice-02a-b",
         text: "Hide in ceiling crawlspace",
-        consequences: { rw_hid_in_church: true, rw_hidden_path: 3 },
+        consequences: { rw_hid_in_church: true },
         nextScene: "rw-ts-scene-03b"
       }
     ]
@@ -98,7 +98,7 @@ Outside, you hear the roadblock. Voices. Machetes on pavement. The radio plays f
       {
         id: "rw-ts-choice-02b-a",
         text: "Hide in the attic",
-        consequences: { rw_hid_with_hutu: true, rw_hidden_path: 3 },
+        consequences: { rw_hid_with_hutu: true },
         nextScene: "rw-ts-scene-03c"
       }
     ]
@@ -121,7 +121,7 @@ You have two cards in your pocket. Your real one—Tutsi. Marie's—Hutu. The mi
       {
         id: "rw-ts-choice-02c-a",
         text: "Show Marie's Hutu card",
-        consequences: { rw_used_false_id: true, rw_enclave_path: 2 },
+        consequences: { rw_used_false_id: true },
         nextScene: "rw-ts-scene-03d"
       }
     ]
@@ -144,7 +144,7 @@ A UN convoy passes. White vehicles. You could flag them down. Or keep hiding. Wa
       {
         id: "rw-ts-choice-03a-a",
         text: "Flag down the UN convoy",
-        consequences: { rw_reached_un_protection: true, rw_testimony_path: 3 },
+        consequences: { rw_reached_un_protection: true },
         nextScene: "rw-ts-scene-04a"
       }
     ]
@@ -167,7 +167,7 @@ The old man coughs. Quiet, but not quiet enough. Below, footsteps stop. "You hea
       {
         id: "rw-ts-choice-03b-a",
         text: "Stay absolutely silent—don't move",
-        consequences: { rw_survived_church_hiding: true, rw_hidden_path: 2 },
+        consequences: { rw_survived_church_hiding: true },
         nextScene: "rw-ts-scene-04b"
       }
     ]
@@ -190,7 +190,7 @@ At night, Jeanne brings food. Bread. Water. "Paul is talking about leaving. Goin
       {
         id: "rw-ts-choice-03c-a",
         text: "Stay hidden and trust Jeanne",
-        consequences: { rw_trusted_protector: true, rw_hidden_path: 2 },
+        consequences: { rw_trusted_protector: true },
         nextScene: "rw-ts-scene-04c"
       }
     ]
@@ -214,7 +214,7 @@ You find a corner in a conference room. Thirty people in a space meant for ten. 
       {
         id: "rw-ts-choice-03d-a",
         text: "Stay at the hotel—wait for RPF",
-        consequences: { rw_reached_hotel: true, rw_enclave_path: 3 },
+        consequences: { rw_reached_hotel: true },
         nextScene: "rw-ts-scene-04d"
       }
     ]
@@ -224,7 +224,7 @@ You find a corner in a conference room. Thirty people in a space meant for ten. 
 
   {
     id: "rw-ts-scene-04a",
-    narrative: `2006. Arusha, Tanzania. The International Criminal Tribunal for Rwanda. You're here to testify. You flagged down that UN convoy. You survived. You carried what you saw at the church—Father Michel killed, grenades, machetes, children. The prosecutor needs your testimony to convict the militia commander who organized the massacre.
+    narrative: `2006. Arusha, Tanzania. The International Criminal Tribunal for Rwanda — the UN court established in 1994 to prosecute genocide organizers. You're here to testify. You flagged down that UN convoy. You survived. You carried what you saw at the church—Father Michel killed, grenades, machetes, children. The prosecutor needs your testimony to convict the militia commander who organized the massacre.
 
 The courtroom is formal. Translators. Judges from three countries. The defendant sits behind glass. He looks older. Tired. He doesn't look at you. The prosecutor asks you to describe what you saw. Every detail. Names. Times. Who gave orders. Who carried them out.
 
@@ -329,7 +329,9 @@ Jeanne saved your life. She's asking you to attend. But her brother helped kill 
 
   {
     id: "rw-ts-scene-04d",
-    narrative: `2007. Kigali. You survived the hotel. Twelve hundred people crammed into the Hôtel des Mille Collines. You used Marie's Hutu identity card to get past the roadblock. You gave her name to the UN peacekeeper. You lived as someone else for three months. When the RPF captured Kigali, you reclaimed your real name. Immaculée. Tutsi. Survivor.
+    narrative: `July 4, 1994. The RPF captured Kigali. The genocide ended. Years passed.
+
+2007. Kigali. You survived the hotel. Twelve hundred people crammed into the Hôtel des Mille Collines. You used Marie's Hutu identity card to get past the roadblock. You gave her name to the UN peacekeeper. You lived as someone else for three months. When the RPF captured Kigali, you reclaimed your real name. Immaculée. Tutsi. Survivor.
 
 Now it's thirteen years later. The hotel still operates. Tourists come to see where people sheltered. They take photos. They ask questions. The manager became famous. Then controversial. The narrative is complicated.
 

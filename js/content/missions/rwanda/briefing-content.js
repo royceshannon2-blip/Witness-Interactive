@@ -61,7 +61,7 @@ export const BRIEFING_PAGES = {
       hClass: 'urgent',
       h: '800,000 Dead in 100 Days',
       deck: 'The fastest mass killing in recorded history — averaging 8,000 dead per day',
-      body: 'In one hundred days, approximately 800,000 people are killed in Rwanda. This is 75% of the country\'s entire Tutsi population. The Holocaust killed 2,000 people per day. Rwanda averages 8,000.\n\nMost victims are killed by neighbours with machetes. Churches become massacre sites — over two hundred of them. Every place people gather believing it is safe is targeted specifically, because the planners knew where frightened people go. The traps were built around the instinct to seek safety.\n\nThe United Nations has peacekeepers in Kigali ordered not to intervene. The United States instructs its officials not to use the word genocide — because under international law, that word creates an obligation to act. The word is not used until it is too late.\n\nYour identity card is in your pocket. The first roadblock is on your street. You have minutes.',
+      body: 'In one hundred days, approximately 800,000 people are killed in Rwanda. This is 75% of the country\'s entire Tutsi population. The Holocaust killed 2,000 people per day. Rwanda averages 8,000.\n\nMost victims are killed by neighbours with machetes. Churches become massacre sites — over two hundred of them. Every place people gather believing it is safe is targeted specifically, because the planners knew where frightened people go. The traps were built around the instinct to seek safety.\n\nThe United Nations has peacekeepers in Kigali ordered not to intervene. The United States instructs its officials not to use the word genocide — because under international law, that word creates an obligation to act. The word is not used until it is too late.\n\nThe RPF — the Rwandan Patriotic Front, a Tutsi rebel force that had been fighting from Uganda since 1990 — was advancing from the north. They would capture Kigali on July 4th, 1994, ending the genocide after 100 days.\n\nYour identity card is in your pocket. The first roadblock is on your street. You have minutes.',
       ticker: null
     }
   ],
@@ -119,7 +119,7 @@ export const BRIEFING_PAGES = {
       hClass: 'urgent',
       h: '800,000 Dead in 100 Days',
       deck: 'Most perpetrators are ordinary people — Hutu who sheltered Tutsi are also killed',
-      body: 'In one hundred days, approximately 800,000 people are killed. Most are Tutsi. Most killers are ordinary people given permission and a weapon and told their neighbours were cockroaches. This is the fastest mass killing in recorded history — 8,000 dead per day.\n\nThe Hutu who shelter Tutsi — who lie to militia at their doors, who falsify identity cards at roadblocks, who flee rather than participate — are also killed. Thousands of them. The genocide\'s architects understood that moderates were the obstacle. They were eliminated first.\n\nThe choice you are about to make is the choice thousands of real people faced. Some of them are still alive. Some are not. None of them knew, on April 6th, which one they would become.',
+      body: 'In one hundred days, approximately 800,000 people are killed. Most are Tutsi. Most killers are ordinary people given permission and a weapon and told their neighbours were cockroaches. This is the fastest mass killing in recorded history — 8,000 dead per day.\n\nThe Hutu who shelter Tutsi — who lie to militia at their doors, who falsify identity cards at roadblocks, who flee rather than participate — are also killed. Thousands of them. The genocide\'s architects understood that moderates were the obstacle. They were eliminated first.\n\nThe RPF — the Rwandan Patriotic Front, a Tutsi rebel force that had been fighting from Uganda since 1990 — was advancing from the north. They would capture Kigali on July 4th, 1994, ending the genocide after 100 days.\n\nThe choice you are about to make is the choice thousands of real people faced. Some of them are still alive. Some are not. None of them knew, on April 6th, which one they would become.',
       ticker: null
     }
   ],
@@ -177,7 +177,7 @@ export const BRIEFING_PAGES = {
       hClass: 'urgent',
       h: '800,000 Dead. The World Watched.',
       deck: 'Fastest mass killing in recorded history ends when RPF captures Kigali — one hundred days after it began',
-      body: 'In one hundred days, 800,000 people are killed. The international community is present throughout. There are cameras. There are cables. There are peacekeepers in the city who can see the roadblocks from their windows. The world does not act.\n\nThe United States instructs its officials not to use the word genocide because the 1948 Genocide Convention legally obligates signatories to intervene. Officials are directed to say "acts of genocide may have occurred." By the time the word is used officially, the killing is nearly complete.\n\nYou are in Kigali right now. You have 270 soldiers and orders that say observe and report. You have read Dallaire\'s January fax. You have seen the bodies on the roads near headquarters. You know exactly what this is. Your orders do not tell you what to do about it.',
+      body: 'In one hundred days, 800,000 people are killed. The international community is present throughout. There are cameras. There are cables. There are peacekeepers in the city who can see the roadblocks from their windows. The world does not act.\n\nThe United States instructs its officials not to use the word genocide because the 1948 Genocide Convention legally obligates signatories to intervene. Officials are directed to say "acts of genocide may have occurred." By the time the word is used officially, the killing is nearly complete.\n\nThe RPF — the Rwandan Patriotic Front, a Tutsi rebel force that had been fighting from Uganda since 1990 — was advancing from the north. They would capture Kigali on July 4th, 1994, ending the genocide after 100 days.\n\nYou are in Kigali right now. You have 270 soldiers and orders that say observe and report. You have read Dallaire\'s January fax. You have seen the bodies on the roads near headquarters. You know exactly what this is. Your orders do not tell you what to do about it.',
       ticker: null
     }
   ]
@@ -194,7 +194,7 @@ export const BRIEFING_CARDS = {
       ['Secteur', 'Kacyiru, Kigali']
     ],
     stamp: 'Délivré 1992 · En vigueur',
-    note: 'This card will get you killed at every roadblock in Kigali today. You cannot cross the city without showing it. You cannot destroy it — soldiers ask specifically for people who have removed their cards. This piece of cardboard, issued by Belgian colonizers before you were born, is the reason you are being hunted. It is in your pocket right now.'
+    note: 'You are a 19-year-old Tutsi university student in Kigali. This card is your death sentence at every roadblock in the city today. You cannot destroy it — militia specifically check for people who have removed their cards. Your ethnicity is stamped here in ink, issued by Belgian colonizers before you were born, and it is the only reason you are being hunted.\n\nIn this role, your decisions are about survival. Who do you trust? Where do you hide? When do you run? There is no safe choice — only choices with different risks. You will have to decide how much danger you can accept and how much you can ask others to accept for you.'
   },
 
   hutu: {
@@ -207,7 +207,7 @@ export const BRIEFING_CARDS = {
       ['Secteur', 'Nyamirambo, Kigali']
     ],
     stamp: 'Délivré 1988 · En vigueur',
-    note: 'Your ethnicity is Hutu. At roadblocks today, this card is your protection — the militia cannot always tell the difference by sight. But you are on a second list. You are a Hutu moderate. You did not attend the last Hutu Power rally. That was recorded. There are two ways to be killed today: carrying a Tutsi card, and being the wrong kind of Hutu.'
+    note: 'You are a Hutu communal secretary — a mid-level government official with access to population records. Your card protects you at roadblocks. But you are on a second list: Hutu moderates who refused to attend Hutu Power rallies. There are two ways to be killed today. One is carrying a Tutsi card. The other is being the wrong kind of Hutu.\n\nIn this role, your decisions are about complicity. You have power others don\'t — your position, your records, your card. The question is what you do with it. Do you use your authority to protect people? Follow orders to protect yourself? Or disappear before anyone asks you to choose? Every decision has a cost, and someone else pays it.'
   },
 
   un: {
@@ -220,7 +220,7 @@ export const BRIEFING_CARDS = {
       ['Mission', 'UNAMIR — Kigali, Rwanda']
     ],
     stamp: 'Issued Jan 1994 · Active',
-    note: 'This card gives you immunity at every roadblock in Kigali. The militia will not touch you. You can walk through any checkpoint in the city. Every Rwandan civilian around you does not have this protection. You will watch people be separated three feet from where you stand. Your orders say you may not intervene. You will have to decide what those orders mean to you.'
+    note: 'You are a Canadian Forces officer serving with UNAMIR — the UN peacekeeping mission in Rwanda. This card gives you immunity at every roadblock. The militia will not touch you. You can walk through any checkpoint in the city while Rwandan civilians are pulled aside three feet away.\n\nIn this role, your decisions are about mandate versus conscience. Your orders say: observe and report only. You may not intervene. You may not use force except in self-defence. You have read General Dallaire\'s fax from January. You know what is happening and why. The question is what your orders actually mean when you are standing in front of it.'
   }
 };
 
