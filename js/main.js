@@ -28,6 +28,7 @@ import AtmosphericEffects from './engine/AtmosphericEffects.js';
 import TimedChoiceSystem from './engine/TimedChoiceSystem.js';
 import AmbientSoundManager from './engine/AmbientSoundManager.js';
 import NarratorAudioManager from './engine/NarratorAudioManager.js';
+import SFXManager from './engine/SFXManager.js';
 import MissionBriefing from './engine/MissionBriefing.js';
 
 // UI imports
@@ -146,7 +147,14 @@ async function initializeApp() {
     });
     console.log('✓ NarratorAudioManager initialized');
     
-    // 16. Initialize UIController (handles all DOM rendering)
+    // 17. Initialize SFXManager (one-shot sound effects tied to scenes)
+    const sfxManager = new SFXManager(eventBus, audioContext, {
+        audioPath: 'audio/ambient/',
+        volume: 0.65
+    });
+    console.log('✓ SFXManager initialized');
+    
+    // 18. Initialize UIController (handles all DOM rendering)
     // Pass components object with interactive polish features
     const components = {
         typewriterEffect,
