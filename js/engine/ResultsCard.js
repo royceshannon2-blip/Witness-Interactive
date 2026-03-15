@@ -427,10 +427,10 @@ class ResultsCard {
           <p>Your feedback shapes the future of historical education games.</p>
           
           <div class="cta-buttons">
-            <a href="https://forms.gle/placeholder" target="_blank" rel="noopener noreferrer" class="cta-btn cta-btn-primary" id="cta-survey">
+            <a href="https://docs.google.com/forms/d/e/1FAIpQLSfPJsbWWy5l6R2iRq5YqezoiDOIiFdCbEKNi7BUsODSzbFL1g/viewform?usp=header" target="_blank" rel="noopener noreferrer" class="cta-btn cta-btn-primary" id="cta-survey">
               Take 2-Minute Survey
             </a>
-            <a href="https://discord.gg/placeholder" target="_blank" rel="noopener noreferrer" class="cta-btn cta-btn-secondary" id="cta-discord">
+            <a href="https://discord.gg/xgy4zKem" target="_blank" rel="noopener noreferrer" class="cta-btn cta-btn-secondary" id="cta-discord">
               Join Our Discord Community
             </a>
           </div>
