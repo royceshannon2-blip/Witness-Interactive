@@ -270,72 +270,59 @@ class MissionBriefing {
     return '';
   }
 
-  _buildTutsiCard(t) {
+_buildTutsiCard(t) {
     return `<div class="physical-card tutsi-card">
-  <div class="pc-header-band pc-green">
-    <span class="pc-republic">${t.headerBand.republic}</span>
-    <span class="pc-type">${t.headerBand.type}</span>
-  </div>
-  <div class="pc-body">
-    <div class="pc-photo-col">
-      <div class="pc-photo-box">
-        <img src="images/rwanda-tutsi-photo.png" alt="Identity photo" class="pc-photo-img" />
-        <div class="pc-photo-label">${t.photoLabel}</div>
+      <div class="pc-header-band pc-green">
+        <span class="pc-republic">${t.headerBand.republic}</span>
+        <span class="pc-type">${t.headerBand.type}</span>
       </div>
-      <svg class="pc-stamp" viewBox="0 0 44 44">
-        <circle cx="22" cy="22" r="20" fill="none" stroke="rgba(60,30,120,0.6)" stroke-width="1.5"/>
-        <circle cx="22" cy="22" r="16" fill="rgba(60,30,120,0.12)" stroke="rgba(60,30,120,0.4)" stroke-width="0.8"/>
-        <text x="22" y="14" text-anchor="middle" font-size="4" fill="rgba(60,30,120,0.75)" font-family="Times New Roman" letter-spacing="0.5">${t.stamp.line1}</text>
-        <text x="22" y="23" text-anchor="middle" font-size="5.5" font-weight="700" fill="rgba(60,30,120,0.85)" font-family="Times New Roman">${t.stamp.line2}</text>
-        <text x="22" y="30" text-anchor="middle" font-size="3.5" fill="rgba(60,30,120,0.65)" font-family="Times New Roman">${t.stamp.line3}</text>
+      <div class="pc-body">
+        <div class="pc-photo-col">
+          <div class="pc-photo-box">
+            <img src="images/rwanda-tutsi-photo.png" alt="Identity photo" class="pc-photo-img" style="filter: sepia(0.3) contrast(1.1) brightness(0.9);" />
+            <div class="pc-photo-label">${t.photoLabel}</div>
+          </div>
+          <svg class="pc-stamp" viewBox="0 0 44 44" style="transform: rotate(-12deg); filter: url(#inkBleed); opacity: 0.7;">
+            <circle cx="22" cy="22" r="20" fill="none" stroke="rgba(60,30,120,0.6)" stroke-width="1.5"/>
+            <circle cx="22" cy="22" r="16" fill="rgba(60,30,120,0.12)" stroke="rgba(60,30,120,0.4)" stroke-width="0.8"/>
+            <text x="22" y="14" text-anchor="middle" font-size="4" fill="rgba(60,30,120,0.75)" font-family="Times New Roman" letter-spacing="0.5">${t.stamp.line1}</text>
+            <text x="22" y="23" text-anchor="middle" font-size="5.5" font-weight="700" fill="rgba(60,30,120,0.85)" font-family="Times New Roman">${t.stamp.line2}</text>
+            <text x="22" y="30" text-anchor="middle" font-size="3.5" fill="rgba(60,30,120,0.65)" font-family="Times New Roman">${t.stamp.line3}</text>
+          </svg>
+        </div>
+        <div class="pc-fields" style="filter: url(#inkBleed);">
+          ${t.fields.map(f => `<div class="pc-field"><span class="pc-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('')}
+        </div>
+      </div>
+      <div class="pc-footer pc-green-footer">
+        <span>${t.footer.issued}</span><span>${t.footer.valid}</span><span>${t.footer.number}</span>
+      </div>
+      <div class="pc-age-tint" style="background: radial-gradient(circle, transparent 20%, rgba(101, 67, 33, 0.15) 80%, rgba(60, 40, 20, 0.35) 100%);"></div>
+      <svg class="pc-distress" viewBox="0 0 480 230" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" style="mix-blend-mode: multiply;">
+        <defs>
+          <filter id="db1"><feGaussianBlur stdDeviation="3"/></filter>
+          <filter id="db2"><feGaussianBlur stdDeviation="6"/></filter>
+          <filter id="fray">
+            <feTurbulence type="fractalNoise" baseFrequency="0.12" numOctaves="4" seed="5" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" />
+          </filter>
+          <filter id="inkBleed">
+            <feGaussianBlur stdDeviation="0.4" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
+        </defs>
+        <rect x="239" y="0" width="2" height="230" fill="rgba(0,0,0,0.2)" filter="url(#db1)" />
+        <rect x="240" y="0" width="1" height="230" fill="rgba(255,255,255,0.1)" />
+        <path d="M210 95 C250 80, 280 110, 250 140 C220 160, 190 120, 210 95Z" fill="rgba(72,48,10,0.2)" filter="url(#db2)"/>
+        <path d="M40 160 C80 150, 100 200, 60 220 C20 240, 10 180, 40 160Z" fill="rgba(58,38,7,0.25)" filter="url(#db2)"/>
+        <g filter="url(#fray)">
+          <path d="M480 230 L480 190 C450 195, 430 170, 400 175 L480 230Z" fill="#0a0e1a"/>
+          <path d="M0 230 L0 205 C30 210, 40 225, 60 220 L0 230Z" fill="#0a0e1a"/>
+          <path d="M0 0 L15 0 C10 10, 5 15, 0 20 L0 0Z" fill="#0a0e1a"/>
+          <path d="M480 0 L460 0 C470 15, 475 25, 480 30 L480 0Z" fill="#0a0e1a"/>
+        </g>
       </svg>
-    </div>
-    <div class="pc-fields">
-      ${t.fields.map(f => `<div class="pc-field"><span class="pc-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('\n      ')}
-    </div>
-  </div>
-  <div class="pc-footer pc-green-footer">
-    <span>${t.footer.issued}</span><span>${t.footer.valid}</span><span>${t.footer.number}</span>
-  </div>
-  <div class="pc-age-tint"></div>
-  <svg class="pc-distress" viewBox="0 0 480 230" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <filter id="db1"><feGaussianBlur stdDeviation="3"/></filter>
-      <filter id="db2"><feGaussianBlur stdDeviation="6"/></filter>
-      <filter id="db3"><feGaussianBlur stdDeviation="1.5"/></filter>
-    </defs>
-    <path d="M0 180 C15 165,38 158,52 170 C68 183,74 200,60 215 C45 228,18 230,5 222 C-8 214,-12 195,0 180Z" fill="rgba(65,42,8,0.35)" filter="url(#db2)"/>
-    <path d="M8 185 C20 172,40 168,50 178 C60 188,58 205,45 212 C32 219,14 218,6 208 C-2 198,-2 190,8 185Z" fill="rgba(55,35,5,0.2)" filter="url(#db1)"/>
-    <path d="M400 10 C425 5,455 12,468 28 C480 44,475 62,458 68 C440 74,415 65,405 50 C393 34,385 22,400 10Z" fill="rgba(60,38,6,0.3)" filter="url(#db2)"/>
-    <path d="M415 18 C432 12,452 20,460 34 C468 48,460 60,448 62 C435 64,418 55,412 43 C405 30,405 22,415 18Z" fill="rgba(50,32,4,0.18)" filter="url(#db1)"/>
-    <path d="M210 95 C225 82,248 84,258 96 C270 110,265 128,250 133 C234 138,215 130,208 118 C200 105,198 105,210 95Z" fill="rgba(72,48,10,0.22)" filter="url(#db2)"/>
-    <path d="M430 140 C440 132,455 135,462 148 C470 162,465 180,452 184 C440 188,428 180,425 168 C421 155,422 148,430 140Z" fill="rgba(58,38,7,0.26)" filter="url(#db1)"/>
-    <path d="M355 158 C368 150,385 152,392 164 C399 176,394 192,382 196 C369 200,354 193,350 181 C346 168,344 164,355 158Z" fill="none" stroke="rgba(62,40,8,0.3)" stroke-width="2.5" filter="url(#db3)"/>
-    <path d="M88 42 C97 36,110 38,115 48 C120 58,115 70,106 72 C96 74,85 67,83 57 C81 48,81 46,88 42Z" fill="none" stroke="rgba(60,38,6,0.25)" stroke-width="2" filter="url(#db3)"/>
-    <path d="M238 0 C240 18,236 35,239 52 C242 70,238 88,241 105 C244 122,239 140,242 158 C245 175,240 195,243 215 C244 222,244 230,244 230" stroke="rgba(40,22,3,0.55)" stroke-width="1.8" fill="none" filter="url(#db3)"/>
-    <path d="M230 0 C232 18,228 35,231 52 C234 70,230 88,233 105 C236 122,231 140,234 158 C237 175,232 195,235 215" stroke="rgba(0,0,0,0.08)" stroke-width="7" fill="none" filter="url(#db1)"/>
-    <path d="M248 0 C250 18,246 35,249 52 C252 70,248 88,251 105 C254 122,249 140,252 158 C255 175,250 195,253 215" stroke="rgba(0,0,0,0.06)" stroke-width="5" fill="none" filter="url(#db1)"/>
-    <path d="M0 88 C40 84,80 90,120 86 C155 83,190 88,230 85" stroke="rgba(40,22,3,0.25)" stroke-width="1" fill="none" filter="url(#db3)"/>
-    <path d="M480 230 L480 195 C472 198,468 204,462 200 C456 196,458 188,452 185 C446 182,440 190,434 186 C428 182,430 174,424 172 C418 170,415 178,409 175 L480 230Z" fill="#0a0e1a"/>
-    <path d="M480 0 L466 0 C468 6,464 10,468 15 C472 20,476 17,478 22 C480 27,478 30,480 35 L480 0Z" fill="#0a0e1a"/>
-    <path d="M0 230 L0 212 C5 215,8 210,12 213 C16 216,14 222,19 224 C24 226,26 220,30 222 L0 230Z" fill="#0a0e1a"/>
-    <path d="M0 0 L12 0 C10 4,6 5,8 9 C10 13,14 11,13 15 L0 15 L0 0Z" fill="#0a0e1a"/>
-    <circle cx="185" cy="55" r="3.5" fill="rgba(75,50,12,0.28)" filter="url(#db3)"/>
-    <circle cx="310" cy="148" r="2.8" fill="rgba(68,44,9,0.24)" filter="url(#db3)"/>
-    <circle cx="142" cy="168" r="2.2" fill="rgba(72,46,10,0.22)" filter="url(#db3)"/>
-    <circle cx="395" cy="82" r="3" fill="rgba(65,42,8,0.26)" filter="url(#db3)"/>
-    <circle cx="255" cy="108" r="1.8" fill="rgba(78,52,13,0.2)" filter="url(#db3)"/>
-    <circle cx="75" cy="130" r="2.5" fill="rgba(70,45,10,0.22)" filter="url(#db3)"/>
-    <circle cx="170" cy="200" r="3.2" fill="rgba(74,49,11,0.25)" filter="url(#db3)"/>
-    <path d="M188 152 C198 148,212 150,228 146 C238 144,244 147,246 145" stroke="rgba(15,8,3,0.2)" stroke-width="3" fill="none" stroke-linecap="round" filter="url(#db3)"/>
-    <path d="M155 22 L215 20 L216 30 L154 32 Z" fill="rgba(215,195,135,0.32)" stroke="rgba(180,158,100,0.25)" stroke-width="0.5" filter="url(#db3)"/>
-    <path d="M0 228 C8 226,14 229,22 227 C30 225,38 228,48 226 C58 224,65 227,75 226 C88 225,96 228,108 226 C120 224,130 227,142 226 C155 225,165 228,178 226 C192 224,202 227,215 226 C228 225,238 228,252 226 C266 224,278 227,292 226 C306 225,316 228,330 226 C344 224,358 228,372 226 C386 224,398 227,412 226 C426 225,438 228,452 226 C462 225,472 228,480 226 L480 230 L0 230Z" fill="#0a0e1a"/>
-    <path d="M0 0 C0 40,5 80,3 120 C1 160,6 200,0 230 L18 230 C12 200,16 160,14 120 C12 80,16 40,18 0Z" fill="rgba(30,15,3,0.18)" filter="url(#db1)"/>
-    <path d="M480 0 C480 40,475 80,477 120 C479 160,474 200,480 230 L462 230 C468 200,464 160,466 120 C468 80,464 40,462 0Z" fill="rgba(30,15,3,0.15)" filter="url(#db1)"/>
-    <path d="M0 0 L480 0 L480 16 C400 12,320 18,240 14 C160 10,80 16,0 12Z" fill="rgba(30,15,3,0.16)" filter="url(#db1)"/>
-    <path d="M0 230 L480 230 L480 214 C400 218,320 212,240 216 C160 220,80 214,0 218Z" fill="rgba(30,15,3,0.22)" filter="url(#db1)"/>
-  </svg>
-</div>`;
+    </div>`;
   }
 
   _buildHutuCard(t) {
