@@ -90,6 +90,7 @@ You have seconds. The roadblock at the end of the street—you know the commande
   },
 
   {
+    linear: true,
     id: "rw-hm-scene-02b",
     narrative: `April 7, evening. The rally is at the communal office. Hundreds of men, some with machetes already. The speaker—a local Hutu Power organizer—shouts about the RPF, about Tutsi plotting to enslave Hutu again. "They killed our president! They want to take everything!"
 
@@ -117,6 +118,7 @@ Your hands are shaking. If you refuse, you're a traitor. If you comply, you're p
   },
 
   {
+    linear: true,
     id: "rw-hm-scene-02c",
     narrative: `April 7, pre-dawn. You told Celestin to leave. You don't know if he made it. The radio reports massacres at churches, schools, administrative buildings. Prime Minister Uwilingiyimana is dead. Moderate politicians, journalists, civil servants—all targeted in the first hours.
 
@@ -209,6 +211,7 @@ The radio crackles. RTLM praises the "work" being done. Lists more names. More l
   },
 
   {
+    linear: true,
     id: "rw-hm-scene-03c",
     narrative: `April 9. You accepted the roadblock assignment at the rally. Three days now. You've checked hundreds of identity cards. Tutsi. Hutu. The militia takes the Tutsi away. You don't ask where.
 
@@ -236,6 +239,7 @@ You tell yourself you're surviving. You tell yourself you had no choice. But you
   },
 
   {
+    linear: true,
     id: "rw-hm-scene-03d",
     narrative: `April 10. You fled Kigali. Your family made it to your cousin's village near Gitarama. The countryside is quieter, but the genocide is here too. Roadblocks on every path. Militia in every village. The radio reaches everywhere.
 
@@ -499,83 +503,6 @@ Rwanda's reconciliation process was designed for full confession. You gave a par
   },
 
   {
-    id: "rw-hm-outcome-rescue-survived",
-    survived: true,
-    conditions: {
-      rw_helped_celestin: true,
-      rw_saved_at_roadblock: true
-    },
-    epilogue: `You survived. Celestin survived. You hid him when the militias came, misdirected them when they searched, and risked everything for someone who wasn't family. At the roadblock, you lied again—claimed identity cards were valid when they weren't. The militia believed you. Those people lived because you chose risk over compliance. When the RPF captured Kigali in July, you emerged from hiding. Celestin's wife and two children were killed at a different roadblock you couldn't control. He knows you tried.
-
-The gacaca courts asked you to testify. You told the truth—what you did, what you couldn't do, who you saved, who you couldn't save. The judges gave you community service, not prison. Survivors thanked you. Some perpetrators called you a traitor. Your family struggled with what you'd risked for strangers.
-
-Rwanda's reconciliation asks you to live next to people who made different choices. Some Hutu who sheltered Tutsi were killed alongside them. You weren't. That's luck, not virtue. Celestin's son grows up knowing you helped. Your children grow up knowing you chose risk over safety. The history books call people like you "Righteous Hutu." You just call yourself someone who couldn't look away. You carried that choice forward.`
-  },
-
-  {
-    id: "rw-hm-outcome-rescue-killed-hero",
-    survived: false,
-    conditions: {
-      rw_helped_celestin: true,
-      rw_saved_at_roadblock: true
-    },
-    deathContext: {
-      cause: "Killed by Interahamwe militia after being identified as a Tutsi-protector",
-      historicalRate: "Thousands of Hutu moderates who sheltered Tutsi or falsified identity cards were killed when discovered",
-      yourChoices: "You hid Celestin, misdirected the militia, and falsified cards at the roadblock to let people through. You were seen. Someone recognized you."
-    },
-    epilogue: `You didn't survive. You did everything you could—hid Celestin, lied to the militia, falsified cards at the roadblock to let people through. And someone saw. A neighbor. A militiaman who recognized your face from before. "That's Augustin. He's been helping them." The commander's face changed.
-
-They killed you at the roadblock. Quick. An example for others. Celestin had already fled—you'd bought him enough time. The people whose cards you falsified made it through. They're alive. You aren't.
-
-The gacaca courts heard testimony about you in 2007. Survivors described what you did—specifically, carefully, the way people describe acts they don't want forgotten. The historical record classifies you among "Hutu moderates killed after active resistance." Your children grew up knowing you chose the harder path. That's not comfort. But it's true. You carried those choices to the end.`,
-    deathEpilogueEarly: `You didn't survive. You did everything you could—hid Celestin, lied to the militia, falsified cards at the roadblock to let people through. And someone saw. A neighbor. A militiaman who recognized your face from before. "That's Augustin. He's been helping them." The commander's face changed.
-
-They killed you at the roadblock in April 1994. Quick. An example for others. Celestin had already fled—you'd bought him enough time. The people whose cards you falsified made it through. They're alive. You aren't.
-
-Your body was found by the RPF when they captured Kigali in July. Your family had fled to Zaire. They came back in 1996. The gacaca courts heard testimony about you in 2007—survivors described what you did, specifically, carefully, the way people describe acts they don't want forgotten. The historical record classifies you among "Hutu moderates killed after active resistance." Your children grew up knowing you chose the harder path. That's not comfort. But it's true. You died at the moment your choices made death inevitable.`
-  },
-
-  {
-    id: "rw-hm-outcome-rescue-killed-complied",
-    survived: false,
-    conditions: {
-      rw_helped_celestin: true,
-      rw_complied_at_roadblock: true
-    },
-    deathContext: {
-      cause: "Killed by Interahamwe militia after earlier sheltering of Tutsi was discovered",
-      historicalRate: "Thousands of Hutu moderates who sheltered Tutsi or refused to participate were killed during the genocide",
-      yourChoices: "You helped Celestin hide, but at the roadblock you followed orders. The militia discovered your earlier choice."
-    },
-    epilogue: `You didn't survive. You helped Celestin at first—hid him, misdirected the militia. But at the roadblock, you followed orders. You checked identity cards and separated people as instructed. The militia commander praised you. Then someone recognized you. "That's Augustin. He hid a Tutsi last week." The commander's face changed. "You're a traitor." They killed you at the roadblock you'd been staffing.
-
-Celestin survived—he'd already fled when you were discovered. Your family fled to Zaire. When the gacaca courts began, survivors testified about you. Some said you helped. Some said you complied. Both were true. The memorial lists your name in a complicated category: "Hutu moderates killed after initial resistance." Your children grew up with that ambiguity.
-
-You tried to help and then you didn't. You chose risk and then you chose safety. Neither choice saved you. You carried those contradictions to the end.`
-  },
-
-  {
-    id: "rw-hm-outcome-compliance-killed-confessor",
-    survived: false,
-    conditions: {
-      rw_staffed_roadblock: true,
-      rw_continued_compliance: true,
-      rw_confessed_complicity: true
-    },
-    deathContext: {
-      cause: "Killed by RPF forces during the advance on Kigali",
-      historicalRate: "Thousands of Hutu perpetrators were killed by RPF forces as they captured territory in July 1994",
-      yourChoices: "You staffed the roadblock and followed orders for days. The RPF arrived before you reached the gacaca courts."
-    },
-    epilogue: `You didn't survive to confess. You attended the rally, staffed the roadblock, checked cards for days. The RPF advanced faster than the militia commanders had promised. You were still at the roadblock when they arrived — or found in the weeks afterward. You were on the lists. Multiple witnesses.
-
-The gacaca courts didn't open until 2005. You didn't reach 2005. The confession you would have made never happened. Whether you would have actually confessed — fully, without minimizing — is something only you knew. The record doesn't contain your answer.
-
-Your family fled to Zaire. Your children came back in 1996. The charges that would have been filed against you are in the gacaca record alongside the note that you died before proceedings. Some perpetrators who died this way had family members testify on their behalf — partial accounts, second-hand, incomplete. Yours didn't. The record is a list of charges and an absence where the accounting should be. That's the version that exists.`
-  },
-
-  {
     id: "rw-hm-outcome-compliance-survived-confessor",
     survived: true,
     conditions: {
@@ -658,39 +585,6 @@ Your family fled to Zaire. Your children grew up in the camps. They came back in
 You never got to court. You never got to explain the coercion, the pressure, the lack of alternatives. Those arguments might have worked — gacaca courts did reduce sentences for perpetrators who could demonstrate they'd been threatened into participation. You didn't get the chance to make the case.
 
 The gacaca record lists you as a perpetrator killed during the RPF advance or the immediate aftermath. Category Two. No mitigating testimony on file because there was no hearing. Your family fled to Zaire. Your children came back in 1996. The charges and the outcome are in the record. The context you would have provided is not. That's the version that exists.`
-  },
-
-  {
-    id: "rw-hm-outcome-compliance-survived",
-    survived: true,
-    conditions: {
-      rw_staffed_roadblock: true,
-      rw_continued_compliance: true
-    },
-    epilogue: `You survived. You attended the rally. You staffed the roadblock. You checked identity cards and followed orders for days. You didn't kill anyone directly—or maybe you did, you're not sure anymore. The line between checking cards and participating blurs when you know what happens next. You told yourself you were surviving. You told yourself you had no choice. But you had choices. You made them every day.
-
-When the RPF captured Kigali, you fled to Zaire with two million other Hutu refugees. The camps were chaos—perpetrators mixed with bystanders, militia leaders recruiting, aid agencies overwhelmed. You came back in 1996 when the camps collapsed. The gacaca courts called you. Category Two: participation in killings. Multiple witnesses.
-
-You confessed. Partial truth, partial lies. Enough to get community service instead of prison. You rebuilt homes for survivors. You attended reconciliation meetings. You said the words the government wanted. Your children know what you did. Celestin's son knows what you did. You live in the same sector now. You see each other at the market. He doesn't speak to you. You don't blame him. You carried those choices forward.`
-  },
-
-  {
-    id: "rw-hm-outcome-compliance-killed",
-    survived: false,
-    conditions: {
-      rw_participated_directly: true,
-      rw_revealed_celestin: true
-    },
-    deathContext: {
-      cause: "Killed by RPF forces during the advance on Kigali",
-      historicalRate: "Thousands of Hutu perpetrators and militia members were killed by RPF forces as they captured territory",
-      yourChoices: "You revealed Celestin's hiding place. You participated directly in killings at the roadblock. The RPF found you."
-    },
-    epilogue: `You didn't survive. The RPF advanced faster than anyone expected. You were still at the roadblock when they arrived. You'd revealed Celestin's location—the militia killed him in your attic. You'd participated directly in killings at the checkpoint. The RPF soldiers knew. They shot you. Quick. Cleaner than what you'd done to others.
-
-Your family fled to Zaire. Your wife told your children you were a victim, that you had no choice, that the RPF killed innocent Hutu. Your children believed her for years. Then the gacaca courts began. Survivors testified. They named you. They described what you did—how you revealed Celestin, how you participated at the roadblock. Your children learned the truth from strangers.
-
-The memorial doesn't list your name. The history books don't record you as a victim. You're a statistic—one of the perpetrators killed during the RPF advance. Celestin's son grew up knowing you revealed his father's hiding place. Your own children grew up knowing what you did. There's no reconciliation for you. You're just gone. You carried those choices to the end.`
   },
 
   {

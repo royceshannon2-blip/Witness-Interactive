@@ -30,6 +30,10 @@ Your mandate is clear: peacekeeping, not peace enforcement. You can't fire unles
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
+    soundEffects: [
+      { file: 'rw-sfx-military-radio.mp3', triggerAfterMs: 1200 },
+      { file: 'rw-sfx-radio-static-burst.mp3', triggerAfterMs: 4500 }
+    ],
     choices: [
       {
         id: "rw-un-choice-01-a",
@@ -228,6 +232,7 @@ You're at the airport. You could board a plane. Go home. File your report. Or yo
   },
 
   {
+    linear: true,
     id: "rw-un-scene-03d",
     narrative: `April 11. You stayed at the church. You documented. Camera. Notebook. Radio reports. The militia let you watch. They wanted you to see. They wanted the world to know they weren't afraid. Three hundred people killed. You have photos. You have names. You have evidence.
 
@@ -528,20 +533,6 @@ The documentary aired. Policy analysts cited it. Students watched it in internat
 His daughter watched it and said it felt like he was hiding. He said he was focusing. She asked what the difference was. He said hiding is about protecting yourself, focusing is about directing attention where it can matter. She wasn't satisfied with that answer. Neither is he. But the Responsibility to Protect doctrine exists. The mandate changed. He carries both things forward.`
   },
 
-  {
-    id: "rw-un-outcome-evacuated-survived",
-    survived: true,
-    conditions: {
-      rw_evacuated_expatriates: true,
-      rw_left_rwandans: true
-    },
-    epilogue: `You survived. You evacuated the expatriates. You followed orders. You left Rwandans at the checkpoint—the woman with the child, the embassy workers, people begging to board. You went home. You filed your report. You did your job. But the faces haunt you. You know they died. You know you could have saved them. You chose not to.
-
-You have PTSD. Guilt. Nightmares. Your therapist says you followed orders. Your family says you did what you could. But you know the truth. You had a choice. You chose safety over risk. You chose orders over conscience. Most peacekeepers made the same choice. That doesn't make it easier. The guilt doesn't lift.
-
-You became an advocate. You speak at universities. You write op-eds. You push for stronger peacekeeping mandates. "Never again" means nothing if we don't act. Your advocacy matters. It changes policy. It educates people. But it doesn't bring back the Rwandans you left behind. You carry that guilt forward. You use it. You make sure the world remembers what happens when we follow orders instead of conscience. You survived, but part of you stayed at that checkpoint.`
-  },
-
   // DOCUMENTED PATH - Aftermath variants
   {
     id: "rw-un-outcome-documented-full-survived",
@@ -594,20 +585,6 @@ Two convictions followed from his evidence. The prosecutors wanted him there. Th
 His therapist suggested the avoided testimony was about self-protection. He said it was about trusting the documentation. His daughter asked if he was hiding. He said he was letting the evidence speak. She asked what the difference was. He said one is about fear and one is about method. She wasn't convinced. Neither is he. But the photographs exist. The reports exist. The two convictions exist. He submitted the evidence. That was the job. He carries the question forward.`
   },
 
-  {
-    id: "rw-un-outcome-documented-survived",
-    survived: true,
-    conditions: {
-      rw_documented_evidence: true,
-      rw_sent_genocide_fax: true
-    },
-    epilogue: `You survived. You documented everything. Churches. Roadblocks. Massacres. Identity card checks. You sent reports to New York. To Dallaire. To the media. The world saw. The world didn't act. But your evidence mattered later. The International Criminal Tribunal for Rwanda used your photos, your testimony, your reports. Militia leaders were convicted. RTLM broadcasters were convicted. Justice was slow. But it came.
-
-Some peacekeepers who documented felt like they did nothing. You gathered evidence while people died. But evidence matters. Justice matters. The historical record matters. Your documentation helped convict perpetrators. It helped survivors get justice. It helped the world understand. Without witnesses like you, there would be no accountability. No trials. No historical record.
-
-You testified at The Hague. You spoke at inquiries. You educated students. Your photos are in museums. Your testimony is in archives. You didn't save lives in the moment. But you saved truth. You saved justice. You saved memory. The survivors you photographed—some lived, some died—they're remembered because you documented them. You carried that responsibility forward. You were a witness. That matters.`
-  },
-
   // STAYED PATH - FOLLOWED MANDATE - Aftermath variants
   {
     id: "rw-un-outcome-mandate-spoke-survived",
@@ -658,20 +635,6 @@ He returns every year. Same seat. Same silence. After the ceremony, survivors so
 One of the families — a woman who lost her husband but whose three children survived — sends him photos every December. The children are adults now. One is a doctor. One teaches secondary school. One works for the Ministry of Justice. He keeps the photos in a drawer with his service medal. He doesn't display them. They're not for display. They're evidence of a specific math: twelve hundred people survived, and those twelve hundred had children, and those children have lives. The mandate he held was forty meters wide. The consequences extend further.
 
 His therapist asked once why he avoids ceremonies but maintains these private relationships. He said ceremonies are about what happened. The dinners are about what's happening. He can't change 1994. He can witness 2010. That's the part he can sustain.`
-  },
-
-  {
-    id: "rw-un-outcome-mandate-held-survived",
-    survived: true,
-    conditions: {
-      rw_protected_hotel: true,
-      rw_held_position: true
-    },
-    epilogue: `You survived. You followed the mandate and held the hotel. You didn't defy orders — you held position within your authorization and refused to retreat when the militia threatened. Eight peacekeepers. Twelve hundred refugees. The militia surrounded you, cut power, cut water, threatened daily. You held. When the RPF captured Kigali in July, everyone inside survived.
-
-The distinction matters to you: you didn't defy your orders, you fulfilled them. Your mandate said protect the designated safe zone. You protected it. The UN didn't reprimand you. Canada gave you a service medal. You went home and told people you'd done your job.
-
-But you know what the mandate excluded. You watched roadblocks from your vehicle windows. You filed reports. You observed and reported, exactly as instructed, while the killing continued outside the perimeter you were holding. Twelve hundred people are alive because you held position. Hundreds of thousands died because the position you held was forty meters wide. You carry both numbers. You did your job. You've never been sure that was enough.`
   },
 
   // EVACUATED PATH - SAVED RWANDANS - Aftermath variants
@@ -776,20 +739,6 @@ His therapist asked if he regrets the careful approach. He said he regrets the c
 The seven people he saved asked why he didn't testify. He said the evidence spoke for itself. They said his presence would have mattered. He said his presence in 1994 was what mattered — he was there, he documented, the photographs and reports exist independent of his testimony. They weren't satisfied with that answer. Neither is he. But the convictions happened. The evidence was sufficient. His voice wasn't required.
 
 His therapist suggested the avoided testimony was about protecting himself from re-traumatization. He said it was about trusting the documentation over his memory. Both things might be true. The seven people he saved are alive. The two perpetrators are in prison. The evidence existed without his voice. Whether that's sufficient is a question he carries forward.`
-  },
-
-  {
-    id: "rw-un-outcome-saved-rwandans-survived",
-    survived: true,
-    conditions: {
-      rw_saved_rwandans: true,
-      rw_defied_orders: true
-    },
-    epilogue: `You survived. You took Rwandans onto the convoy. You risked the whole evacuation — every foreign national on board, your own soldiers, your career. The militia commander walked over and you didn't stop. You loaded the woman with the child. The embassy workers. Seven people who didn't have the right passport. The convoy got through. Everyone survived.
-
-The UN reprimanded you. Officially. You had violated your mandate, endangered a sanctioned evacuation, exceeded your authority. The reprimand is in your file. You don't regret it. The seven people you loaded are alive. They testified at the ICTR later. One of them named you specifically — not as a hero, but as the peacekeeper who didn't stop moving when he should have stopped.
-
-Dallaire wrote about cases like yours in his memoir. Moments where individual soldiers made choices the institution couldn't sanction and couldn't honestly condemn. You lived in that contradiction. The genocide killed 800,000 people in 100 days. You saved seven. The math is impossible to sit with. You carry it anyway. You made the choice you could make in the twelve seconds you had. That's all anyone gets.`
   },
 
   {

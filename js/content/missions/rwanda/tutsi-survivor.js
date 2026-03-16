@@ -91,6 +91,7 @@ The militia pours in. Machetes. Grenades. People running. The altar is no protec
   },
 
   {
+    linear: true,
     id: "rw-ts-scene-02b",
     narrative: `April 7, afternoon. You made it to Jeanne's house. She opened the door, pulled you inside fast. "Immaculée. God. I heard the radio." Her husband, Paul, is Tutsi too. He's in the back room with their children. "We're all targets now."
 
@@ -118,6 +119,7 @@ Outside, you hear the roadblock. Voices. Machetes on pavement. The radio plays f
   },
 
   {
+    linear: true,
     id: "rw-ts-scene-02c",
     narrative: `April 7, late afternoon. You're trying to reach the Hôtel des Mille Collines. Marie gave you her student ID—Hutu name, Hutu card. "If they ask, you're my cousin." It might work. It might not.
 
@@ -248,6 +250,10 @@ You find a corner in a conference room. Thirty people in a space meant for ten. 
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-03d.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-truck-idle.mp3', triggerAfterMs: 800 },
+      { file: 'rw-sfx-machete-tap.mp3', triggerAfterMs: 3200 }
+    ],
     timedChoice: { enabled: true, duration: 10000, defaultChoice: "rw-ts-choice-03d-a" },
     deathCheckpoint: true,
     choices: [
@@ -504,30 +510,6 @@ The church became a genocide memorial. The RPF arrived weeks later and documente
   },
 
   {
-    id: "rw-ts-outcome-hidden-ditch-killed",
-    survived: false,
-    conditions: {
-      rw_stayed_hidden_ditch: true,
-      rw_witnessed_massacre: true
-    },
-    deathContext: {
-      cause: "Found while hiding and killed",
-      historicalRate: "Most Tutsi in Kigali who attempted to hide without shelter were found within days",
-      yourChoices: "You stayed hidden in the drainage ditch rather than flagging the UN convoy. The militia searched the area."
-    },
-    epilogue: `You didn't survive. You stayed hidden — didn't flag the convoy, didn't move until dark. The drainage ditch felt safer than the open street. For a few hours, it was. Then the militia began systematic searches of the area around the church, looking for survivors. They found you before morning.
-
-You had seen what happened in the church. You were a witness to one of the worst single massacres of the genocide. That testimony died with you in the ditch. The ICTR reconstructed what happened at the church from other witnesses — people who had escaped through different routes, who had survived different hiding places. Your account was never recorded.
-
-The RPF arrived weeks later. They documented the church. They found the ditch. The memorial lists the names of everyone who died in that area in April 1994. Your name is there. You were nineteen years old. You had survived the massacre and then didn't survive the night. That distance — one massacre to the next morning — is the distance that separated most people who lived from most people who didn't.`,
-    deathEpilogueEarly: `You didn't survive. You stayed hidden in the drainage ditch — didn't flag the convoy, didn't move. The ditch felt safer than the open street. For a few hours, it was. Then the militia began systematic searches of the area around the church. They found you before morning. This was April 7, 1994.
-
-You had seen what happened in the church. You were a witness to one of the worst single massacres of the genocide. That testimony died with you in the ditch. The RPF arrived weeks later and documented the church. They found the ditch. The memorial lists the names of everyone who died in that area in April 1994. Your name is there.
-
-You were nineteen years old. You survived the massacre and then didn't survive the night. The ICTR reconstructed what happened at the church from other witnesses who escaped through different routes. Your account was never recorded. That distance — one massacre to the next morning — is the distance that separated most people who lived from most people who didn't.`
-  },
-
-  {
     id: "rw-ts-outcome-ceiling-killed",
     survived: false,
     conditions: {
@@ -677,22 +659,6 @@ The memorial exists. The names are on the wall. You know where it is. You don't 
 The drainage ditch kept you alive for one night. The RPF arrived weeks later. You emerged and built a life that doesn't center on 1994. Some survivors found meaning in commemoration. You found meaning in distance. Both are valid responses to what happened. Rwanda's reconciliation process asks survivors to remember together. You remember alone.
 
 The memorial guide called once asking if you'd speak. You said no. You didn't explain and they stopped asking. Your silence is its own testimony. You know what happened. You carry it. You don't need an audience for that carrying. You survived to remember, and you remember at a distance. That's both gift and burden.`
-  },
-
-  // Generic fallback for ditch path (lower specificity)
-  {
-    id: "rw-ts-outcome-hidden-ditch-survived",
-    survived: true,
-    conditions: {
-      rw_stayed_hidden_ditch: true,
-      rw_witnessed_massacre: true,
-      rw_escaped_church: true
-    },
-    epilogue: `You survived. You stayed in the drainage ditch through the night. Sewage and smoke and the sound of the city dying around you. You didn't flag down the convoy. You waited for dark, then moved — through back streets, through abandoned buildings, through the parts of Kigali where the militia hadn't reached yet. You survived by being invisible.
-
-The RPF captured Kigali on July 4th, 1994. You were alive. Thin. Traumatized. A witness to something most people in the world didn't believe was happening while it happened. You'd seen the church. You knew exactly what had occurred there and who had done it.
-
-The gacaca courts and the ICTR both needed witnesses. You had to decide whether to speak — whether your testimony was yours to give or yours to keep. Whether speaking would bring justice or just re-traumatize you for someone else's education. Rwanda's reconciliation process asked survivors to participate in their own healing as a public act. Some found that necessary. You found it complicated. Both things were true at the same time.`
   },
 
   // CEILING HIDING PATH - SPECIFIC AFTERMATH OUTCOMES
