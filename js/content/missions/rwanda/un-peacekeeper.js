@@ -50,7 +50,7 @@ Your mandate is clear: peacekeeping, not peace enforcement. You can't fire unles
       {
         id: "rw-un-choice-01-c",
         text: "Document atrocities—gather evidence",
-        consequences: {},
+        consequences: { rw_documented_evidence: true },
         nextScene: "rw-un-scene-02c"
       }
     ]
@@ -487,10 +487,7 @@ Your family grieved. Your children grew up knowing you died a hero. The survivor
     survived: true,
     conditions: {
       rw_evacuated_expatriates: true,
-      rw_left_rwandans: true,
-      rw_left_rwanda: true,
-      rw_participated_documentary: true,
-      rw_shared_guilt: true
+      rw_left_rwandans: true
     },
     epilogue: `He agreed to the documentary and told the full story: the convoy, the checkpoint, the woman with the child, the embassy workers he left behind, the plane ride home, the filing of the report that no one questioned. The documentary aired in twelve countries. Rwandans watched it. Some of the families of people he left at that checkpoint watched it. He didn't watch it. He knew what it said.
 
@@ -591,10 +588,7 @@ His therapist suggested the avoided testimony was about self-protection. He said
     survived: true,
     conditions: {
       rw_followed_mandate: true,
-      rw_protected_hotel: true,
-      rw_held_position: true,
-      rw_spoke_publicly: true,
-      rw_honored_survivors: true
+      rw_protected_hotel: true
     },
     epilogue: `He speaks at the ceremony and tells the part he always tells: that he held position, that twelve hundred people survived, that the mandate was inadequate and he stayed inside it anyway. He doesn't tell the other part: the roadblocks he drove past, the reports he filed that no one acted on, the math that doesn't resolve. The audience applauds. The survivors in the front row don't applaud. They nod. That's the part he brings home.
 
@@ -643,10 +637,7 @@ His therapist asked once why he avoids ceremonies but maintains these private re
     survived: true,
     conditions: {
       rw_saved_rwandans: true,
-      rw_defied_orders: true,
-      rw_left_rwanda: true,
-      rw_participated_documentary: true,
-      rw_shared_guilt: true
+      rw_defied_orders: true
     },
     epilogue: `He loaded seven people onto the convoy and was reprimanded for it. He told that story in the documentary. The seven people he saved also gave interviews. One of them — a woman who lost her husband at that same checkpoint — said she doesn't know what to feel about his choice. "He saved me. He didn't save Joseph." The documentary ends on that. Webb's face when he hears it. He's watched that clip once. That was enough.
 
