@@ -350,9 +350,9 @@ const hutuModerateOutcomes = [
 
 The years after were complicated in a different way. You didn't kill anyone. You didn't staff roadblocks. You also didn't help anyone. Celestin — you told him to leave that night. You never learned what happened to him. That uncertainty is its own weight.
 
-Rwanda's post-genocide government declared a single identity: Rwandan. No Hutu. No Tutsi. You went back to Kigali in 1997. Your house was occupied by strangers. Your position was gone. A gacaca judge visited your village asking for testimony. You knew things — lists, names, who organized what. You had to decide whether that knowledge was yours to keep or yours to give.
+Rwanda's post-genocide government declared a single identity: Rwandan. No Hutu. No Tutsi. You relocated — maybe back to Kigali briefly in 1997, maybe to another village entirely. Your house was occupied by strangers. Your position was gone. A gacaca judge visited asking for testimony. You knew things — lists, names, who organized what. Some people who fled testified. Some stayed silent. Some relocated again to avoid the questions entirely. You had to decide whether that knowledge was yours to keep or yours to give, whether to stay or to move again.
 
-The gacaca courts ran until 2012. Some people who fled, like you, testified as witnesses and were protected. Some stayed silent and were left alone. Some were named by others anyway. You were a bystander. History records bystanders in complicated ways. You carried that ambiguity forward.`
+The gacaca courts ran until 2012. You were a bystander who fled. History records bystanders in complicated ways. You carried that ambiguity forward — the weight of what you didn't do, the uncertainty of what happened to those you left behind, the choice of whether to speak or stay silent or simply disappear into Rwanda's new identity.`
   },
 
   {
@@ -552,6 +552,7 @@ Rwanda's reconciliation process was designed for full confessions, not partial o
     survived: false,
     conditions: {
       rw_staffed_roadblock: true,
+      rw_continued_compliance: true,
       rw_denied_charges: true
     },
     deathContext: {
@@ -571,6 +572,7 @@ Your family fled to Zaire. Your children grew up in the camps. They came back in
     survived: false,
     conditions: {
       rw_staffed_roadblock: true,
+      rw_continued_compliance: true,
       rw_minimized_role: true
     },
     deathContext: {
