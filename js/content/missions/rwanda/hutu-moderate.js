@@ -149,7 +149,7 @@ The sun rises. Smoke columns across Kigali. You hear screaming from the next str
     id: "rw-hm-scene-03a",
     narrative: `April 8. The roadblock at the market. You're here because you misdirected the militia away from Celestin. They believed you. For now. But now you're assigned here anyway—punishment or test, you're not sure.
 
-A truck approaches. Tutsi families, you can tell by their faces. Children in the back. The militia commander hands you a clipboard. "Check the cards. Separate them."
+A truck approaches. Tutsi families, you can tell by their faces. Children in the back. The militia commander hands you a clipboard. "Check the cards. Separate them." The identity cards—introduced by Belgium decades ago—list each person's ethnicity: Hutu, Tutsi, or Twa. At roadblocks like this, a Tutsi card is a death sentence.
 
 You know what happens next. You've seen the bodies in the ditches. The commander watches you. "You're with us, right Augustin? Or are you one of them?"
 
@@ -211,7 +211,7 @@ The radio crackles. RTLM praises the "work" being done. Lists more names. More l
   {
     linear: true,
     id: "rw-hm-scene-03c",
-    narrative: `April 9. You accepted the roadblock assignment at the rally. Three days now. You've checked hundreds of identity cards. Tutsi. Hutu. The militia takes the Tutsi away. You don't ask where.
+    narrative: `April 9. You accepted the roadblock assignment at the rally. Three days now. You've checked hundreds of identity cards—the colonial-era cards that list ethnicity, turning bureaucratic records into death warrants. Tutsi. Hutu. The militia takes the Tutsi away. You don't ask where.
 
 The commander trusts you now. He gives you more responsibility. "You're educated. You can read. Help us with the lists." Lists of names. Addresses. Who's hiding where. The administrative machinery of genocide—you're part of it.
 

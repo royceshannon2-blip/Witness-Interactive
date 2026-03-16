@@ -121,7 +121,7 @@ A woman holds up a child. "Please. Just the children." Your sergeant looks at yo
 
   {
     id: "rw-un-scene-02c",
-    narrative: `April 10. You're documenting. Camera. Notebook. Radio reports to HQ. You've seen roadblocks. Identity card checks. Bodies in streets. Churches surrounded by militia. You're gathering evidence. Someone has to record this. Someone has to make the world see.
+    narrative: `April 10. You're documenting. Camera. Notebook. Radio reports to HQ. You've seen roadblocks where militia check identity cards—colonial-era documents listing ethnicity that have become death warrants for anyone marked Tutsi. Bodies in streets. Churches surrounded by militia. You're gathering evidence. Someone has to record this. Someone has to make the world see.
 
 You reach a church. Screaming inside. Grenades. Machetes. Hundreds of people. The militia sees your UN vehicle. They stop. They're not sure what to do. You're a witness. That makes them nervous. Or it makes them bold. "UN. You have no mandate here. Leave." You could leave. Document from a distance. Or stay. Your presence might stop them. Or it might get you killed like the Belgians.
 

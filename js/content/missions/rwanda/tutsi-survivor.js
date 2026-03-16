@@ -24,7 +24,7 @@ const tutsiSurvivorScenes = [
 
 Your roommate, Marie, is Hutu. She's packing. "My brother says get out of Kigali. Now." She looks at you. "You should... I don't know. The church? Father Michel always said it was sanctuary."
 
-Your identity card is in your pocket. The one that says "Tutsi." The one that's a death sentence at every roadblock. Your parents are in Butare—you can't reach them. The phone lines are dead. Outside, you hear trucks. Shouting. The smell of smoke.
+Your identity card is in your pocket. Belgium introduced these cards decades ago, listing each person as Hutu, Tutsi, or Twa. Now militia at roadblocks use them to identify who lives and who dies. Yours says "Tutsi"—a death sentence at every checkpoint. Your parents are in Butare—you can't reach them. The phone lines are dead. Outside, you hear trucks. Shouting. The smell of smoke.
 
 Three options. The church—Father Michel knows you. Your friend Jeanne's house—she's Hutu, married to a Tutsi, might hide you. Or the Hôtel des Mille Collines—rumors say UN peacekeepers are there, protecting people. All three mean crossing roadblocks.`,
     apThemes: ["causation", "perspective", "complexity"],
@@ -124,7 +124,7 @@ Outside, you hear the roadblock. Voices. Machetes on pavement. The radio plays f
 
 The streets are chaos. Bodies already. Roadblocks every few blocks. Militia checking cards, pulling people from cars. You see a woman dragged away. Her children screaming. You keep walking. Head down. Don't run. Running means guilt.
 
-The hotel is three blocks away. You can see it. UN vehicles outside. Blue helmets. Safety. But there's a roadblock between you and the gate. Interahamwe, maybe ten men. They're checking everyone. Cards. Questions. Some people get through. Some don't.
+The hotel is three blocks away. You can see it. UN vehicles outside. Blue helmets. Safety. But there's a roadblock between you and the gate. Interahamwe, maybe ten men. They're checking everyone—examining the colonial-era identity cards that list ethnicity, using Belgian bureaucracy as a tool for murder. Cards. Questions. Some people get through. Some don't.
 
 You have two cards in your pocket. Your real one—Tutsi. Marie's—Hutu. The militia commander is young, maybe twenty. He looks tired. Bored. Methodical. You're next in line. He holds out his hand. "Identity card."`,
     apThemes: ["perspective", "complexity"],
