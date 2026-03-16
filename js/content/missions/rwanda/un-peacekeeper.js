@@ -40,13 +40,13 @@ Your mandate is clear: peacekeeping, not peace enforcement. You can't fire unles
       {
         id: "rw-un-choice-01-b",
         text: "Evacuate expatriates as ordered",
-        consequences: { rw_followed_evacuation_orders: true },
+        consequences: {},
         nextScene: "rw-un-scene-02b"
       },
       {
         id: "rw-un-choice-01-c",
         text: "Document atrocities—gather evidence",
-        consequences: { rw_chose_documentation: true },
+        consequences: {},
         nextScene: "rw-un-scene-02c"
       }
     ]
@@ -127,7 +127,7 @@ Your radio crackles. Dallaire. "All units. Avoid direct confrontation. Document 
       {
         id: "rw-un-choice-02c-a",
         text: "Stay and document—be a witness",
-        consequences: { rw_documented_evidence: true, rw_witnessed_massacre: true },
+        consequences: { rw_documented_evidence: true },
         nextScene: "rw-un-scene-03d"
       }
     ]
@@ -148,7 +148,7 @@ The militia commander returns. "Captain. Your government will abandon you. The U
       {
         id: "rw-un-choice-03a-a",
         text: "Hold the hotel—wait for RPF",
-        consequences: { rw_held_hotel: true, rw_saved_civilians: true },
+        consequences: { rw_saved_civilians: true },
         nextScene: "rw-un-scene-04a"
       }
     ]
@@ -169,7 +169,7 @@ A militia attack on the hotel seems imminent. You can see them massing. Your rad
       {
         id: "rw-un-choice-03b-a",
         text: "Hold at all costs—no retreat",
-        consequences: { rw_held_position: true, rw_protected_civilians: true },
+        consequences: { rw_held_position: true },
         nextScene: "rw-un-scene-04b"
       }
     ]
@@ -190,7 +190,7 @@ You're at the airport. You could board a plane. Go home. File your report. Or yo
       {
         id: "rw-un-choice-03c-a",
         text: "Board the plane—go home",
-        consequences: { rw_went_home: true, rw_left_rwanda: true },
+        consequences: { rw_left_rwanda: true },
         nextScene: "rw-un-scene-04c"
       },
       {
