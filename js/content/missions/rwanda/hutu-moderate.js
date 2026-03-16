@@ -144,6 +144,7 @@ Your hands shake as you take the first identity card. The woman holding it looks
     ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-03a.mp3",
     timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-hm-choice-03a-b" },
+    deathCheckpoint: true,
     choices: [
       {
         id: "rw-hm-choice-03a-a",
@@ -174,6 +175,7 @@ The radio crackles. RTLM praises the "work" being done. Lists more names. More l
     ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-03b.mp3",
     timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-hm-choice-03b-a" },
+    deathCheckpoint: true,
     choices: [
       {
         id: "rw-hm-choice-03b-a",
@@ -460,7 +462,12 @@ Rwanda's reconciliation asks you to live next to people who made different choic
 
 They killed you at the roadblock. Quick. An example for others. Celestin had already fled—you'd bought him enough time. The people whose cards you falsified made it through. They're alive. You aren't.
 
-The gacaca courts heard testimony about you in 2007. Survivors described what you did—specifically, carefully, the way people describe acts they don't want forgotten. The historical record classifies you among "Hutu moderates killed after active resistance." Your children grew up knowing you chose the harder path. That's not comfort. But it's true. You carried those choices to the end.`
+The gacaca courts heard testimony about you in 2007. Survivors described what you did—specifically, carefully, the way people describe acts they don't want forgotten. The historical record classifies you among "Hutu moderates killed after active resistance." Your children grew up knowing you chose the harder path. That's not comfort. But it's true. You carried those choices to the end.`,
+    deathEpilogueEarly: `You didn't survive. You did everything you could—hid Celestin, lied to the militia, falsified cards at the roadblock to let people through. And someone saw. A neighbor. A militiaman who recognized your face from before. "That's Augustin. He's been helping them." The commander's face changed.
+
+They killed you at the roadblock in April 1994. Quick. An example for others. Celestin had already fled—you'd bought him enough time. The people whose cards you falsified made it through. They're alive. You aren't.
+
+Your body was found by the RPF when they captured Kigali in July. Your family had fled to Zaire. They came back in 1996. The gacaca courts heard testimony about you in 2007—survivors described what you did, specifically, carefully, the way people describe acts they don't want forgotten. The historical record classifies you among "Hutu moderates killed after active resistance." Your children grew up knowing you chose the harder path. That's not comfort. But it's true. You died at the moment your choices made death inevitable.`
   },
 
   {

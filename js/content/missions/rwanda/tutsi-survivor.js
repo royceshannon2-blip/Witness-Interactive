@@ -151,6 +151,7 @@ A UN convoy passes. White vehicles. You could flag them down. Or keep hiding. Wa
     soundEffects: [
       { file: 'rw-sfx-un-vehicle-pass.mp3', triggerAfterMs: 4500 }
     ],
+    deathCheckpoint: true,
     choices: [
       {
         id: "rw-ts-choice-03a-a",
@@ -184,6 +185,7 @@ The old man coughs. Quiet, but not quiet enough. Below, footsteps stop. "You hea
       { file: 'rw-sfx-boots-stone.mp3', triggerAfterMs: 3200 },
       { file: 'rw-sfx-suppressed-cough.mp3', triggerAfterMs: 5800 }
     ],
+    deathCheckpoint: true,
     choices: [
       {
         id: "rw-ts-choice-03b-a",
@@ -207,6 +209,7 @@ At night, Jeanne brings food. Bread. Water. "Paul is talking about leaving. Goin
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-03c.mp3",
+    deathCheckpoint: true,
     choices: [
       {
         id: "rw-ts-choice-03c-a",
@@ -231,6 +234,7 @@ You find a corner in a conference room. Thirty people in a space meant for ten. 
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-03d.mp3",
     timedChoice: { enabled: true, duration: 10000, defaultChoice: "rw-ts-choice-03d-a" },
+    deathCheckpoint: true,
     choices: [
       {
         id: "rw-ts-choice-03d-a",
@@ -500,7 +504,12 @@ The church became a genocide memorial. The RPF arrived weeks later and documente
 
 You had seen what happened in the church. You were a witness to one of the worst single massacres of the genocide. That testimony died with you in the ditch. The ICTR reconstructed what happened at the church from other witnesses — people who had escaped through different routes, who had survived different hiding places. Your account was never recorded.
 
-The RPF arrived weeks later. They documented the church. They found the ditch. The memorial lists the names of everyone who died in that area in April 1994. Your name is there. You were nineteen years old. You had survived the massacre and then didn't survive the night. That distance — one massacre to the next morning — is the distance that separated most people who lived from most people who didn't.`
+The RPF arrived weeks later. They documented the church. They found the ditch. The memorial lists the names of everyone who died in that area in April 1994. Your name is there. You were nineteen years old. You had survived the massacre and then didn't survive the night. That distance — one massacre to the next morning — is the distance that separated most people who lived from most people who didn't.`,
+    deathEpilogueEarly: `You didn't survive. You stayed hidden in the drainage ditch — didn't flag the convoy, didn't move. The ditch felt safer than the open street. For a few hours, it was. Then the militia began systematic searches of the area around the church. They found you before morning. This was April 7, 1994.
+
+You had seen what happened in the church. You were a witness to one of the worst single massacres of the genocide. That testimony died with you in the ditch. The RPF arrived weeks later and documented the church. They found the ditch. The memorial lists the names of everyone who died in that area in April 1994. Your name is there.
+
+You were nineteen years old. You survived the massacre and then didn't survive the night. The ICTR reconstructed what happened at the church from other witnesses who escaped through different routes. Your account was never recorded. That distance — one massacre to the next morning — is the distance that separated most people who lived from most people who didn't.`
   },
 
   {

@@ -209,6 +209,18 @@ class UIController {
     if (data && data.missionId) {
       this.currentMissionId = data.missionId;
     }
+    
+    // Store early death context if present
+    if (data && data.diedEarly) {
+      this.earlyDeathContext = {
+        diedEarly: true,
+        deathReason: data.deathReason,
+        deathChance: data.deathChance
+      };
+    } else {
+      this.earlyDeathContext = null;
+    }
+    
     this.currentOutcome = this.calculateCurrentOutcome();
     this.showScreen('outcome', data);
   }
@@ -219,7 +231,19 @@ class UIController {
     if (!mission) return null;
     const role = mission.roles.find(r => r.id === this.currentRoleId);
     if (!role || !role.outcomes) return null;
-    const survivalResult = this.consequenceSystem.determineSurvival(this.currentRoleId);
+    
+    // If player died early (mid-story), use survived=false
+    let survivalResult;
+    if (this.earlyDeathContext && this.earlyDeathContext.diedEarly) {
+      survivalResult = {
+        survived: false,
+        deathChance: this.earlyDeathContext.deathChance,
+        modifiers: { 'early_death': this.earlyDeathContext.deathReason }
+      };
+    } else {
+      survivalResult = this.consequenceSystem.determineSurvival(this.currentRoleId);
+    }
+    
     const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes, survivalResult.survived);
     if (!outcomeId) return null;
     return role.outcomes.find(o => o.id === outcomeId);
@@ -792,10 +816,15 @@ class UIController {
     const survivalStatus = outcome.survived ? 'You Survived' : 'You Did Not Survive';
     const survivalClass = outcome.survived ? 'text-success' : 'text-danger';
     
+    // Use early death epilogue if player died mid-story
+    const epilogueText = (this.earlyDeathContext && this.earlyDeathContext.diedEarly && outcome.deathEpilogueEarly)
+      ? outcome.deathEpilogueEarly
+      : outcome.epilogue;
+    
     outcomeResultContainer.innerHTML = `
       <h3 class="${survivalClass}">${survivalStatus}</h3>
       <div class="outcome-epilogue mt-md">
-        ${this.formatEpilogue(outcome.epilogue)}
+        ${this.formatEpilogue(epilogueText)}
       </div>
     `;
   }

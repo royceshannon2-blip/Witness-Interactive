@@ -85,6 +85,286 @@ class ConsequenceSystem {
     }
   }
 
+  /**
+   * Check if the player should die NOW based on current flags (mid-story).
+   * This prevents players who take high-risk paths from continuing to aftermath
+   * scenes before death is determined.
+   *
+   * Called at specific scene checkpoints (scenes with deathCheckpoint: true).
+   * Returns { dies: boolean, reason: string, deathChance: number }
+   *
+   * @param {string} roleId
+   * @returns {{ dies: boolean, reason: string, deathChance: number }}
+   */
+  shouldDieNow(roleId) {
+    const flags = this.getAllFlags();
+
+    switch (roleId) {
+      case 'hutu-moderate':
+        return this._shouldDieNowHM(flags);
+      case 'tutsi-survivor':
+        return this._shouldDieNowTS(flags);
+      case 'un-peacekeeper':
+        return this._shouldDieNowUN(flags);
+      default:
+        // Pearl Harbor roles don't have mid-story death checkpoints
+        return { dies: false, reason: '', deathChance: 0 };
+    }
+  }
+
+  /**
+   * Hutu Moderate mid-story death check
+   * Only the rescue+misdirect+roadblock path triggers immediate death
+   */
+  _shouldDieNowHM(flags) {
+    // High-risk rescue path: hid Celestin, misdirected militia, falsified cards at roadblock
+    if (flags.rw_helped_celestin && flags.rw_misdirected_militia && flags.rw_saved_at_roadblock) {
+      let deathChance = 0.15; // base
+      deathChance += 0.30; // helped Celestin
+      deathChance += 0.15; // misdirected militia
+      deathChance += 0.20; // saved at roadblock
+      // Total: 0.80 (80% death chance)
+
+      const roll = Math.random();
+      const dies = roll < deathChance;
+
+      console.log(`[shouldDieNow] HM rescue path: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} dies=${dies}`);
+
+      return {
+        dies,
+        reason: 'Killed by Interahamwe militia after being identified as a Tutsi-protector at the roadblock',
+        deathChance
+      };
+    }
+
+    // All other paths continue to aftermath scenes
+    return { dies: false, reason: '', deathChance: 0 };
+  }
+
+  /**
+   * Tutsi Survivor mid-story death check
+   * Players who escaped church but didn't reach safety may die before aftermath
+   */
+  _shouldDieNowTS(flags) {
+    // Escaped church, high death chance if didn't reach UN protection or hide effectively
+    if (flags.rw_escaped_church && flags.rw_witnessed_massacre) {
+      let deathChance = 0.75; // base
+      deathChance -= 0.30; // escaped church
+
+      // If reached UN protection, much safer
+      if (flags.rw_reached_un_protection) {
+        deathChance -= 0.25;
+      }
+
+      // If stayed hidden in ditch, somewhat safer
+      if (flags.rw_stayed_hidden_ditch) {
+        deathChance -= 0.20;
+      }
+
+      // Roll for death if still at significant risk
+      if (deathChance > 0.20) {
+        const roll = Math.random();
+        const dies = roll < deathChance;
+
+        console.log(`[shouldDieNow] TS escape path: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} dies=${dies}`);
+
+        return {
+          dies,
+          reason: 'Killed at a roadblock after escaping the church massacre',
+          deathChance
+        };
+      }
+    }
+
+    // All other paths continue to aftermath scenes
+    return { dies: false, reason: '', deathChance: 0 };
+  }
+
+  /**
+   * UN Peacekeeper mid-story death check
+   * Players who defied orders and held position face death during militia assault
+   */
+  _shouldDieNowUN(flags) {
+    // Defied orders and held hotel under attack
+    if (flags.rw_defied_orders && flags.rw_stayed_after_withdrawal && flags.rw_held_hotel) {
+      let deathChance = 0.05; // base
+      deathChance += 0.20; // defied orders
+      deathChance += 0.15; // held hotel
+      deathChance += 0.10; // stayed after withdrawal
+      // Total: 0.50 (50% death chance)
+
+      const roll = Math.random();
+      const dies = roll < deathChance;
+
+      console.log(`[shouldDieNow] UN defiance path: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} dies=${dies}`);
+
+      return {
+        dies,
+        reason: 'Killed defending civilians during militia assault on the hotel in July 1994',
+        deathChance
+      };
+    }
+
+    // Left Rwanda - almost no death chance
+    if (flags.rw_left_rwanda) {
+      const deathChance = 0.01;
+      const roll = Math.random();
+      const dies = roll < deathChance;
+
+      if (dies) {
+        console.log(`[shouldDieNow] UN evacuation path: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} dies=${dies}`);
+        return {
+          dies: true,
+          reason: 'Killed at convoy roadblock en route to airport',
+          deathChance
+        };
+      }
+    }
+
+    // All other paths continue to aftermath scenes
+    return { dies: false, reason: '', deathChance: 0 };
+  }
+
+  /**
+   * Check if the player should die NOW based on current flags (mid-story).
+   * This prevents players who take high-risk paths from continuing to aftermath
+   * scenes before death is determined.
+   *
+   * Called at specific scene checkpoints (scenes with deathCheckpoint: true).
+   * Returns { dies: boolean, reason: string, deathChance: number }
+   *
+   * @param {string} roleId
+   * @returns {{ dies: boolean, reason: string, deathChance: number }}
+   */
+  shouldDieNow(roleId) {
+    const flags = this.getAllFlags();
+
+    switch (roleId) {
+      case 'hutu-moderate':
+        return this._shouldDieNowHM(flags);
+      case 'tutsi-survivor':
+        return this._shouldDieNowTS(flags);
+      case 'un-peacekeeper':
+        return this._shouldDieNowUN(flags);
+      default:
+        // Pearl Harbor roles don't have mid-story death checkpoints
+        return { dies: false, reason: '', deathChance: 0 };
+    }
+  }
+
+  /**
+   * Hutu Moderate mid-story death check
+   * Only the rescue+misdirect+roadblock path triggers immediate death
+   */
+  _shouldDieNowHM(flags) {
+    // High-risk rescue path: hid Celestin, misdirected militia, falsified cards at roadblock
+    if (flags.rw_helped_celestin && flags.rw_misdirected_militia && flags.rw_saved_at_roadblock) {
+      let deathChance = 0.15; // base
+      deathChance += 0.30; // helped Celestin
+      deathChance += 0.15; // misdirected militia
+      deathChance += 0.20; // saved at roadblock
+      // Total: 0.80 (80% death chance)
+
+      const roll = Math.random();
+      const dies = roll < deathChance;
+
+      console.log(`[shouldDieNow] HM rescue path: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} dies=${dies}`);
+
+      return {
+        dies,
+        reason: 'Killed by Interahamwe militia after being identified as a Tutsi-protector at the roadblock',
+        deathChance
+      };
+    }
+
+    // All other paths continue to aftermath scenes
+    return { dies: false, reason: '', deathChance: 0 };
+  }
+
+  /**
+   * Tutsi Survivor mid-story death check
+   * Players who escaped church but didn't reach safety may die before aftermath
+   */
+  _shouldDieNowTS(flags) {
+    // Escaped church, high death chance if didn't reach UN protection or hide effectively
+    if (flags.rw_escaped_church && flags.rw_witnessed_massacre) {
+      let deathChance = 0.75; // base
+      deathChance -= 0.30; // escaped church
+
+      // If reached UN protection, much safer
+      if (flags.rw_reached_un_protection) {
+        deathChance -= 0.25;
+      }
+
+      // If stayed hidden in ditch, somewhat safer
+      if (flags.rw_stayed_hidden_ditch) {
+        deathChance -= 0.20;
+      }
+
+      // Roll for death if still at significant risk
+      if (deathChance > 0.20) {
+        const roll = Math.random();
+        const dies = roll < deathChance;
+
+        console.log(`[shouldDieNow] TS escape path: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} dies=${dies}`);
+
+        return {
+          dies,
+          reason: 'Killed at a roadblock after escaping the church massacre',
+          deathChance
+        };
+      }
+    }
+
+    // All other paths continue to aftermath scenes
+    return { dies: false, reason: '', deathChance: 0 };
+  }
+
+  /**
+   * UN Peacekeeper mid-story death check
+   * Players who defied orders and held position face death during militia assault
+   */
+  _shouldDieNowUN(flags) {
+    // Defied orders and held hotel under attack
+    if (flags.rw_defied_orders && flags.rw_stayed_after_withdrawal && flags.rw_held_hotel) {
+      let deathChance = 0.05; // base
+      deathChance += 0.20; // defied orders
+      deathChance += 0.15; // held hotel
+      deathChance += 0.10; // stayed after withdrawal
+      // Total: 0.50 (50% death chance)
+
+      const roll = Math.random();
+      const dies = roll < deathChance;
+
+      console.log(`[shouldDieNow] UN defiance path: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} dies=${dies}`);
+
+      return {
+        dies,
+        reason: 'Killed defending civilians during militia assault on the hotel in July 1994',
+        deathChance
+      };
+    }
+
+    // Left Rwanda - almost no death chance
+    if (flags.rw_left_rwanda) {
+      const deathChance = 0.01;
+      const roll = Math.random();
+      const dies = roll < deathChance;
+
+      if (dies) {
+        console.log(`[shouldDieNow] UN evacuation path: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} dies=${dies}`);
+        return {
+          dies: true,
+          reason: 'Killed at convoy roadblock en route to airport',
+          deathChance
+        };
+      }
+    }
+
+    // All other paths continue to aftermath scenes
+    return { dies: false, reason: '', deathChance: 0 };
+  }
+
   // ─── PEARL HARBOR SURVIVAL METHODS ────────────────────────────────────────
 
   /**
