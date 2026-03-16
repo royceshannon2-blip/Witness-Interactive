@@ -468,13 +468,13 @@ You testified at inquiries. You advocated for stronger peacekeeping mandates. Yo
       rw_defied_orders: true
     },
     deathContext: {
-      cause: "Killed defending civilians during militia attack on hotel enclave",
+      cause: "Killed during the genocide while defending civilians",
       historicalRate: "While most UN peacekeepers who stayed survived, some were killed defending protected sites",
-      yourChoices: "You defied withdrawal orders and held the hotel. The militia attacked in force. You held them off but were killed in the assault."
+      yourChoices: "You defied withdrawal orders and held the hotel. The militia attacked."
     },
-    epilogue: `You didn't survive. You defied orders. You stayed when the UN withdrew. You held the hotel with four peacekeepers against hundreds of militia. For weeks, your presence kept them back. Then they attacked in force. Grenades. Automatic weapons. You held them off long enough for most refugees to escape through the back. But you were killed in the assault. Quick. Defending the gate.
+    epilogue: `You didn't survive. You defied orders. You stayed when the UN withdrew. You held the hotel with a handful of peacekeepers against hundreds of militia. For weeks, your presence kept them back. Whether you were killed during a direct assault, in an ambush, or in the chaos of the genocide's final weeks, you died defending civilians. Most of the refugees survived because you bought them time.
 
-The RPF arrived two days later. Most of the refugees survived because you bought them time. Your body was recovered. Canada gave you a posthumous medal. The UN named a peacekeeping award after you. General Dallaire spoke at your funeral. He said you embodied what UNAMIR should have been—protection over politics, conscience over orders.
+The RPF arrived and secured the area. Your body was recovered. Canada gave you a posthumous medal. The UN named a peacekeeping award after you. General Dallaire spoke at your funeral. He said you embodied what UNAMIR should have been — protection over politics, civilians over mandates, courage over orders.
 
 Your family grieved. Your children grew up knowing you died a hero. The survivors you protected remember your name. The hotel has a plaque. Students visit. They learn that some peacekeepers stayed, that some died defending civilians, that courage matters even when mandates fail. You're remembered. You're honored. You carried that choice to the end.`
   },
@@ -739,15 +739,15 @@ His therapist suggested the avoided testimony was about protecting himself from 
       rw_defied_orders: true
     },
     deathContext: {
-      cause: "Killed when militia stopped the convoy after Rwandan civilians were loaded",
+      cause: "Killed during the genocide after defying orders to protect Rwandan civilians",
       historicalRate: "Some peacekeepers who defied orders to protect civilians were killed during confrontations with militia",
-      yourChoices: "You loaded Rwandan civilians onto the evacuation convoy. The militia stopped the vehicle. You didn't survive the confrontation."
+      yourChoices: "You loaded Rwandan civilians onto the evacuation convoy. The militia confronted you."
     },
-    epilogue: `You didn't survive. You loaded Rwandans onto the convoy. The militia commander had walked over because he saw what you were doing. He stopped the vehicle. You refused to unload the civilians. The confrontation lasted four minutes. You were killed. The seven people you'd loaded were taken off the truck. Most of them were killed at the roadblock.
+    epilogue: `You didn't survive. You loaded Rwandans onto the convoy. The militia saw what you were doing. Whether you were killed at that roadblock, during a subsequent confrontation, or in the violence that followed your defiance of orders, you died trying to protect civilians you were explicitly ordered to leave behind.
 
-The UN investigated. The report noted that you had violated your mandate, endangered the evacuation, and been killed as a direct result. It also noted that you had attempted to protect civilians in a situation where protection was explicitly prohibited. Both things were recorded. Neither resolved the other.
+The UN investigated. The report noted that you had violated your mandate and been killed as a result. It also noted that you had attempted to protect civilians in a situation where protection was explicitly prohibited. Both things were recorded. Neither resolved the other.
 
-Canada gave you a posthumous commendation. Your family received it. Dallaire spoke at a memorial service and said your name alongside the ten Belgians killed on April 7th. He said the genocide produced too many names like yours — people who tried to act within a system designed to prevent action. You carried that choice to the end. The seven people you tried to save are also names now.`
+Canada gave you a posthumous commendation. Your family received it. Dallaire spoke at a memorial service and said your name alongside the ten Belgians killed on April 7th. He said the genocide produced too many names like yours — people who tried to act within a system designed to prevent action. You carried that choice to the end. Some of the people you tried to save survived. Some didn't. You died trying.`
   },
 
   {
@@ -757,13 +757,13 @@ Canada gave you a posthumous commendation. Your family received it. Dallaire spo
       rw_protected_hotel: true
     },
     deathContext: {
-      cause: "Killed when militia attacked the hotel after UN force was reduced",
+      cause: "Killed during the genocide while following mandate to protect civilians",
       historicalRate: "Some peacekeepers who remained to protect civilians were killed during militia attacks on protected sites",
-      yourChoices: "You followed your mandate and held position at the hotel. When the force was reduced to four peacekeepers, the militia attacked."
+      yourChoices: "You followed your mandate and held position at the hotel. The militia attacked."
     },
-    epilogue: `You didn't survive. You followed your orders exactly — held position, protected the designated safe zone, did not defy the mandate. When the Security Council cut UNAMIR to 270 soldiers and your detachment was reduced to four, you stayed at the gate. You'd done everything correctly within the rules you were given.
+    epilogue: `You didn't survive. You followed your orders exactly — held position, protected the designated safe zone, did not defy the mandate. When the Security Council cut UNAMIR to 270 soldiers and your detachment was reduced, you stayed at the gate. You'd done everything correctly within the rules you were given.
 
-The militia waited for the numbers to drop. They were patient and they were organized and they had been watching the peacekeeping force shrink for two weeks. When they came through the gate you were outnumbered and under-authorized and the rules of engagement did not allow you to do what would have been necessary to stop them.
+Whether you were killed during a militia assault, in an ambush, or in the chaos of the genocide's final weeks, you died following the mandate you were given. The mandate was inadequate. You followed it anyway. That's what soldiers do.
 
 Canada gave you a posthumous service medal. The UN noted your compliance with the mandate in its post-genocide review — the same review that concluded the mandate itself had been inadequate. You followed the rules. The rules were wrong. Both things are recorded in the same document. Dallaire wrote later that the soldiers who died in Rwanda following their mandates deserved better mandates. He was right. You were one of the people he was writing about.`
   },
@@ -776,15 +776,15 @@ Canada gave you a posthumous service medal. The UN noted your compliance with th
       rw_left_rwandans: true
     },
     deathContext: {
-      cause: "Killed during the evacuation convoy by militia who stopped the vehicles",
+      cause: "Killed during the evacuation operation",
       historicalRate: "Several evacuation convoys were stopped and threatened by militia during the withdrawal from Rwanda",
-      yourChoices: "You followed orders and evacuated expatriates only. The convoy was stopped by militia on the way to the airport."
+      yourChoices: "You followed orders and evacuated expatriates only. The operation turned deadly."
     },
-    epilogue: `You didn't survive. You followed your orders. Foreign nationals only — no Rwandans. You left the people at the checkpoint behind. The woman with the child. The embassy workers. You drove away from them and toward the airport and your orders and your conscience were at war for the twenty minutes it took to reach the roadblock that stopped the convoy.
+    epilogue: `You didn't survive. You followed your orders. Foreign nationals only — no Rwandans. You left the people at the checkpoint behind. The woman with the child. The embassy workers. Whether you were killed at a roadblock during the evacuation, in an ambush, or in the violence that followed, you died following orders that asked you to prioritize certain lives over others.
 
-The militia commander wanted something — money, a radio, proof of something. The negotiation failed. Three peacekeepers were killed at that roadblock before the convoy was allowed to proceed. You were one of them.
+The foreign nationals you were protecting made it to the airport. They went home. They were debriefed. Some of them testified later about what they saw during the evacuation — the roadblocks, the bodies, the people left behind at checkpoints. They mentioned peacekeepers who died protecting them. Your name is in those depositions.
 
-The foreign nationals made it to the airport. They went home. They were debriefed. Some of them testified later about what they saw during the evacuation — the roadblocks, the bodies, the people left behind at checkpoints. They mentioned peacekeepers who died protecting them. Your name is in those depositions. You followed your orders to the end. The orders asked you to prioritize certain lives over others. You did. Then you died doing it. The gap between those two facts is what the subsequent inquiries spent years trying to understand.`
+You followed your orders to the end. The orders asked you to prioritize certain lives over others. You did. Then you died doing it. The gap between those two facts is what the subsequent inquiries spent years trying to understand. Canada gave you a posthumous medal. Your family received it. The people at the checkpoint you left behind are also names now.`
   },
 
   {
@@ -794,13 +794,13 @@ The foreign nationals made it to the airport. They went home. They were debriefe
       rw_documented_evidence: true
     },
     deathContext: {
-      cause: "Killed by militia while documenting atrocities",
+      cause: "Killed during the genocide while documenting atrocities",
       historicalRate: "Journalists and peacekeepers who stayed to document the genocide faced significant danger, and several were killed",
       yourChoices: "You stayed to document what was happening. You sent reports to New York. The militia viewed your documentation as a threat."
     },
     epilogue: `You didn't survive. You stayed. You documented. You sent the reports — photos, testimony, names, dates, the specific language the militia commanders used when they thought no one official was listening. You sent them to Dallaire, to New York, to the media contacts you had. The world received your reports and debated their implications while you were still in the field generating more of them.
 
-The militia commander at the church had been patient with you for two weeks. You were a witness and witnesses made them nervous and nervous people do unpredictable things. On a Tuesday he decided your presence was more threatening than your UN status was protective.
+Whether you were killed at a specific site you were documenting, during an ambush, or in the violence that followed, your presence as a witness was viewed as a threat. You died gathering evidence.
 
 Your documentation survived you. The photos you took were entered into evidence at the ICTR. The reports you filed are in the UN archives. Three militia leaders were convicted partly on the basis of evidence you collected. You didn't live to testify. Your camera did it for you. Dallaire cited your work specifically in his memoir — not your name, because your family asked for privacy, but your work. The evidence existed. The convictions followed. You were the reason.`
   },

@@ -444,15 +444,15 @@ Survivor guilt is a weight that doesn't lift. The memorial guide asks if you wan
       rw_trusted_church: true
     },
     deathContext: {
-      cause: "Killed during church massacre by Interahamwe militia",
+      cause: "Killed during the genocide after seeking sanctuary at the church",
       historicalRate: "Churches became massacre sites across Rwanda. Thousands of Tutsi who sought sanctuary in churches were killed there.",
-      yourChoices: "You trusted the church as sanctuary. When the militia attacked, you didn't escape in time."
+      yourChoices: "You trusted the church as sanctuary. The militia attacked."
     },
-    epilogue: `You didn't survive. You went to the church—Father Michel, sanctuary, safety. Churches had always been safe. But not this time. The Interahamwe surrounded the building. They killed Father Michel at the door. They poured in with machetes and grenades. You tried to find safety but there was nowhere to go. The pews offered no protection. The altar was no shield. You died with hundreds of others in a place that was supposed to be sacred.
+    epilogue: `You didn't survive. You went to the church — Father Michel, sanctuary, safety. Churches had always been safe. But not this time. The Interahamwe surrounded the building. They killed Father Michel at the door. They poured in with machetes and grenades. Whether you were killed in the initial assault, while trying to hide, or in the systematic searches that followed, you died with hundreds of others in a place that was supposed to be sacred.
 
-Your body was found weeks later when the RPF arrived. Your family identified you by your clothes. The church became a genocide memorial. Your name is on the wall with three hundred others who died there that day. Students visit now. They see the skulls on shelves, the clothes preserved, the names. They learn that churches became massacre sites, that sanctuary was a lie, that trust was weaponized.
+Your body was found when the RPF arrived. Your family identified you by your clothes. The church became a genocide memorial. Your name is on the wall with three hundred others who died there. Students visit now. They see the skulls on shelves, the clothes preserved, the names. They learn that churches became massacre sites, that sanctuary was a lie, that trust was weaponized.
 
-Your friend Marie survived. She testified at the gacaca courts about what happened. She said you were kind, that you trusted people, that you believed in safety. The memorial guide tells your story to visitors—how you went to the church, how you died there, how trust became a trap. You're remembered. You're a name on a wall. You carried that trust to the end.`
+Your friend Marie survived. She testified at the gacaca courts about what happened. She said you were kind, that you trusted people, that you believed in safety. The memorial guide tells your story to visitors — how you went to the church seeking sanctuary, how you died there, how trust became a trap. You're remembered. You're a name on a wall. You carried that trust to the end.`
   },
 
   {
@@ -463,15 +463,15 @@ Your friend Marie survived. She testified at the gacaca courts about what happen
       rw_survived_church_hiding: true
     },
     deathContext: {
-      cause: "Discovered and killed while hiding in the church ceiling by returning militia",
+      cause: "Killed during the genocide after hiding in the church",
       historicalRate: "Militia systematically searched churches for survivors in the days following massacres. Many who hid in ceilings and crawlspaces were eventually found.",
-      yourChoices: "You hid in the ceiling crawlspace. The militia returned to search for survivors and found you."
+      yourChoices: "You hid in the ceiling crawlspace. The militia searched for survivors."
     },
-    epilogue: `You didn't survive. You made it to the ceiling crawlspace—barely three feet high, silent, terrified. You held absolutely still while the massacre happened below. The militia came back—they always came back—and this time they looked up. You heard them moving the ladder. You knew what was coming.
+    epilogue: `You didn't survive. You made it to the ceiling crawlspace — barely three feet high, silent, terrified. You held absolutely still while the massacre happened below. The militia returned to search — they always came back — and eventually you were discovered. Whether they found you in the crawlspace, or you were forced out by thirst and starvation, or you were caught trying to escape when you thought it was safe, the end came before the RPF arrived.
 
-The church was documented by the RPF when they arrived in July. The crawlspace above the sacristy was noted in their records—evidence of people who had tried to hide there. The church became a genocide memorial. Tourists visit now. They see the skulls arranged on shelves, the clothes preserved, the names on the walls. The guide explains that some survivors tried to hide in the ceiling for days before being found.
+The church was documented by the RPF when they captured the area. The crawlspace above the sacristy was noted in their records — evidence of people who had tried to hide there. The church became a genocide memorial. Tourists visit now. They see the skulls arranged on shelves, the clothes preserved, the names on the walls. The guide explains that some survivors tried to hide in the ceiling for days.
 
-Your name is on the wall with three hundred others. You lasted longer than most. You were quiet when it counted. It wasn't enough, and that wasn't a failure—it was the arithmetic of what happened there. Three hundred names. You are one of them. You were nineteen years old and you held still until you couldn't anymore.`
+Your name is on the wall with three hundred others. You lasted longer than most. You were quiet when it counted. It wasn't enough, and that wasn't a failure — it was the arithmetic of what happened there. Three hundred names. You are one of them. You were nineteen years old and you held still as long as you could.`
   },
 
   {
@@ -510,15 +510,15 @@ Some survivors find power in testimony. You found both power and exhaustion. Spe
       rw_trusted_church: true
     },
     deathContext: {
-      cause: "Killed at a roadblock while trying to reach safety after escaping the church",
+      cause: "Killed during the genocide after escaping the church",
       historicalRate: "Most Tutsi who escaped church massacres were caught at subsequent roadblocks",
-      yourChoices: "You escaped the church. You saw what happened. You tried to reach safety or flag down help. You were caught."
+      yourChoices: "You escaped the church. You saw what happened. You tried to reach safety."
     },
     epilogue: `You didn't survive. You escaped the church — ran through the side door while the militia was still inside. You saw what happened. Father Michel. The grenades. The children. You carried that out with you into the street and tried to survive long enough for it to matter.
 
-You didn't make it to safety. A roadblock two blocks from the church. Your identity card. The militia commander didn't hesitate. You'd seen too much and you were the wrong ethnicity and the two facts combined into one outcome in about thirty seconds.
+Whether you were caught at a roadblock, killed while hiding, or found during the systematic searches that continued throughout the genocide, you didn't make it to safety. Your identity card. Your face. The organized nature of the killing. The combination was lethal.
 
-The church became a genocide memorial. The RPF arrived weeks later and documented what happened there. Witnesses testified at the ICTR about the massacre — people who escaped through other doors, who survived different roadblocks. Your story was told by them. The memorial lists your name with the three hundred who died that day. You were nineteen years old. You had seen everything. You just didn't survive long enough to say it.`
+The church became a genocide memorial. The RPF documented what happened there. Witnesses testified at the ICTR about the massacre — people who escaped through other doors, who survived different roadblocks. Your story was told by them. The memorial lists your name with the three hundred who died that day. You were nineteen years old. You had seen everything. You just didn't survive long enough to say it.`
   },
 
   {
@@ -529,15 +529,15 @@ The church became a genocide memorial. The RPF arrived weeks later and documente
       rw_trusted_church: true
     },
     deathContext: {
-      cause: "Found in church ceiling crawlspace by returning militia",
+      cause: "Killed during the genocide after hiding in the church ceiling",
       historicalRate: "Militia systematically searched churches for survivors in the days following massacres",
-      yourChoices: "You hid in the ceiling crawlspace. The militia returned to search for survivors."
+      yourChoices: "You hid in the ceiling crawlspace. The militia searched for survivors."
     },
-    epilogue: `You didn't survive. You held absolutely still in the ceiling for twenty-four hours. The old man beside you held still too. The militia came back — they always came back — and this time they looked up. You heard them moving the ladder. The old man looked at you. You both knew.
+    epilogue: `You didn't survive. You held absolutely still in the ceiling for as long as you could. The old man beside you held still too. The militia returned to search — they always came back. Whether they found you in the crawlspace, or you were forced out by thirst and starvation, or you were caught trying to escape, you were discovered before the RPF arrived.
 
-The church was documented by the RPF when they arrived in July. The crawlspace above the sacristy was noted in their records — evidence of people who had tried to hide there. The church became a genocide memorial. Tourists visit now. They see the skulls arranged on shelves, the clothes preserved, the names on the walls. The guide explains that some survivors hid in the ceiling for days before being found.
+The church was documented by the RPF when they captured the area. The crawlspace above the sacristy was noted in their records — evidence of people who had tried to hide there. The church became a genocide memorial. Tourists visit now. They see the skulls arranged on shelves, the clothes preserved, the names on the walls. The guide explains that some survivors hid in the ceiling for days before being found.
 
-Your name is on the wall with three hundred others. You lasted longer than most. You were quiet when it counted. It wasn't enough, and that wasn't a failure — it was the arithmetic of what happened there. Three hundred names. You are one of them. You were nineteen years old and you held still until you couldn't anymore.`
+Your name is on the wall with three hundred others. You lasted longer than most. You were quiet when it counted. It wasn't enough, and that wasn't a failure — it was the arithmetic of what happened there. Three hundred names. You are one of them. You were nineteen years old and you held still as long as you could.`
   },
 
   {
@@ -547,13 +547,13 @@ Your name is on the wall with three hundred others. You lasted longer than most.
       rw_hid_with_hutu: true
     },
     deathContext: {
-      cause: "Discovered by Jeanne's Interahamwe brother during a house search",
+      cause: "Killed during the genocide after being discovered in hiding",
       historicalRate: "Many Hutu who sheltered Tutsi were betrayed by family members who were militia",
-      yourChoices: "You hid in Jeanne's attic. Her brother was Interahamwe. He eventually searched the house."
+      yourChoices: "You hid in Jeanne's attic. Her brother was Interahamwe. Your hiding place was eventually discovered."
     },
-    epilogue: `You didn't survive. Jeanne's brother came back a fourth time and this time he didn't ask — he searched. He knew the house. He knew where the ceiling panel was. Jeanne tried to stop him. He pushed past her. He found you in the attic.
+    epilogue: `You didn't survive. Jeanne hid you in her attic. Her brother was Interahamwe. He came by repeatedly, asking questions, searching. Eventually you were discovered — whether he found you himself, whether someone else informed on Jeanne, whether you were forced out by circumstances beyond anyone's control, the protection that had kept you alive for days or weeks ultimately failed.
 
-Jeanne was arrested for sheltering a Tutsi. She survived the genocide — released when the RPF arrived — but her brother served six years for roadblock killings and for what happened to you. The gacaca courts heard testimony about that attic. Jeanne's children testified about the weeks you spent up there. About the silence. About how they'd learned not to speak.
+Jeanne was arrested for sheltering a Tutsi. She survived the genocide — released when the RPF arrived — but her brother served six years for roadblock killings and for what happened to you. The gacaca courts heard testimony about that attic. Jeanne's children testified about the time you spent up there. About the silence. About how they'd learned not to speak.
 
 You were hidden by someone who risked everything to protect you. That protection wasn't enough, and that failure wasn't Jeanne's — it was the systematic, organized nature of what was happening. Militia members were searching houses. Family members were informing on family members. Jeanne's courage was real. The genocide was more organized than her courage could contain. Your name is in the gacaca record alongside hers. She still visits the memorial on April 7th. She says your name out loud every year.`
   },
@@ -565,15 +565,15 @@ You were hidden by someone who risked everything to protect you. That protection
       rw_used_false_id: true
     },
     deathContext: {
-      cause: "Killed when militia breached the hotel perimeter",
+      cause: "Killed during the genocide despite reaching UN protection",
       historicalRate: "While most people in the Hôtel des Mille Collines survived, the threat of militia breach was constant and some protected sites were overrun",
-      yourChoices: "You made it to the hotel with Marie's identity card. You were inside the UN-protected perimeter when the militia breached it."
+      yourChoices: "You made it to the hotel with Marie's identity card. You were inside the UN-protected perimeter."
     },
-    epilogue: `You didn't survive. You made it to the hotel — showed Marie's card, got through the roadblock, registered under her name. Twelve hundred people in a building meant for two hundred. UN peacekeepers at the gate. For weeks it held.
+    epilogue: `You didn't survive. You made it to the hotel — showed Marie's card, got through the roadblock, registered under her name. Twelve hundred people in a building meant for two hundred. UN peacekeepers at the gate. For a time it held.
 
-Then the withdrawal order came. The Security Council cut UNAMIR to 270 soldiers. The peacekeepers at the gate were reduced to four. The militia commander outside had been waiting for exactly this. He walked through the gate on a Tuesday morning and his men came with him.
+Whether the militia eventually breached the perimeter, whether you were discovered using a false identity, whether you were killed during an evacuation attempt or in the chaos of the genocide's final weeks, you died despite reaching what should have been safety. The protection was real but incomplete. The hotel became a symbol of survival, but not everyone inside survived.
 
-Most people in the hotel survived. The RPF arrived in time for most of them. You were in the wrong corridor at the wrong moment — the militia moved fast and the remaining peacekeepers couldn't cover every room. The hotel became famous after the genocide. A film was made about it. The manager who negotiated for the people inside became an international figure. The twelve hundred who survived are cited in every account of the genocide as evidence that protection was possible. You were inside that protection. It just didn't hold long enough to include you.`
+The hotel became famous after the genocide. A film was made about it. The manager who negotiated for the people inside became an international figure. The twelve hundred who survived are cited in every account of the genocide as evidence that protection was possible. You were inside that protection. It just didn't hold long enough to include you. Your name is recorded among those who sought sanctuary and didn't survive. Marie knows what happened to her card. She carries that knowledge forward.`
   },
 
   // TESTIMONY PATH - SPECIFIC AFTERMATH OUTCOMES
