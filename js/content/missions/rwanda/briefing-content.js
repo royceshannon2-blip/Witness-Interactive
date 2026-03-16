@@ -32,6 +32,17 @@ export const BRIEFING_PAGES = {
       ticker: 'RTLM broadcast range: all of Kigali and surrounding prefectures — 24 hours a day.'
     },
     {
+      vol: 'Vol. LVIII — No. 217',
+      date: 'Arusha, Tanzania — August 4, 1993',
+      price: 'Cinq francs',
+      hSize: 'sz-lg',
+      hClass: '',
+      h: 'Rwanda Peace Accord Signed. Power-Sharing Agreement Reached.',
+      deck: 'Habyarimana government and RPF agree to transitional government — Hutu Power factions immediately denounce deal as betrayal',
+      body: 'After a year of negotiations in Arusha, Tanzania, the Rwandan government and the Rwandan Patriotic Front signed a comprehensive peace agreement today. The Arusha Accords establish a broad-based transitional government including the RPF and opposition parties, integration of RPF soldiers into the national army, and a timeline toward elections under a new constitution.\n\nA small UN peacekeeping mission — UNAMIR — will monitor the ceasefire and political transition. Its mandate is limited to observation. It cannot enforce the agreement or use force unless directly attacked.\n\nHardliners in the Akazu — the president\'s inner circle — publicly reject the accords. They have spent years building Hutu Power. The accords would dismantle what they built. They call it surrender. They begin organising to ensure it never takes effect.\n\nThe weapons distribution continues. The militia training continues. The Arusha Accords are signed. They are not implemented.',
+      ticker: 'Hutu Power response to Arusha: "We will never share power with the Tutsi enemy." — RTLM broadcast, August 1993.'
+    },
+    {
       vol: 'Vol. LX — No. 11',
       date: 'Kigali, Rwanda — January 11, 1994',
       price: 'Cinq francs',
@@ -86,7 +97,7 @@ export const BRIEFING_PAGES = {
       hClass: 'alert',
       h: 'Hutu Power Arms Militias. Radio Takes to the Airwaves. Lists Are Compiled.',
       deck: 'Government distributes machetes by neighbourhood as RTLM broadcasts Tutsi names and escape routes',
-      body: 'As civil war continues in the north, the government arms civilian militias — the Interahamwe — and distributes machetes to villages across Rwanda. Training is systematic. The weapons are not hidden.\n\nRadio Mille Collines, RTLM, 106.3 FM, broadcasts music and comedy. Between programmes, announcers call Tutsi inyenzi — cockroaches — and read their names and addresses aloud. It is a real-time targeting system.\n\nModerate Hutu politicians — those who spoke against ethnic violence, those who refused Hutu Power rallies — are being watched. Their names recorded. You did not attend the last rally. That was noted. Your name is on a list.',
+      body: 'As civil war continues in the north, the government arms civilian militias — the Interahamwe — and distributes machetes to villages across Rwanda. Training is systematic. The weapons are not hidden.\n\nRadio Mille Collines, RTLM, 106.3 FM, broadcasts music and comedy. Between programmes, announcers call Tutsi inyenzi — cockroaches — and read their names and addresses aloud. It is a real-time targeting system.\n\nModerate Hutu politicians — those who spoke against ethnic violence, those who refused Hutu Power rallies — are being watched. Their names recorded. You did not attend the last rally. That was noted. Your name is on a list.\n\nLast August, the government signed the Arusha Accords with the RPF — a peace agreement requiring power-sharing. Hutu Power called it treason. Moderate politicians who supported the deal are now on the same lists as Tutsi. Refusing to attend a rally is enough to mark you as a traitor to the cause.',
       ticker: 'RTLM announcer Georges Ruggiu — convicted of incitement to genocide, The Hague, 2000.'
     },
     {
@@ -133,7 +144,7 @@ export const BRIEFING_PAGES = {
       hClass: '',
       h: 'U.N. Authorizes Rwanda Mission. Mandate: Observe and Report Only.',
       deck: 'General Dallaire given 2,500 troops and explicit orders not to intervene in internal conflicts',
-      body: 'The United Nations Security Council authorizes the United Nations Assistance Mission for Rwanda — UNAMIR — to monitor a peace agreement. The force is commanded by Canadian General Roméo Dallaire.\n\nThe mandate is explicit: observe and report only. Peacekeepers may use force only in self-defence. They may not protect civilians outside designated safe zones. They may not confiscate weapons caches. They may not take any action that could be interpreted as interference in Rwanda\'s internal affairs.\n\nGeneral Dallaire submits written concerns that the mandate is insufficient for conditions on the ground. He is told to proceed as authorized. He proceeds.',
+      body: 'The United Nations Security Council authorizes the United Nations Assistance Mission for Rwanda — UNAMIR — to monitor the Arusha Accords, a peace agreement signed this month between the Rwandan government and the Rwandan Patriotic Front. The Accords establish a transitional government including the RPF and opposition parties, with a timeline toward elections. The force is commanded by Canadian General Roméo Dallaire.\n\nUNAMIR\'s mandate is explicit: monitor the Accords\' implementation and report on compliance. Peacekeepers may use force only in self-defence. They may not protect civilians outside designated safe zones. They may not confiscate weapons caches. They may not enforce the agreement — only observe whether it is being followed.\n\nGeneral Dallaire submits written concerns that the mandate is insufficient for conditions on the ground. He is told to proceed as authorized. He proceeds.',
       ticker: 'UNAMIR authorized strength: 2,500 troops. Rules of engagement: self-defence only.'
     },
     {
