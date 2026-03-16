@@ -39,7 +39,7 @@ Your wife catches your eye from the kitchen. Fear. The radio mentioned moderate 
       {
         id: "rw-hm-choice-01-b",
         text: "Attend the Hutu Power rally",
-        consequences: { rw_attended_rally: true },
+        consequences: {},
         nextScene: "rw-hm-scene-02b"
       },
       {
@@ -78,7 +78,7 @@ You have seconds. The roadblock at the end of the street—you know the commande
       {
         id: "rw-hm-choice-02a-b",
         text: "Comply—reveal Celestin's location",
-        consequences: { rw_revealed_celestin: true },
+        consequences: { rw_revealed_celestin: true, rw_participated_directly: true },
         nextScene: "rw-hm-scene-03b"
       }
     ]
@@ -251,13 +251,13 @@ Celestin watches you. His son—the one who survived—sits beside him. The crow
       {
         id: "rw-hm-choice-04a-a",
         text: "Testify fully—confess everything",
-        consequences: { rw_testified_gacaca: true, rw_full_confession: true },
+        consequences: { rw_full_confession: true },
         nextScene: "outcome"
       },
       {
         id: "rw-hm-choice-04a-b",
         text: "Testify partially—protect some names",
-        consequences: { rw_testified_gacaca: true, rw_partial_confession: true },
+        consequences: { rw_partial_confession: true },
         nextScene: "outcome"
       },
       {
@@ -286,7 +286,7 @@ Or you could deny it. Claim you were forced. Claim you had no choice. Some perpe
       {
         id: "rw-hm-choice-04b-a",
         text: "Confess fully—accept responsibility",
-        consequences: { rw_confessed_complicity: true, rw_accepted_guilt: true },
+        consequences: { rw_confessed_complicity: true },
         nextScene: "outcome"
       },
       {
@@ -321,19 +321,19 @@ A gacaca judge visits. "Augustin. We need testimony about what happened in Kigal
       {
         id: "rw-hm-choice-04d-a",
         text: "Testify as a witness—help survivors",
-        consequences: { rw_testified_as_witness: true, rw_helped_justice: true },
+        consequences: { rw_testified_as_witness: true },
         nextScene: "outcome"
       },
       {
         id: "rw-hm-choice-04d-b",
         text: "Refuse—stay silent about the past",
-        consequences: { rw_refused_testimony: true, rw_stayed_silent: true },
+        consequences: { rw_refused_testimony: true },
         nextScene: "outcome"
       },
       {
         id: "rw-hm-choice-04d-c",
         text: "Relocate again—avoid the questions",
-        consequences: { rw_relocated_village: true, rw_avoided_past: true },
+        consequences: {},
         nextScene: "outcome"
       }
     ]
@@ -341,6 +341,42 @@ A gacaca judge visits. "Augustin. We need testimony about what happened in Kigal
 ];
 
 const hutuModerateOutcomes = [
+  // GAP 1 FIX: Misdirection path that ends at death checkpoint before roadblock
+  {
+    id: "rw-hm-outcome-rescue-misdirected-survived",
+    survived: true,
+    conditions: {
+      rw_helped_celestin: true,
+      rw_misdirected_militia: true
+    },
+    epilogue: `You survived. You hid Celestin when he came to your door that first night, and when the militia came searching, you lied to their faces. You misdirected them to another house. They believed you. Celestin fled before they came back. You never reached the roadblock scene — the story ended before you had to make that choice.
+
+The gacaca courts asked about the militia visit thirteen years later. You told them what you did. The mitigation is real: you lied to Interahamwe to protect a Tutsi neighbor. The record shows that. Category Two charges were filed based on your position as communal secretary, but the testimony about misdirecting the militia reduced your sentence to community service.
+
+Celestin survived. He testified on your behalf at the hearing. His wife and children were killed at a different roadblock you had no control over. He knows you tried. He knows you stopped at misdirection, never knowing what you would have done if the militia had come back, if you'd been assigned to a roadblock anyway, if the choices had continued past that moment.
+
+You carry the weight of having stopped there — not resolution, but the specific uncertainty of a path that ended before its final test. Rwanda's reconciliation asks you to live with what you did and what you didn't have to do. You do. One week at a time.`
+  },
+  {
+    id: "rw-hm-outcome-rescue-misdirected-killed",
+    survived: false,
+    conditions: {
+      rw_helped_celestin: true,
+      rw_misdirected_militia: true
+    },
+    deathContext: {
+      cause: "Killed at roadblock after militia learned he had misdirected them",
+      historicalRate: "Hutu who lied to Interahamwe and were discovered were killed immediately — discovery of deception carried the same death sentence as sheltering Tutsi",
+      yourChoices: "You hid Celestin and lied to the militia when they came. They found out. The roadblock was where it ended."
+    },
+    epilogue: `You didn't survive. You hid Celestin and misdirected the militia when they came to your door. You lied to Interahamwe. They believed you at first. Celestin fled. Then they found out — a neighbor saw, or someone talked, or they came back and searched more carefully. The deception was discovered.
+
+You never made it to the roadblock scene as a checkpoint worker. You were killed before that choice existed. They found you at a roadblock as a suspect, not as staff. The discovery of your lie carried the same death sentence as sheltering Tutsi directly. The militia made an example of you.
+
+Celestin had already fled when they came back for you. He survived. The gacaca courts recorded your name posthumously in 2007 in the category of Hutu moderates killed for protecting Tutsi. Your children grew up knowing what you did — that you lied to armed militia to save a neighbor, that you were discovered, that you died for it.
+
+The historical record classifies you among those who resisted and paid the price. Your family knows the specific moment: the knock on the door, the lie you told, the days before they found out. You died at the moment your deception was discovered, never knowing what you would have done if the story had continued past that point.`
+  },
   {
     id: "rw-hm-outcome-flight-survived",
     survived: true,
