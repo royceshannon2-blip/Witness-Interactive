@@ -417,8 +417,7 @@ const tutsiSurvivorOutcomes = [
     id: "rw-ts-outcome-attic-survived",
     survived: true,
     conditions: {
-      rw_hid_with_hutu: true,
-      rw_trusted_protector: true
+      rw_hid_with_hutu: true
     },
     epilogue: `You survived. You hid in Jeanne's attic for three weeks, silent and terrified while her Interahamwe brother searched below. She risked everything to protect you—her family, her life, her children. She lied to her brother every day. When the RPF captured Kigali in July, you emerged. Thin. Traumatized. Alive. Most people who hid didn't survive. You did because someone chose to help you.
 
@@ -431,7 +430,6 @@ The gacaca courts asked you to testify. You told what you knew—who helped, who
     id: "rw-ts-outcome-ceiling-survived",
     survived: true,
     conditions: {
-      rw_survived_church_hiding: true,
       rw_hid_in_church: true
     },
     epilogue: `You survived. You hid in the church ceiling for three days, silent and terrified while militia searched below. The crawlspace was barely three feet high. You couldn't stand. Couldn't move. An old man hid with you—he coughed, but they didn't hear. Or they didn't care. When the RPF arrived, you climbed down. Bodies everywhere. You were one of seven survivors from a church that held three hundred. Most people who hid didn't survive. You did because you stayed silent.
@@ -464,7 +462,6 @@ Your friend Marie survived. She testified at the gacaca courts about what happen
     id: "rw-ts-outcome-enclave-survived",
     survived: true,
     conditions: {
-      rw_reached_hotel: true,
       rw_used_false_id: true
     },
     epilogue: `You survived. You made it to the Hôtel des Mille Collines. You showed Marie's Hutu identity card at the roadblock. The militia commander looked at you, looked at the card, waved you through. You lived as someone else for three months—Marie's name, Marie's identity, Marie's safety. Twelve hundred people crammed into that hotel. UN peacekeepers held the perimeter. The militia threatened daily but never breached the gates. When the RPF captured Kigali, you reclaimed your real name. Immaculée. Tutsi. Survivor.
@@ -479,8 +476,7 @@ Marie survived too. She knows you used her card. She never asked for it back. Sh
     survived: true,
     conditions: {
       rw_witnessed_massacre: true,
-      rw_escaped_church: true,
-      rw_reached_un_protection: true
+      rw_escaped_church: true
     },
     epilogue: `You survived. You witnessed the church massacre—Father Michel killed, grenades, machetes, children. You escaped through the side door during the chaos. You flagged down a UN convoy. You carried what you saw. Most people in that church didn't survive. You did, and you remember everything. The screams. The smell. The faces. You're a witness. That's a burden. That's also a purpose.
 
@@ -717,11 +713,11 @@ Some survivors found meaning in commemoration. You found meaning in distance. Bo
       rw_attended_reconciliation: true,
       rw_spoke_truth: true
     },
-    epilogue: `You survived because Jeanne hid you in her attic for three weeks. She risked everything. Her brother was Interahamwe. He came by every day. She lied to him every day. When the RPF arrived, you climbed down. Jeanne's husband Paul was killed at a roadblock. Her children survived. You survived.
+    epilogue: `You attended the reconciliation meeting and spoke. 2010. Sixteen years after Jeanne hid you in her attic for three weeks while her Interahamwe brother searched the house. The gacaca courts concluded. He confessed to roadblock killings. He served six years. He's back in the village now. Jeanne invited you to the meeting. You came. You spoke.
 
-2010. The gacaca courts concluded. Jeanne's brother confessed to roadblock killings. He served six years. He's back in the village now. Jeanne invited you to a reconciliation meeting. You attended and spoke honestly — about Jeanne, about the three weeks in the attic, about what her brother did. The meeting facilitator thanked you. Jeanne's brother sat four seats away. He didn't look at you. You looked at him.
+You described what Jeanne did — the three weeks, the lies she told her brother, the risk she carried. You described what her brother did — the roadblocks, the killings, the searches of the house. You didn't forgive. You didn't condemn. You spoke what happened. Jeanne's brother sat four seats away. He didn't look at you while you spoke. When you finished, he looked at you. He didn't apologize. He nodded once.
 
-That's different from forgiving him. Rwanda asks people to live in the difference. You attend the meetings. You speak when you have something to say. You stay silent when you don't. Jeanne sits beside you sometimes. You don't talk about 1994 during the meetings. You talk about it after, over tea, in her kitchen. That's where the real reconciliation happens. You survived because someone chose to help you. You speak because someone needs to say what happened. That's both gift and burden.`
+That's not reconciliation. That's acknowledgment. Rwanda asks people to live in the difference. You attend the meetings when Jeanne asks. You speak when you have something to say. Jeanne sits beside you. After, over tea in her kitchen, she says "thank you for coming." You say "thank you for hiding me." Both are still true. You survived because someone chose to help you. You speak because someone needs to say what happened. That's both gift and burden.`
   },
 
   {
@@ -733,11 +729,11 @@ That's different from forgiving him. Rwanda asks people to live in the differenc
       rw_attended_reconciliation: true,
       rw_stayed_silent: true
     },
-    epilogue: `You survived because Jeanne hid you in her attic for three weeks. She risked everything. Her brother was Interahamwe. He came by every day. She lied to him every day. When the RPF arrived, you climbed down. Jeanne's husband Paul was killed at a roadblock. Her children survived. You survived.
+    epilogue: `You attended the reconciliation meeting but stayed silent. 2010. Sixteen years after Jeanne hid you in her attic for three weeks while her Interahamwe brother searched the house. The gacaca courts concluded. He confessed to roadblock killings. He served six years. He's back in the village now. Jeanne invited you to the meeting. You came. You sat in the circle. You listened.
 
-2010. The gacaca courts concluded. Jeanne's brother confessed to roadblock killings. He served six years. He's back in the village now. Jeanne invited you to a reconciliation meeting. You attended and said nothing. You sat in the circle and listened to Jeanne's brother give his partial account. You know what he left out. You didn't correct him.
+Jeanne's brother gave his partial account — he mentioned the roadblocks, the orders he followed, the people he turned away. He didn't mention searching Jeanne's house three times. He didn't mention that he knew people were hiding in houses like hers. You didn't correct him. The facilitator asked if anyone else wanted to speak. You shook your head. Jeanne looked at you. Her brother looked at the floor.
 
-The facilitator said silence was also participation. You're not sure that's true. Jeanne sent you a message that night: "Thank you for coming." You didn't reply until the next morning. You still don't know what the right answer was. You attend the meetings sometimes. You speak sometimes. You stay silent sometimes. Rwanda's reconciliation process asks survivors to participate. You participate on your terms. You survived because someone chose to help you. You carry that forward quietly. That's both gift and burden.`
+That silence has weight. It's not forgiveness. It's not absolution. It's the space where you hold what you know and he holds what he knows and Jeanne holds what she did between you. The meeting ended. Jeanne walked you home. She didn't ask why you stayed silent. She knows. You attend the meetings when she asks. Sometimes you speak. Sometimes you don't. Your silence is also testimony. You survived because someone chose to help you. You carry that forward in the way you choose. That's both gift and burden.`
   },
 
   {
@@ -749,11 +745,11 @@ The facilitator said silence was also participation. You're not sure that's true
       rw_declined_reconciliation: true,
       rw_chose_boundaries: true
     },
-    epilogue: `You survived because Jeanne hid you in her attic for three weeks. She risked everything. Her brother was Interahamwe. He came by every day. She lied to him every day. When the RPF arrived, you climbed down. Jeanne's husband Paul was killed at a roadblock. Her children survived. You survived.
+    epilogue: `You declined the reconciliation meeting. Not yet. Maybe never. 2010. Sixteen years after Jeanne hid you in her attic for three weeks while her Interahamwe brother searched the house. The gacaca courts concluded. He confessed to roadblock killings. He served six years. He's back in the village now. Jeanne invited you to a meeting with him. You said no.
 
-2010. The gacaca courts concluded. Jeanne's brother confessed to roadblock killings. He served six years. He's back in the village now. Jeanne invited you to a reconciliation meeting. You declined. The facilitator said this was your right. Jeanne called and said she understood. Her brother is back in the sector. You see him at the market sometimes. You don't avoid the market. You don't speak to him.
+The facilitator called and said this was your right. Jeanne came to your house the next day. She brought tea. She said "I understand." You said "I'm grateful to you. I'm not ready to sit across from him." She nodded. "I know." Her brother is back in the sector. You see him at the market sometimes. He sees you. You don't avoid the market. You don't speak to him. He doesn't speak to you. That's the boundary.
 
-Rwanda's reconciliation policy is designed for people who can sit in rooms together. Some people can't yet. Some never will. That's also true. You live in the same country as all of it. Jeanne saved your life. You're grateful. Her brother participated in killings. You're not ready to sit across from him. Both facts are true. You survived because someone chose to help you. You carry that forward with boundaries. That's both gift and burden.`
+Rwanda's reconciliation policy is designed for people who can sit in rooms together and speak about what happened. Some people can't. Some people won't. That's also valid. Jeanne saved your life. Her brother participated in killings. Both facts are permanent. You carry gratitude and you carry boundaries. You survived because someone chose to help you. You honor that by choosing what you can and cannot do. That's both gift and burden.`
   },
 
   // ENCLAVE PATH - SPECIFIC AFTERMATH OUTCOMES
