@@ -387,10 +387,12 @@ The conference is next week. Journalists will attend. Students. Researchers. You
 ];
 
 const tutsiSurvivorOutcomes = [
+  // GENERIC PATH FALLBACKS - lower specificity, catch paths without aftermath choices
   {
     id: "rw-ts-outcome-attic-survived",
     survived: true,
     conditions: {
+      rw_hid_with_hutu: true,
       rw_trusted_protector: true
     },
     epilogue: `You survived. You hid in Jeanne's attic for three weeks, silent and terrified while her Interahamwe brother searched below. She risked everything to protect you—her family, her life, her children. She lied to her brother every day. When the RPF captured Kigali in July, you emerged. Thin. Traumatized. Alive. Most people who hid didn't survive. You did because someone chose to help you.
@@ -404,7 +406,8 @@ The gacaca courts asked you to testify. You told what you knew—who helped, who
     id: "rw-ts-outcome-ceiling-survived",
     survived: true,
     conditions: {
-      rw_survived_church_hiding: true
+      rw_survived_church_hiding: true,
+      rw_hid_in_church: true
     },
     epilogue: `You survived. You hid in the church ceiling for three days, silent and terrified while militia searched below. The crawlspace was barely three feet high. You couldn't stand. Couldn't move. An old man hid with you—he coughed, but they didn't hear. Or they didn't care. When the RPF arrived, you climbed down. Bodies everywhere. You were one of seven survivors from a church that held three hundred. Most people who hid didn't survive. You did because you stayed silent.
 
@@ -482,21 +485,6 @@ The church became a genocide memorial. The RPF arrived weeks later and documente
   },
 
   {
-    id: "rw-ts-outcome-hidden-ditch-survived",
-    survived: true,
-    conditions: {
-      rw_stayed_hidden_ditch: true,
-      rw_witnessed_massacre: true,
-      rw_escaped_church: true
-    },
-    epilogue: `You survived. You stayed in the drainage ditch through the night. Sewage and smoke and the sound of the city dying around you. You didn't flag down the convoy. You waited for dark, then moved — through back streets, through abandoned buildings, through the parts of Kigali where the militia hadn't reached yet. You survived by being invisible.
-
-The RPF captured Kigali on July 4th, 1994. You were alive. Thin. Traumatized. A witness to something most people in the world didn't believe was happening while it happened. You'd seen the church. You knew exactly what had occurred there and who had done it.
-
-The gacaca courts and the ICTR both needed witnesses. You had to decide whether to speak — whether your testimony was yours to give or yours to keep. Whether speaking would bring justice or just re-traumatize you for someone else's education. Rwanda's reconciliation process asked survivors to participate in their own healing as a public act. Some found that necessary. You found it complicated. Both things were true at the same time.`
-  },
-
-  {
     id: "rw-ts-outcome-hidden-ditch-killed",
     survived: false,
     conditions: {
@@ -570,6 +558,260 @@ You were hidden by someone who risked everything to protect you. That protection
 Then the withdrawal order came. The Security Council cut UNAMIR to 270 soldiers. The peacekeepers at the gate were reduced to four. The militia commander outside had been waiting for exactly this. He walked through the gate on a Tuesday morning and his men came with him.
 
 Most people in the hotel survived. The RPF arrived in time for most of them. You were in the wrong corridor at the wrong moment — the militia moved fast and the remaining peacekeepers couldn't cover every room. The hotel became famous after the genocide. A film was made about it. The manager who negotiated for the people inside became an international figure. The twelve hundred who survived are cited in every account of the genocide as evidence that protection was possible. You were inside that protection. It just didn't hold long enough to include you.`
+  },
+
+  // TESTIMONY PATH - SPECIFIC AFTERMATH OUTCOMES
+  {
+    id: "rw-ts-outcome-testimony-full-survived",
+    survived: true,
+    conditions: {
+      rw_witnessed_massacre: true,
+      rw_reached_un_protection: true,
+      rw_testified_ictr: true,
+      rw_chose_justice: true
+    },
+    epilogue: `You survived. You testified fully — every name, every detail. Arusha 2006. The International Criminal Tribunal for Rwanda. The defense attorney cross-examined you for three days. He questioned your memory, your timeline, your motives. You held steady. You described Father Michel's death. The grenades. The children. The militia commander who gave the orders. Your testimony helped convict him.
+
+The weight of speaking is different from the weight of silence. You carry both now: what you saw and what you said about it. Some survivors found power in testimony. You found exhaustion and purpose in equal measure. The historical record includes your voice. Justice depended on witnesses like you. That matters. It also cost something.
+
+You visit the memorial each April 7th. Kwibuka. The church is preserved as it was — skulls on shelves, clothes behind glass, names on walls. Three hundred died there. You saw it happen. You spoke about it in a courtroom in Tanzania. The guide asks if you want to speak at the ceremony. Sometimes you do. Sometimes you can't. Both are true. You survived to remember, and you remembered out loud. That's both gift and burden.`
+  },
+
+  {
+    id: "rw-ts-outcome-testimony-protected-survived",
+    survived: true,
+    conditions: {
+      rw_witnessed_massacre: true,
+      rw_reached_un_protection: true,
+      rw_testified_ictr: true,
+      rw_chose_protection: true
+    },
+    epilogue: `You survived. You testified but withheld some names — people who helped you escape who might face reprisals. The judges accepted the partial account. Three convictions came from what you gave. The names you kept are still with you. You don't know if protecting them was the right choice or just the human one.
+
+Rwanda's reconciliation process assumed full disclosure. You gave partial truth and received full protection. Both facts sit in the same file. The defense attorney pressed you on the gaps in your testimony. You held the line. Some information belongs to you. Some belongs to the court. You decided which was which.
+
+The memorial lists the names of those who died. You visit once a year. April 7th. You speak some names out loud. Others you carry silently. The gacaca courts asked you to testify locally. You declined. You'd given what you could give in Arusha. The rest stays with you. You survived to remember, and you remembered on your terms. That's both gift and burden.`
+  },
+
+  {
+    id: "rw-ts-outcome-testimony-declined-survived",
+    survived: true,
+    conditions: {
+      rw_witnessed_massacre: true,
+      rw_reached_un_protection: true,
+      rw_declined_testimony: true,
+      rw_chose_healing: true
+    },
+    epilogue: `You survived. You were called to testify and declined. The ICTR noted your refusal without reprimand — witnesses couldn't be compelled. The militia commander who organized the church massacre was convicted on other testimony. You watched the verdict on television in your apartment in Kigali. You had seen everything. The court managed without your seeing.
+
+You don't know if that's relief or its own weight. Some survivors found power in testimony. You found the prospect exhausting. Speaking the truth would have made it real again in a way you weren't ready for. Maybe you never will be. That's allowed. Justice happened without you. The memorial still stands. The names are still on the wall.
+
+You visit once a year. April 7th. Kwibuka. You don't speak at ceremonies. You stand at the wall of names for twenty minutes and leave. That's your testimony. It belongs to you. Rwanda's reconciliation process asks survivors to participate publicly. You participate privately. Both are valid. You survived to remember, and you remember on your terms. That's both gift and burden.`
+  },
+
+  // DITCH HIDING PATH - SPECIFIC AFTERMATH OUTCOMES
+  {
+    id: "rw-ts-outcome-ditch-spoke-survived",
+    survived: true,
+    conditions: {
+      rw_stayed_hidden_ditch: true,
+      rw_witnessed_massacre: true,
+      rw_shared_testimony: true
+    },
+    epilogue: `You survived by staying invisible during the genocide. You spent the years after doing the opposite — speaking at commemorations, telling what you saw at the church. The memorial guide asked you to help train volunteer speakers. You did for three years, then stopped. Speaking helped and then it didn't. You're allowed to stop.
+
+The drainage ditch kept you alive for one night. The RPF arrived weeks later. You emerged thin, traumatized, a witness to something most people didn't believe was happening while it happened. You chose to speak about it. Students listened. Journalists recorded. Researchers cited. Your testimony became part of the historical record.
+
+Then it became exhausting. The same questions. The same details. The same faces looking for lessons in your survival. You stopped accepting speaking invitations. The memorial still has your recorded testimony. That's enough. You visit on April 7th. Kwibuka. You stand at the wall of names. You don't speak anymore. You already said what needed saying. You survived to remember, and you remembered out loud until you didn't need to anymore. That's both gift and burden.`
+  },
+
+  {
+    id: "rw-ts-outcome-ditch-private-survived",
+    survived: true,
+    conditions: {
+      rw_stayed_hidden_ditch: true,
+      rw_witnessed_massacre: true,
+      rw_mourned_privately: true
+    },
+    epilogue: `You survived by staying invisible. You attended the Kwibuka ceremony once and didn't go back. Not because you don't remember — you remember everything — but because remembering publicly and remembering privately are different acts and you chose the second. The gacaca courts asked if you had testimony to give. You said you didn't know who gave orders. That was partly true. You carry the rest.
+
+The drainage ditch kept you alive for one night. The RPF arrived weeks later. You emerged and reclaimed your life quietly. No speeches. No interviews. No public testimony. Some survivors found meaning in speaking. You found meaning in silence. Both are valid responses to what happened.
+
+The memorial exists. The names are on the wall. You know where it is. You don't go. Your remembering happens in your apartment, in your thoughts, in the way you move through Kigali knowing what happened in every neighborhood. That's your ceremony. It belongs to you. Rwanda's reconciliation process asks survivors to participate publicly. You participate by living. That's enough. You survived to remember, and you remember privately. That's both gift and burden.`
+  },
+
+  {
+    id: "rw-ts-outcome-ditch-distance-survived",
+    survived: true,
+    conditions: {
+      rw_stayed_hidden_ditch: true,
+      rw_witnessed_massacre: true,
+      rw_avoided_ceremony: true
+    },
+    epilogue: `You survived by staying invisible. The ceremony is every April 7th. You leave Kigali that week. You go to your cousin's in Butare and come back on the 15th. You don't explain it to your children. They're old enough to know what Kwibuka is and young enough not to ask why you leave. The church is a memorial now. You haven't been back. You don't need to go back to know what's there.
+
+The drainage ditch kept you alive for one night. The RPF arrived weeks later. You emerged and built a life that doesn't center on 1994. Some survivors found meaning in commemoration. You found meaning in distance. Both are valid responses to what happened. Rwanda's reconciliation process asks survivors to remember together. You remember alone.
+
+The memorial guide called once asking if you'd speak. You said no. You didn't explain and they stopped asking. Your silence is its own testimony. You know what happened. You carry it. You don't need an audience for that carrying. You survived to remember, and you remember at a distance. That's both gift and burden.`
+  },
+
+  // Generic fallback for ditch path (lower specificity)
+  {
+    id: "rw-ts-outcome-hidden-ditch-survived",
+    survived: true,
+    conditions: {
+      rw_stayed_hidden_ditch: true,
+      rw_witnessed_massacre: true,
+      rw_escaped_church: true
+    },
+    epilogue: `You survived. You stayed in the drainage ditch through the night. Sewage and smoke and the sound of the city dying around you. You didn't flag down the convoy. You waited for dark, then moved — through back streets, through abandoned buildings, through the parts of Kigali where the militia hadn't reached yet. You survived by being invisible.
+
+The RPF captured Kigali on July 4th, 1994. You were alive. Thin. Traumatized. A witness to something most people in the world didn't believe was happening while it happened. You'd seen the church. You knew exactly what had occurred there and who had done it.
+
+The gacaca courts and the ICTR both needed witnesses. You had to decide whether to speak — whether your testimony was yours to give or yours to keep. Whether speaking would bring justice or just re-traumatize you for someone else's education. Rwanda's reconciliation process asked survivors to participate in their own healing as a public act. Some found that necessary. You found it complicated. Both things were true at the same time.`
+  },
+
+  // CEILING HIDING PATH - SPECIFIC AFTERMATH OUTCOMES
+  {
+    id: "rw-ts-outcome-ceiling-spoke-survived",
+    survived: true,
+    conditions: {
+      rw_survived_church_hiding: true,
+      rw_hid_in_church: true,
+      rw_shared_testimony: true
+    },
+    epilogue: `Three days in the ceiling. Seven survivors from three hundred. You speak about it now — at schools, at the memorial, at international conferences. The old man who hid with you and died two days after liberation: you say his name at every talk. You didn't know him before April 7th. You know his name now better than most people in your life.
+
+The crawlspace was barely three feet high. You couldn't stand. Couldn't move without noise. The militia searched below. You held still. The old man held still. When the RPF arrived, you climbed down. Bodies everywhere. He died of starvation and dehydration two days later. You lived. That difference is arbitrary and permanent.
+
+You speak about it because someone has to. Students ask questions. Researchers take notes. Journalists record. Your testimony is part of the historical record now. Some survivors found power in speaking. You found obligation. The memorial guide thanks you after every talk. You nod. You'll do it again next month. You survived to remember, and you remember out loud. That's both gift and burden.`
+  },
+
+  {
+    id: "rw-ts-outcome-ceiling-private-survived",
+    survived: true,
+    conditions: {
+      rw_survived_church_hiding: true,
+      rw_hid_in_church: true,
+      rw_mourned_privately: true
+    },
+    epilogue: `Seven survivors. Three hundred dead. You don't attend the memorial ceremonies. You go on April 7th before anyone arrives, before the chairs are set up, before the guides come. You stand at the wall of names for twenty minutes and leave. That's your ceremony. It belongs to you.
+
+Three days in the ceiling. The old man beside you died two days after liberation. You lived. That difference is arbitrary and permanent. The memorial guide calls every year asking if you'll speak. You always say no. You don't explain. Your silence is its own testimony. The crawlspace is still there. Tourists look up at it now. You don't need to be in the room for it to hold what it holds.
+
+Some survivors found meaning in public remembrance. You found meaning in private mourning. Both are valid. The names are on the wall. You know where they are. You visit alone, early, before the ceremony. That's enough. You survived to remember, and you remember privately. That's both gift and burden.`
+  },
+
+  {
+    id: "rw-ts-outcome-ceiling-distance-survived",
+    survived: true,
+    conditions: {
+      rw_survived_church_hiding: true,
+      rw_hid_in_church: true,
+      rw_avoided_ceremony: true
+    },
+    epilogue: `Seven survivors. Three hundred dead. The memorial guide calls every year asking if you'll speak. You always say no. You don't explain and the guide has stopped asking for explanations. Your silence is its own testimony. The ceiling is still there. Tourists look up at it now. You don't need to be in the room for it to hold what it holds.
+
+Three days in the crawlspace. The old man beside you died two days after liberation. You lived. You don't attend Kwibuka. You don't visit the memorial. You don't speak at ceremonies. Not because you don't remember — you remember everything — but because remembering publicly and remembering privately are different acts and you chose the second.
+
+Some survivors found meaning in commemoration. You found meaning in distance. Both are valid responses to what happened. The church is a memorial now. The names are on the wall. You know they're there. You don't need to see them to carry them. You survived to remember, and you remember at a distance. That's both gift and burden.`
+  },
+
+  // ATTIC HIDING PATH - SPECIFIC AFTERMATH OUTCOMES
+  {
+    id: "rw-ts-outcome-attic-spoke-survived",
+    survived: true,
+    conditions: {
+      rw_hid_with_hutu: true,
+      rw_trusted_protector: true,
+      rw_attended_reconciliation: true,
+      rw_spoke_truth: true
+    },
+    epilogue: `You survived because Jeanne hid you in her attic for three weeks. She risked everything. Her brother was Interahamwe. He came by every day. She lied to him every day. When the RPF arrived, you climbed down. Jeanne's husband Paul was killed at a roadblock. Her children survived. You survived.
+
+2010. The gacaca courts concluded. Jeanne's brother confessed to roadblock killings. He served six years. He's back in the village now. Jeanne invited you to a reconciliation meeting. You attended and spoke honestly — about Jeanne, about the three weeks in the attic, about what her brother did. The meeting facilitator thanked you. Jeanne's brother sat four seats away. He didn't look at you. You looked at him.
+
+That's different from forgiving him. Rwanda asks people to live in the difference. You attend the meetings. You speak when you have something to say. You stay silent when you don't. Jeanne sits beside you sometimes. You don't talk about 1994 during the meetings. You talk about it after, over tea, in her kitchen. That's where the real reconciliation happens. You survived because someone chose to help you. You speak because someone needs to say what happened. That's both gift and burden.`
+  },
+
+  {
+    id: "rw-ts-outcome-attic-silent-survived",
+    survived: true,
+    conditions: {
+      rw_hid_with_hutu: true,
+      rw_trusted_protector: true,
+      rw_attended_reconciliation: true,
+      rw_stayed_silent: true
+    },
+    epilogue: `You survived because Jeanne hid you in her attic for three weeks. She risked everything. Her brother was Interahamwe. He came by every day. She lied to him every day. When the RPF arrived, you climbed down. Jeanne's husband Paul was killed at a roadblock. Her children survived. You survived.
+
+2010. The gacaca courts concluded. Jeanne's brother confessed to roadblock killings. He served six years. He's back in the village now. Jeanne invited you to a reconciliation meeting. You attended and said nothing. You sat in the circle and listened to Jeanne's brother give his partial account. You know what he left out. You didn't correct him.
+
+The facilitator said silence was also participation. You're not sure that's true. Jeanne sent you a message that night: "Thank you for coming." You didn't reply until the next morning. You still don't know what the right answer was. You attend the meetings sometimes. You speak sometimes. You stay silent sometimes. Rwanda's reconciliation process asks survivors to participate. You participate on your terms. You survived because someone chose to help you. You carry that forward quietly. That's both gift and burden.`
+  },
+
+  {
+    id: "rw-ts-outcome-attic-declined-survived",
+    survived: true,
+    conditions: {
+      rw_hid_with_hutu: true,
+      rw_trusted_protector: true,
+      rw_declined_reconciliation: true,
+      rw_chose_boundaries: true
+    },
+    epilogue: `You survived because Jeanne hid you in her attic for three weeks. She risked everything. Her brother was Interahamwe. He came by every day. She lied to him every day. When the RPF arrived, you climbed down. Jeanne's husband Paul was killed at a roadblock. Her children survived. You survived.
+
+2010. The gacaca courts concluded. Jeanne's brother confessed to roadblock killings. He served six years. He's back in the village now. Jeanne invited you to a reconciliation meeting. You declined. The facilitator said this was your right. Jeanne called and said she understood. Her brother is back in the sector. You see him at the market sometimes. You don't avoid the market. You don't speak to him.
+
+Rwanda's reconciliation policy is designed for people who can sit in rooms together. Some people can't yet. Some never will. That's also true. You live in the same country as all of it. Jeanne saved your life. You're grateful. Her brother participated in killings. You're not ready to sit across from him. Both facts are true. You survived because someone chose to help you. You carry that forward with boundaries. That's both gift and burden.`
+  },
+
+  // ENCLAVE PATH - SPECIFIC AFTERMATH OUTCOMES
+  {
+    id: "rw-ts-outcome-enclave-spoke-survived",
+    survived: true,
+    conditions: {
+      rw_reached_hotel: true,
+      rw_used_false_id: true,
+      rw_shared_hotel_story: true
+    },
+    epilogue: `You survived because you had a Hutu friend, because you could pass, because you were lucky. You speak at conferences about the hotel now. You're careful about what you say. You always say that part first — the conditions of your survival. The audiences want to hear about survival. You make them hear about the conditions.
+
+Marie gave you her identity card. You showed it at the roadblock. The militia commander waved you through. You lived as someone else for three months. Twelve hundred people crammed into the Hôtel des Mille Collines. UN peacekeepers held the perimeter. When the RPF captured Kigali, you reclaimed your real name. Immaculée. Tutsi. Survivor.
+
+Marie comes to some of the talks. Sits in the back. You have coffee after. You don't talk about 1994 during the talks. You talk about it after, in the café, where the real conversation happens. She knows what she gave you. You know what it cost her. You both carry that forward. You speak because someone needs to say what happened and how it happened. You survived because of specific conditions. You speak about those conditions. That's both gift and burden.`
+  },
+
+  {
+    id: "rw-ts-outcome-enclave-listened-survived",
+    survived: true,
+    conditions: {
+      rw_reached_hotel: true,
+      rw_used_false_id: true,
+      rw_attended_conference: true,
+      rw_chose_listening: true
+    },
+    epilogue: `You survived because you had a Hutu friend, because you could pass, because you were lucky. You attended the conference and listened. Other survivors spoke. You didn't raise your hand. The moderator asked if anyone else wanted to share. You shook your head. The man next to you — another hotel survivor — leaned over and said "you don't have to." You already knew that. It helped to hear it anyway.
+
+Marie gave you her identity card. You showed it at the roadblock. The militia commander waved you through. You lived as someone else for three months. Twelve hundred people crammed into the Hôtel des Mille Collines. UN peacekeepers held the perimeter. When the RPF captured Kigali, you reclaimed your real name. Immaculée. Tutsi. Survivor.
+
+You attend conferences sometimes. You listen. You don't speak publicly. Some survivors found meaning in testimony. You find meaning in listening to others. Both are valid. Marie knows you attended. She doesn't ask if you spoke. She knows you didn't. That's fine. You survived because of specific conditions. You carry that forward quietly. That's both gift and burden.`
+  },
+
+  {
+    id: "rw-ts-outcome-enclave-private-survived",
+    survived: true,
+    conditions: {
+      rw_reached_hotel: true,
+      rw_used_false_id: true,
+      rw_declined_conference: true,
+      rw_chose_private_life: true
+    },
+    epilogue: `You survived because you had a Hutu friend, because you could pass, because you were lucky. You declined the conference invitation. The conference was about survivor testimony and international accountability. You support both. You just don't want to be the one in the chair. Marie's card got you through the roadblock. You've spent thirty years making sure Marie's children know what their mother did. That's your contribution. It doesn't need an audience.
+
+You lived as someone else for three months. Twelve hundred people crammed into the Hôtel des Mille Collines. UN peacekeepers held the perimeter. When the RPF captured Kigali, you reclaimed your real name. Immaculée. Tutsi. Survivor. The hotel became famous. A film was made. The manager became an international figure. You're cited in accounts as one of the twelve hundred who survived.
+
+You don't speak at conferences. You don't give interviews. You live your life. Marie's children know what their mother did. That's what matters. Some survivors found meaning in public testimony. You found meaning in private gratitude. Both are valid. You survived because someone chose to help you. You honor that privately. That's both gift and burden.`
   },
 
   // FALLBACK OUTCOMES - catch-all for paths not covered by specific outcomes

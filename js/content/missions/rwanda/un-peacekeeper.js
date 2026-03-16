@@ -361,6 +361,58 @@ Some peacekeepers who documented felt like they did nothing. You gathered eviden
 ];
 
 const unPeacekeeperOutcomes = [
+  // STAYED PATH - DEFIED ORDERS - Aftermath variants
+  {
+    id: "rw-un-outcome-stayed-advocate-survived",
+    survived: true,
+    conditions: {
+      rw_defied_orders: true,
+      rw_stayed_after_withdrawal: true,
+      rw_saved_civilians: true,
+      rw_testified_inquiry: true,
+      rw_advocated_change: true
+    },
+    epilogue: `He testified at three parliamentary inquiries and a UN internal review. He pushed for the Responsibility to Protect doctrine that was eventually adopted in 2005. He speaks at West Point, at Sandhurst, at the Canadian Forces College. The twelve hundred survivors send a delegation to Ottawa every five years. He meets them every time. He never feels like he deserves to be in the same room.
+
+The advocacy work matters. The R2P doctrine changed how the UN approaches mass atrocities. His testimony was cited in the 2004 Canadian Senate report. Students read his depositions in international relations courses. But the doctrine came eleven years after Rwanda. Eight hundred thousand people died before the world decided "never again" needed enforcement mechanisms.
+
+He carries both numbers. The twelve hundred who lived because he stayed. The hundreds of thousands who died while the Security Council debated semantics. His therapist says he can't hold himself responsible for structural failures. He knows that intellectually. The nightmares don't care about intellectual distinctions. He keeps testifying anyway. Someone has to say the names.`
+  },
+
+  {
+    id: "rw-un-outcome-stayed-healed-survived",
+    survived: true,
+    conditions: {
+      rw_defied_orders: true,
+      rw_stayed_after_withdrawal: true,
+      rw_saved_civilians: true,
+      rw_declined_testimony: true,
+      rw_chose_healing: true
+    },
+    epilogue: `He declined the inquiry testimony. His therapist said it was the right call at the time. He spent two years in treatment before he could sleep through the night. The twelve hundred survivors — he checks the survivor association website sometimes. He doesn't reach out. He doesn't need them to thank him again. He knows what he did. That's enough. Some days it's enough.
+
+Canada gave him a medal. He keeps it in a drawer. Dallaire wrote about him — not by name, at his request, but the story is recognizable to anyone who knows UNAMIR. He read that section once. He hasn't opened the book since. The story is accurate. That doesn't mean he needs to live inside it.
+
+His daughter asked once if he was a hero. He said he was a soldier who stayed when he was supposed to leave. She was eight. She didn't understand the difference yet. She's twenty-two now. She understands. She doesn't ask anymore. They have dinner once a week. They talk about her work, about his garden, about ordinary things. That's the relationship he can sustain. That's the healing he's managed.`
+  },
+
+  {
+    id: "rw-un-outcome-stayed-private-survived",
+    survived: true,
+    conditions: {
+      rw_defied_orders: true,
+      rw_stayed_after_withdrawal: true,
+      rw_saved_civilians: true,
+      rw_testified_privately: true,
+      rw_avoided_spotlight: true
+    },
+    epilogue: `He gave a private deposition — on record but not public. The UN review used it without naming him. He went home to Winnipeg and told his family he'd done his job. His daughter asked if he was a hero. He said he was a soldier who stayed when he was supposed to leave. She was eight. She didn't understand the difference yet. He's still waiting to find out if she'll need to.
+
+The private testimony mattered. Policy analysts cited it. The Responsibility to Protect doctrine drew on depositions like his. But his name isn't in the public record. The survivors know. Dallaire knows. The UN review board knows. That's enough witnesses. He doesn't need the world to know. He needs to know he told the truth to people who could use it.
+
+He works in veteran services now. He helps other peacekeepers process what they saw. He doesn't talk about Rwanda unless they ask directly. Most of them ask eventually. He tells them what he told the review board: you do what you can with the mandate you're given, and sometimes the mandate is wrong, and you carry both of those facts forward. They understand. That's the audience that matters.`
+  },
+
   {
     id: "rw-un-outcome-stayed-survived",
     survived: true,
@@ -395,6 +447,58 @@ The RPF arrived two days later. Most of the refugees survived because you bought
 Your family grieved. Your children grew up knowing you died a hero. The survivors you protected remember your name. The hotel has a plaque. Students visit. They learn that some peacekeepers stayed, that some died defending civilians, that courage matters even when mandates fail. You're remembered. You're honored. You carried that choice to the end.`
   },
 
+  // EVACUATED PATH - FOLLOWED ORDERS - Aftermath variants
+  {
+    id: "rw-un-outcome-evacuated-documentary-survived",
+    survived: true,
+    conditions: {
+      rw_evacuated_expatriates: true,
+      rw_left_rwandans: true,
+      rw_left_rwanda: true,
+      rw_participated_documentary: true,
+      rw_shared_guilt: true
+    },
+    epilogue: `He agreed to the documentary and told the full story: the convoy, the checkpoint, the woman with the child, the embassy workers he left behind, the plane ride home, the filing of the report that no one questioned. The documentary aired in twelve countries. Rwandans watched it. Some of the families of people he left at that checkpoint watched it. He didn't watch it. He knew what it said.
+
+The filmmaker asked if he felt guilty. He said yes. The filmmaker asked if he'd do it differently. He said he didn't know. The filmmaker asked what he wanted viewers to understand. He said he wanted them to understand that following orders and doing the right thing are not always the same calculation, and that peacekeepers are given impossible mandates and twelve seconds to resolve them. The documentary used that quote. It's the part people remember.
+
+His family watched it. His daughter called afterward. She didn't say anything for thirty seconds. Then she said, "I understand now." He asked what she understood. She said, "Why you don't sleep." The documentary didn't fix anything. It made the guilt public. He's not sure if that was courage or a different kind of avoidance. The families at the checkpoint know his name now. He carries that forward.`
+  },
+
+  {
+    id: "rw-un-outcome-evacuated-private-survived",
+    survived: true,
+    conditions: {
+      rw_evacuated_expatriates: true,
+      rw_left_rwandans: true,
+      rw_left_rwanda: true,
+      rw_declined_documentary: true,
+      rw_private_advocacy: true
+    },
+    epilogue: `He declined the documentary. He advocates privately — letters to parliamentarians, testimony to closed committees, funding for peacekeeping reform organisations. Nobody films it. He prefers it that way. The guilt doesn't need an audience. The policy work doesn't either. He's made his accounting in private. Whether that's courage or avoidance is a question he's stopped answering.
+
+The Responsibility to Protect doctrine was adopted in 2005. His testimony to the closed committee was cited in the Canadian brief. His name isn't in the public record. The policy analysts know. The committee members know. That's enough. He didn't save the people at the checkpoint. He can't bring them back. He can make sure the next peacekeeper has a mandate that doesn't force the same choice. That's the work he can do.
+
+His therapist asked once why he avoids public testimony but maintains the private advocacy. He said public testimony is about him. Private advocacy is about the mandate. He doesn't need to be the story. He needs the mandate to change. Eleven years after Rwanda, it did. The doctrine isn't perfect. It's better than what he had. He carries that forward.`
+  },
+
+  {
+    id: "rw-un-outcome-evacuated-policy-survived",
+    survived: true,
+    conditions: {
+      rw_evacuated_expatriates: true,
+      rw_left_rwandans: true,
+      rw_left_rwanda: true,
+      rw_participated_policy_focus: true,
+      rw_forward_looking: true
+    },
+    epilogue: `He participated in the documentary but redirected every question about guilt toward policy. What should the mandate have said. What Security Council veto reform would have looked like. What the Responsibility to Protect doctrine changed. The interviewer kept trying to get to the checkpoint. He kept returning to the structural failure. Both things are true. He knows which one he can live inside.
+
+The documentary aired. Policy analysts cited it. Students watched it in international relations courses. The reviews said it was "clinical" and "policy-focused" and "less emotional than other Rwanda documentaries." That was correct. He wasn't interested in performing guilt. He was interested in explaining why the mandate was wrong and what changed afterward. The people at the checkpoint are dead. The policy is different. He can't fix the first thing. He contributed to the second.
+
+His daughter watched it and said it felt like he was hiding. He said he was focusing. She asked what the difference was. He said hiding is about protecting yourself, focusing is about directing attention where it can matter. She wasn't satisfied with that answer. Neither is he. But the Responsibility to Protect doctrine exists. The mandate changed. He carries both things forward.`
+  },
+
   {
     id: "rw-un-outcome-evacuated-survived",
     survived: true,
@@ -407,6 +511,58 @@ Your family grieved. Your children grew up knowing you died a hero. The survivor
 You have PTSD. Guilt. Nightmares. Your therapist says you followed orders. Your family says you did what you could. But you know the truth. You had a choice. You chose safety over risk. You chose orders over conscience. Most peacekeepers made the same choice. That doesn't make it easier. The guilt doesn't lift.
 
 You became an advocate. You speak at universities. You write op-eds. You push for stronger peacekeeping mandates. "Never again" means nothing if we don't act. Your advocacy matters. It changes policy. It educates people. But it doesn't bring back the Rwandans you left behind. You carry that guilt forward. You use it. You make sure the world remembers what happens when we follow orders instead of conscience. You survived, but part of you stayed at that checkpoint.`
+  },
+
+  // DOCUMENTED PATH - Aftermath variants
+  {
+    id: "rw-un-outcome-documented-full-survived",
+    survived: true,
+    conditions: {
+      rw_sent_genocide_fax: true,
+      rw_documented_evidence: true,
+      rw_continued_documentation: true,
+      rw_testified_tribunal: true,
+      rw_provided_evidence: true
+    },
+    epilogue: `His fax preceded Dallaire's by six days. He testified at the ICTR and the Belgian Senate inquiry and the UN internal review. His documentation filled four evidence files. He spent eleven years answering questions about what he saw and what he reported and why the world didn't act. He stopped counting how many times someone told him the documentation mattered. He knows it did. It still took a hundred days and eight hundred thousand deaths.
+
+The ICTR used his evidence in seven cases. Five convictions. His photographs are in the Kigali Genocide Memorial. His testimony is cited in the UN's 1999 independent inquiry report — the one that concluded the Security Council failed Rwanda. Students read his depositions in international law courses. He's testified at universities, at military academies, at UN training sessions. He's told the story so many times it's become a script. He's not sure if that's processing or performance.
+
+His therapist asked what he needs the documentation to have accomplished. He said he needs it to have prevented the next genocide. She asked if it did. He said Darfur happened. Syria happened. The Rohingya happened. She asked if the documentation still mattered. He said he doesn't know how to answer that. The five convictions happened. The memorial exists. The world still watches. He carries all of it forward.`
+  },
+
+  {
+    id: "rw-un-outcome-documented-careful-survived",
+    survived: true,
+    conditions: {
+      rw_sent_genocide_fax: true,
+      rw_documented_evidence: true,
+      rw_continued_documentation: true,
+      rw_testified_carefully: true,
+      rw_protected_sources: true
+    },
+    epilogue: `He testified carefully — gave the tribunal what it needed and protected the names of Rwandans who'd trusted him with information. The protection cost something: some perpetrators the evidence might have placed at specific sites couldn't be fully placed there without testimony he withheld. He weighed this. He chose protection. Three convictions came anyway. Two didn't. He knows which two.
+
+The sources he protected are still alive. Some of them still live in communities alongside perpetrators who were acquitted. One of them wrote to him in 2008: "You kept your promise. My family is safe. The man who killed my brother walks free. Both things are true because of your choice." He keeps that letter. He's never been certain the choice was right. His therapist says protecting sources was ethical. The tribunal judges accepted it. The two acquitted perpetrators are free. The sources are alive. The math doesn't resolve.
+
+Dallaire wrote about the impossible calculations peacekeepers made. Webb's careful testimony is one of them. The ICTR noted his source protection in its final report — acknowledged the limitation and the reasoning. Three convictions. Two acquittals. Multiple protected sources still living in Rwanda. He testified at universities about this calculation. Students ask if he'd do it differently. He says he'd want a world where the choice didn't exist. They're not satisfied with that answer. Neither is he.`
+  },
+
+  {
+    id: "rw-un-outcome-documented-submitted-survived",
+    survived: true,
+    conditions: {
+      rw_sent_genocide_fax: true,
+      rw_documented_evidence: true,
+      rw_continued_documentation: true,
+      rw_submitted_evidence: true,
+      rw_avoided_testimony: true
+    },
+    epilogue: `He submitted the documentation and declined to testify in person. The ICTR noted the refusal and accepted the evidence anyway. He's asked about this sometimes — why document if not testify? He says the documentation was always the point. His presence in a courtroom was optional. The photographs, the reports, the fax: those couldn't be cross-examined. They just existed. He trusted them more than his own memory by the time the trials came.
+
+Two convictions followed from his evidence. The prosecutors wanted him there. They said his testimony would strengthen the cases. He said the evidence was sufficient. They said his presence would matter to survivors. He said the convictions would matter to survivors. Both things might be true. The two convictions happened. Three other cases where his evidence might have been used didn't proceed to trial. He doesn't know if his testimony would have changed that.
+
+His therapist suggested the avoided testimony was about self-protection. He said it was about trusting the documentation. His daughter asked if he was hiding. He said he was letting the evidence speak. She asked what the difference was. He said one is about fear and one is about method. She wasn't convinced. Neither is he. But the photographs exist. The reports exist. The two convictions exist. He submitted the evidence. That was the job. He carries the question forward.`
   },
 
   {
@@ -423,6 +579,58 @@ Some peacekeepers who documented felt like they did nothing. You gathered eviden
 You testified at The Hague. You spoke at inquiries. You educated students. Your photos are in museums. Your testimony is in archives. You didn't save lives in the moment. But you saved truth. You saved justice. You saved memory. The survivors you photographed—some lived, some died—they're remembered because you documented them. You carried that responsibility forward. You were a witness. That matters.`
   },
 
+  // STAYED PATH - FOLLOWED MANDATE - Aftermath variants
+  {
+    id: "rw-un-outcome-mandate-spoke-survived",
+    survived: true,
+    conditions: {
+      rw_followed_mandate: true,
+      rw_protected_hotel: true,
+      rw_held_position: true,
+      rw_spoke_publicly: true,
+      rw_honored_survivors: true
+    },
+    epilogue: `He speaks at the ceremony and tells the part he always tells: that he held position, that twelve hundred people survived, that the mandate was inadequate and he stayed inside it anyway. He doesn't tell the other part: the roadblocks he drove past, the reports he filed that no one acted on, the math that doesn't resolve. The audience applauds. The survivors in the front row don't applaud. They nod. That's the part he brings home.
+
+The Kwibuka commemoration happens every April. He's spoken at four of them. The organizers ask him back because he doesn't claim heroism. He describes the mandate, the limitations, the twelve hundred who lived and the calculation that produced that number. Students ask questions afterward. They want to know if he'd do it differently. He says he'd want a different mandate. They ask if he'd defy orders. He says he held position within his authorization and that was the choice he made. They're not satisfied with that answer. Neither is he.
+
+His therapist says public testimony can be part of processing. He's not sure if he's processing or performing. The survivors nod when he speaks. That's the metric he uses. If they nod, he's telling it right. If they applaud, he's told it wrong. He watches the front row. He brings that home.`
+  },
+
+  {
+    id: "rw-un-outcome-mandate-silent-survived",
+    survived: true,
+    conditions: {
+      rw_followed_mandate: true,
+      rw_protected_hotel: true,
+      rw_held_position: true,
+      rw_attended_silently: true,
+      rw_centered_survivors: true
+    },
+    epilogue: `He attended the Kwibuka commemoration in Ottawa and sat in the back. When they asked if any former UNAMIR personnel wanted to stand, he didn't stand. The ceremony wasn't for him. It was for the people in the front rows who lost everyone. He was there because he needed to be in the same room as that grief once a year. He doesn't know if that's processing or penance. His therapist says the distinction might not matter.
+
+The survivors speak. They describe what happened at roadblocks, in churches, at the stadium. They describe the twelve hundred who lived at the hotel. They don't name the peacekeepers who held position. That's correct. The story isn't about the peacekeepers. He held position within his mandate. Twelve hundred people survived. Hundreds of thousands didn't. The ceremony is for everyone. He sits in the back and listens.
+
+He returns every year. Same seat. Same silence. After the ceremony, survivors sometimes recognize him. They shake his hand. They don't thank him. They acknowledge him. That's the right verb. He was there. He held position. They survived. Those are facts. The ceremony puts them in the same room once a year. That's enough.`
+  },
+
+  {
+    id: "rw-un-outcome-mandate-private-survived",
+    survived: true,
+    conditions: {
+      rw_followed_mandate: true,
+      rw_protected_hotel: true,
+      rw_held_position: true,
+      rw_met_privately: true,
+      rw_avoided_ceremony: true
+    },
+    epilogue: `He doesn't attend ceremonies. He meets privately with survivor families once a year — a coffee, sometimes dinner, a conversation that isn't about what happened at the hotel because everyone at the table already knows. It's about what came after: their children, the gacaca verdicts, what Rwanda looks like now. The ceremonies are for making memory public. These dinners are for keeping it human. He needs the second kind.
+
+One of the families — a woman who lost her husband but whose three children survived — sends him photos every December. The children are adults now. One is a doctor. One teaches secondary school. One works for the Ministry of Justice. He keeps the photos in a drawer with his service medal. He doesn't display them. They're not for display. They're evidence of a specific math: twelve hundred people survived, and those twelve hundred had children, and those children have lives. The mandate he held was forty meters wide. The consequences extend further.
+
+His therapist asked once why he avoids ceremonies but maintains these private relationships. He said ceremonies are about what happened. The dinners are about what's happening. He can't change 1994. He can witness 2010. That's the part he can sustain.`
+  },
+
   {
     id: "rw-un-outcome-mandate-held-survived",
     survived: true,
@@ -435,6 +643,110 @@ You testified at The Hague. You spoke at inquiries. You educated students. Your 
 The distinction matters to you: you didn't defy your orders, you fulfilled them. Your mandate said protect the designated safe zone. You protected it. The UN didn't reprimand you. Canada gave you a service medal. You went home and told people you'd done your job.
 
 But you know what the mandate excluded. You watched roadblocks from your vehicle windows. You filed reports. You observed and reported, exactly as instructed, while the killing continued outside the perimeter you were holding. Twelve hundred people are alive because you held position. Hundreds of thousands died because the position you held was forty meters wide. You carry both numbers. You did your job. You've never been sure that was enough.`
+  },
+
+  // EVACUATED PATH - SAVED RWANDANS - Aftermath variants
+  {
+    id: "rw-un-outcome-savers-documentary-survived",
+    survived: true,
+    conditions: {
+      rw_saved_rwandans: true,
+      rw_defied_orders: true,
+      rw_left_rwanda: true,
+      rw_participated_documentary: true,
+      rw_shared_guilt: true
+    },
+    epilogue: `He loaded seven people onto the convoy and was reprimanded for it. He told that story in the documentary. The seven people he saved also gave interviews. One of them — a woman who lost her husband at that same checkpoint — said she doesn't know what to feel about his choice. "He saved me. He didn't save Joseph." The documentary ends on that. Webb's face when he hears it. He's watched that clip once. That was enough.
+
+The documentary aired in eight countries. The reviews called it "morally complex" and "unflinching." The woman's quote — about being saved while her husband wasn't — became the most-cited line. Webb's daughter asked him about it. He said the woman was right. His daughter asked if he regretted saving her. He said no. She asked if he regretted not saving more. He said yes. She asked how he lives with that. He said he doesn't know yet.
+
+The seven people he saved have their own lives now. Three of them testified at the ICTR. One works for a survivor organization in Kigali. One lives in Brussels. One died in 2003. Webb went to that funeral. The family thanked him for the extra nine years. He didn't know what to say to that. The documentary didn't resolve anything. It made the complexity public. He carries that forward.`
+  },
+
+  {
+    id: "rw-un-outcome-savers-private-survived",
+    survived: true,
+    conditions: {
+      rw_saved_rwandans: true,
+      rw_defied_orders: true,
+      rw_left_rwanda: true,
+      rw_declined_documentary: true,
+      rw_private_advocacy: true
+    },
+    epilogue: `He declined the documentary. The seven people he saved have their own stories. He doesn't need to be in them. He and one of them — the woman with the child, now grown — exchange letters every year. Not about 1994. About her daughter's school results, about his retirement, about the price of things. Ordinary letters. That's the relationship. He's glad the documentary doesn't have it.
+
+The woman's daughter is twenty-three now. She's studying international law at the University of Rwanda. She wants to work for the ICTR successor mechanism. The woman wrote that her daughter exists because Webb loaded them onto the convoy. He wrote back that her daughter exists because her mother survived, and that survival is its own achievement. The woman wrote back that both things are true. He keeps that letter.
+
+His advocacy is private. He testifies to closed committees. He writes policy briefs. He funds peacekeeping reform organizations. Nobody films it. The seven people he saved know what he does. That's enough witnesses. He didn't save everyone at the checkpoint. He saved seven. The woman's daughter is studying law. That's a consequence that extends. He carries that forward.`
+  },
+
+  {
+    id: "rw-un-outcome-savers-policy-survived",
+    survived: true,
+    conditions: {
+      rw_saved_rwandans: true,
+      rw_defied_orders: true,
+      rw_left_rwanda: true,
+      rw_participated_policy_focus: true,
+      rw_forward_looking: true
+    },
+    epilogue: `He participated in the documentary but made it about the mandate. "The system told me to leave Rwandans behind. I didn't, and I was reprimanded. That's the problem I want to talk about." The seven people he saved appreciated this framing. It made their survival about injustice rather than luck. Whether that's honest or a kind of management, he isn't certain.
+
+The documentary focused on the mandate failure. The evacuation orders. The "foreign nationals only" directive. The reprimand he received for loading Rwandans. The Responsibility to Protect doctrine that came eleven years later. The interviewer asked about the seven people. He redirected to the eight hundred thousand. The interviewer asked about his choice. He redirected to the mandate that forced it. The reviews said it was "policy-focused" and "less personal than expected." That was intentional.
+
+The seven people he saved have mixed feelings about this approach. One of them said in a separate interview that Webb "turned us into a policy argument." Another said, "He saved us and then made sure the next peacekeeper wouldn't have to make that choice. Both things matter." Webb watched that interview. He's not sure which person is right. He knows the mandate changed. He knows seven people are alive. He carries both things forward.`
+  },
+
+  // EVACUATED PATH - SAVED RWANDANS, RETURNED TO DOCUMENT - Aftermath variants
+  {
+    id: "rw-un-outcome-savers-docs-full-survived",
+    survived: true,
+    conditions: {
+      rw_saved_rwandans: true,
+      rw_documented_evidence: true,
+      rw_returned_to_duty: true,
+      rw_testified_tribunal: true,
+      rw_provided_evidence: true
+    },
+    epilogue: `He saved seven people from the convoy and then went back and documented what he couldn't stop. The ICTR used his evidence in four cases. He testified fully — named names, gave dates, described what he saw at specific sites on specific days. His deposition runs to 340 pages. He's never read it in full. He knows what's in it.
+
+The seven people he saved attended the tribunal. They sat in the gallery when he testified. One of them told him afterward, "You saved us and then you made sure they'd be held accountable. Both things mattered." He's not sure about that equation. He saved seven. He documented evidence that helped convict four perpetrators. Eight hundred thousand people died. The math doesn't resolve. But the tribunal happened. The convictions happened. The seven people are alive. Those are facts.
+
+Dallaire wrote about peacekeepers who stayed to document. He said they carried an impossible burden — witnessing atrocities they couldn't stop, gathering evidence for justice that came too late. Webb's testimony is cited in three separate ICTR judgments. His photographs are in the Kigali Genocide Memorial. The seven people he saved have children now. He carries all of it forward.`
+  },
+
+  {
+    id: "rw-un-outcome-savers-docs-careful-survived",
+    survived: true,
+    conditions: {
+      rw_saved_rwandans: true,
+      rw_documented_evidence: true,
+      rw_returned_to_duty: true,
+      rw_testified_carefully: true,
+      rw_protected_sources: true
+    },
+    epilogue: `He testified carefully — gave what the tribunal needed without exposing the Rwandans who'd helped him document. Some of those sources were still living in communities alongside perpetrators. Full disclosure would have endangered them. The judges accepted this. Three convictions, no compromised sources. Whether that balance was right is a question he revisits.
+
+The seven people he saved understood the calculation. One of them had been a source — had given him names, locations, details that went into his reports. That person's family still lives in Kigali. Webb's careful testimony protected them. But it also meant some perpetrators couldn't be fully placed at specific sites. The tribunal accepted the limitation. The defense attorneys exploited it. Three convictions. Two acquittals. He knows which two.
+
+His therapist asked if he regrets the careful approach. He said he regrets the choice existing. The sources trusted him. He protected them. The perpetrators who were acquitted are free. The sources are alive. Both things are true. The seven people he saved have told him the careful testimony was right. He's not sure they're the right judges of that. He carries the question forward.`
+  },
+
+  {
+    id: "rw-un-outcome-savers-docs-silent-survived",
+    survived: true,
+    conditions: {
+      rw_saved_rwandans: true,
+      rw_documented_evidence: true,
+      rw_returned_to_duty: true,
+      rw_submitted_evidence: true,
+      rw_avoided_testimony: true
+    },
+    epilogue: `He submitted the evidence and didn't testify in person. The ICTR accepted the documentation. Two convictions followed from it. He watched the verdict announcements on a television in a hotel room in Geneva. He was there for a different UN meeting. That seemed appropriate somehow — the verdict happening in a margin of something else he was already doing.
+
+The seven people he saved asked why he didn't testify. He said the evidence spoke for itself. They said his presence would have mattered. He said his presence in 1994 was what mattered — he was there, he documented, the photographs and reports exist independent of his testimony. They weren't satisfied with that answer. Neither is he. But the convictions happened. The evidence was sufficient. His voice wasn't required.
+
+His therapist suggested the avoided testimony was about protecting himself from re-traumatization. He said it was about trusting the documentation over his memory. Both things might be true. The seven people he saved are alive. The two perpetrators are in prison. The evidence existed without his voice. Whether that's sufficient is a question he carries forward.`
   },
 
   {
