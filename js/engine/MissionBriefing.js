@@ -54,6 +54,15 @@ class MissionBriefing {
     // Do NOT apply glossary highlighting yet — it mutates innerHTML and corrupts the typewriter
     glossaryTooltip.showIntro();
 
+    // Add back button handler
+    const backButton = this.container.querySelector('#mb-back-button');
+    if (backButton) {
+      backButton.addEventListener('click', () => {
+        this._cleanup();
+        this.eventBus.emit('briefing:back', { missionId: _missionId });
+      });
+    }
+
     let pageIdx = 0;
     let typing  = false;
 
@@ -397,7 +406,8 @@ _buildTutsiCard(t) {
 
   _buildHTML(roleKey) {
     const cardHTML = this._buildCardHTML(roleKey);
-    return `<div class="mb-paper">
+    return `<button id="mb-back-button" class="back-button" aria-label="Back to role selection">← Back</button>
+<div class="mb-paper">
   <div class="mb-mast">
     <div class="mb-mast-name">${BRIEFING_UI_TEXT.masthead.name}</div>
     <div class="mb-rule-double"></div>

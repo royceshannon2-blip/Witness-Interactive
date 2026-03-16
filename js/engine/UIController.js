@@ -65,6 +65,7 @@ class UIController {
     this.eventBus.on('game:complete', this.handleGameComplete.bind(this));
     this.eventBus.on('mission:selected', this.handleMissionSelected.bind(this));
     this.eventBus.on('role:selected', this.handleRoleSelected.bind(this));
+    this.eventBus.on('briefing:back', this.handleBriefingBack.bind(this));
     this.eventBus.on('checkpoint:complete', this.handleCheckpointComplete.bind(this));
     this.eventBus.on('timer:started', this.handleTimerStarted.bind(this));
     this.eventBus.on('timer:update', this.handleTimerUpdate.bind(this));
@@ -273,6 +274,16 @@ class UIController {
     this.showScreen('scene');
   }
 
+  handleBriefingBack(data) {
+    if (data && data.missionId) {
+      this.eventBus.emit('mission:selected', { missionId: data.missionId });
+    } else if (this.currentMissionId) {
+      this.eventBus.emit('mission:selected', { missionId: this.currentMissionId });
+    } else {
+      this.showScreen('timeline');
+    }
+  }
+
   handleCheckpointComplete(data) {
     this.showScreen('results-card', data);
   }
@@ -377,6 +388,7 @@ class UIController {
     
     return `
       <article class="role-selection-content" role="article" aria-labelledby="role-selection-title">
+        <button id="back-to-timeline" class="back-button" aria-label="Back to timeline">← Back</button>
         <h2 id="role-selection-title" class="text-center text-gold">${c.title}</h2>
         <p class="text-center">${subtitle}</p>
         <section id="all-roles-completed-message" class="panel panel-parchment mt-lg hidden" role="region" aria-live="polite">
@@ -665,6 +677,13 @@ class UIController {
     
     if (screenName === 'role-selection') {
       this.populateRoleCards(screen);
+      const backButton = screen.querySelector('#back-to-timeline');
+      if (backButton) {
+        backButton.addEventListener('click', () => {
+          this.haptics.light();
+          this.showScreen('timeline');
+        });
+      }
     }
     
     if (screenName === 'outcome') {

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Back Button Test - Witness Interactive</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Test Role Selection Screen -->
+        <div id="role-selection-screen" class="screen active">
+            <article class="role-selection-content">
+                <button id="back-to-timeline" class="back-button" aria-label="Back to timeline">← Back</button>
+                <h2 class="text-center text-gold">Choose Your Perspective</h2>
+                <p class="text-center">Select a role to experience the mission</p>
+                <section id="role-cards-container" class="mt-lg">
+                    <article class="role-card">
+                        <h3 class="role-title">Test Role</h3>
+                        <p class="role-description">This is a test role card</p>
+                        <button class="role-select-button">Select Role</button>
+                    </article>
+                </section>
+            </article>
+        </div>
+    </div>
+
+    <script type="module">
+        // Test back button functionality
+        const backButton = document.getElementById('back-to-timeline');
+        if (backButton) {
+            backButton.addEventListener('click', () => {
+                console.log('Back button clicked - would navigate to timeline');
+                alert('Back button works! Would navigate to timeline.');
+            });
+        }
+    </script>
+</body>
+</html>
