@@ -202,9 +202,11 @@ class UIController {
   }
 
   handleGameComplete(data) {
-    if (data && data.roleId) {
-      this.completedRoles.add(data.roleId);
-      this.currentRoleId = data.roleId;
+    // Handle both data.roleId and data.role for compatibility
+    const roleId = data?.roleId || data?.role;
+    if (roleId) {
+      this.completedRoles.add(roleId);
+      this.currentRoleId = roleId;
     }
     if (data && data.missionId) {
       this.currentMissionId = data.missionId;
@@ -219,6 +221,17 @@ class UIController {
       };
     } else {
       this.earlyDeathContext = null;
+    }
+    
+    // Update endings counter immediately
+    this.updateEndingsCounter();
+    
+    // Check if all roles completed
+    if (this.currentMissionId) {
+      const mission = this.missionRegistry.getMission(this.currentMissionId);
+      if (mission && this.completedRoles.size === mission.roles.length) {
+        console.log('[UIController] All roles completed for mission:', this.currentMissionId);
+      }
     }
     
     this.currentOutcome = this.calculateCurrentOutcome();
@@ -765,6 +778,26 @@ class UIController {
     if (endingsCountElement) {
       endingsCountElement.textContent = `${completedCount}/${totalRoles}`;
     }
+    if (allRolesCompletedMessage && completedCount === totalRoles) {
+      allRolesCompletedMessage.classList.remove('hidden');
+    }
+  }
+
+  updateEndingsCounter() {
+    // Update the endings counter immediately when a role is completed
+    const endingsCountElement = document.getElementById('endings-count');
+    if (!endingsCountElement || !this.currentMissionId) return;
+    
+    const mission = this.missionRegistry.getMission(this.currentMissionId);
+    if (!mission) return;
+    
+    const totalRoles = mission.roles.length;
+    const completedCount = this.completedRoles.size;
+    
+    endingsCountElement.textContent = `${completedCount}/${totalRoles}`;
+    
+    // Show all-roles-completed message if all roles are done
+    const allRolesCompletedMessage = document.getElementById('all-roles-completed-message');
     if (allRolesCompletedMessage && completedCount === totalRoles) {
       allRolesCompletedMessage.classList.remove('hidden');
     }

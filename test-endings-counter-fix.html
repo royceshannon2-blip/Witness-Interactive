@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Endings Counter Fix Test</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .test-section {
+      margin: 2rem 0;
+      padding: 1rem;
+      border: 1px solid var(--color-choice-border);
+      border-radius: 4px;
+    }
+    .test-button {
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--color-choice-default);
+      color: var(--color-text-primary);
+      border: 1px solid var(--color-choice-border);
+      cursor: pointer;
+    }
+    .test-button:hover {
+      background: var(--color-choice-hover);
+    }
+    .status {
+      margin-top: 1rem;
+      padding: 1rem;
+      background: var(--color-surface-raised);
+      border-radius: 4px;
+    }
+    .pass { color: var(--color-safe); }
+    .fail { color: var(--color-crisis); }
+  </style>
+</head>
+<body>
+  <h1>Endings Counter Fix Test</h1>
+  
+  <div class="test-section">
+    <h2>Test 1: Complete roles and verify counter updates</h2>
+    <p>This test simulates completing roles and checks if the counter updates immediately.</p>
+    <button class="test-button" onclick="runTest1()">Run Test 1</button>
+    <div id="test1-status" class="status"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 2: All roles completed message</h2>
+    <p>This test verifies the all-roles-completed message appears when all roles are done.</p>
+    <button class="test-button" onclick="runTest2()">Run Test 2</button>
+    <div id="test2-status" class="status"></div>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 3: Handle both roleId and role properties</h2>
+    <p>This test verifies the system handles both data.roleId and data.role.</p>
+    <button class="test-button" onclick="runTest3()">Run Test 3</button>
+    <div id="test3-status" class="status"></div>
+  </div>
+
+  <div id="app">
+    <div id="role-selection-screen" class="screen">
+      <article class="role-selection-content">
+        <h2 class="text-center text-gold">Choose Your Perspective</h2>
+        <section id="all-roles-completed-message" class="panel panel-parchment mt-lg hidden">
+          <h3 class="text-gold text-center">All Perspectives Experienced</h3>
+          <p class="text-center">You've witnessed this historical moment through every available lens.</p>
+        </section>
+        <section id="role-cards-container" class="mt-lg"></section>
+        <div class="endings-counter text-center mt-md">
+          <p class="text-secondary">Endings Discovered: <span id="endings-count">0/3</span></p>
+        </div>
+      </article>
+    </div>
+  </div>
+
+  <script type="module">
+    import EventBus from './js/engine/EventBus.js';
+    import UIController from './js/engine/UIController.js';
+    import MissionRegistry from './js/content/MissionRegistry.js';
+    import ConsequenceSystem from './js/engine/ConsequenceSystem.js';
+    import ResultsCard from './js/engine/ResultsCard.js';
+    import uiContent from './js/content/ui-content.js';
+
+    const eventBus = new EventBus();
+    const missionRegistry = new MissionRegistry();
+    const consequenceSystem = new ConsequenceSystem(eventBus);
+    const resultsCard = new ResultsCard(eventBus, uiContent);
+
+    const uiController = new UIController(
+      eventBus,
+      null, // timelineSelector
+      missionRegistry,
+      consequenceSystem,
+      resultsCard,
+      uiContent
+    );
+
+    // Set current mission
+    uiController.currentMissionId = 'rwanda';
+
+    window.runTest1 = function() {
+      const status = document.getElementById('test1-status');
+      status.innerHTML = '<p>Running test...</p>';
+      
+      try {
+        // Reset
+        uiController.completedRoles.clear();
+        
+        // Simulate completing first role with roleId
+        eventBus.emit('game:complete', { 
+          missionId: 'rwanda', 
+          roleId: 'tutsi-survivor' 
+        });
+        
+        const counter1 = document.getElementById('endings-count').textContent;
+        if (counter1 !== '1/3') {
+          throw new Error(`Expected counter to be 1/3, got ${counter1}`);
+        }
+        
+        // Simulate completing second role with role (alternative property)
+        eventBus.emit('game:complete', { 
+          missionId: 'rwanda', 
+          role: 'hutu-moderate' 
+        });
+        
+        const counter2 = document.getElementById('endings-count').textContent;
+        if (counter2 !== '2/3') {
+          throw new Error(`Expected counter to be 2/3, got ${counter2}`);
+        }
+        
+        status.innerHTML = '<p class="pass">✓ Test 1 PASSED: Counter updates immediately after game:complete</p>';
+      } catch (error) {
+        status.innerHTML = `<p class="fail">✗ Test 1 FAILED: ${error.message}</p>`;
+      }
+    };
+
+    window.runTest2 = function() {
+      const status = document.getElementById('test2-status');
+      status.innerHTML = '<p>Running test...</p>';
+      
+      try {
+        // Reset
+        uiController.completedRoles.clear();
+        const message = document.getElementById('all-roles-completed-message');
+        message.classList.add('hidden');
+        
+        // Complete first two roles
+        eventBus.emit('game:complete', { 
+          missionId: 'rwanda', 
+          roleId: 'tutsi-survivor' 
+        });
+        eventBus.emit('game:complete', { 
+          missionId: 'rwanda', 
+          roleId: 'hutu-moderate' 
+        });
+        
+        // Message should still be hidden
+        if (!message.classList.contains('hidden')) {
+          throw new Error('Message should be hidden when not all roles completed');
+        }
+        
+        // Complete third role
+        eventBus.emit('game:complete', { 
+          missionId: 'rwanda', 
+          roleId: 'un-peacekeeper' 
+        });
+        
+        // Message should now be visible
+        if (message.classList.contains('hidden')) {
+          throw new Error('Message should be visible when all roles completed');
+        }
+        
+        const counter = document.getElementById('endings-count').textContent;
+        if (counter !== '3/3') {
+          throw new Error(`Expected counter to be 3/3, got ${counter}`);
+        }
+        
+        status.innerHTML = '<p class="pass">✓ Test 2 PASSED: All-roles-completed message appears correctly</p>';
+      } catch (error) {
+        status.innerHTML = `<p class="fail">✗ Test 2 FAILED: ${error.message}</p>`;
+      }
+    };
+
+    window.runTest3 = function() {
+      const status = document.getElementById('test3-status');
+      status.innerHTML = '<p>Running test...</p>';
+      
+      try {
+        // Reset
+        uiController.completedRoles.clear();
+        
+        // Test with roleId property
+        eventBus.emit('game:complete', { 
+          missionId: 'rwanda', 
+          roleId: 'tutsi-survivor' 
+        });
+        
+        if (!uiController.completedRoles.has('tutsi-survivor')) {
+          throw new Error('Role not added with roleId property');
+        }
+        
+        // Test with role property (alternative)
+        eventBus.emit('game:complete', { 
+          missionId: 'rwanda', 
+          role: 'hutu-moderate' 
+        });
+        
+        if (!uiController.completedRoles.has('hutu-moderate')) {
+          throw new Error('Role not added with role property');
+        }
+        
+        if (uiController.completedRoles.size !== 2) {
+          throw new Error(`Expected 2 completed roles, got ${uiController.completedRoles.size}`);
+        }
+        
+        status.innerHTML = '<p class="pass">✓ Test 3 PASSED: Both roleId and role properties handled correctly</p>';
+      } catch (error) {
+        status.innerHTML = `<p class="fail">✗ Test 3 FAILED: ${error.message}</p>`;
+      }
+    };
+
+    // Auto-run all tests
+    setTimeout(() => {
+      runTest1();
+      setTimeout(() => runTest2(), 500);
+      setTimeout(() => runTest3(), 1000);
+    }, 500);
+  </script>
+</body>
+</html>
