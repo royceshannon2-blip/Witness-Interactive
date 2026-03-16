@@ -71,7 +71,6 @@ Your radio crackles. Dallaire's voice. "All units. Prepare for possible evacuati
       { file: 'rw-sfx-militia-chant-distant.mp3', triggerAfterMs: 2000 },
       { file: 'rw-sfx-military-radio.mp3', triggerAfterMs: 5500 }
     ],
-    timedChoice: { enabled: true, duration: 15000, defaultChoice: "rw-un-choice-02a-b" },
     choices: [
       {
         id: "rw-un-choice-02a-a",
@@ -104,7 +103,6 @@ A woman holds up a child. "Please. Just the children." Your sergeant looks at yo
       { file: 'rw-sfx-desperate-voices.mp3', triggerAfterMs: 3500 },
       { file: 'rw-sfx-truck-idle.mp3', triggerAfterMs: 6000 }
     ],
-    timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-un-choice-02b-a" },
     choices: [
       {
         id: "rw-un-choice-02b-a",
@@ -502,9 +500,7 @@ His family watched it. His daughter called afterward. She didn't say anything fo
     conditions: {
       rw_evacuated_expatriates: true,
       rw_left_rwandans: true,
-      rw_left_rwanda: true,
-      rw_declined_documentary: true,
-      rw_private_advocacy: true
+      rw_left_rwanda: true
     },
     epilogue: `He declined the documentary. He advocates privately — letters to parliamentarians, testimony to closed committees, funding for peacekeeping reform organisations. Nobody films it. He prefers it that way. The guilt doesn't need an audience. The policy work doesn't either. He's made his accounting in private. Whether that's courage or avoidance is a question he's stopped answering.
 
@@ -537,9 +533,7 @@ His daughter watched it and said it felt like he was hiding. He said he was focu
     conditions: {
       rw_sent_genocide_fax: true,
       rw_documented_evidence: true,
-      rw_continued_documentation: true,
-      rw_testified_tribunal: true,
-      rw_provided_evidence: true
+      rw_continued_documentation: true
     },
     epilogue: `His fax preceded Dallaire's by six days. He testified at the ICTR and the Belgian Senate inquiry and the UN internal review. His documentation filled four evidence files. He spent eleven years answering questions about what he saw and what he reported and why the world didn't act. He stopped counting how many times someone told him the documentation mattered. He knows it did. It still took a hundred days and eight hundred thousand deaths.
 
@@ -602,10 +596,7 @@ His therapist says public testimony can be part of processing. He's not sure if 
     survived: true,
     conditions: {
       rw_followed_mandate: true,
-      rw_protected_hotel: true,
-      rw_held_position: true,
-      rw_attended_silently: true,
-      rw_centered_survivors: true
+      rw_protected_hotel: true
     },
     epilogue: `He attended the Kwibuka commemoration in Ottawa and sat in the back. When they asked if any former UNAMIR personnel wanted to stand, he didn't stand. The ceremony wasn't for him. It was for the people in the front rows who lost everyone. He was there because he needed to be in the same room as that grief once a year. He doesn't know if that's processing or penance. His therapist says the distinction might not matter.
 
@@ -631,6 +622,21 @@ One of the families — a woman who lost her husband but whose three children su
 His therapist asked once why he avoids ceremonies but maintains these private relationships. He said ceremonies are about what happened. The dinners are about what's happening. He can't change 1994. He can witness 2010. That's the part he can sustain.`
   },
 
+  {
+    id: "rw-un-outcome-mandate-public-survived",
+    survived: true,
+    conditions: {
+      rw_followed_mandate: true,
+      rw_protected_hotel: true,
+      rw_held_position: true
+    },
+    epilogue: `He followed the mandate as far as it would take him, then held position when the numbers dropped to four peacekeepers. When the RPF arrived in July, twelve hundred people walked out of that hotel alive. He did his job within the authorization he was given, and when the authorization became insufficient, he held anyway. That's the story he tells at ceremonies and inquiries and university lectures.
+
+The public testimony matters to him in a way the private conversations don't quite reach. He needs people to understand that the mandate was inadequate but that inadequate mandates can still save lives if the people holding them refuse to abandon their posts. He speaks at Kwibuka commemorations, at UN training sessions, at military academies. Students ask if he'd do it differently. He says he'd want a better mandate but he'd make the same choice within the one he had.
+
+The Responsibility to Protect doctrine came eleven years after Rwanda. His testimony was cited in the Canadian brief that supported it. He speaks about this: how twelve hundred people survived because he held a forty-meter perimeter, and how the doctrine that followed tried to make sure the next peacekeeper wouldn't have to make survival math with such small numbers. The ceremonies applaud. The survivors in the front rows nod. He watches for the nods. That's how he knows he's telling it right.`
+  },
+
   // EVACUATED PATH - SAVED RWANDANS - Aftermath variants
   {
     id: "rw-un-outcome-savers-documentary-survived",
@@ -652,9 +658,7 @@ The seven people he saved have their own lives now. Three of them testified at t
     conditions: {
       rw_saved_rwandans: true,
       rw_defied_orders: true,
-      rw_left_rwanda: true,
-      rw_declined_documentary: true,
-      rw_private_advocacy: true
+      rw_left_rwanda: true
     },
     epilogue: `He declined the documentary. The seven people he saved have their own stories. He doesn't need to be in them. He and one of them — the woman with the child, now grown — exchange letters every year. Not about 1994. About her daughter's school results, about his retirement, about the price of things. Ordinary letters. That's the relationship. He's glad the documentary doesn't have it.
 
@@ -685,11 +689,8 @@ The seven people he saved have mixed feelings about this approach. One of them s
     id: "rw-un-outcome-savers-docs-full-survived",
     survived: true,
     conditions: {
-      rw_saved_rwandans: true,
       rw_documented_evidence: true,
-      rw_returned_to_duty: true,
-      rw_testified_tribunal: true,
-      rw_provided_evidence: true
+      rw_returned_to_duty: true
     },
     epilogue: `He saved seven people from the convoy and then went back and documented what he couldn't stop. The ICTR used his evidence in four cases. He testified fully — named names, gave dates, described what he saw at specific sites on specific days. His deposition runs to 340 pages. He's never read it in full. He knows what's in it.
 
@@ -702,7 +703,6 @@ Dallaire wrote about peacekeepers who stayed to document. He said they carried a
     id: "rw-un-outcome-savers-docs-careful-survived",
     survived: true,
     conditions: {
-      rw_saved_rwandans: true,
       rw_documented_evidence: true,
       rw_returned_to_duty: true,
       rw_testified_carefully: true,
@@ -719,7 +719,6 @@ His therapist asked if he regrets the careful approach. He said he regrets the c
     id: "rw-un-outcome-savers-docs-silent-survived",
     survived: true,
     conditions: {
-      rw_saved_rwandans: true,
       rw_documented_evidence: true,
       rw_returned_to_duty: true,
       rw_submitted_evidence: true,
@@ -755,8 +754,7 @@ Canada gave you a posthumous commendation. Your family received it. Dallaire spo
     id: "rw-un-outcome-mandate-held-killed",
     survived: false,
     conditions: {
-      rw_protected_hotel: true,
-      rw_held_position: true
+      rw_protected_hotel: true
     },
     deathContext: {
       cause: "Killed when militia attacked the hotel after UN force was reduced",
@@ -793,8 +791,7 @@ The foreign nationals made it to the airport. They went home. They were debriefe
     id: "rw-un-outcome-documented-killed",
     survived: false,
     conditions: {
-      rw_documented_evidence: true,
-      rw_sent_genocide_fax: true
+      rw_documented_evidence: true
     },
     deathContext: {
       cause: "Killed by militia while documenting atrocities",
@@ -808,27 +805,7 @@ The militia commander at the church had been patient with you for two weeks. You
 Your documentation survived you. The photos you took were entered into evidence at the ICTR. The reports you filed are in the UN archives. Three militia leaders were convicted partly on the basis of evidence you collected. You didn't live to testify. Your camera did it for you. Dallaire cited your work specifically in his memoir — not your name, because your family asked for privacy, but your work. The evidence existed. The convictions followed. You were the reason.`
   },
 
-  // FALLBACK OUTCOMES - catch-all for paths not covered by specific outcomes
-  {
-    id: "rw-un-fallback-survived",
-    survived: true,
-    conditions: {},
-    epilogue: `You survived your deployment to Rwanda. The genocide ended on July 4th, 1994, when the RPF captured Kigali. You were there for some portion of what happened between April 6th and that date — as witness, as peacekeeper, as someone operating under a mandate that was structurally inadequate for what it was asked to observe.
 
-The UN Security Council's decision to cut UNAMIR from 2,500 to 270 troops after the 10 Belgian peacekeepers were killed is part of the historical record. General Dallaire's January 1994 fax warning of mass killing — ignored by New York — is part of the historical record. The Responsibility to Protect doctrine, adopted by the UN in 2005 partly in response to Rwanda, is part of the historical record. Your choices during those 100 days are part of a record too, even when they don't map cleanly to named outcomes.
-
-You carry what you saw. The Canadian Senate held a Special Committee on Rwanda in 2004. Inquiries were held across multiple countries. The world spent years trying to understand how it watched and didn't act. You were inside that watching. What you did with your twelve seconds, your mandate, your conscience — that's the part only you can account for.`
-  },
-  {
-    id: "rw-un-fallback-killed",
-    survived: false,
-    conditions: {},
-    epilogue: `You didn't survive your deployment. The genocide killed approximately 800,000 civilians in 100 days. It also killed ten Belgian peacekeepers on April 7th — their deaths triggered the UN withdrawal that reduced UNAMIR to 270 soldiers. You died in a conflict you were mandated only to observe.
-
-The specific circumstances of your death — whether in defense of civilians, in a confrontation you couldn't avoid, or in the chaos that surrounded a mission without adequate authorization — aren't fully captured in this path. UNAMIR operated in impossible conditions: present, visible, and prohibited from acting. Some peacekeepers died for that contradiction.
-
-General Dallaire's 2003 memoir, Shake Hands with the Devil, is dedicated to the soldiers who served under him in Rwanda. Canada recognized its UNAMIR veterans. The Responsibility to Protect doctrine — adopted at the UN in 2005 — exists in part because of what happened in Rwanda and what happened to people like you. You were there. That matters, even when the outcome couldn't be recorded cleanly.`
-  }
 ];
 
 // Export role data

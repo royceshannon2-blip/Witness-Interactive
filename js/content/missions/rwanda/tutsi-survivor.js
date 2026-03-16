@@ -73,7 +73,6 @@ The militia pours in. Machetes. Grenades. People running. The altar is no protec
       { file: 'rw-sfx-gunshot-muffled.mp3', triggerAfterMs: 2800 },
       { file: 'rw-sfx-grenade-muffled.mp3', triggerAfterMs: 5200 }
     ],
-    timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-ts-choice-02a-b" },
     choices: [
       {
         id: "rw-ts-choice-02a-a",
@@ -254,7 +253,6 @@ You find a corner in a conference room. Thirty people in a space meant for ten. 
       { file: 'rw-sfx-truck-idle.mp3', triggerAfterMs: 800 },
       { file: 'rw-sfx-machete-tap.mp3', triggerAfterMs: 3200 }
     ],
-    timedChoice: { enabled: true, duration: 10000, defaultChoice: "rw-ts-choice-03d-a" },
     deathCheckpoint: true,
     choices: [
       {
@@ -440,22 +438,40 @@ Survivor guilt is a weight that doesn't lift. The memorial guide asks if you wan
   },
 
   {
-    id: "rw-ts-outcome-hidden-killed",
+    id: "rw-ts-outcome-church-approach-killed",
     survived: false,
     conditions: {
-      rw_trusted_church: true,
-      rw_hid_in_church: false
+      rw_trusted_church: true
     },
     deathContext: {
       cause: "Killed during church massacre by Interahamwe militia",
       historicalRate: "Churches became massacre sites across Rwanda. Thousands of Tutsi who sought sanctuary in churches were killed there.",
-      yourChoices: "You trusted the church as sanctuary. You stayed in the main hall when the militia attacked. You didn't escape."
+      yourChoices: "You trusted the church as sanctuary. When the militia attacked, you didn't escape in time."
     },
-    epilogue: `You didn't survive. You went to the church—Father Michel, sanctuary, safety. Churches had always been safe. But not this time. The Interahamwe surrounded the building. They killed Father Michel at the door. They poured in with machetes and grenades. You tried to run but there was nowhere to go. The pews offered no protection. The altar was no shield. You died with hundreds of others in a place that was supposed to be sacred.
+    epilogue: `You didn't survive. You went to the church—Father Michel, sanctuary, safety. Churches had always been safe. But not this time. The Interahamwe surrounded the building. They killed Father Michel at the door. They poured in with machetes and grenades. You tried to find safety but there was nowhere to go. The pews offered no protection. The altar was no shield. You died with hundreds of others in a place that was supposed to be sacred.
 
 Your body was found weeks later when the RPF arrived. Your family identified you by your clothes. The church became a genocide memorial. Your name is on the wall with three hundred others who died there that day. Students visit now. They see the skulls on shelves, the clothes preserved, the names. They learn that churches became massacre sites, that sanctuary was a lie, that trust was weaponized.
 
 Your friend Marie survived. She testified at the gacaca courts about what happened. She said you were kind, that you trusted people, that you believed in safety. The memorial guide tells your story to visitors—how you went to the church, how you died there, how trust became a trap. You're remembered. You're a name on a wall. You carried that trust to the end.`
+  },
+
+  {
+    id: "rw-ts-outcome-ceiling-approach-killed",
+    survived: false,
+    conditions: {
+      rw_hid_in_church: true,
+      rw_survived_church_hiding: true
+    },
+    deathContext: {
+      cause: "Discovered and killed while hiding in the church ceiling by returning militia",
+      historicalRate: "Militia systematically searched churches for survivors in the days following massacres. Many who hid in ceilings and crawlspaces were eventually found.",
+      yourChoices: "You hid in the ceiling crawlspace. The militia returned to search for survivors and found you."
+    },
+    epilogue: `You didn't survive. You made it to the ceiling crawlspace—barely three feet high, silent, terrified. You held absolutely still while the massacre happened below. The militia came back—they always came back—and this time they looked up. You heard them moving the ladder. You knew what was coming.
+
+The church was documented by the RPF when they arrived in July. The crawlspace above the sacristy was noted in their records—evidence of people who had tried to hide there. The church became a genocide memorial. Tourists visit now. They see the skulls arranged on shelves, the clothes preserved, the names on the walls. The guide explains that some survivors tried to hide in the ceiling for days before being found.
+
+Your name is on the wall with three hundred others. You lasted longer than most. You were quiet when it counted. It wasn't enough, and that wasn't a failure—it was the arithmetic of what happened there. Three hundred names. You are one of them. You were nineteen years old and you held still until you couldn't anymore.`
   },
 
   {
@@ -528,7 +544,6 @@ Your name is on the wall with three hundred others. You lasted longer than most.
     id: "rw-ts-outcome-attic-killed",
     survived: false,
     conditions: {
-      rw_trusted_protector: true,
       rw_hid_with_hutu: true
     },
     deathContext: {
@@ -547,7 +562,6 @@ You were hidden by someone who risked everything to protect you. That protection
     id: "rw-ts-outcome-enclave-killed",
     survived: false,
     conditions: {
-      rw_reached_hotel: true,
       rw_used_false_id: true
     },
     deathContext: {
@@ -800,27 +814,7 @@ You lived as someone else for three months. Twelve hundred people crammed into t
 You don't speak at conferences. You don't give interviews. You live your life. Marie's children know what their mother did. That's what matters. Some survivors found meaning in public testimony. You found meaning in private gratitude. Both are valid. You survived because someone chose to help you. You honor that privately. That's both gift and burden.`
   },
 
-  // FALLBACK OUTCOMES - catch-all for paths not covered by specific outcomes
-  {
-    id: "rw-ts-fallback-survived",
-    survived: true,
-    conditions: {},
-    epilogue: `You survived. The RPF captured Kigali on July 4th, 1994. The genocide ended. Of Rwanda's Tutsi population — roughly 930,000 people — approximately 75% were killed in 100 days. You were among those who lived.
 
-How you survived involved a series of choices that this system couldn't reduce to a single clear path. Most survivors' stories are like that — not one decision but dozens, not one person who helped but several, not one close call but a sequence of them that could have broken anywhere and didn't.
-
-The years after survival have their own weight. Kwibuka — Rwanda's national remembrance, held each April 7th — asks survivors to remember publicly and together. Some find that necessary. Some find it impossible. Some find it both at once. You carry what happened. Rwanda is being rebuilt by people who mostly weren't alive in 1994. That future is partly yours and partly something you'll watch from the edges. You're alive. That is the beginning of whatever comes next.`
-  },
-  {
-    id: "rw-ts-fallback-killed",
-    survived: false,
-    conditions: {},
-    epilogue: `You didn't survive. The genocide killed approximately 800,000 people in 100 days — an average of 8,000 per day, the fastest mass killing in recorded history. You were one of them.
-
-The specific circumstances — which church, which roadblock, which choice that ended in the wrong place at the wrong moment — aren't fully captured in the path this story traced. The genocide was methodical but not perfectly predictable. Survival often came down to location, to who happened to be at a particular checkpoint, to whether a neighbor spoke or stayed silent. You encountered the wrong version of those variables.
-
-Your name belongs in the memorial. Rwanda has the Kigali Genocide Memorial, which holds the remains of over 250,000 victims and lists names on its walls. April 7th — Kwibuka — is the day Rwanda remembers. Your story is part of what that day is for. You were 19 years old, a student, a person who had plans. 1994 ended them. That is what the genocide did, one person at a time, 800,000 times.`
-  }
 ];
 
 // Export role data

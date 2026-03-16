@@ -162,7 +162,6 @@ Your hands shake as you take the first identity card. The woman holding it looks
       { file: 'rw-sfx-truck-idle.mp3', triggerAfterMs: 800 },
       { file: 'rw-sfx-machete-tap.mp3', triggerAfterMs: 3000 }
     ],
-    timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-hm-choice-03a-b" },
     deathCheckpoint: true,
     choices: [
       {
@@ -198,7 +197,6 @@ The radio crackles. RTLM praises the "work" being done. Lists more names. More l
       { file: 'rw-sfx-machete-tap.mp3', triggerAfterMs: 2500 },
       { file: 'rw-sfx-radio-music-stab.mp3', triggerAfterMs: 5000 }
     ],
-    timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-hm-choice-03b-a" },
     deathCheckpoint: true,
     choices: [
       {
@@ -552,8 +550,7 @@ Rwanda's reconciliation process was designed for full confessions, not partial o
     survived: false,
     conditions: {
       rw_staffed_roadblock: true,
-      rw_continued_compliance: true,
-      rw_denied_charges: true
+      rw_continued_compliance: true
     },
     deathContext: {
       cause: "Killed by RPF forces or vigilante justice before gacaca proceedings",
@@ -685,27 +682,7 @@ The judges acquitted you on the roadblock charges — insufficient evidence to c
 What the record doesn't show is the sector's memory. People who were at that checkpoint remember you. Celestin knows about the attic. He also knows what people say about the roadblock. He's never asked you directly. You've never offered. Rwanda's official identity says you're just Rwandan now — no categories, no distinctions. The unofficial memory is more specific. You live inside the gap between the two.`
   },
 
-  // FALLBACK OUTCOMES - catch-all for paths not covered by specific outcomes
-  {
-    id: "rw-hm-fallback-survived",
-    survived: true,
-    conditions: {},
-    epilogue: `You survived the genocide. The RPF captured Kigali on July 4th, 1994. One hundred days after it began, it ended. Approximately 800,000 people — 75% of Rwanda's Tutsi population — had been killed. You were not among them.
 
-What you did during those hundred days is recorded in consequence flags this system couldn't fully anticipate. Rwanda's gacaca courts ran from 2005 to 2012 and heard testimony from over 1.2 million cases. Whether you were perpetrator, bystander, resister, or something that doesn't have a clean name, the courts were designed to process exactly the kind of complexity you lived through.
-
-You carry 1994 forward. Rwanda rebuilt. The country you live in now has a different official identity than the one you were born into. Whether that new identity fits you is something only you can answer. You survived. That's not a moral verdict. It's a fact. What you do with it is the rest of the story.`
-  },
-  {
-    id: "rw-hm-fallback-killed",
-    survived: false,
-    conditions: {},
-    epilogue: `You didn't survive the genocide. The RPF captured Kigali on July 4th, 1994, ending 100 days of killing. You didn't reach July 4th.
-
-The circumstances of your death depended on choices this system couldn't fully map to a single epilogue — you lived in the space between the paths, between the clean categories. The genocide killed approximately 800,000 people. It also killed thousands of Hutu who sheltered Tutsi, who refused to participate, who were on the wrong list for the wrong reason at the wrong moment.
-
-Your name is somewhere. A gacaca record. A family's memory. A neighbor who saw what happened and carried it for thirty years. Rwanda built memorials for those who died. Some names are on walls. Some are in documents. Some are only in the memories of people who are also aging, also dying. You were part of what happened in 1994. The full account of what that means didn't fit neatly into the branches this story could trace. It rarely does.`
-  }
 ];
 
 // Export role data
