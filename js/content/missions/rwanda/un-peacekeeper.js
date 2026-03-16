@@ -27,7 +27,7 @@ UNAMIR headquarters in Kigali. Radio chatter. Reports of roadblocks. Presidentia
 
 Your mandate is clear: peacekeeping, not peace enforcement. You can't fire unless fired upon. You can't protect civilians unless they're in designated safe zones. But civilians are being killed at roadblocks three blocks from here. The radio crackles. Three options. The H├┤tel des Mille Collines is requesting protection—twelve hundred Tutsi sheltering there. Or evacuate foreign nationals as ordered. Or stay mobile, document what's happening, send evidence to New York. Fifteen seconds to decide.`,
     apThemes: ["causation", "perspective", "complexity"],
-    atmosphericEffect: "dawn",
+    atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
     choices: [
@@ -88,7 +88,7 @@ At one checkpoint, Rwandans are begging to board. "Please. Take us. We worked fo
 
 A woman holds up a child. "Please. Just the children." Your sergeant looks at you. The convoy is idling. The airport is twenty minutes away. The militia commander is walking over. You have seconds. Follow orders—foreign nationals only. Or take Rwandans and risk the convoy. Twelve seconds to decide.`,
     apThemes: ["perspective", "complexity"],
-    atmosphericEffect: "smoke",
+    atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
     timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-un-choice-02b-a" },
@@ -116,13 +116,14 @@ You reach a church. Screaming inside. Grenades. Machetes. Hundreds of people. Th
 
 Your radio crackles. Dallaire. "All units. Avoid direct confrontation. Document and report only." The militia commander is waiting. The screaming inside the church is getting quieter. You have your camera. You have your weapon. You have your orders. What do you do?`,
     apThemes: ["perspective", "complexity"],
-    atmosphericEffect: "smoke",
+    atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
     soundEffects: [
       { file: 'rw-sfx-camera-shutter.mp3', triggerAfterMs: 1500 },
       { file: 'rw-sfx-camera-shutter.mp3', triggerAfterMs: 3800 }
     ],
+    deathCheckpoint: true,
     choices: [
       {
         id: "rw-un-choice-02c-a",
@@ -144,6 +145,7 @@ The militia commander returns. "Captain. Your government will abandon you. The U
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
+    deathCheckpoint: true,
     choices: [
       {
         id: "rw-un-choice-03a-a",
@@ -165,6 +167,7 @@ A militia attack on the hotel seems imminent. You can see them massing. Your rad
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
+    deathCheckpoint: true,
     choices: [
       {
         id: "rw-un-choice-03b-a",
@@ -186,6 +189,7 @@ You're at the airport. You could board a plane. Go home. File your report. Or yo
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
+    deathCheckpoint: true,
     choices: [
       {
         id: "rw-un-choice-03c-a",
@@ -210,7 +214,7 @@ You send reports to New York. To Dallaire. To anyone who will listen. The media 
 
 You continue documenting. Roadblocks. Massacres. Refugee movements. You're building a case. For tribunals. For history. For justice. But justice is later. Right now, people are dying. You're a witness. That's important. But is it enough? You could do more. You could protect enclaves. You could defy orders. Or you keep documenting. Keep gathering evidence. Keep making the world see.`,
     apThemes: ["perspective", "complexity"],
-    atmosphericEffect: "smoke",
+    atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
     choices: [

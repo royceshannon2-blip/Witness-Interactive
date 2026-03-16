@@ -26,7 +26,7 @@ A knock at the door. It's Celestin, your Tutsi neighbor. His hands shake. "They'
 
 Your wife catches your eye from the kitchen. Fear. The radio mentioned moderate politicians being targeted. Your name is on lists too—you refused to attend the last Hutu Power rally. Outside, you hear vehicles, shouting. The smell of smoke drifts through the window.`,
     apThemes: ["causation", "perspective", "complexity"],
-    atmosphericEffect: "smoke",
+    atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-01.mp3",
     choices: [
@@ -117,7 +117,7 @@ You have a cousin in the countryside, near Gitarama. Maybe it's safer there. May
 
 The sun rises. Smoke columns across Kigali. You hear screaming from the next street. Your wife grabs your hand. "Augustin. We go now or we die here."`,
     apThemes: ["perspective", "complexity"],
-    atmosphericEffect: "smoke",
+    atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-02c.mp3",
     choices: [

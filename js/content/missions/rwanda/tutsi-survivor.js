@@ -28,7 +28,7 @@ Your identity card is in your pocket. The one that says "Tutsi." The one that's 
 
 Three options. The church—Father Michel knows you. Your friend Jeanne's house—she's Hutu, married to a Tutsi, might hide you. Or the Hôtel des Mille Collines—rumors say UN peacekeepers are there, protecting people. All three mean crossing roadblocks.`,
     apThemes: ["causation", "perspective", "complexity"],
-    atmosphericEffect: "dawn",
+    atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-01.mp3",
     choices: [
@@ -122,7 +122,7 @@ The hotel is three blocks away. You can see it. UN vehicles outside. Blue helmet
 
 You have two cards in your pocket. Your real one—Tutsi. Marie's—Hutu. The militia commander is young, maybe twenty. He looks tired. Bored. Methodical. You're next in line. He holds out his hand. "Identity card."`,
     apThemes: ["perspective", "complexity"],
-    atmosphericEffect: "smoke",
+    atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-02c.mp3",
     choices: [

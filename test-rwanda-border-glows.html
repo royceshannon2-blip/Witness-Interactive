@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rwanda Border Glow Test</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #0a0a0a;
+      color: #E8DCC8;
+      font-family: system-ui;
+    }
+    .controls {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 4px;
+      z-index: 100;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    button {
+      display: block;
+      width: 100%;
+      margin: 5px 0;
+      padding: 10px;
+      background: #2a2a2a;
+      color: #E8DCC8;
+      border: 1px solid #3d3d3d;
+      cursor: pointer;
+      font-size: 12px;
+      text-align: left;
+    }
+    button:hover {
+      background: #3a3a3a;
+    }
+    .role-section {
+      margin-top: 15px;
+      padding-top: 15px;
+      border-top: 1px solid #3d3d3d;
+    }
+    .role-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #B8860B;
+    }
+    #status {
+      margin-top: 20px;
+      padding: 10px;
+      background: #111;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="controls">
+    <h2>Rwanda Border Glow Test</h2>
+    <p style="font-size: 12px; color: #A89880;">Click a scene to trigger its border glow</p>
+    
+    <div class="role-section">
+      <div class="role-title">HUTU MODERATE</div>
+      <button onclick="testGlow('rw-hm-scene-01', 'Amber - Last normal moment')">Scene 01 - Amber</button>
+      <button onclick="testGlow('rw-hm-scene-02a', 'Blood-red - Immediate danger')">Scene 02a - Blood-red</button>
+      <button onclick="testGlow('rw-hm-scene-02b', 'Sick yellow-green - Moral corruption')">Scene 02b - Sick green</button>
+      <button onclick="testGlow('rw-hm-scene-02c', 'Cold grey-blue - Flight')">Scene 02c - Grey-blue</button>
+      <button onclick="testGlow('rw-hm-scene-03a', 'Blood-red intense - Roadblock')">Scene 03a - Blood-red intense</button>
+      <button onclick="testGlow('rw-hm-scene-03b', 'Dark crimson - Betrayal')">Scene 03b - Dark crimson</button>
+      <button onclick="testGlow('rw-hm-scene-03c', 'Sick green deep - Participation')">Scene 03c - Sick green deep</button>
+      <button onclick="testGlow('rw-hm-scene-03d', 'Earth-brown - Hiding')">Scene 03d - Earth-brown</button>
+      <button onclick="testGlow('rw-hm-scene-04a', 'Pale ash-grey - Gacaca rescue')">Scene 04a - Ash-grey</button>
+      <button onclick="testGlow('rw-hm-scene-04b', 'Dark ash-grey - Gacaca compliance')">Scene 04b - Dark ash-grey</button>
+      <button onclick="testGlow('rw-hm-scene-04c', 'Stone-grey - Denial')">Scene 04c - Stone-grey</button>
+      <button onclick="testGlow('rw-hm-scene-04d', 'Dusty amber-grey - Refugee')">Scene 04d - Amber-grey</button>
+    </div>
+
+    <div class="role-section">
+      <div class="role-title">TUTSI SURVIVOR</div>
+      <button onclick="testGlow('rw-ts-scene-01', 'Dawn amber - Last deciding moment')">Scene 01 - Dawn amber</button>
+      <button onclick="testGlow('rw-ts-scene-02a', 'Cold grey-blue - False sanctuary')">Scene 02a - Grey-blue</button>
+      <button onclick="testGlow('rw-ts-scene-02b', 'Warm dim amber - Hidden warmth')">Scene 02b - Warm amber</button>
+      <button onclick="testGlow('rw-ts-scene-02c', 'Stark white-grey - Exposed')">Scene 02c - White-grey</button>
+      <button onclick="testGlow('rw-ts-scene-03a', 'Sewage green-grey - Ditch')">Scene 03a - Sewage green</button>
+      <button onclick="testGlow('rw-ts-scene-03b', 'Near-black cold blue - Ceiling')">Scene 03b - Near-black blue</button>
+      <button onclick="testGlow('rw-ts-scene-03c', 'Deep warm brown - Attic')">Scene 03c - Warm brown</button>
+      <button onclick="testGlow('rw-ts-scene-03d', 'Blood-red - False ID')">Scene 03d - Blood-red</button>
+      <button onclick="testGlow('rw-ts-scene-04a', 'Cold institutional blue - ICTR')">Scene 04a - Institutional blue</button>
+      <button onclick="testGlow('rw-ts-scene-04b', 'Dark ash - Survivor guilt')">Scene 04b - Dark ash</button>
+      <button onclick="testGlow('rw-ts-scene-04c', 'Muted earth-green - Reconciliation')">Scene 04c - Earth-green</button>
+      <button onclick="testGlow('rw-ts-scene-04d', 'Pale warm gold - Hotel conference')">Scene 04d - Warm gold</button>
+    </div>
+
+    <div class="role-section">
+      <div class="role-title">UN PEACEKEEPER</div>
+      <button onclick="testGlow('rw-un-scene-01', 'Cold UN-blue - The mandate')">Scene 01 - UN-blue</button>
+      <button onclick="testGlow('rw-un-scene-02a', 'UN-blue deep - Hotel, clock ticking')">Scene 02a - UN-blue deep</button>
+      <button onclick="testGlow('rw-un-scene-02b', 'Sickly pale green - Compliance nausea')">Scene 02b - Pale green</button>
+      <button onclick="testGlow('rw-un-scene-02c', 'Stark white-grey - The camera')">Scene 02c - White-grey</button>
+      <button onclick="testGlow('rw-un-scene-03a', 'Deep UN-blue - Defiance')">Scene 03a - Deep UN-blue</button>
+      <button onclick="testGlow('rw-un-scene-03b', 'Steel blue-grey - Discipline')">Scene 03b - Steel blue-grey</button>
+      <button onclick="testGlow('rw-un-scene-03c', 'Pale institutional grey - Departure')">Scene 03c - Institutional grey</button>
+      <button onclick="testGlow('rw-un-scene-03d', 'Cold white - Camera flash')">Scene 03d - Cold white</button>
+      <button onclick="testGlow('rw-un-scene-04a', 'Dark cold blue - PTSD')">Scene 04a - Dark cold blue</button>
+      <button onclick="testGlow('rw-un-scene-04b', 'Muted red-grey - Memorial')">Scene 04b - Red-grey</button>
+      <button onclick="testGlow('rw-un-scene-04c', 'Dim pale grey - Documentary')">Scene 04c - Pale grey</button>
+      <button onclick="testGlow('rw-un-scene-04d', 'Cold institutional white-blue - Tribunal')">Scene 04d - White-blue</button>
+    </div>
+
+    <div id="status"></div>
+  </div>
+
+  <script type="module">
+    import EventBus from './js/engine/EventBus.js';
+    import AtmosphericEffects from './js/engine/AtmosphericEffects.js';
+
+    const eventBus = new EventBus();
+    const effects = new AtmosphericEffects(eventBus);
+
+    window.testGlow = function(sceneId, description) {
+      const status = document.getElementById('status');
+      status.textContent = `Testing: ${sceneId}\n${description}\n\nBorder glow should appear and fade over 5-6 seconds...`;
+      
+      // Clear any existing effects
+      effects.clearAllEffects();
+      
+      // Trigger the delayed effect (simulating typewriter:complete)
+      setTimeout(() => {
+        eventBus.emit('typewriter:complete', { sceneId });
+      }, 100);
+    };
+
+    console.log('Rwanda Border Glow Test Ready');
+    console.log('AtmosphericEffects initialized:', effects);
+  </script>
+</body>
+</html>

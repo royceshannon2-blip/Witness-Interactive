@@ -290,6 +290,87 @@ class AtmosphericEffects {
     } else if (sceneId === 'ac-scene-05') {
       this.createAftermath();
     }
+
+    // ── HUTU MODERATE ──────────────────────────────────────────
+    else if (sceneId === 'rw-hm-scene-01') {
+      this.createBorderGlow('rgba(200, 140, 40, 0.4)', 5000);
+    } else if (sceneId === 'rw-hm-scene-02a') {
+      this.createBorderGlow('rgba(160, 20, 20, 0.55)', 6000);
+    } else if (sceneId === 'rw-hm-scene-02b') {
+      this.createBorderGlow('rgba(120, 160, 30, 0.45)', 5000);
+    } else if (sceneId === 'rw-hm-scene-02c') {
+      this.createBorderGlow('rgba(80, 100, 140, 0.4)', 5000);
+    } else if (sceneId === 'rw-hm-scene-03a') {
+      this.createBorderGlow('rgba(180, 15, 15, 0.65)', 6000);
+    } else if (sceneId === 'rw-hm-scene-03b') {
+      this.createBorderGlow('rgba(140, 10, 10, 0.7)', 6000);
+    } else if (sceneId === 'rw-hm-scene-03c') {
+      this.createBorderGlow('rgba(90, 130, 20, 0.55)', 5000);
+    } else if (sceneId === 'rw-hm-scene-03d') {
+      this.createBorderGlow('rgba(100, 80, 40, 0.4)', 5000);
+    } else if (sceneId === 'rw-hm-scene-04a') {
+      this.createBorderGlow('rgba(140, 130, 120, 0.4)', 5000);
+    } else if (sceneId === 'rw-hm-scene-04b') {
+      this.createBorderGlow('rgba(110, 100, 90, 0.5)', 5000);
+    } else if (sceneId === 'rw-hm-scene-04c') {
+      this.createBorderGlow('rgba(100, 100, 110, 0.5)', 5000);
+    } else if (sceneId === 'rw-hm-scene-04d') {
+      this.createBorderGlow('rgba(150, 120, 70, 0.4)', 5000);
+    }
+
+    // ── TUTSI SURVIVOR ─────────────────────────────────────────
+    else if (sceneId === 'rw-ts-scene-01') {
+      this.createBorderGlow('rgba(200, 140, 40, 0.35)', 5000);
+    } else if (sceneId === 'rw-ts-scene-02a') {
+      this.createBorderGlow('rgba(80, 110, 160, 0.45)', 5000);
+    } else if (sceneId === 'rw-ts-scene-02b') {
+      this.createBorderGlow('rgba(160, 110, 40, 0.4)', 5000);
+    } else if (sceneId === 'rw-ts-scene-02c') {
+      this.createBorderGlow('rgba(180, 180, 190, 0.45)', 5000);
+    } else if (sceneId === 'rw-ts-scene-03a') {
+      this.createBorderGlow('rgba(80, 110, 70, 0.5)', 6000);
+    } else if (sceneId === 'rw-ts-scene-03b') {
+      this.createBorderGlow('rgba(30, 40, 80, 0.65)', 6000);
+    } else if (sceneId === 'rw-ts-scene-03c') {
+      this.createBorderGlow('rgba(80, 50, 30, 0.6)', 6000);
+    } else if (sceneId === 'rw-ts-scene-03d') {
+      this.createBorderGlow('rgba(160, 20, 20, 0.6)', 6000);
+    } else if (sceneId === 'rw-ts-scene-04a') {
+      this.createBorderGlow('rgba(60, 100, 160, 0.4)', 5000);
+    } else if (sceneId === 'rw-ts-scene-04b') {
+      this.createBorderGlow('rgba(90, 85, 80, 0.45)', 5000);
+    } else if (sceneId === 'rw-ts-scene-04c') {
+      this.createBorderGlow('rgba(70, 110, 70, 0.4)', 5000);
+    } else if (sceneId === 'rw-ts-scene-04d') {
+      this.createBorderGlow('rgba(180, 150, 70, 0.35)', 5000);
+    }
+
+    // ── UN PEACEKEEPER ─────────────────────────────────────────
+    else if (sceneId === 'rw-un-scene-01') {
+      this.createBorderGlow('rgba(0, 90, 160, 0.4)', 5000);
+    } else if (sceneId === 'rw-un-scene-02a') {
+      this.createBorderGlow('rgba(0, 70, 140, 0.55)', 6000);
+    } else if (sceneId === 'rw-un-scene-02b') {
+      this.createBorderGlow('rgba(80, 150, 80, 0.5)', 6000);
+    } else if (sceneId === 'rw-un-scene-02c') {
+      this.createBorderGlow('rgba(180, 175, 170, 0.45)', 5000);
+    } else if (sceneId === 'rw-un-scene-03a') {
+      this.createBorderGlow('rgba(0, 50, 120, 0.6)', 6000);
+    } else if (sceneId === 'rw-un-scene-03b') {
+      this.createBorderGlow('rgba(60, 90, 130, 0.5)', 5000);
+    } else if (sceneId === 'rw-un-scene-03c') {
+      this.createBorderGlow('rgba(140, 145, 155, 0.45)', 5000);
+    } else if (sceneId === 'rw-un-scene-03d') {
+      this.createBorderGlow('rgba(200, 200, 210, 0.4)', 5000);
+    } else if (sceneId === 'rw-un-scene-04a') {
+      this.createBorderGlow('rgba(30, 50, 100, 0.5)', 5000);
+    } else if (sceneId === 'rw-un-scene-04b') {
+      this.createBorderGlow('rgba(120, 80, 80, 0.4)', 5000);
+    } else if (sceneId === 'rw-un-scene-04c') {
+      this.createBorderGlow('rgba(130, 130, 140, 0.45)', 5000);
+    } else if (sceneId === 'rw-un-scene-04d') {
+      this.createBorderGlow('rgba(160, 175, 200, 0.4)', 5000);
+    }
   }
 
   /**
