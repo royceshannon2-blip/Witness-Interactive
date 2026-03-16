@@ -31,6 +31,11 @@ Three options. The church—Father Michel knows you. Your friend Jeanne's house�
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-01.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-radio-static-burst.mp3', triggerAfterMs: 1000 },
+      { file: 'rw-sfx-truck-distant.mp3', triggerAfterMs: 3800 },
+      { file: 'rw-sfx-distant-shouting.mp3', triggerAfterMs: 6200 }
+    ],
     choices: [
       {
         id: "rw-ts-choice-01-a",
@@ -125,6 +130,11 @@ You have two cards in your pocket. Your real one—Tutsi. Marie's—Hutu. The mi
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-02c.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-distant-shouting.mp3', triggerAfterMs: 1500 },
+      { file: 'rw-sfx-machete-distant.mp3', triggerAfterMs: 4000 },
+      { file: 'rw-sfx-truck-idle.mp3', triggerAfterMs: 6500 }
+    ],
     choices: [
       {
         id: "rw-ts-choice-02c-a",
@@ -149,7 +159,8 @@ A UN convoy passes. White vehicles. You could flag them down. Or keep hiding. Wa
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-03a.mp3",
     soundEffects: [
-      { file: 'rw-sfx-un-vehicle-pass.mp3', triggerAfterMs: 4500 }
+      { file: 'rw-sfx-water-drip.mp3', triggerAfterMs: 2000 },
+      { file: 'rw-sfx-truck-heavy-passing.mp3', triggerAfterMs: 5500 }
     ],
     deathCheckpoint: true,
     choices: [
@@ -182,8 +193,8 @@ The old man coughs. Quiet, but not quiet enough. Below, footsteps stop. "You hea
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-03b.mp3",
     soundEffects: [
-      { file: 'rw-sfx-boots-stone.mp3', triggerAfterMs: 3200 },
-      { file: 'rw-sfx-suppressed-cough.mp3', triggerAfterMs: 5800 }
+      { file: 'rw-sfx-boots-stone.mp3', triggerAfterMs: 3500 },
+      { file: 'rw-sfx-boots-stone.mp3', triggerAfterMs: 7000 }
     ],
     deathCheckpoint: true,
     choices: [
@@ -209,6 +220,10 @@ At night, Jeanne brings food. Bread. Water. "Paul is talking about leaving. Goin
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/tutsi-survivor/rw-ts-scene-03c.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-door-creak.mp3', triggerAfterMs: 2800 },
+      { file: 'rw-sfx-floorboard-creak.mp3', triggerAfterMs: 5500 }
+    ],
     deathCheckpoint: true,
     choices: [
       {

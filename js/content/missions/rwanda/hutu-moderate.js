@@ -29,6 +29,11 @@ Your wife catches your eye from the kitchen. Fear. The radio mentioned moderate 
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-01.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-radio-static-burst.mp3', triggerAfterMs: 1200 },
+      { file: 'rw-sfx-truck-distant.mp3', triggerAfterMs: 3500 },
+      { file: 'rw-sfx-door-knock-soft.mp3', triggerAfterMs: 6000 }
+    ],
     choices: [
       {
         id: "rw-hm-choice-01-a",
@@ -97,6 +102,10 @@ Your hands are shaking. If you refuse, you're a traitor. If you comply, you're p
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-02b.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-crowd-chant.mp3', triggerAfterMs: 1800 },
+      { file: 'rw-sfx-radio-music-stab.mp3', triggerAfterMs: 4200 }
+    ],
     choices: [
       {
         id: "rw-hm-choice-02b-a",
@@ -120,6 +129,10 @@ The sun rises. Smoke columns across Kigali. You hear screaming from the next str
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-02c.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-distant-shouting.mp3', triggerAfterMs: 2000 },
+      { file: 'rw-sfx-machete-distant.mp3', triggerAfterMs: 4500 }
+    ],
     choices: [
       {
         id: "rw-hm-choice-02c-a",
@@ -143,6 +156,10 @@ Your hands shake as you take the first identity card. The woman holding it looks
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-03a.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-truck-idle.mp3', triggerAfterMs: 800 },
+      { file: 'rw-sfx-machete-tap.mp3', triggerAfterMs: 3000 }
+    ],
     timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-hm-choice-03a-b" },
     deathCheckpoint: true,
     choices: [
@@ -174,6 +191,11 @@ The radio crackles. RTLM praises the "work" being done. Lists more names. More l
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-03b.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-truck-idle.mp3', triggerAfterMs: 800 },
+      { file: 'rw-sfx-machete-tap.mp3', triggerAfterMs: 2500 },
+      { file: 'rw-sfx-radio-music-stab.mp3', triggerAfterMs: 5000 }
+    ],
     timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-hm-choice-03b-a" },
     deathCheckpoint: true,
     choices: [
@@ -199,6 +221,10 @@ You tell yourself you're surviving. You tell yourself you had no choice. But you
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-03c.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-truck-idle.mp3', triggerAfterMs: 1000 },
+      { file: 'rw-sfx-radio-static-burst.mp3', triggerAfterMs: 4000 }
+    ],
     choices: [
       {
         id: "rw-hm-choice-03c-a",
@@ -222,6 +248,10 @@ You're not safe here either. Nowhere is safe. The RPF is advancing from the nort
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: "audio/narration/hutu-moderate/rw-hm-scene-03d.mp3",
+    soundEffects: [
+      { file: 'rw-sfx-birds-rural.mp3', triggerAfterMs: 1500 },
+      { file: 'rw-sfx-dog-bark-distant.mp3', triggerAfterMs: 5500 }
+    ],
     choices: [
       {
         id: "rw-hm-choice-03d-a",

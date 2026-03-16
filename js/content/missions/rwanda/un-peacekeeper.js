@@ -63,6 +63,10 @@ Your radio crackles. Dallaire's voice. "All units. Prepare for possible evacuati
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
+    soundEffects: [
+      { file: 'rw-sfx-militia-chant-distant.mp3', triggerAfterMs: 2000 },
+      { file: 'rw-sfx-military-radio.mp3', triggerAfterMs: 5500 }
+    ],
     timedChoice: { enabled: true, duration: 15000, defaultChoice: "rw-un-choice-02a-b" },
     choices: [
       {
@@ -91,6 +95,11 @@ A woman holds up a child. "Please. Just the children." Your sergeant looks at yo
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
+    soundEffects: [
+      { file: 'rw-sfx-truck-idle.mp3', triggerAfterMs: 1000 },
+      { file: 'rw-sfx-desperate-voices.mp3', triggerAfterMs: 3500 },
+      { file: 'rw-sfx-truck-idle.mp3', triggerAfterMs: 6000 }
+    ],
     timedChoice: { enabled: true, duration: 12000, defaultChoice: "rw-un-choice-02b-a" },
     choices: [
       {
@@ -145,6 +154,10 @@ The militia commander returns. "Captain. Your government will abandon you. The U
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
+    soundEffects: [
+      { file: 'rw-sfx-militia-chant-distant.mp3', triggerAfterMs: 1800 },
+      { file: 'rw-sfx-military-radio.mp3', triggerAfterMs: 4800 }
+    ],
     deathCheckpoint: true,
     choices: [
       {
@@ -167,6 +180,10 @@ A militia attack on the hotel seems imminent. You can see them massing. Your rad
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
+    soundEffects: [
+      { file: 'rw-sfx-militia-chant-distant.mp3', triggerAfterMs: 2000 },
+      { file: 'rw-sfx-military-radio.mp3', triggerAfterMs: 5000 }
+    ],
     deathCheckpoint: true,
     choices: [
       {
@@ -189,6 +206,10 @@ You're at the airport. You could board a plane. Go home. File your report. Or yo
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
+    soundEffects: [
+      { file: 'rw-sfx-aircraft-engines-distant.mp3', triggerAfterMs: 1500 },
+      { file: 'rw-sfx-military-radio.mp3', triggerAfterMs: 5000 }
+    ],
     deathCheckpoint: true,
     choices: [
       {
@@ -217,6 +238,10 @@ You continue documenting. Roadblocks. Massacres. Refugee movements. You're build
     atmosphericEffect: null,
     ambientTrack: null,
     narratorAudio: null,
+    soundEffects: [
+      { file: 'rw-sfx-camera-shutter.mp3', triggerAfterMs: 2200 },
+      { file: 'rw-sfx-radio-static-burst.mp3', triggerAfterMs: 5000 }
+    ],
     choices: [
       {
         id: "rw-un-choice-03d-a",
