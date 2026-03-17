@@ -53,3 +53,25 @@ Scene content:    z-index 1
 - Uses rounded corners larger than 4px on narrative elements
 - Shows achievement badges, stars, or gamification elements
 - Auto-plays audio without player action
+
+## Atmospheric Glow Mapping (Divided City)
+
+The Urban Design mission reuses existing AtmosphericEffects.js glow triggers to represent policy impacts:
+
+### Redlining Phase (1935-1950s)
+**Effect:** `danger-glow` (Red border pulse)
+**Represents:** HOLC "D" grade designation, systemic discrimination
+**Color:** `--color-crisis` (#8B0000)
+**Usage:** Triggered via scene object `atmosphericEffect: "danger-glow"`
+
+### Urban Heat Phase (1960s-1980s)
+**Effect:** `warning-glow` (Amber/Orange border pulse)
+**Represents:** Heat island effect from disinvestment and lack of tree canopy
+**Color:** `--color-dawn` (#FF6B35)
+**Usage:** Triggered via scene object `atmosphericEffect: "warning-glow"`
+
+### Implementation Notes
+- These effects already exist in AtmosphericEffects.js — no new code needed
+- The glow effects provide visual reinforcement of environmental racism
+- Must be paired with sensory narrative descriptions (heat, lack of shade)
+- Never use these effects decoratively — they represent documented harm

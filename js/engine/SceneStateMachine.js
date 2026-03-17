@@ -231,8 +231,8 @@ class SceneStateMachine {
     this.currentSceneIndex = nextSceneIndex;
     const newScene = this.getCurrentScene();
 
-    // ── AFTERMATH DETECTION: Fire event when entering Rwanda scene-04 ────
-    if (newScene.id.startsWith('rw-') && newScene.id.includes('-scene-04')) {
+    // ── AFTERMATH DETECTION: Fire event when entering Rwanda or Urban Design scene-04 ────
+    if ((newScene.id.startsWith('rw-') || newScene.id.startsWith('ud-')) && newScene.id.includes('-scene-04')) {
       this.eventBus.emit('aftermath:reached', {
         missionId: this.currentMissionId,
         roleId: this.currentRoleId

@@ -77,6 +77,61 @@ TENSION: 1 sentence raising the stakes — what happens if they don't act?
 - Sample line: "Mrs. Tanaka from next door is hanging laundry.
   She looks up at the same moment you do. Neither of you speaks."
 
+### Urban Resident (Divided City)
+- Tone: Observant, weary, resilient across decades
+- Internal tension: Pride in home vs. awareness of systemic neglect
+- Vocabulary: Block, neighborhood, property, investment, decline, heat, shade
+- Avoid: Victimhood narrative — show agency and community strength despite barriers
+- Key emotional truth: People living in redlined areas knew something was wrong
+  long before they had language for "systemic racism"
+- Sample line: "The bank manager doesn't say no directly. He just mentions
+  the neighborhood, taps the map, and slides your application back across the desk."
+
+## Urban Heat Sensory Rule (Urban Design Mission)
+Scenes set during "The Heat" era (Phase 2, 1960s-1980s) MUST include physical
+descriptions of temperature to provide historical context:
+
+**Required sensory elements:**
+- Radiating heat from asphalt or concrete
+- Lack of shade or tree cover
+- Physical discomfort (sweat, exhaustion, seeking relief)
+- Contrast with cooler areas (if applicable)
+- Smell of hot tar, warm metal, or sun-baked surfaces
+
+**Good example:**
+"The sidewalk shimmers. No trees, no shade, just concrete and asphalt
+ radiating heat like an oven. Your shirt sticks to your back."
+
+**Bad example:**
+"It's hot outside. You walk down the street."
+
+This rule ensures players understand the environmental racism embedded in
+redlining policy without requiring explicit maps or data visualization.
+
+## Silent Narrative Sensory Standards (Urban Design Mission)
+
+Because the ud- mission has NO audio (no ambient tracks, no narrator), narrative
+text must compensate by describing the absence of sound and physical sensations:
+
+**Required elements for silent missions:**
+- Describe the quality of silence (heavy, oppressive, empty, waiting)
+- Emphasize physical sensations (heat, weight, texture, pressure)
+- Use visual details more intensely (light, shadow, color, movement)
+- Describe what ISN'T heard (no birds, no traffic, no voices)
+
+**Good example:**
+"The street is silent except for the hum of cicadas. No children playing,
+ no neighbors talking over fences. Just heat and stillness."
+
+**Bad example:**
+"You walk down the quiet street."
+
+**Why this matters:**
+Audio creates immersion in Pearl Harbor and Rwanda missions. Without it,
+the Urban Design mission must rely entirely on text to create atmosphere.
+Silence itself becomes a narrative element representing disinvestment and
+abandonment.
+
 ## Choice Writing Standards
 
 ### What Makes a Good Choice

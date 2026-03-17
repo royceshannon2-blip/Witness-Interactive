@@ -11,6 +11,6 @@
   },
   "then": {
     "type": "askAgent",
-    "prompt": "Verify the edited engine file contains zero game content (no hardcoded scene narratives, mission data, or content strings). Engine files must only contain logic. If content is found, refactor it to the appropriate js/content/ file before completing."
+    "prompt": "Verify the edited engine file contains zero game content (no hardcoded scene narratives, mission data, or content strings). Engine files must only contain logic. EXCEPTION: SceneStateMachine.js may contain mission prefix logic (ph-, rw-, ud-) for scene ID routing and aftermath detection. If other content is found, refactor it to the appropriate js/content/ file before completing."
   }
 }

@@ -7,7 +7,22 @@
 - No frameworks, no npm, no build tools
 - All new missions added via MissionRegistry only
 - CSS custom properties for every color, font, spacing value
-- Every scene object must include AP theme tags---
+- Every scene object must include AP theme tags
+
+## Mission-Specific Constraints (Divided City / ud- namespace)
+
+### Silent Mission Rule
+The ud- mission (Urban Design / Divided City) is a silent-only experience:
+- NEVER include `ambientTrack` properties in ud- scene objects
+- NEVER include `narratorAudio` properties in ud- scene objects
+- Immersion comes from narrative text and atmospheric effects only
+- This is an intentional design constraint, not a limitation
+
+### Asset Pathing for GitHub Pages
+All asset references in mission content files MUST use relative paths:
+- ✅ CORRECT: `./audio/ambient/file.mp3` or `../audio/ambient/file.mp3`
+- ❌ WRONG: `/audio/ambient/file.mp3` (breaks on GitHub Pages subdirectories)
+- This applies to all missions but is critical for ud- mission deployment---
 inclusion: always
 ## Completion Expectation
 All tasks in tasks.md are expected to be completed fully in sequence.

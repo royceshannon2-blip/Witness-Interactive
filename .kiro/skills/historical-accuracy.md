@@ -92,8 +92,43 @@ properly sourced, and appropriate for AP History curriculum use.
 - Changing documented timelines: NOT ALLOWED
 - Altering casualty figures or ship fates: NOT ALLOWED
 
+## Data-Narrative Mapping (Urban Design Mission)
+For missions spanning decades rather than single events, accuracy requires anchoring narrative to verifiable data:
+
+### HOLC Redlining Maps (1935-1940)
+- All neighborhood grades (A/B/C/D) must match actual HOLC maps for the city
+- Use // DATA-VERIFIED comment for any reference to specific grades or boundaries
+- Never invent neighborhood names — use actual mapped areas or generic descriptions
+- Color coding: Green (A), Blue (B), Yellow (C), Red (D) — historically accurate
+
+### Temperature and Environmental Data
+- Heat island effects are real and measurable — cite temperature differentials
+- Tree canopy coverage correlates with HOLC grades — this is documented
+- Use // DATA-VERIFIED for temperature deltas (e.g., "15°F hotter in summer")
+- Asphalt, concrete, and lack of shade are documented heat contributors
+
+### Demographic and Economic Data
+- Population shifts, property values, and investment patterns must be verifiable
+- Use census data ranges rather than specific numbers unless documented
+- Wealth gaps and health disparities are documented — cite ranges, not invented figures
+- Use // ESTIMATED for reasonable extrapolations from documented trends
+
+### Verification Standard for Urban Design
+Every atmospheric effect (Heat, Canopy) must be anchored in 1930s HOLC policy:
+```javascript
+// Example scene with data verification
+{
+  id: "ud-resident-scene-02",
+  narrative: "The thermometer reads 98°F, but the asphalt radiates heat like an oven. // DATA-VERIFIED: D-graded areas average 15°F hotter than A-graded areas in summer",
+  atmosphericEffect: "heat"
+}
+```
+
 ## Sources to Reference
 - National Park Service: USS Arizona Memorial documentation
 - Naval History and Heritage Command official records
 - Gordon Prange "At Dawn We Slept" (definitive Pearl Harbor account)
 - College Board AP US History Course and Exam Description
+- University of Richmond: Mapping Inequality (HOLC maps digitized)
+- EPA and NOAA: Urban heat island effect documentation
+- Robert K. Nelson et al.: "Mapping Inequality" project

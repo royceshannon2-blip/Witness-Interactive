@@ -50,6 +50,37 @@ Pearl Harbor examples:
 - Did US intelligence failures enable the attack?
 - How did Pearl Harbor reshape American national identity?
 
+## AP Human Geography Skills
+For missions involving urban development, housing policy, and spatial analysis:
+
+### spatial-analysis
+Understanding how location, distance, and geographic patterns influence policy and outcomes.
+Urban Design examples:
+- How proximity to downtown affected HOLC redlining grades
+- Distance from parks and green space creating health disparities
+- Geographic clustering of disinvestment creating "heat islands"
+
+### human-environment-interaction
+How human decisions shape the physical environment and vice versa.
+Urban Design examples:
+- Redlining policies leading to reduced tree canopy and increased heat
+- Lack of investment creating deteriorating infrastructure
+- Environmental racism concentrating pollution in redlined neighborhoods
+
+### scale-analysis
+Connecting local phenomena to regional, national, or global patterns.
+Urban Design examples:
+- A single block's "D" grade connecting to national FHA policy
+- Local disinvestment patterns reflecting nationwide systemic racism
+- Individual property values affected by federal mortgage insurance rules
+
+### patterns-and-processes
+Identifying spatial patterns and the processes that create them.
+Urban Design examples:
+- The geographic pattern of HOLC grades following racial demographics
+- Process of white flight accelerating neighborhood decline
+- Cyclical pattern of disinvestment leading to further disinvestment
+
 ## AP Key Concepts — Pearl Harbor Relevance
 
 ### KC-7.1.I: US Involvement Debate

@@ -13,6 +13,6 @@
   },
   "then": {
     "type": "askAgent",
-    "prompt": "Check this file for GitHub Pages compatibility: verify it uses relative paths only (no absolute paths like /js/...), contains no npm imports or require() statements, and needs no build step. If you find violations, flag them immediately and suggest fixes."
+    "prompt": "Check this file for GitHub Pages compatibility: verify it uses relative paths only (no absolute paths like /js/... or /audio/...), contains no npm imports or require() statements, and needs no build step. CRITICAL: Mission content files (ud-resident.js, etc.) must use relative paths like './audio/' or '../audio/' not absolute paths. If you find violations, flag them immediately and suggest fixes."
   }
 }
