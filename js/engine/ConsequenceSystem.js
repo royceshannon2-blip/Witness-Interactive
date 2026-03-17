@@ -75,6 +75,16 @@ class ConsequenceSystem {
   determineSurvival(roleId) {
     const flags = this.getAllFlags();
 
+    // If player reached aftermath scenes (gacaca period), they survived the genocide
+    if (flags.rw_reached_aftermath === true) {
+      console.log('[Survival] Player reached aftermath scenes — survived=true forced. Genocide survival is confirmed by reaching gacaca period.');
+      return { 
+        survived: true, 
+        deathChance: 0, 
+        modifiers: { 'reached_aftermath': 'Player reached scene-04 — survived the genocide period' } 
+      };
+    }
+
     switch (roleId) {
       case 'japanese-aviator':   return this._survivalJA(flags);
       case 'american-sailor':    return this._survivalAS(flags);

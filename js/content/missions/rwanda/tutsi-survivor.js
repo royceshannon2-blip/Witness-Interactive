@@ -548,6 +548,11 @@ The church became a genocide memorial. The RPF documented what happened there. W
       historicalRate: "Militia systematically searched churches for survivors in the days following massacres",
       yourChoices: "You hid in the ceiling crawlspace. The militia searched for survivors."
     },
+    deathEpilogueEarly: `You didn't survive. You held absolutely still in the ceiling for as long as you could. The old man beside you held still too. The militia returned to search — they always came back — and you were discovered in May or June 1994. Whether they found you in the crawlspace, or you were forced out by thirst and starvation, or you were caught trying to escape when you thought it was safe, the end came before the RPF arrived.
+
+Your death occurred during the genocide itself, before the killing stopped in July. You lasted longer than most. You were quiet when it counted. It wasn't enough, and that wasn't a failure — it was the arithmetic of what happened there.
+
+The church was documented by the RPF when they captured the area. The crawlspace above the sacristy was noted in their records — evidence of people who had tried to hide there. The church became a genocide memorial later. Tourists visit now. They see the skulls arranged on shelves, the clothes preserved, the names on the walls. The guide explains that some survivors hid in the ceiling for days before being found. Your name is on the wall with three hundred others. You were nineteen years old and you held still as long as you could.`,
     epilogue: `You didn't survive. You held absolutely still in the ceiling for as long as you could. The old man beside you held still too. The militia returned to search — they always came back. Whether they found you in the crawlspace, or you were forced out by thirst and starvation, or you were caught trying to escape, you were discovered before the RPF arrived.
 
 The church was documented by the RPF when they captured the area. The crawlspace above the sacristy was noted in their records — evidence of people who had tried to hide there. The church became a genocide memorial. Tourists visit now. They see the skulls arranged on shelves, the clothes preserved, the names on the walls. The guide explains that some survivors hid in the ceiling for days before being found.
