@@ -393,7 +393,6 @@ Some peacekeepers who documented felt like they did nothing. You gathered eviden
 ];
 
 const unPeacekeeperOutcomes = [
-  // STAYED PATH - DEFIED ORDERS - Aftermath variants
   {
     id: "rw-un-outcome-stayed-advocate-survived",
     survived: true,
@@ -404,11 +403,9 @@ const unPeacekeeperOutcomes = [
       rw_testified_inquiry: true,
       rw_advocated_change: true
     },
-    epilogue: `He testified at three parliamentary inquiries and a UN internal review. He pushed for the Responsibility to Protect doctrine that was eventually adopted in 2005. He speaks at West Point, at Sandhurst, at the Canadian Forces College. The twelve hundred survivors send a delegation to Ottawa every five years. He meets them every time. He never feels like he deserves to be in the same room.
+    epilogue: `You survived. You explicitly defied New York's evacuation order, refusing to abandon the Hôtel des Mille Collines. Alongside your skeleton crew and the negotiations of Rusesabagina, you stared down the Interahamwe militia for weeks until the RPF captured Kigali, ensuring all twelve hundred refugees survived.
 
-The advocacy work matters. The R2P doctrine changed how the UN approaches mass atrocities. His testimony was cited in the 2004 Canadian Senate report. Students read his depositions in international relations courses. But the doctrine came eleven years after Rwanda. Eight hundred thousand people died before the world decided "never again" needed enforcement mechanisms.
-
-He carries both numbers. The twelve hundred who lived because he stayed. The hundreds of thousands who died while the Security Council debated semantics. His therapist says he can't hold himself responsible for structural failures. He knows that intellectually. The nightmares don't care about intellectual distinctions. He keeps testifying anyway. Someone has to say the names.`
+In 2008, you traveled to Ottawa and testified publicly at the Canadian inquiry, detailing exactly how the UN's "monitor and report" rules enabled a massacre. General Dallaire’s book cited you, and the UN called you a hero. Your public testimony forced international policy to reckon with your defiance. You carry both the twelve hundred lives you saved and the guilt of those you couldn't.`
   },
 
   {
@@ -421,11 +418,9 @@ He carries both numbers. The twelve hundred who lived because he stayed. The hun
       rw_declined_testimony: true,
       rw_chose_healing: true
     },
-    epilogue: `He declined the inquiry testimony. His therapist said it was the right call at the time. He spent two years in treatment before he could sleep through the night. The twelve hundred survivors — he checks the survivor association website sometimes. He doesn't reach out. He doesn't need them to thank him again. He knows what he did. That's enough. Some days it's enough.
+    epilogue: `You survived. You explicitly defied New York's evacuation order, refusing to abandon the Hôtel des Mille Collines. When Dallaire's voice came over the radio signaling the UN withdrawal, you looked at the Interahamwe waiting to massacre twelve hundred people, and you refused to leave.
 
-Canada gave him a medal. He keeps it in a drawer. Dallaire wrote about him — not by name, at his request, but the story is recognizable to anyone who knows UNAMIR. He read that section once. He hasn't opened the book since. The story is accurate. That doesn't mean he needs to live inside it.
-
-His daughter asked once if he was a hero. He said he was a soldier who stayed when he was supposed to leave. She was eight. She didn't understand the difference yet. She's twenty-two now. She understands. She doesn't ask anymore. They have dinner once a week. They talk about her work, about his garden, about ordinary things. That's the relationship he can sustain. That's the healing he's managed.`
+By 2008, when the Canadian government called you to Ottawa to testify about your actions, you declined. The PTSD and nightmares outweighed the heroism of saving the hotel. Your therapist agreed it was the right choice. You don't need to sit in front of a committee to know that those twelve hundred people lived because you ignored the rules. That private truth is enough.`
   },
 
   {
@@ -438,65 +433,66 @@ His daughter asked once if he was a hero. He said he was a soldier who stayed wh
       rw_testified_privately: true,
       rw_avoided_spotlight: true
     },
-    epilogue: `He gave a private deposition — on record but not public. The UN review used it without naming him. He went home to Winnipeg and told his family he'd done his job. His daughter asked if he was a hero. He said he was a soldier who stayed when he was supposed to leave. She was eight. She didn't understand the difference yet. He's still waiting to find out if she'll need to.
+    epilogue: `You survived. You explicitly defied New York's evacuation order, refusing to abandon the Hôtel des Mille Collines. You and your eight peacekeepers held the line against the militia until the RPF arrived, ensuring twelve hundred refugees walked out alive.
 
-The private testimony mattered. Policy analysts cited it. The Responsibility to Protect doctrine drew on depositions like his. But his name isn't in the public record. The survivors know. Dallaire knows. The UN review board knows. That's enough witnesses. He doesn't need the world to know. He needs to know he told the truth to people who could use it.
-
-He works in veteran services now. He helps other peacekeepers process what they saw. He doesn't talk about Rwanda unless they ask directly. Most of them ask eventually. He tells them what he told the review board: you do what you can with the mandate you're given, and sometimes the mandate is wrong, and you carry both of those facts forward. They understand. That's the audience that matters.`
+When the Canadian inquiry called you in 2008, you gave a private deposition—on the record, but safe from the media glare. You explained exactly how you relied on Rusesabagina's bribes and sheer bluffing to keep the militia back. You avoided the spotlight, preferring the quiet knowledge that you told the truth to the people who could actually change the rules for the next generation of peacekeepers.`
   },
 
   {
-    id: "rw-un-outcome-stayed-survived",
+    id: "rw-un-outcome-mandate-spoke-survived",
     survived: true,
     conditions: {
-      rw_stayed_after_withdrawal: true,
-      rw_defied_orders: true,
-      rw_chose_protection: true
+      rw_followed_mandate: true,
+      rw_protected_hotel: true,
+      rw_spoke_publicly: true,
+      rw_honored_survivors: true
     },
-    epilogue: `You survived. You defied orders. When the UN withdrew most of UNAMIR, you stayed. Eight peacekeepers. Twelve hundred refugees at the Hôtel des Mille Collines. The militia surrounded you. They cut water. They cut power. They threatened daily. But they didn't attack. Your presence—blue helmets, UN flag—held them back. When the RPF captured Kigali in July, everyone survived. Twelve hundred people lived because you didn't leave.
+    epilogue: `You survived. You initially followed Dallaire's mandate, holding the Hôtel des Mille Collines while Rusesabagina negotiated. When the attack finally seemed imminent and you had only four peacekeepers left, you drew the line and held position at all costs until the RPF arrived. 
 
-Canada gave you a medal. The UN called you a hero. General Dallaire wrote about you. But you have PTSD. Nightmares. Flashbacks. The faces of people you couldn't save at other sites. You saved twelve hundred. Hundreds of thousands died. The math doesn't comfort you. Your therapist says you did what you could. Your family says you're a hero. You don't feel like one.
-
-You testified at inquiries. You advocated for stronger peacekeeping mandates. You spoke at universities. Your story changed policy. It educated people. But it didn't bring back those who died. You return to Rwanda sometimes. Survivors thank you. They say you gave them life. You carry that forward—both the lives you saved and the weight of those you couldn't. You stayed when you could have left. That matters.`
+In 2010, you returned to Kigali. Standing at the hotel where you once faced down the militia commander, you spoke publicly at the memorial ceremony. You acknowledged the failure of the "monitor and report" mandate, and you honored the twelve hundred who lived because, at the final hour, you did what was right instead of what was ordered.`
   },
 
   {
-    id: "rw-un-outcome-stayed-killed",
-    survived: false,
+    id: "rw-un-outcome-mandate-silent-survived",
+    survived: true,
     conditions: {
-      rw_stayed_after_withdrawal: true,
-      rw_defied_orders: true
+      rw_followed_mandate: true,
+      rw_protected_hotel: true,
+      rw_attended_silently: true,
+      rw_centered_survivors: true
     },
-    deathContext: {
-      cause: "Killed during the genocide while defending civilians",
-      historicalRate: "While most UN peacekeepers who stayed survived, some were killed defending protected sites",
-      yourChoices: "You defied withdrawal orders and held the hotel. The militia attacked."
-    },
-    deathEpilogueEarly: `You didn't survive. You defied orders. You stayed when the UN withdrew. You held the hotel with a handful of peacekeepers against hundreds of militia. For weeks, your presence kept them back. You were killed in June or July 1994 during a militia assault on the hotel, before the RPF captured Kigali and the genocide ended.
+    epilogue: `You survived. You held the Hôtel des Mille Collines, strictly following the mandate until it became clear doing so meant slaughter. Then, alongside a skeleton crew of four peacekeepers, you held the line at all costs until the RPF arrived in July.
 
-Your death occurred during the hundred days. You died defending civilians, following the mandate you believed you should have had rather than the one you were given. Most of the refugees survived because you bought them time. Your body was recovered when the RPF arrived.
-
-Canada gave you a posthumous medal. The UN named a peacekeeping award after you. General Dallaire spoke at your funeral. He said you embodied what UNAMIR should have been — protection over politics, civilians over mandates, courage over orders. The hotel has a plaque. Students visit. They learn that some peacekeepers stayed, that some died defending civilians, that courage matters even when mandates fail. You're remembered. You're honored. You carried that choice to the end.`,
-    epilogue: `You didn't survive. You defied orders. You stayed when the UN withdrew. You held the hotel with a handful of peacekeepers against hundreds of militia. For weeks, your presence kept them back. Whether you were killed during a direct assault, in an ambush, or in the chaos of the genocide's final weeks, you died defending civilians. Most of the refugees survived because you bought them time.
-
-The RPF arrived and secured the area. Your body was recovered. Canada gave you a posthumous medal. The UN named a peacekeeping award after you. General Dallaire spoke at your funeral. He said you embodied what UNAMIR should have been — protection over politics, civilians over mandates, courage over orders.
-
-Your family grieved. Your children grew up knowing you died a hero. The survivors you protected remember your name. The hotel has a plaque. Students visit. They learn that some peacekeepers stayed, that some died defending civilians, that courage matters even when mandates fail. You're remembered. You're honored. You carried that choice to the end.`
+When you returned to Kigali in 2010 for the memorial ceremony, you declined to speak. You watched the survivors who once sheltered behind your UN flag tell their own stories. You stood silently in the crowd, centering their grief and resilience, finding peace in the fact that they were alive to speak for themselves.`
   },
 
-  // EVACUATED PATH - FOLLOWED ORDERS - Aftermath variants
+  {
+    id: "rw-un-outcome-mandate-private-survived",
+    survived: true,
+    conditions: {
+      rw_followed_mandate: true,
+      rw_protected_hotel: true,
+      rw_met_privately: true,
+      rw_avoided_ceremony: true
+    },
+    epilogue: `You survived. You held the Hôtel des Mille Collines, strictly following the mandate until it became clear doing so meant slaughter. Then, alongside a skeleton crew of four peacekeepers, you held the line at all costs until the RPF arrived in July.
+
+When you returned to Kigali in 2010, you avoided the public memorial ceremony entirely. Instead, you met privately with the survivors who once sheltered behind your UN flag. You didn't want the applause of the government or the cameras; you simply wanted to look the people you protected in the eye. You shared tears in private, honoring the fact that they survived the nightmare.`
+  },
+
   {
     id: "rw-un-outcome-evacuated-documentary-survived",
     survived: true,
     conditions: {
       rw_evacuated_expatriates: true,
-      rw_left_rwandans: true
+      rw_left_rwandans: true,
+      rw_left_rwanda: true,
+      rw_participated_documentary: true,
+      rw_shared_guilt: true
     },
-    epilogue: `He agreed to the documentary and told the full story: the convoy, the checkpoint, the woman with the child, the embassy workers he left behind, the plane ride home, the filing of the report that no one questioned. The documentary aired in twelve countries. Rwandans watched it. Some of the families of people he left at that checkpoint watched it. He didn't watch it. He knew what it said.
+    epilogue: `You survived. You followed orders, escorting the convoy of Americans and Europeans to the airport. You stared into the eyes of the Rwandan woman holding her child at the roadblock, pleading for you to take them, and you left her behind. You flew back to Canada safe.
 
-The filmmaker asked if he felt guilty. He said yes. The filmmaker asked if he'd do it differently. He said he didn't know. The filmmaker asked what he wanted viewers to understand. He said he wanted them to understand that following orders and doing the right thing are not always the same calculation, and that peacekeepers are given impossible mandates and twelve seconds to resolve them. The documentary used that quote. It's the part people remember.
-
-His family watched it. His daughter called afterward. She didn't say anything for thirty seconds. Then she said, "I understand now." He asked what she understood. She said, "Why you don't sleep." The documentary didn't fix anything. It made the guilt public. He's not sure if that was courage or a different kind of avoidance. The families at the checkpoint know his name now. He carries that forward.`
+In 2006, haunted by the faces at that checkpoint, you sat down with a documentary filmmaker and confessed to the world that you abandoned the embassy workers to the Interahamwe because New York told you to. Your raw, public guilt exposed the fatal flaw of international peacekeeping. You couldn't save the Rwandans at the checkpoint, but you spent the rest of your life making sure the world knew exactly how they were abandoned.`
   },
 
   {
@@ -505,13 +501,13 @@ His family watched it. His daughter called afterward. She didn't say anything fo
     conditions: {
       rw_evacuated_expatriates: true,
       rw_left_rwandans: true,
-      rw_left_rwanda: true
+      rw_left_rwanda: true,
+      rw_declined_documentary: true,
+      rw_private_advocacy: true
     },
-    epilogue: `He declined the documentary. He advocates privately — letters to parliamentarians, testimony to closed committees, funding for peacekeeping reform organisations. Nobody films it. He prefers it that way. The guilt doesn't need an audience. The policy work doesn't either. He's made his accounting in private. Whether that's courage or avoidance is a question he's stopped answering.
+    epilogue: `You survived. You followed your orders to the letter, escorting the expatriates to the airport while leaving the desperate Rwandan embassy workers and the woman with her child at the militia roadblock. You boarded the plane home and lived.
 
-The Responsibility to Protect doctrine was adopted in 2005. His testimony to the closed committee was cited in the Canadian brief. His name isn't in the public record. The policy analysts know. The committee members know. That's enough. He didn't save the people at the checkpoint. He can't bring them back. He can make sure the next peacekeeper has a mandate that doesn't force the same choice. That's the work he can do.
-
-His therapist asked once why he avoids public testimony but maintains the private advocacy. He said public testimony is about him. Private advocacy is about the mandate. He doesn't need to be the story. He needs the mandate to change. Eleven years after Rwanda, it did. The doctrine isn't perfect. It's better than what he had. He carries that forward.`
+By 2006, the guilt drove you to become a private advocate for peacekeeping reform. When the documentary filmmaker called, you declined. You chose instead to funnel your grief into closed-door committees, arguing fiercely for mandates that would never again force a soldier to abandon civilians. Your private advocacy ensured that the deadly failure of your specific convoy would never be repeated.`
   },
 
   {
@@ -524,27 +520,24 @@ His therapist asked once why he avoids public testimony but maintains the privat
       rw_participated_policy_focus: true,
       rw_forward_looking: true
     },
-    epilogue: `He participated in the documentary but redirected every question about guilt toward policy. What should the mandate have said. What Security Council veto reform would have looked like. What the Responsibility to Protect doctrine changed. The interviewer kept trying to get to the checkpoint. He kept returning to the structural failure. Both things are true. He knows which one he can live inside.
+    epilogue: `You survived. You followed your orders, escorting the expatriates to the airport while leaving the desperate Rwandan embassy workers and the woman with her child at the militia roadblock. You boarded the plane home and lived.
 
-The documentary aired. Policy analysts cited it. Students watched it in international relations courses. The reviews said it was "clinical" and "policy-focused" and "less emotional than other Rwanda documentaries." That was correct. He wasn't interested in performing guilt. He was interested in explaining why the mandate was wrong and what changed afterward. The people at the checkpoint are dead. The policy is different. He can't fix the first thing. He contributed to the second.
-
-His daughter watched it and said it felt like he was hiding. He said he was focusing. She asked what the difference was. He said hiding is about protecting yourself, focusing is about directing attention where it can matter. She wasn't satisfied with that answer. Neither is he. But the Responsibility to Protect doctrine exists. The mandate changed. He carries both things forward.`
+When the documentary filmmaker called in 2006, you agreed to participate, but you refused to focus on your personal guilt. Instead, you coldly detailed the structural failure of the UN mandate that forced you to abandon the Rwandans at that checkpoint. You didn't bleed for the cameras; you used your experience to ruthlessly dismantle the logic of the "monitor and report" doctrine for the historical record.`
   },
 
-  // DOCUMENTED PATH - Aftermath variants
   {
     id: "rw-un-outcome-documented-full-survived",
     survived: true,
     conditions: {
       rw_sent_genocide_fax: true,
       rw_documented_evidence: true,
-      rw_continued_documentation: true
+      rw_continued_documentation: true,
+      rw_testified_tribunal: true,
+      rw_provided_evidence: true
     },
-    epilogue: `His fax preceded Dallaire's by six days. He testified at the ICTR and the Belgian Senate inquiry and the UN internal review. His documentation filled four evidence files. He spent eleven years answering questions about what he saw and what he reported and why the world didn't act. He stopped counting how many times someone told him the documentation mattered. He knows it did. It still took a hundred days and eight hundred thousand deaths.
+    epilogue: `You survived. While the UN debated the definition of "acts of genocide," you stayed at the church where hundreds were massacred. You raised your camera and documented the blood, the grenades, and the specific militia commanders who thought they had impunity. 
 
-The ICTR used his evidence in seven cases. Five convictions. His photographs are in the Kigali Genocide Memorial. His testimony is cited in the UN's 1999 independent inquiry report — the one that concluded the Security Council failed Rwanda. Students read his depositions in international law courses. He's testified at universities, at military academies, at UN training sessions. He's told the story so many times it's become a script. He's not sure if that's processing or performance.
-
-His therapist asked what he needs the documentation to have accomplished. He said he needs it to have prevented the next genocide. She asked if it did. He said Darfur happened. Syria happened. The Rohingya happened. She asked if the documentation still mattered. He said he doesn't know how to answer that. The five convictions happened. The memorial exists. The world still watches. He carries all of it forward.`
+In 2012, you took the stand at the International Criminal Tribunal in The Hague. You stared directly at the man who organized that church massacre and provided every detail, photograph, and specific name from your notebook. Because you stayed to be a witness when New York refused to act, your camera secured the convictions of the men responsible. You used your trauma as a weapon for justice.`
   },
 
   {
@@ -557,11 +550,9 @@ His therapist asked what he needs the documentation to have accomplished. He sai
       rw_testified_carefully: true,
       rw_protected_sources: true
     },
-    epilogue: `He testified carefully — gave the tribunal what it needed and protected the names of Rwandans who'd trusted him with information. The protection cost something: some perpetrators the evidence might have placed at specific sites couldn't be fully placed there without testimony he withheld. He weighed this. He chose protection. Three convictions came anyway. Two didn't. He knows which two.
+    epilogue: `You survived. You stayed at the massacred church, holding your camera steady while the Interahamwe slaughtered hundreds. You gathered the grim evidence, sending it straight to Dallaire and the global media to build a historical record.
 
-The sources he protected are still alive. Some of them still live in communities alongside perpetrators who were acquitted. One of them wrote to him in 2008: "You kept your promise. My family is safe. The man who killed my brother walks free. Both things are true because of your choice." He keeps that letter. He's never been certain the choice was right. His therapist says protecting sources was ethical. The tribunal judges accepted it. The two acquitted perpetrators are free. The sources are alive. The math doesn't resolve.
-
-Dallaire wrote about the impossible calculations peacekeepers made. Webb's careful testimony is one of them. The ICTR noted his source protection in its final report — acknowledged the limitation and the reasoning. Three convictions. Two acquittals. Multiple protected sources still living in Rwanda. He testified at universities about this calculation. Students ask if he'd do it differently. He says he'd want a world where the choice didn't exist. They're not satisfied with that answer. Neither is he.`
+When called to The Hague in 2012, you testified, but you carefully withheld specific details that would identify the Rwandan sources who helped you gather evidence. While protecting your sources meant some men were acquitted, your core documentation still sent the primary architects of the church massacre to prison. You navigated the impossible balance of achieving international justice while fiercely protecting the vulnerable informants who trusted you.`
   },
 
   {
@@ -574,213 +565,70 @@ Dallaire wrote about the impossible calculations peacekeepers made. Webb's caref
       rw_submitted_evidence: true,
       rw_avoided_testimony: true
     },
-    epilogue: `He submitted the documentation and declined to testify in person. The ICTR noted the refusal and accepted the evidence anyway. He's asked about this sometimes — why document if not testify? He says the documentation was always the point. His presence in a courtroom was optional. The photographs, the reports, the fax: those couldn't be cross-examined. They just existed. He trusted them more than his own memory by the time the trials came.
+    epilogue: `You survived. You stayed at the massacred church, holding your camera steady while the Interahamwe slaughtered hundreds. You gathered the grim evidence, sending it straight to Dallaire and the global media to build a historical record.
 
-Two convictions followed from his evidence. The prosecutors wanted him there. They said his testimony would strengthen the cases. He said the evidence was sufficient. They said his presence would matter to survivors. He said the convictions would matter to survivors. Both things might be true. The two convictions happened. Three other cases where his evidence might have been used didn't proceed to trial. He doesn't know if his testimony would have changed that.
-
-His therapist suggested the avoided testimony was about self-protection. He said it was about trusting the documentation. His daughter asked if he was hiding. He said he was letting the evidence speak. She asked what the difference was. He said one is about fear and one is about method. She wasn't convinced. Neither is he. But the photographs exist. The reports exist. The two convictions exist. He submitted the evidence. That was the job. He carries the question forward.`
+When called to The Hague in 2012, you submitted your photos and notebooks to the prosecutors but refused to testify in person. You let the photographs of the church massacre speak for themselves. The physical evidence you gathered while defying the UN's inaction was enough to secure convictions, allowing you to achieve justice without repeatedly breaking yourself on the witness stand.`
   },
 
-  // STAYED PATH - FOLLOWED MANDATE - Aftermath variants
-  {
-    id: "rw-un-outcome-mandate-spoke-survived",
-    survived: true,
-    conditions: {
-      rw_followed_mandate: true,
-      rw_protected_hotel: true
-    },
-    epilogue: `He speaks at the ceremony and tells the part he always tells: that he held position, that twelve hundred people survived, that the mandate was inadequate and he stayed inside it anyway. He doesn't tell the other part: the roadblocks he drove past, the reports he filed that no one acted on, the math that doesn't resolve. The audience applauds. The survivors in the front row don't applaud. They nod. That's the part he brings home.
-
-The Kwibuka commemoration happens every April. He's spoken at four of them. The organizers ask him back because he doesn't claim heroism. He describes the mandate, the limitations, the twelve hundred who lived and the calculation that produced that number. Students ask questions afterward. They want to know if he'd do it differently. He says he'd want a different mandate. They ask if he'd defy orders. He says he held position within his authorization and that was the choice he made. They're not satisfied with that answer. Neither is he.
-
-His therapist says public testimony can be part of processing. He's not sure if he's processing or performing. The survivors nod when he speaks. That's the metric he uses. If they nod, he's telling it right. If they applaud, he's told it wrong. He watches the front row. He brings that home.`
-  },
-
-  {
-    id: "rw-un-outcome-mandate-silent-survived",
-    survived: true,
-    conditions: {
-      rw_followed_mandate: true,
-      rw_protected_hotel: true
-    },
-    epilogue: `He attended the Kwibuka commemoration in Ottawa and sat in the back. When they asked if any former UNAMIR personnel wanted to stand, he didn't stand. The ceremony wasn't for him. It was for the people in the front rows who lost everyone. He was there because he needed to be in the same room as that grief once a year. He doesn't know if that's processing or penance. His therapist says the distinction might not matter.
-
-The survivors speak. They describe what happened at roadblocks, in churches, at the stadium. They describe the twelve hundred who lived at the hotel. They don't name the peacekeepers who held position. That's correct. The story isn't about the peacekeepers. He held position within his mandate. Twelve hundred people survived. Hundreds of thousands didn't. The ceremony is for everyone. He sits in the back and listens.
-
-He returns every year. Same seat. Same silence. After the ceremony, survivors sometimes recognize him. They shake his hand. They don't thank him. They acknowledge him. That's the right verb. He was there. He held position. They survived. Those are facts. The ceremony puts them in the same room once a year. That's enough.`
-  },
-
-  {
-    id: "rw-un-outcome-mandate-private-survived",
-    survived: true,
-    conditions: {
-      rw_followed_mandate: true,
-      rw_protected_hotel: true,
-      rw_held_position: true,
-      rw_met_privately: true,
-      rw_avoided_ceremony: true
-    },
-    epilogue: `He doesn't attend ceremonies. He meets privately with survivor families once a year — a coffee, sometimes dinner, a conversation that isn't about what happened at the hotel because everyone at the table already knows. It's about what came after: their children, the gacaca verdicts, what Rwanda looks like now. The ceremonies are for making memory public. These dinners are for keeping it human. He needs the second kind.
-
-One of the families — a woman who lost her husband but whose three children survived — sends him photos every December. The children are adults now. One is a doctor. One teaches secondary school. One works for the Ministry of Justice. He keeps the photos in a drawer with his service medal. He doesn't display them. They're not for display. They're evidence of a specific math: twelve hundred people survived, and those twelve hundred had children, and those children have lives. The mandate he held was forty meters wide. The consequences extend further.
-
-His therapist asked once why he avoids ceremonies but maintains these private relationships. He said ceremonies are about what happened. The dinners are about what's happening. He can't change 1994. He can witness 2010. That's the part he can sustain.`
-  },
-
-  {
-    id: "rw-un-outcome-mandate-public-survived",
-    survived: true,
-    conditions: {
-      rw_followed_mandate: true,
-      rw_protected_hotel: true,
-      rw_held_position: true
-    },
-    epilogue: `He followed the mandate as far as it would take him, then held position when the numbers dropped to four peacekeepers. When the RPF arrived in July, twelve hundred people walked out of that hotel alive. He did his job within the authorization he was given, and when the authorization became insufficient, he held anyway. That's the story he tells at ceremonies and inquiries and university lectures.
-
-The public testimony matters to him in a way the private conversations don't quite reach. He needs people to understand that the mandate was inadequate but that inadequate mandates can still save lives if the people holding them refuse to abandon their posts. He speaks at Kwibuka commemorations, at UN training sessions, at military academies. Students ask if he'd do it differently. He says he'd want a better mandate but he'd make the same choice within the one he had.
-
-The Responsibility to Protect doctrine came eleven years after Rwanda. His testimony was cited in the Canadian brief that supported it. He speaks about this: how twelve hundred people survived because he held a forty-meter perimeter, and how the doctrine that followed tried to make sure the next peacekeeper wouldn't have to make survival math with such small numbers. The ceremonies applaud. The survivors in the front rows nod. He watches for the nods. That's how he knows he's telling it right.`
-  },
-
-  // EVACUATED PATH - SAVED RWANDANS - Aftermath variants
   {
     id: "rw-un-outcome-savers-documentary-survived",
     survived: true,
     conditions: {
+      rw_evacuated_expatriates: true,
       rw_saved_rwandans: true,
-      rw_defied_orders: true
-    },
-    epilogue: `He loaded seven people onto the convoy and was reprimanded for it. He told that story in the documentary. The seven people he saved also gave interviews. One of them — a woman who lost her husband at that same checkpoint — said she doesn't know what to feel about his choice. "He saved me. He didn't save Joseph." The documentary ends on that. Webb's face when he hears it. He's watched that clip once. That was enough.
-
-The documentary aired in eight countries. The reviews called it "morally complex" and "unflinching." The woman's quote — about being saved while her husband wasn't — became the most-cited line. Webb's daughter asked him about it. He said the woman was right. His daughter asked if he regretted saving her. He said no. She asked if he regretted not saving more. He said yes. She asked how he lives with that. He said he doesn't know yet.
-
-The seven people he saved have their own lives now. Three of them testified at the ICTR. One works for a survivor organization in Kigali. One lives in Brussels. One died in 2003. Webb went to that funeral. The family thanked him for the extra nine years. He didn't know what to say to that. The documentary didn't resolve anything. It made the complexity public. He carries that forward.`
-  },
-
-  {
-    id: "rw-un-outcome-savers-private-survived",
-    survived: true,
-    conditions: {
-      rw_saved_rwandans: true,
-      rw_defied_orders: true,
-      rw_left_rwanda: true
-    },
-    epilogue: `He declined the documentary. The seven people he saved have their own stories. He doesn't need to be in them. He and one of them — the woman with the child, now grown — exchange letters every year. Not about 1994. About her daughter's school results, about his retirement, about the price of things. Ordinary letters. That's the relationship. He's glad the documentary doesn't have it.
-
-The woman's daughter is twenty-three now. She's studying international law at the University of Rwanda. She wants to work for the ICTR successor mechanism. The woman wrote that her daughter exists because Webb loaded them onto the convoy. He wrote back that her daughter exists because her mother survived, and that survival is its own achievement. The woman wrote back that both things are true. He keeps that letter.
-
-His advocacy is private. He testifies to closed committees. He writes policy briefs. He funds peacekeeping reform organizations. Nobody films it. The seven people he saved know what he does. That's enough witnesses. He didn't save everyone at the checkpoint. He saved seven. The woman's daughter is studying law. That's a consequence that extends. He carries that forward.`
-  },
-
-  {
-    id: "rw-un-outcome-savers-policy-survived",
-    survived: true,
-    conditions: {
-      rw_saved_rwandans: true,
-      rw_defied_orders: true,
-      rw_left_rwanda: true,
-      rw_participated_policy_focus: true,
-      rw_forward_looking: true
-    },
-    epilogue: `He participated in the documentary but made it about the mandate. "The system told me to leave Rwandans behind. I didn't, and I was reprimanded. That's the problem I want to talk about." The seven people he saved appreciated this framing. It made their survival about injustice rather than luck. Whether that's honest or a kind of management, he isn't certain.
-
-The documentary focused on the mandate failure. The evacuation orders. The "foreign nationals only" directive. The reprimand he received for loading Rwandans. The Responsibility to Protect doctrine that came eleven years later. The interviewer asked about the seven people. He redirected to the eight hundred thousand. The interviewer asked about his choice. He redirected to the mandate that forced it. The reviews said it was "policy-focused" and "less personal than expected." That was intentional.
-
-The seven people he saved have mixed feelings about this approach. One of them said in a separate interview that Webb "turned us into a policy argument." Another said, "He saved us and then made sure the next peacekeeper wouldn't have to make that choice. Both things matter." Webb watched that interview. He's not sure which person is right. He knows the mandate changed. He knows seven people are alive. He carries both things forward.`
-  },
-
-  // EVACUATED PATH - SAVED RWANDANS, RETURNED TO DOCUMENT - Aftermath variants
-  {
-    id: "rw-un-outcome-savers-docs-full-survived",
-    survived: true,
-    conditions: {
-      rw_documented_evidence: true,
-      rw_returned_to_duty: true
-    },
-    epilogue: `He saved seven people from the convoy and then went back and documented what he couldn't stop. The ICTR used his evidence in four cases. He testified fully — named names, gave dates, described what he saw at specific sites on specific days. His deposition runs to 340 pages. He's never read it in full. He knows what's in it.
-
-The seven people he saved attended the tribunal. They sat in the gallery when he testified. One of them told him afterward, "You saved us and then you made sure they'd be held accountable. Both things mattered." He's not sure about that equation. He saved seven. He documented evidence that helped convict four perpetrators. Eight hundred thousand people died. The math doesn't resolve. But the tribunal happened. The convictions happened. The seven people are alive. Those are facts.
-
-Dallaire wrote about peacekeepers who stayed to document. He said they carried an impossible burden — witnessing atrocities they couldn't stop, gathering evidence for justice that came too late. Webb's testimony is cited in three separate ICTR judgments. His photographs are in the Kigali Genocide Memorial. The seven people he saved have children now. He carries all of it forward.`
-  },
-
-  {
-    id: "rw-un-outcome-savers-docs-careful-survived",
-    survived: true,
-    conditions: {
-      rw_documented_evidence: true,
       rw_returned_to_duty: true,
-      rw_testified_carefully: true,
-      rw_protected_sources: true
+      rw_testified_tribunal: true
     },
-    epilogue: `He testified carefully — gave what the tribunal needed without exposing the Rwandans who'd helped him document. Some of those sources were still living in communities alongside perpetrators. Full disclosure would have endangered them. The judges accepted this. Three convictions, no compromised sources. Whether that balance was right is a question he revisits.
+    epilogue: `You survived. After defying orders to smuggle Rwandans onto the expatriate convoy at the risk of everyone's lives, you dropped them at the airport and refused to board the plane home. You returned to General Dallaire's skeleton crew in Kigali, grabbed your camera, and spent the rest of the genocide documenting the massacres. 
 
-The seven people he saved understood the calculation. One of them had been a source — had given him names, locations, details that went into his reports. That person's family still lives in Kigali. Webb's careful testimony protected them. But it also meant some perpetrators couldn't be fully placed at specific sites. The tribunal accepted the limitation. The defense attorneys exploited it. Three convictions. Two acquittals. He knows which two.
-
-His therapist asked if he regrets the careful approach. He said he regrets the choice existing. The sources trusted him. He protected them. The perpetrators who were acquitted are free. The sources are alive. Both things are true. The seven people he saved have told him the careful testimony was right. He's not sure they're the right judges of that. He carries the question forward.`
+Years later at the Hague, you testified fully about what you had seen. The Rwandans you smuggled past that militia commander lived to see the men you documented go to prison based on your 340-page deposition. You carried the impossible burden of having saved a few while watching thousands die, but your decision to return to the fire ensured that both your defiance and your evidence changed history.`
   },
 
   {
-    id: "rw-un-outcome-savers-docs-silent-survived",
+    id: "rw-un-outcome-savers-careful-survived",
     survived: true,
     conditions: {
-      rw_documented_evidence: true,
+      rw_evacuated_expatriates: true,
+      rw_saved_rwandans: true,
       rw_returned_to_duty: true,
-      rw_submitted_evidence: true,
-      rw_avoided_testimony: true
+      rw_testified_carefully: true
     },
-    epilogue: `He submitted the evidence and didn't testify in person. The ICTR accepted the documentation. Two convictions followed from it. He watched the verdict announcements on a television in a hotel room in Geneva. He was there for a different UN meeting. That seemed appropriate somehow — the verdict happening in a margin of something else he was already doing.
+    epilogue: `You survived. After defying orders to smuggle Rwandans onto the expatriate convoy, you dropped them at the airport and returned to General Dallaire's skeleton crew in Kigali. You spent the rest of the genocide documenting the massacres. 
 
-The seven people he saved asked why he didn't testify. He said the evidence spoke for itself. They said his presence would have mattered. He said his presence in 1994 was what mattered — he was there, he documented, the photographs and reports exist independent of his testimony. They weren't satisfied with that answer. Neither is he. But the convictions happened. The evidence was sufficient. His voice wasn't required.
-
-His therapist suggested the avoided testimony was about protecting himself from re-traumatization. He said it was about trusting the documentation over his memory. Both things might be true. The seven people he saved are alive. The two perpetrators are in prison. The evidence existed without his voice. Whether that's sufficient is a question he carries forward.`
+Years later at the Hague, you testified carefully, strictly protecting the Rwandan informants who had helped you map the violence. The people you smuggled past the militia commander at the convoy checkpoint lived because of your defiance. Your careful testimony resulted in fewer total convictions, but you ensured that the vulnerable people who trusted you were protected from retaliation.`
   },
 
   {
-    id: "rw-un-outcome-saved-rwandans-killed",
+    id: "rw-un-outcome-savers-submitted-survived",
+    survived: true,
+    conditions: {
+      rw_evacuated_expatriates: true,
+      rw_saved_rwandans: true,
+      rw_returned_to_duty: true,
+      rw_submitted_evidence: true
+    },
+    epilogue: `You survived. After defying orders to smuggle Rwandans onto the expatriate convoy, you dropped them at the airport and returned to General Dallaire's skeleton crew in Kigali. You spent the rest of the genocide documenting the massacres. 
+
+Years later at the Hague, you submitted your physical evidence but refused to testify in person. The people you smuggled past the militia commander at the convoy checkpoint lived because of your defiance, and the photos you took during your return to duty were enough to secure convictions. You let your actions and your camera speak for you.`
+  },
+
+  // DEATH OUTCOMES (Occurring BEFORE post-genocide inquiries)
+  {
+    id: "rw-un-outcome-stayed-killed",
     survived: false,
     conditions: {
-      rw_saved_rwandans: true,
-      rw_defied_orders: true
+      rw_stayed_after_withdrawal: true,
+      rw_defied_orders: true,
+      rw_saved_civilians: false
     },
     deathContext: {
-      cause: "Killed during the genocide after defying orders to protect Rwandan civilians",
-      historicalRate: "Some peacekeepers who defied orders to protect civilians were killed during confrontations with militia",
-      yourChoices: "You loaded Rwandan civilians onto the evacuation convoy. The militia confronted you."
+      cause: "Killed defending civilians after defying UN withdrawal orders",
+      historicalRate: "Ten Belgian peacekeepers were killed on the first day; others survived only by avoiding direct combat or negotiating",
+      yourChoices: "You defied Dallaire's warning and the UN withdrawal order to stay at the Hôtel des Mille Collines. The militia eventually overwhelmed your position."
     },
-    deathEpilogueEarly: `You didn't survive. You loaded Rwandans onto the convoy. The militia saw what you were doing. You were killed at that roadblock in April 1994, during the first weeks of the genocide. You died trying to protect civilians you were explicitly ordered to leave behind.
+    deathEpilogueEarly: `You didn't survive. You defied New York's orders and Dallaire's warning, choosing to stay with your eight peacekeepers at the Hôtel des Mille Collines to protect the twelve hundred refugees inside. 
 
-Your death occurred during the hundred days, before the RPF captured Kigali. The UN investigated later. The report noted that you had violated your mandate and been killed as a result. It also noted that you had attempted to protect civilians in a situation where protection was explicitly prohibited. Both things were recorded. Neither resolved the other.
-
-Canada gave you a posthumous commendation. Your family received it. Dallaire spoke at a memorial service and said your name alongside the ten Belgians killed on April 7th. He said the genocide produced too many names like yours — people who tried to act within a system designed to prevent action. You carried that choice to the end. Some of the people you tried to save survived. Some didn't. You died trying.`,
-    epilogue: `You didn't survive. You loaded Rwandans onto the convoy. The militia saw what you were doing. Whether you were killed at that roadblock, during a subsequent confrontation, or in the violence that followed your defiance of orders, you died trying to protect civilians you were explicitly ordered to leave behind.
-
-The UN investigated. The report noted that you had violated your mandate and been killed as a result. It also noted that you had attempted to protect civilians in a situation where protection was explicitly prohibited. Both things were recorded. Neither resolved the other.
-
-Canada gave you a posthumous commendation. Your family received it. Dallaire spoke at a memorial service and said your name alongside the ten Belgians killed on April 7th. He said the genocide produced too many names like yours — people who tried to act within a system designed to prevent action. You carried that choice to the end. Some of the people you tried to save survived. Some didn't. You died trying.`
-  },
-
-  {
-    id: "rw-un-outcome-mandate-held-killed",
-    survived: false,
-    conditions: {
-      rw_protected_hotel: true
-    },
-    deathContext: {
-      cause: "Killed during the genocide while following mandate to protect civilians",
-      historicalRate: "Some peacekeepers who remained to protect civilians were killed during militia attacks on protected sites",
-      yourChoices: "You followed your mandate and held position at the hotel. The militia attacked."
-    },
-    deathEpilogueEarly: `You didn't survive. You followed your orders exactly — held position, protected the designated safe zone, did not defy the mandate. When the Security Council cut UNAMIR to 270 soldiers and your detachment was reduced, you stayed at the gate. You'd done everything correctly within the rules you were given.
-
-You were killed in June or July 1994 during a militia assault on the hotel, before the RPF captured Kigali and the genocide ended. You died following the mandate you were given. The mandate was inadequate. You followed it anyway. That's what soldiers do.
-
-Canada gave you a posthumous service medal. The UN noted your compliance with the mandate in its post-genocide review — the same review that concluded the mandate itself had been inadequate. You followed the rules. The rules were wrong. Both things are recorded in the same document. Dallaire wrote later that the soldiers who died in Rwanda following their mandates deserved better mandates. He was right. You were one of the people he was writing about.`,
-    epilogue: `You didn't survive. You followed your orders exactly — held position, protected the designated safe zone, did not defy the mandate. When the Security Council cut UNAMIR to 270 soldiers and your detachment was reduced, you stayed at the gate. You'd done everything correctly within the rules you were given.
-
-Whether you were killed during a militia assault, in an ambush, or in the chaos of the genocide's final weeks, you died following the mandate you were given. The mandate was inadequate. You followed it anyway. That's what soldiers do.
-
-Canada gave you a posthumous service medal. The UN noted your compliance with the mandate in its post-genocide review — the same review that concluded the mandate itself had been inadequate. You followed the rules. The rules were wrong. Both things are recorded in the same document. Dallaire wrote later that the soldiers who died in Rwanda following their mandates deserved better mandates. He was right. You were one of the people he was writing about.`
+But without reinforcements, your blue helmet couldn't keep the Interahamwe commander at bay forever. The militia's patience ran out before the RPF could arrive. You were killed defending the perimeter of the hotel in a direct assault during the 100 days of genocide. Canada awarded you a posthumous medal, and you died exactly as General Dallaire later wrote that UNAMIR should have acted: choosing protection over politics.`
   },
 
   {
@@ -788,23 +636,16 @@ Canada gave you a posthumous service medal. The UN noted your compliance with th
     survived: false,
     conditions: {
       rw_evacuated_expatriates: true,
-      rw_left_rwandans: true
+      rw_saved_rwandans: true
     },
     deathContext: {
-      cause: "Killed during the evacuation operation",
-      historicalRate: "Several evacuation convoys were stopped and threatened by militia during the withdrawal from Rwanda",
-      yourChoices: "You followed orders and evacuated expatriates only. The operation turned deadly."
+      cause: "Killed while attempting to evacuate Rwandans against orders",
+      historicalRate: "Militias strictly enforced the separation of foreign nationals from Tutsi targets; intervening risked the entire convoy",
+      yourChoices: "You defied your mandate to only evacuate foreign nationals. The militia at the checkpoint discovered the Rwandans and attacked."
     },
-    deathEpilogueEarly: `You didn't survive. You followed your orders. Foreign nationals only — no Rwandans. You left the people at the checkpoint behind. The woman with the child. The embassy workers. You were killed at a roadblock during the evacuation in April 1994, during the first weeks of the genocide. You died following orders that asked you to prioritize certain lives over others.
+    deathEpilogueEarly: `You didn't survive. At the checkpoint on the way to the airport, you looked at the Rwandan woman holding her child and the terrified embassy workers, and you defied your orders. You loaded them onto the expatriate convoy. 
 
-Your death occurred during the hundred days, before the RPF captured Kigali. The foreign nationals you were protecting made it to the airport. They went home. They were debriefed. Some of them testified later about what they saw during the evacuation — the roadblocks, the bodies, the people left behind at checkpoints. They mentioned peacekeepers who died protecting them. Your name is in those depositions.
-
-You followed your orders to the end. The orders asked you to prioritize certain lives over others. You did. Then you died doing it. The gap between those two facts is what the subsequent inquiries spent years trying to understand. Canada gave you a posthumous medal. Your family received it. The people at the checkpoint you left behind are also names now.`,
-    epilogue: `You didn't survive. You followed your orders. Foreign nationals only — no Rwandans. You left the people at the checkpoint behind. The woman with the child. The embassy workers. Whether you were killed at a roadblock during the evacuation, in an ambush, or in the violence that followed, you died following orders that asked you to prioritize certain lives over others.
-
-The foreign nationals you were protecting made it to the airport. They went home. They were debriefed. Some of them testified later about what they saw during the evacuation — the roadblocks, the bodies, the people left behind at checkpoints. They mentioned peacekeepers who died protecting them. Your name is in those depositions.
-
-You followed your orders to the end. The orders asked you to prioritize certain lives over others. You did. Then you died doing it. The gap between those two facts is what the subsequent inquiries spent years trying to understand. Canada gave you a posthumous medal. Your family received it. The people at the checkpoint you left behind are also names now.`
+The militia commander saw what you did. By breaking the unwritten rule that gave UN vehicles immunity—that you would only save white foreigners—you sacrificed yourself. You were killed at that roadblock during the first weeks of the genocide alongside the Rwandans you tried to save. You refused to accept a mandate that valued some lives more than others, and the Interahamwe killed you for it.`
   },
 
   {
@@ -816,23 +657,13 @@ You followed your orders to the end. The orders asked you to prioritize certain 
     deathContext: {
       cause: "Killed during the genocide while documenting atrocities",
       historicalRate: "Journalists and peacekeepers who stayed to document the genocide faced significant danger, and several were killed",
-      yourChoices: "You stayed to document what was happening. You sent reports to New York. The militia viewed your documentation as a threat."
+      yourChoices: "You stayed at the church to photograph the massacre. The militia viewed your documentation as a threat."
     },
-    deathEpilogueEarly: `You didn't survive. You stayed. You documented. You sent the reports — photos, testimony, names, dates, the specific language the militia commanders used when they thought no one official was listening. You sent them to Dallaire, to New York, to the media contacts you had. The world received your reports and debated their implications while you were still in the field generating more of them.
+    deathEpilogueEarly: `You didn't survive. You drove to the church, heard the screams and the grenades, and instead of driving away to safety, you raised your camera. You documented the faces of the Interahamwe commanders as they slaughtered hundreds of people.
 
-You were killed in June or July 1994 at a massacre site you were documenting, before the RPF captured Kigali and the genocide ended. Your presence as a witness was viewed as a threat. You died gathering evidence during the hundred days.
-
-Your documentation survived you. The photos you took were entered into evidence at the ICTR later. The reports you filed are in the UN archives. Three militia leaders were convicted partly on the basis of evidence you collected. You didn't live to testify. Your camera did it for you. Dallaire cited your work specifically in his memoir — not your name, because your family asked for privacy, but your work. The evidence existed. The convictions followed. You were the reason.`,
-    epilogue: `You didn't survive. You stayed. You documented. You sent the reports — photos, testimony, names, dates, the specific language the militia commanders used when they thought no one official was listening. You sent them to Dallaire, to New York, to the media contacts you had. The world received your reports and debated their implications while you were still in the field generating more of them.
-
-Whether you were killed at a specific site you were documenting, during an ambush, or in the violence that followed, your presence as a witness was viewed as a threat. You died gathering evidence.
-
-Your documentation survived you. The photos you took were entered into evidence at the ICTR. The reports you filed are in the UN archives. Three militia leaders were convicted partly on the basis of evidence you collected. You didn't live to testify. Your camera did it for you. Dallaire cited your work specifically in his memoir — not your name, because your family asked for privacy, but your work. The evidence existed. The convictions followed. You were the reason.`
-  },
-
-
+But witnesses are dangerous to perpetrators. Realizing you were gathering evidence of their war crimes, the militia turned on your UN vehicle. You were killed during the 100 days of the genocide, dying with your camera and notebook in hand. However, when the RPF secured the area, your photographs were recovered. Years later, Dallaire and the ICTR used the very images you died capturing to secure convictions.`
+  }
 ];
-
 // Export role data
 export default {
   scenes: unPeacekeeperScenes,
