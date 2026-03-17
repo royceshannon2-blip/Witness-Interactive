@@ -30,6 +30,9 @@ class ConsequenceSystem {
     this.flags    = new Map();
     this.eventBus = eventBus;
     this.eventBus.on('choice:made', this.handleChoiceMade.bind(this));
+    this.eventBus.on('aftermath:reached', () => {
+      this.setFlag('rw_reached_aftermath', true);
+    });
   }
 
   // ─── FLAG MANAGEMENT ───────────────────────────────────────────────────────

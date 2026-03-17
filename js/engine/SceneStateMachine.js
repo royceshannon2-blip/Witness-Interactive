@@ -26,8 +26,9 @@
  */
 
 class SceneStateMachine {
-  constructor(eventBus) {
+  constructor(eventBus, consequenceSystem = null) {
     this.eventBus = eventBus;
+    this.consequenceSystem = consequenceSystem;
 
     // Current role's scene sequence
     this.scenes = [];
@@ -164,6 +165,10 @@ class SceneStateMachine {
    * game:complete is only emitted after the final real scene is played.
    * 
    * Terminal scenes: If nextSceneId is null, emit role:complete to trigger outcome generation.
+   * 
+   * DEATH CHECKPOINTS: Before loading the next scene, check if the current scene
+   * has deathCheckpoint: true. If so, call shouldDieNow(). If player dies, skip
+   * to game:complete with survived=false instead of loading the next scene.
    */
   transitionTo(nextSceneId) {
     // Handle terminal scenes (nextScene: null)
@@ -190,6 +195,24 @@ class SceneStateMachine {
       return;
     }
 
+    // ── DEATH CHECKPOINT: Check if player should die before next scene ────
+    const currentScene = this.getCurrentScene();
+    if (currentScene && currentScene.deathCheckpoint && this.consequenceSystem) {
+      const deathCheck = this.consequenceSystem.shouldDieNow(this.currentRoleId);
+      if (deathCheck.dies) {
+        console.log(`[SceneStateMachine] Player died at checkpoint: ${deathCheck.reason}`);
+        // Emit game:complete with death context
+        this.eventBus.emit('game:complete', {
+          missionId: this.currentMissionId,
+          roleId   : this.currentRoleId,
+          diedEarly: true,
+          deathReason: deathCheck.reason,
+          deathChance: deathCheck.deathChance
+        });
+        return;
+      }
+    }
+
     const nextSceneIndex = this.scenes.findIndex(s => s.id === nextSceneId);
 
     if (nextSceneIndex === -1) {
@@ -207,6 +230,14 @@ class SceneStateMachine {
 
     this.currentSceneIndex = nextSceneIndex;
     const newScene = this.getCurrentScene();
+
+    // ── AFTERMATH DETECTION: Fire event when entering Rwanda scene-04 ────
+    if (newScene.id.startsWith('rw-') && newScene.id.includes('-scene-04')) {
+      this.eventBus.emit('aftermath:reached', {
+        missionId: this.currentMissionId,
+        roleId: this.currentRoleId
+      });
+    }
 
     // Handle ambient audio crossfade
     if (newScene.ambientTrack && this.currentAmbientTrack !== newScene.ambientTrack) {

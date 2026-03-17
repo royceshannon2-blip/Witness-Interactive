@@ -869,9 +869,17 @@ class UIController {
     const survivalClass = outcome.survived ? 'text-success' : 'text-danger';
     
     // Use early death epilogue if player died mid-story
-    const epilogueText = (this.earlyDeathContext && this.earlyDeathContext.diedEarly && outcome.deathEpilogueEarly)
-      ? outcome.deathEpilogueEarly
-      : outcome.epilogue;
+    let epilogueText;
+    if (this.earlyDeathContext && this.earlyDeathContext.diedEarly) {
+      if (outcome.deathEpilogueEarly) {
+        epilogueText = outcome.deathEpilogueEarly;
+      } else {
+        console.warn('[UIController] Outcome', outcome.id, 'is missing deathEpilogueEarly — falling back to regular epilogue. Add this field.');
+        epilogueText = outcome.epilogue;
+      }
+    } else {
+      epilogueText = outcome.epilogue;
+    }
     
     outcomeResultContainer.innerHTML = `
       <h3 class="${survivalClass}">${survivalStatus}</h3>

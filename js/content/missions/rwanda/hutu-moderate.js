@@ -401,6 +401,13 @@ You carry the weight of having stopped there — not resolution, but the specifi
       historicalRate: "Hutu who lied to Interahamwe and were discovered were killed immediately — discovery of deception carried the same death sentence as sheltering Tutsi",
       yourChoices: "You hid Celestin and lied to the militia when they came. Your protection of a Tutsi neighbor was eventually discovered."
     },
+    deathEpilogueEarly: `You didn't survive. You hid Celestin and misdirected the militia when they came to your door. You lied to Interahamwe. Celestin fled. Your deception was discovered — a neighbor saw, or someone talked, or the militia returned and searched more carefully. The discovery of your lie carried the same death sentence as sheltering Tutsi directly.
+
+The militia made an example of you. Whether this happened at a roadblock where you were identified, during a house search, or in the chaotic violence of May or June 1994, the outcome was the same. You were killed for protecting a Tutsi neighbor during the genocide itself.
+
+Your death occurred before the RPF captured Kigali in July. You never saw the end of the killing. You never saw the gacaca courts that would later record your name in the category of Hutu moderates killed for protecting Tutsi. Your children grew up knowing what you did — that you lied to armed militia to save a neighbor, that you were discovered, that you died for it before the genocide ended.
+
+The historical record classifies you among those who resisted and paid the price. Your family knows you hid Celestin, that you lied when the militia came, that your courage was discovered and punished. You died for that choice during the hundred days, carrying it to whatever end found you.`,
     epilogue: `You didn't survive. You hid Celestin and misdirected the militia when they came to your door. You lied to Interahamwe. Celestin fled. Your deception was eventually discovered — a neighbor saw, or someone talked, or the militia returned and searched more carefully. The discovery of your lie carried the same death sentence as sheltering Tutsi directly.
 
 The militia made an example of you. Whether this happened at a roadblock where you were identified, during a house search, or in the chaotic violence of the genocide's final weeks, the outcome was the same. You were killed for protecting a Tutsi neighbor. The specific moment matters less than the fact of it.
@@ -557,6 +564,11 @@ Rwanda's reconciliation process was designed for full confessions, not partial o
       historicalRate: "Thousands of perpetrators were killed by RPF forces or in acts of revenge before the gacaca courts began in 2005",
       yourChoices: "You staffed the roadblock and followed orders. You were identified by survivors."
     },
+    deathEpilogueEarly: `You didn't survive. You staffed the roadblock, checked cards, followed orders. Survivors identified you — to RPF soldiers during the advance in June or July 1994. You were on the lists. Multiple witnesses saw you at the roadblock. The RPF was capturing territory and executing perpetrators as they found them.
+
+You died during the genocide itself, before it ended in July. You never saw the gacaca courts that would open in 2005. You never got to deny anything, never got to claim you were forced, never got to explain the coercion or the pressure. The charges existed in survivor testimony and RPF records, but you never faced them in any court.
+
+Your family fled to Zaire during the RPF advance. Your children grew up in the camps. They came back in 1996 when the camps collapsed. They were told you were a victim of the war. Survivors in the sector knew otherwise. The charges that would have been filed against you were documented by the RPF and later noted in ICTR proceedings as part of the broader accounting. Your death is recorded. The context you would have provided is not.`,
     epilogue: `You didn't survive to deny anything. You staffed the roadblock, checked cards, followed orders. Survivors identified you — to RPF soldiers during the advance, or in the weeks and months afterward when the accounting began. You were on the lists. Multiple witnesses.
 
 The gacaca courts didn't open until 2005. You didn't reach 2005. What happened to you during the RPF advance, in the immediate aftermath, or in the years of violence that followed was documented in RPF records and later in ICTR proceedings as part of the broader accounting. Your death is noted. The charges that would have been filed against you are noted alongside it.
@@ -577,6 +589,11 @@ Your family fled to Zaire. Your children grew up in the camps. They came back in
       historicalRate: "Thousands of Hutu perpetrators were killed or died before the gacaca courts opened in 2005",
       yourChoices: "You staffed the roadblock and followed orders. You were identified before you could claim you were forced."
     },
+    deathEpilogueEarly: `You didn't survive. You attended the rally, staffed the roadblock, checked cards for days. Survivors identified you — naming people, describing what happened at specific locations on specific dates. Your name came up. You were killed during the RPF advance in June or July 1994, before the genocide ended.
+
+You never got to explain the coercion, the pressure, the lack of alternatives. You never got to claim you were forced. The RPF was executing perpetrators as they captured territory. Survivors were pointing people out. You were identified at a roadblock or during a house search. The end came before any accounting could happen.
+
+Your family fled to Zaire during the RPF advance. Your children grew up in the camps. They came back in 1996 when the camps collapsed. The charges that would have been filed against you were documented by survivors and later noted in RPF records. Category Two perpetrator, killed during the advance. No mitigating testimony exists because there was no hearing. The context you would have provided died with you.`,
     epilogue: `You didn't survive to claim you were forced. You attended the rally, staffed the roadblock, checked cards for days. Survivors identified you — naming people, describing what happened at specific locations on specific dates. Your name came up. Whether you were killed during the RPF advance, in the immediate aftermath, or in the years of violence that followed, you never reached the gacaca courts.
 
 You never got to court. You never got to explain the coercion, the pressure, the lack of alternatives. Those arguments might have worked — gacaca courts did reduce sentences for perpetrators who could demonstrate they'd been threatened into participation. You didn't get the chance to make the case.
@@ -595,6 +612,11 @@ The gacaca record lists you as a perpetrator killed before proceedings. Category
       historicalRate: "Thousands of Tutsi and Hutu moderates were killed at roadblocks while attempting to flee Kigali in the first days of the genocide",
       yourChoices: "You told Celestin to leave and fled before dawn. The roads out of Kigali were controlled by Interahamwe."
     },
+    deathEpilogueEarly: `You didn't survive. You fled before dawn — told Celestin to go, packed your family, took the road toward Gitarama. The roadblocks were everywhere. Identity cards. Machetes. The Interahamwe had been positioned on every route out of Kigali and throughout the countryside. You were on lists — communal secretary who refused the rally, moderate who wouldn't participate.
+
+Your family was separated from you during the flight. Your wife and children made it to Gitarama — Hutu cards, no flags against them. You were identified as a moderate at a roadblock in April or May 1994. The militia had lists. Your name was on them. You were killed during the genocide itself, before the RPF captured Kigali in July.
+
+Your death occurred during the hundred days. You never saw the end of the killing. The gacaca courts that would later record your name in the category of Hutu moderates killed during the genocide didn't exist yet. Your children grew up knowing you tried to protect them by leaving. That you were killed for who you were, not for what you did. You carried that identity to the end.`,
     epilogue: `You didn't survive. You fled before dawn — told Celestin to go, packed your family, took the road toward Gitarama. The roadblocks were everywhere. Identity cards. Machetes. The Interahamwe had been positioned on every route out of Kigali and throughout the countryside. You were on lists — communal secretary who refused the rally, moderate who wouldn't participate.
 
 Your family was separated from you during the flight. Your wife and children made it to Gitarama — Hutu cards, no flags against them. You were identified as a moderate. Whether at a roadblock in the first days, during the chaos of the RPF advance, or in the violence that followed, you were killed for who you were and what you refused to do.
@@ -630,6 +652,11 @@ You confessed or denied — either way the witnesses were consistent. You receiv
       historicalRate: "Thousands of Hutu perpetrators were killed by RPF forces as they captured territory in July 1994",
       yourChoices: "You hid Celestin then revealed him. You participated directly in killings at the roadblock. You were identified."
     },
+    deathEpilogueEarly: `You didn't survive. You hid Celestin and then you revealed him. Both things happened. You participated at the roadblock after that — not reluctantly, not under immediate threat, but because the machinery was moving and you moved with it. Survivors identified you. Witnesses had been talking. Your name was on the lists for the roadblock.
+
+You were killed during the RPF advance in June or July 1994, before the genocide ended. The RPF was executing perpetrators as they captured territory. Survivors were pointing people out. You were identified as a Category Two perpetrator. The end came before any accounting could happen, before any court existed to hear what you'd done.
+
+Your death occurred during the hundred days. The gacaca courts that would later record the charges posthumously didn't exist yet. The record that would note witnesses describing you hiding Celestin in the first days — that came later, compiled from survivor testimony after the killing stopped. Both entries would eventually sit in the same file. But you died before any of that documentation happened, carrying both choices to whatever end found you.`,
     epilogue: `You didn't survive. You hid Celestin and then you revealed him. Both things happened. You participated at the roadblock after that — not reluctantly, not under immediate threat, but because the machinery was moving and you moved with it. Survivors identified you. Witnesses had been talking. Your name was on the lists for the roadblock. What happened to Celestin was also documented — neighbors had seen.
 
 Whether you were killed during the RPF advance, in the immediate aftermath, or in the violence that followed, you never reached the gacaca courts. You were identified as a Category Two perpetrator. The end came before any accounting could happen.
