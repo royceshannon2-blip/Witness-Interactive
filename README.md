@@ -315,8 +315,7 @@ This project is licensed under the MIT License - see LICENSE file for details.
 
 For questions, bug reports, or feature requests:
 - Open an issue on GitHub
-- Email: witness-interactive@example.com
-- Twitter: @WitnessInteractive
+- Email: royceshannon2@gmail.com
 
 ---
 
