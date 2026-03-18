@@ -1,5 +1,5 @@
 /**
- * Rwanda Genocide Mission - Tutsi Survivor (Immacul├⌐e) Role
+ * Rwanda Genocide Mission - Tutsi Survivor (Immaculée) Role
  *
  * Historical Context:
  * - Immaculée is a 19-year-old university student in Kigali
@@ -240,7 +240,7 @@ At night, Jeanne brings food. Bread. Water. "Paul is talking about leaving. Goin
     id: "rw-ts-scene-03d",
     narrative: `April 7, evening. You showed Marie's card. The militia commander looked at it. Looked at you. "This says Hutu." You nod. "You don't look Hutu." Your heart stops. "I'm mixed. My mother—" He waves you through. "Go. Quickly."
 
-You made it to the hotel. The H├┤tel des Mille Collines. UN peacekeepers at the gate. Blue helmets. Canadian accents. Inside, chaos—twelve hundred people crammed into a building meant for two hundred. Families in hallways. Children crying. Too many people in too small a space.
+You made it to the hotel. The Hôtel des Mille Collines. UN peacekeepers at the gate. Blue helmets. Canadian accents. Inside, chaos—twelve hundred people crammed into a building meant for two hundred. Families in hallways. Children crying. Too many people in too small a space.
 
 A Belgian peacekeeper registers you. "Name. Age." You give Marie's name. Safer. He doesn't question it. "You're lucky. We're not sure how long we can hold this position."
 
@@ -303,11 +303,11 @@ The prosecutor waits. The judges wait. The defendant stares at the table. You ha
 
   {
     id: "rw-ts-scene-04b",
-    narrative: `2008. Kigali. You survived the church ceiling. You stayed silent when the militia searched below. The old man next to you coughed, but they didn't hear. Or they didn't care. After three days, the RPF arrived. You climbed down. Bodies everywhere. You were one of seven survivors from a church that held three hundred.
+    narrative: `2008. Kigali. You survived Father Michel's church. When the militia came and the grenades hit and the congregation ran, you found a way to stay alive — hidden in the dark, or out through the side door and into the city — while three hundred people in that building did not. You were one of the few who made it out.
 
 Now it's fourteen years later. The church is a genocide memorial. Skulls on shelves. Clothes preserved. Names on walls. You come here once a year. April 7th. Kwibuka—remembrance. The government organizes ceremonies. Speeches about unity and reconciliation. "We are all Rwandans now. No Hutu. No Tutsi."
 
-But you remember who hid you and who hunted you. You remember the old man who coughed. He died two days after liberation—starvation, dehydration. You lived. He didn't. Survivor guilt is a weight that doesn't lift. The memorial guide asks if you want to speak at the ceremony. Share your story. Help the next generation understand.
+But you remember exactly how you survived and exactly who didn't. You remember the specific sounds. The specific smells. Survivor guilt is a weight that doesn't lift — not for those who stayed still in the dark, and not for those who ran. The memorial guide asks if you want to speak at the ceremony. Share your story. Help the next generation understand.
 
 Some survivors find meaning in speaking. Others find it exhausting. The ceremony is tomorrow. Hundreds will attend. Cameras. Students. Government officials. Your story could educate. Or it could reopen wounds that barely healed.`,
     apThemes: ["continuity", "perspective", "complexity"],
@@ -416,11 +416,12 @@ const tutsiSurvivorOutcomes = [
     conditions: {
       rw_witnessed_massacre: true,
       rw_reached_un_protection: true,
-      rw_testified_fully: true
+      rw_testified_ictr: true,
+      rw_chose_justice: true
     },
-    epilogue: `You survived. After watching Father Michel murdered and the congregation slaughtered with machetes and grenades, you slipped out the side door, hid in a drainage ditch, and miraculously flagged down a passing UN convoy. 
+    epilogue: `You survived. When the grenades hit Father Michel's church and the militia poured through the doors, you slipped out through the side entrance and ran. You hid in a drainage ditch smelling of sewage and smoke, clutching the images of what you had just witnessed, and flagged down a UN convoy before the Interahamwe could sweep the perimeter.
 
-In 2006, you traveled to Arusha for the ICTR tribunal. Sitting in that formal courtroom, you stared directly at the militia commander who orchestrated the church massacre. You gave them every detail—the screams, the smell, the exact timeline. Your testimony was the linchpin that put the commander behind bars. It didn't bring back the children you saw murdered, but your courage as a nineteen-year-old student solidified the historical record. You wielded your trauma as a weapon of justice.`
+In 2006, you traveled to Arusha for the ICTR tribunal. You sat across a formal courtroom from the militia commander who had organized the church massacre. You gave the prosecutor every detail — the specific sequence of grenades and machetes, the timeline from Father Michel's death to the moment you reached the side door, the commanders you recognized. Your testimony was the linchpin that secured the conviction. It did not restore what you saw in the church. But it placed the men responsible in the historical and legal record, and it happened because a nineteen-year-old university student ran out a side door and survived to tell the truth about what she witnessed.`
   },
 
   {
@@ -432,9 +433,9 @@ In 2006, you traveled to Arusha for the ICTR tribunal. Sitting in that formal co
       rw_declined_testimony: true,
       rw_chose_healing: true
     },
-    epilogue: `You survived. You fled the massacre at Father Michel's church, escaping through the side door to hide in a drainage ditch before a UN convoy saved you. 
+    epilogue: `You survived. You escaped Father Michel's church through the side door as grenades and machetes tore through the congregation behind you. You hid in a drainage ditch, shaking, and flagged down a UN convoy before the militia's perimeter sweep could find you.
 
-When called to Arusha for the ICTR tribunal in 2006, you declined to testify. The memory of the grenades, the machetes, and the sheer terror of that day was too heavy a burden to unpack in front of a room of lawyers and the very commander who caused it. The court secured a conviction using other testimony. You watched the verdict on television in your apartment in Kigali, knowing you carried the truth of what happened quietly, prioritizing your own healing over an international audience.`
+When the ICTR prosecutor called you to Arusha in 2006, you declined to testify. The crawlspace of memory you had sealed shut to survive — the specific faces, the sequence of sounds, the moment Father Michel fell — was not something you could reopen in front of lawyers and the man who ordered it. The court secured a conviction using other survivors' testimony. You watched the verdict on television in your Kigali apartment, knowing you carried the truth of that church quietly, intact, yours — and that choosing your own healing over an international audience was not a failure of justice but a claim on your own survival.`
   },
 
   {
@@ -442,11 +443,12 @@ When called to Arusha for the ICTR tribunal in 2006, you declined to testify. Th
     survived: true,
     conditions: {
       rw_survived_church_hiding: true,
-      rw_shared_testimony: true
+      rw_shared_testimony: true,
+      rw_chose_education: true
     },
-    epilogue: `You survived. You spent days trapped in a three-foot crawlspace above the church sacristy, holding your breath while the Interahamwe looted the bodies of your community below. You lived, while the seventy-year-old man who hid beside you died of starvation shortly after liberation.
+    epilogue: `You survived. You spent days in a three-foot crawlspace above the church sacristy, pressed flat against the boards in the heat, holding yourself still while the militia looted the bodies below. The old man beside you in the ceiling died of starvation and dehydration two days after the RPF arrived. You were one of seven people who climbed out of a church that held three hundred.
 
-Ten years later, at the Kigali memorial where the skulls of the congregation are now kept, you chose to speak. You stood before the students and cameras and told them about the old man in the ceiling, about the smell of death, and the absolute silence required to stay alive. You ensured that the specific, intimate horror of surviving in the dark above a massacre became part of the next generation's education.`
+At the Kigali memorial in 2008, when the guide asked if you would speak at the Kwibuka ceremony, you said yes. You stood before the students and the cameras and described the old man in the ceiling — his shallow breathing, the way he looked at you when he coughed, the apology in his face. You told them what absolute silence costs and what it protects. You made sure that one specific detail of surviving above a massacre — not a statistic, not a speech — became part of what the next generation learned when they came to see the skulls on the shelves.`
   },
 
   {
@@ -454,11 +456,25 @@ Ten years later, at the Kigali memorial where the skulls of the congregation are
     survived: true,
     conditions: {
       rw_survived_church_hiding: true,
-      rw_avoided_ceremony: true
+      rw_mourned_privately: true,
+      rw_chose_privacy: true
     },
-    epilogue: `You survived. You huddled in the dark crawlspace above the church sacristy, suffocating in the heat and the smell of the massacre below, holding perfectly still while the militia searched. The old man beside you died of starvation just days after the RPF arrived, but you made it out.
+    epilogue: `You survived. You spent days in the three-foot crawlspace above the church sacristy, motionless in the heat, listening to the militia move through the bodies below. The old man beside you died days after liberation. You were one of seven who climbed down from a church that held three hundred.
 
-When the memorial guide asked you to speak at the ceremony ten years later, you refused. The church is full of tourists and preserved clothes now, but you don't need a microphone to remember what happened. You visit the memorial alone, early in the morning before the crowds arrive. Your survival in that ceiling is a private triumph and an enduring solitary grief.`
+When the memorial guide asked you to speak at the Kwibuka ceremony in 2008, you declined. You attended. You sat in the rows with the other survivors, present but silent, while the speeches were made and the cameras filmed. Your survival in that ceiling is not a lesson or an inspiration. It is yours — a private reckoning with what it cost to stay still and what it cost the man beside you. You visit the memorial alone, early, before the crowds arrive, and you mourn on your own terms.`
+  },
+
+  {
+    id: "rw-ts-outcome-ceiling-distance-survived",
+    survived: true,
+    conditions: {
+      rw_survived_church_hiding: true,
+      rw_avoided_ceremony: true,
+      rw_chose_distance: true
+    },
+    epilogue: `You survived. You spent days in the three-foot crawlspace above the church sacristy, holding yourself still above the massacre, listening to the militia return to loot and check and leave again. The old man beside you died days after liberation. You were one of seven from a church that held three hundred.
+
+In 2008, when Kwibuka came, you stayed home. The government's ceremonies, the preserved clothes, the skulls arranged for visitors — you couldn't place your specific survival inside that framing. You know what happened in the ceiling above that sacristy. You know what it weighed. Some years, distance is not avoidance. Some years, it is the only honest response to a wound that hasn't closed.`
   },
 
   {
@@ -470,9 +486,9 @@ When the memorial guide asked you to speak at the ceremony ten years later, you 
       rw_attended_reconciliation: true,
       rw_spoke_truth: true
     },
-    epilogue: `You survived. You spent three agonizing weeks in Jeanne's sweltering four-by-six-foot attic, listening to her Interahamwe brother downstairs interrogate her about hidden Tutsi. Jeanne risked her own children's lives to keep you alive.
+    epilogue: `You survived. You spent three weeks in Jeanne's four-by-six-foot attic, baking in the heat, listening to her Interahamwe brother interrogate her just below the ceiling panel. Jeanne fed you bread at night and kept her children's silence. Her husband Paul was killed at a roadblock. You climbed down when the RPF arrived.
 
-Years later, at the community gacaca court, you stood up and spoke the complicated truth. You looked at Jeanne's brother—a man who had killed others at roadblocks—and you told the village exactly what he had done. But you also told the village what his sister, a Hutu, had sacrificed to save a Tutsi. You didn't forgive him, but you cemented Jeanne's heroism in the official record. You navigated the impossible terrain of post-genocide Rwanda with absolute, unflinching honesty.`
+At the village reconciliation meeting in 2010, you stood up and told the full, complicated truth. You looked at Jeanne's brother — a man who had staffed the roadblocks where Paul was killed — and described what his actions had cost. Then you told the village what his sister had done: three weeks of daily lies to the militia to keep a Tutsi student alive in her attic. You refused to simplify either fact. You didn't forgive him. You didn't pretend the reconciliation was complete. But you made sure Jeanne's defiance was part of the official record of what happened in that village, alongside the true weight of what her brother chose.`
   },
 
   {
@@ -484,9 +500,9 @@ Years later, at the community gacaca court, you stood up and spoke the complicat
       rw_attended_reconciliation: true,
       rw_stayed_silent: true
     },
-    epilogue: `You survived. Jeanne hid you in her attic for three weeks, lying to her Interahamwe brother daily while you baked in the heat of a four-by-six-foot prison. She saved your life.
+    epilogue: `You survived. You endured three weeks in Jeanne's attic — the heat, the bucket, the absolute silence while her brother questioned her downstairs. She kept you alive. Her husband Paul did not survive the roadblocks.
 
-At the gacaca sector meeting, you sat in the audience, mere seats away from Jeanne's brother. You knew he had murdered people at the roadblocks, but you also knew his sister was the reason you were breathing. Caught in the crushing complexity of Rwandan reconciliation, you chose silence. You couldn't condemn the brother without complicating the life of the sister who saved you. You live with the quiet knowledge of who they both are, holding the boundaries of your own survival.`
+At the village reconciliation meeting in 2010, you attended and sat a few seats from Jeanne's brother. You said nothing. The facilitator asked you to speak; you shook your head. You knew what he had done at the roadblocks. You also knew that the woman who saved your life was watching, and that condemning her brother in that room would do something irreversible to her. You chose silence — not because you had forgiven him, not because the reconciliation was real, but because the sister who hid you in her attic deserved to navigate her own grief without you forcing her hand in public. You carry that silence the way you carry the attic: as something that kept you alive and cost you something real.`
   },
 
   {
@@ -498,9 +514,9 @@ At the gacaca sector meeting, you sat in the audience, mere seats away from Jean
       rw_declined_reconciliation: true,
       rw_chose_boundaries: true
     },
-    epilogue: `You survived. You endured three weeks hidden in Jeanne's attic, staying absolutely silent while her Interahamwe brother hunted Tutsi just outside the door. You owe your life to Jeanne's defiance.
+    epilogue: `You survived. You spent three weeks in Jeanne's sweltering four-by-six-foot attic, staying absolutely silent while her Interahamwe brother hunted Tutsi just outside the door. Jeanne risked her children and her own life for you. Her husband Paul died at a roadblock. You owe her everything.
 
-When the reconciliation meetings began in your village years later, you declined to attend. The government mandated that you live side-by-side with perpetrators like Jeanne's brother, but you refused to participate in the performance of forgiveness. You established your boundaries, choosing to privately honor Jeanne's courage without subjecting yourself to the trauma of facing her brother in public.`
+When the village reconciliation meetings began, you declined to attend. The government's policy was coexistence — "we are all Rwandans" — and Jeanne's brother had served his six years and returned. You understood why the structure existed. You also understood that sitting in a room and performing forgiveness for a man who helped kill people at the same roadblocks where Paul died was not something you owed anyone. You honor Jeanne privately. You visit her family. Your boundary is not bitterness — it is honesty about what reconciliation requires and what it cannot be made to mean by a government decree.`
   },
 
   {
@@ -509,12 +525,12 @@ When the reconciliation meetings began in your village years later, you declined
     conditions: {
       rw_reached_hotel: true,
       rw_used_false_id: true,
-      rw_spoke_at_conference: true,
-      rw_chose_public_life: true
+      rw_shared_hotel_story: true,
+      rw_chose_visibility: true
     },
-    epilogue: `You survived. Armed with your Hutu roommate Marie's student ID, you bluffed your way past the exhausted militia commander at the roadblock. You spent three months inside the Hôtel des Mille Collines, a Tutsi university student passing as a Hutu cousin among twelve hundred desperate refugees guarded by UN peacekeepers.
+    epilogue: `You survived. You handed the exhausted militia commander Marie's Hutu student ID at the roadblock outside the hotel — "I'm mixed. My mother—" — and he waved you through. You spent three months crammed into a conference room at the Hôtel des Mille Collines with twelve hundred other refugees, living under your roommate's name while the UN blue helmets held the perimeter.
 
-Years later, you accepted the invitation to speak at an international academic conference in Kigali. You reclaimed your real name—Immaculée—and told the world how a piece of Belgian colonial bureaucracy and a friend's ID card were the only difference between life and death. You turned your three months of terrified impersonation into a public testament to the sheer absurdity and horror of the genocide.`
+When you accepted the invitation to speak at the survivors' conference in 2007, you reclaimed your name out loud in front of the room: Immaculée. Tutsi. Survivor. You explained what a colonial-era identity card actually was — a Belgian bureaucratic instrument repurposed as a death warrant — and you described what it felt like to hand a piece of paper with another woman's name across to a man who was deciding whether you lived. You turned the specific absurdity and horror of surviving on a borrowed identity into something the next generation of students could hold onto and understand.`
   },
 
   {
@@ -523,12 +539,89 @@ Years later, you accepted the invitation to speak at an international academic c
     conditions: {
       rw_reached_hotel: true,
       rw_used_false_id: true,
+      rw_attended_conference: true,
+      rw_chose_listening: true
+    },
+    epilogue: `You survived. You bluffed your way past the militia commander at the roadblock using Marie's Hutu student ID and spent three months inside the Hôtel des Mille Collines living under her name, registered with the UN as someone else, waiting for the RPF.
+
+At the 2007 survivors' conference, you attended but did not speak. You listened to other survivors describe what it was like inside the hotel — the crowding, the threats from outside, the peacekeepers who held the line. Their accounts matched yours exactly, and it was enough to hear them said aloud by others. You reclaimed your name, Immaculée, when the RPF arrived. You did not need a microphone or a panel discussion to confirm that it belongs to you. The conference mattered. Your silence in it was also a choice about what your survival owes to public performance and what it doesn't.`
+  },
+
+  {
+    id: "rw-ts-outcome-hotel-private-life-survived",
+    survived: true,
+    conditions: {
+      rw_reached_hotel: true,
+      rw_used_false_id: true,
       rw_declined_conference: true,
       rw_chose_private_life: true
     },
-    epilogue: `You survived. You stared down the Interahamwe commander at the roadblock and handed him Marie's Hutu ID. For three months, you lived crammed inside a conference room at the Hôtel des Mille Collines, protected by blue helmets and the fiction of a stolen identity card.
+    epilogue: `You survived. You handed Marie's Hutu ID to the militia commander at the roadblock and spent three months inside the Hôtel des Mille Collines living as her cousin, waiting for the city to be liberated. When the RPF arrived, you reclaimed your name: Immaculée.
 
-When the international conference called years later asking you to speak on your survival, you declined. You survived because your Hutu roommate handed you a card, because you could pass, because you were lucky. You support the documentation of the genocide, but you have no desire to turn your trauma into a panel discussion. You reclaimed your name, Immaculée, and you live your life quietly, privately honoring the friend who saved you.`
+When the conference invitation came in 2007, you declined. You survived because your roommate handed you a card, because you could pass, because the commander was tired, because the UN held the perimeter — because of an accumulation of contingencies that had nothing to do with your choices and everything to do with luck. You support the documentation of the genocide. You are glad others testify. But you do not believe your survival obligates you to turn it into a panel discussion or an educational example. You live quietly, privately grateful to Marie for the card, and privately committed to a life that is more than what almost ended it.`
+  },
+
+  // DITCH PATH SURVIVAL OUTCOMES (church → escape side door → hid in ditch → memorial 04b)
+  // TS-1 fix: paths 4-6. Player escaped through side door and hid in a drainage ditch. NOT the ceiling.
+  {
+    id: "rw-ts-outcome-ditch-spoke-survived",
+    survived: true,
+    conditions: {
+      rw_escaped_church: true,
+      rw_witnessed_massacre: true,
+      rw_stayed_hidden_ditch: true,
+      rw_shared_testimony: true,
+      rw_chose_education: true
+    },
+    epilogue: `You survived. You slipped out through the side door of Father Michel's church while the militia was still moving through the congregation. You ran two blocks and lowered yourself into a drainage ditch that smelled of sewage and smoke, pulling yourself flat while RTLM played cheerfully from a nearby radio. You lay there until dark, then moved through the city by night until the RPF arrived.
+
+At the Kigali memorial in 2008, you said yes when the guide asked if you would speak at the Kwibuka ceremony. You stood before the students and the cameras and described what you had seen through that side door — Father Michel killed, grenades, machetes, children — and what it had been like to lie in a ditch two blocks away listening to it end. You described the smell of the sewage and the smoke mixing, the cheerful radio announcing while people died. You made sure the specific, embodied reality of surviving outside the building — not statistics, not distance — was part of what the next generation carried out of that ceremony.`
+  },
+
+  {
+    id: "rw-ts-outcome-ditch-silent-survived",
+    survived: true,
+    conditions: {
+      rw_escaped_church: true,
+      rw_witnessed_massacre: true,
+      rw_stayed_hidden_ditch: true,
+      rw_mourned_privately: true,
+      rw_chose_privacy: true
+    },
+    epilogue: `You survived. You escaped through the side door of Father Michel's church and ran to a drainage ditch two blocks away. You lay there smelling sewage and smoke while the screaming stopped and RTLM resumed. You survived by staying still in the dark, and you eventually made your way out of the city as the RPF advanced.
+
+At Kwibuka in 2008, you attended the ceremony but did not speak. You sat in the rows and watched the memorial guide lead the students through the preserved clothes and the names on the walls. You know what the church looked like from the outside when you ran. You know what it sounded like from the ditch. Those things are yours — not a lesson to deliver from a stage, not a statement for the cameras. You mourn privately, on your own terms, each year on April 7th.`
+  },
+
+  {
+    id: "rw-ts-outcome-ditch-distance-survived",
+    survived: true,
+    conditions: {
+      rw_escaped_church: true,
+      rw_witnessed_massacre: true,
+      rw_stayed_hidden_ditch: true,
+      rw_avoided_ceremony: true,
+      rw_chose_distance: true
+    },
+    epilogue: `You survived. You got out through the side door while the militia was still inside. You hid in a drainage ditch two blocks away, flat in the sewage smell and the smoke, listening to the screaming end and the radio resume. You survived the hundred days by staying hidden and moving at night, and when the RPF arrived you were still alive.
+
+In 2008, when April 7th came, you stayed home. The Kigali memorial, the preserved clothes, the ceremonies — you understand why they exist. You also understand that the specific experience of lying in a ditch outside a church while hundreds of people died inside it is not something that fits inside the framework of a government ceremony. Some wounds don't close on an annual schedule. Staying home was not avoidance. It was the honest answer to the question of whether you were ready to make your survival into something public, and you weren't.`
+  },
+
+  // PROTECT-NAMES OUTCOME (church → escape → UN convoy → testify-but-protect-names)
+  // TS-2 fix: path 2. Player testified at ICTR but chose to protect some names. Must NOT say "gave every detail."
+  {
+    id: "rw-ts-outcome-church-protected-survived",
+    survived: true,
+    conditions: {
+      rw_witnessed_massacre: true,
+      rw_reached_un_protection: true,
+      rw_testified_ictr: true,
+      rw_chose_protection: true
+    },
+    epilogue: `You survived. After watching Father Michel fall and the congregation cut down with grenades and machetes, you escaped through the side door and hid in a drainage ditch until a UN convoy found you. You carried the faces and the sequence of that morning out of the church and across years.
+
+In 2006, at the ICTR in Arusha, you testified — but not everything. You gave the prosecutor the timeline, the commanders you had seen, the structure of what had happened at the church. You withheld the names of two people who had helped you reach the UN convoy safely, people still living in Rwanda who you feared would face retaliation if identified in an international court record. The defense attorney pressed you on the gaps. You held. The court secured a conviction on the evidence you provided. Not a complete record — but enough. You chose what justice cost you personally and what it could not be allowed to cost the people who had helped you survive.`
   },
 
   // DEATH OUTCOMES (Occurring BEFORE post-genocide events)
@@ -536,33 +629,34 @@ When the international conference called years later asking you to speak on your
     id: "rw-ts-outcome-church-escaped-killed",
     survived: false,
     conditions: {
-      rw_trusted_church: true
+      rw_trusted_church: true,
+      rw_escaped_church: true
     },
     deathContext: {
       cause: "Killed during the genocide after escaping the church",
       historicalRate: "Most Tutsi who escaped church massacres were caught at subsequent roadblocks",
-      yourChoices: "You escaped the church. You saw what happened. You tried to reach safety."
+      yourChoices: "You escaped the church through the side door. You saw what happened. You tried to reach safety."
     },
-    deathEpilogueEarly: `You didn't survive. You managed to escape Father Michel's church through the side door while the militia was distracted by the slaughter inside. You carried the memory of the grenades and the children out into the street. 
+    deathEpilogueEarly: `You didn't survive. You slipped out through the side door of Father Michel's church while the militia was still moving through the congregation. You carried what you had seen — the grenades, the machetes, Father Michel falling — out into the street and ran.
 
-But the Interahamwe were methodical. They swept the perimeters of their massacres to catch anyone who had run. You were found hiding in a drainage ditch before the RPF could reach Kigali. You died during the 100 days of the genocide, clutching the memory of what happened in that church—a witness who never got the chance to testify at the ICTR.`
+The Interahamwe were methodical. They swept the perimeters of their massacre sites to catch anyone who had managed to get out. You were found in a drainage ditch before the RPF could reach the city. You died during the hundred days of the genocide, before the ICTR was operational, before any tribunal existed to hear what you had witnessed. You were a nineteen-year-old university student who saw the inside of a massacre and tried to carry it to safety. The testimony that could have convicted the men who organized it died with you.`
   },
 
   {
-    id: "rw-ts-outcome-ceiling-killed",
+    id: "rw-ts-outcome-church-hiding-killed",
     survived: false,
     conditions: {
-      rw_survived_church_hiding: true,
+      rw_trusted_church: true,
       rw_hid_in_church: true
     },
     deathContext: {
-      cause: "Discovered during the genocide while hiding in the church",
+      cause: "Discovered during the genocide while hiding in the church ceiling",
       historicalRate: "Militias routinely returned to massacre sites to hunt for survivors in ceilings and crypts",
-      yourChoices: "You hid in the ceiling. You stayed silent. But they came back."
+      yourChoices: "You hid in the ceiling crawlspace. You stayed silent. But they came back."
     },
-    deathEpilogueEarly: `You didn't survive. You spent agonized hours in the cramped, three-foot crawlspace above the sacristy, holding your breath while the militia slaughtered the congregation below. 
+    deathEpilogueEarly: `You didn't survive. You pulled yourself into the three-foot crawlspace above the sacristy while the massacre unfolded below, pressing flat against the boards, breathing shallow. The old man beside you stayed still. The militia looted the bodies and left. Then they came back.
 
-But militias always returned to loot the bodies, and they eventually checked the ceiling. Whether the old man beside you coughed, or they simply followed protocol, you were discovered. You were pulled from the ceiling and killed during the height of the genocide, long before the memorial was built or the ceremonies began. Your name is now on the wall with the three hundred others who perished there.`
+Whether the old man coughed, or they simply followed the protocol of checking every ceiling and crypt after a massacre site, they found you. You were pulled from the crawlspace and killed during the hundred days of the genocide, long before the memorial was built and the names were put on the walls. Your name is on those walls now. You are one of the three hundred.`
   },
 
   {
@@ -576,9 +670,9 @@ But militias always returned to loot the bodies, and they eventually checked the
       historicalRate: "Interahamwe routinely searched the homes of Hutu suspected of hiding Tutsi",
       yourChoices: "You trusted Jeanne. You hid in the attic. The militia searched the house."
     },
-    deathEpilogueEarly: `You didn't survive. You trusted your friend Jeanne, climbing into her sweltering four-by-six-foot attic while her Interahamwe brother patrolled the streets outside. 
+    deathEpilogueEarly: `You didn't survive. You climbed into Jeanne's four-by-six-foot attic and stayed absolutely silent while her Interahamwe brother questioned her below the ceiling panel every day. She kept her children quiet. She kept you fed at night. She lied to him every time he asked.
 
-But silence in the attic wasn't enough. Jeanne's brother or his militia compatriots eventually searched the house. You were discovered during the 100 days of slaughter and killed alongside the Hutu family who tried to save you. You died knowing Jeanne risked everything for you, but you never lived to see the gacaca courts where you could have testified to her bravery.`
+It wasn't enough. The militia eventually searched the house — whether because her brother finally looked, or because a neighbor reported something, or because the systematic house-to-house sweeps simply reached Jeanne's street. You were discovered in the attic during the hundred days of killing and died alongside the family who tried to save you. Jeanne had risked everything for you. You died knowing that, before the RPF arrived, before any gacaca court could record what she had done.`
   },
 
   {
@@ -592,11 +686,12 @@ But silence in the attic wasn't enough. Jeanne's brother or his militia compatri
       historicalRate: "Many were killed at roadblocks just outside protected enclaves",
       yourChoices: "You tried to reach the hotel using Marie's ID. You didn't make it to safety."
     },
-    deathEpilogueEarly: `You didn't survive. Armed with Marie's Hutu ID, you tried to bluff your way past the militia commander at the roadblock outside the Hôtel des Mille Collines. 
+    deathEpilogueEarly: `You didn't survive. You reached into your pocket and handed the militia commander Marie's Hutu student ID at the roadblock outside the Hôtel des Mille Collines — "I'm mixed. My mother—" — and waited for him to decide.
 
-Whether the commander saw through the false ID, or you were caught in a subsequent assault on the perimeter, you were killed before reaching the safety of the UN blue helmets. You died during the genocide, before the RPF captured Kigali and the killing stopped. You never got to reclaim your real name, Immaculée.`
+He didn't believe you. Or the ID was scrutinized more carefully on a second pass, or someone recognized you from the university, or the commander simply decided to be thorough. You were killed at that roadblock during the hundred days of the genocide, within sight of the UN blue helmets who held the hotel perimeter but could not intervene outside it. You never reached the conference room where twelve hundred people waited out the killing. You never reclaimed your name, Immaculée. You died three blocks from safety.`
   }
 ];
+
 // Export role data
 export default {
   scenes: tutsiSurvivorScenes,
