@@ -304,6 +304,11 @@ class UIController {
     
     const existingScreens = this.appContainer.querySelectorAll('.screen');
     existingScreens.forEach(screen => screen.classList.remove('active'));
+    const roleSpecificScreens = ['outcome', 'historical-ripple', 'knowledge-checkpoint', 'results-card'];
+  if (roleSpecificScreens.includes(screenName)) {
+    const stale = document.getElementById(`${screenName}-screen`);
+    if (stale) stale.remove();
+  }
     
     let screenElement = document.getElementById(`${screenName}-screen`);
     
