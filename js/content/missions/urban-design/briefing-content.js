@@ -16,9 +16,9 @@ export const BRIEFING_PAGES = {
       price: 'Archive Edition',
       hSize: 'sz-lg',
       hClass: '',
-      h: 'National Housing Act Creates HOLC',
-      deck: 'Federal government begins systematic neighborhood grading — "D" grade areas marked in red ink on maps',
-      body: 'President Roosevelt signed the National Housing Act today, creating the Home Owners\' Loan Corporation. HOLC will refinance mortgages to prevent foreclosures during the Depression.\n\nTo assess risk, HOLC appraisers grade neighborhoods A through D. Grade A areas receive green on the map — "best" neighborhoods for investment. Grade D areas receive red — "hazardous" for lending. The criteria include racial composition. Black neighborhoods automatically receive D grades.\n\nBanks use these maps to deny mortgages. The federal government distributed $120 billion in home loans between 1934 and 1962. Less than 2% went to non-white families. This single policy creates the mortgage gap that will compound for ninety years.\n\nThe maps are drawn in ink. The consequences are permanent.',
+      h: 'National Housing Act Formalizes Federal Redlining',
+      deck: 'New FHA mortgage insurance system locks in HOLC neighborhood grades — "D" areas marked in red, denied all federal lending',
+      body: 'President Roosevelt signed the National Housing Act today, creating the Federal Housing Administration. The FHA will insure private mortgages — but only in neighborhoods the Home Owners\' Loan Corporation, created last year, has graded acceptable.\n\nTo assess risk, HOLC appraisers grade neighborhoods A through D. Grade A areas receive green on the map — "best" neighborhoods for investment. Grade D areas receive red — "hazardous" for lending. The criteria include racial composition. Black neighborhoods automatically receive D grades.\n\nBanks use these maps to deny mortgages. The federal government distributed $120 billion in home loans between 1934 and 1962. Less than 2% went to non-white families. This single policy creates the mortgage gap that will compound for ninety years.\n\nThe maps are drawn in ink. The consequences are permanent.',
       ticker: 'HOLC Residential Security Maps will remain in use by banks until 1968.'
     },
     {
@@ -52,7 +52,7 @@ export const BRIEFING_PAGES = {
       h: 'Satellite Data Reveals Urban Heat Islands',
       deck: 'Formerly redlined neighborhoods 5-12°F hotter than green-graded areas — 1930s maps predict 21st century temperatures',
       body: 'Environmental justice researchers map urban heat islands using satellite thermal imaging. The pattern is unmistakable: formerly redlined neighborhoods are significantly hotter than areas graded "A" or "B" in the 1930s.\n\nThe temperature delta ranges from 5°F to 12°F. The cause is clear: decades of disinvestment meant fewer trees, more asphalt, less green space. The 1934 HOLC maps predicted 2024 temperatures. Federal policy created environmental inequality that persists ninety years later.\n\nHeat is not just discomfort. It is a health crisis. Higher rates of heat-related illness. Higher cooling costs for families with less wealth. Lower property values in already-devalued areas. The cycle compounds.\n\nThe line drawn in 1934 is still visible from space.',
-      ticker: 'Study: 94% of formerly redlined areas are hotter than their green-graded counterparts.'
+      ticker: 'Study: 92% of formerly redlined areas are hotter than their green-graded counterparts.'
     },
     {
       vol: 'Vol. XCIV — No. 001',
@@ -62,7 +62,7 @@ export const BRIEFING_PAGES = {
       hClass: 'urgent',
       h: 'The Wealth Gap Persists',
       deck: 'Ninety years after the National Housing Act, median white family wealth is 8-10x median Black family wealth — most of the gap is home equity',
-      body: 'Ninety years after the National Housing Act created the HOLC, the median white family holds eight to ten times the wealth of the median Black family. Most of that gap is home equity — denied in 1934, compounded over three generations.\n\nThe divided city remains divided. The question is no longer why. The question is what comes next.\n\nYou are about to experience one property\'s journey through three eras: The Line (1930s redlining), The Panic (1960s blockbusting), and The Heat (modern environmental justice). Your choices will determine whether the cycle continues or breaks.\n\nThe federal government drew the lines. Real estate speculators exploited them. The consequences are measured in degrees Fahrenheit and dollars of wealth denied.\n\nYour story begins in 1934. A federal appraiser is coming to your neighborhood.',
+      body: 'Ninety years after the Home Owners\' Loan Corporation drew its first redlining maps, the median white family holds eight to ten times the wealth of the median Black family. Most of that gap is home equity — denied in 1934, compounded over three generations.\n\nThe divided city remains divided. The question is no longer why. The question is what comes next.\n\nYou are about to experience one property\'s journey through three eras: The Line (1930s redlining), The Panic (1960s blockbusting), and The Heat (modern environmental justice). Your choices will determine whether the cycle continues or breaks.\n\nThe federal government drew the lines. Real estate speculators exploited them. The consequences are measured in degrees Fahrenheit and dollars of wealth denied.\n\nYour story begins in 1934. A federal appraiser is coming to your neighborhood.',
       ticker: null
     }
   ]

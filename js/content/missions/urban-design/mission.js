@@ -60,8 +60,8 @@ const urbanDesignMission = {
     {
       id: 'ud-ripple-01',
       date: '1934-06-28',
-      title: 'National Housing Act Creates HOLC',
-      description: 'President Roosevelt signed the National Housing Act, creating the Home Owners\' Loan Corporation. HOLC appraisers graded neighborhoods A through D based on "risk." Black neighborhoods received D grades—red on the map. Banks refused loans. This single policy created the mortgage gap: $120 billion in federal loans, less than 2% to non-white families.',
+      title: 'National Housing Act Formalizes Federal Redlining',
+      description: 'President Roosevelt signed the National Housing Act, creating the Federal Housing Administration. Building on the Home Owners\' Loan Corporation established the prior year, the FHA formalized the neighborhood grading system that would deny mortgages across Black America for decades.',
       apTheme: 'causation',
       animationDelay: 1000
     },

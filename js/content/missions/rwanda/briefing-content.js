@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Rwanda Mission Briefing Content
  * 
  * Historical newspaper briefing pages and identity cards for each role.
@@ -22,13 +22,13 @@ export const BRIEFING_PAGES = {
     },
     {
       vol: 'Vol. LVII — No. 284',
-      date: 'Kigali, Rwanda — October 1990',
+      date: 'Kigali, Rwanda — October 1990 – Mid-1993',
       price: 'Cinq francs',
       hSize: 'sz-lg',
       hClass: '',
-      h: 'Civil War Erupts. Radio Mille Collines Takes to the Airwaves.',
-      deck: 'Government arms Interahamwe militias as new station reads Tutsi names and addresses on air',
-      body: 'Forces of the Rwandan Patriotic Front crossed the northern border from Uganda yesterday. The government accelerates the distribution of machetes to civilian militias known as the Interahamwe — "those who attack together."\n\nA new radio station launched this week: Radio Mille Collines, RTLM, 106.3 FM. It plays popular music. Between songs its announcers call Tutsi inyenzi — cockroaches — and inzoka — snakes. They read names aloud. Addresses. They describe which roads people are using to flee.\n\nThe radio is not propaganda. It is a real-time targeting system. Lists are being compiled of who lives where. Weapons are being distributed by neighbourhood. The machinery is being assembled in plain sight.',
+      h: 'Civil War Erupts. Three Years Later, Radio Mille Collines Takes to the Airwaves.',
+      deck: 'Government arms Interahamwe militias from 1990 — RTLM launches in 1993 to broadcast Tutsi names and addresses',
+      body: 'Forces of the Rwandan Patriotic Front crossed the northern border from Uganda yesterday. The government accelerates the distribution of machetes to civilian militias known as the Interahamwe — "those who attack together."\n\nOver the next three years, the machinery of genocide is assembled in plain sight. Lists are compiled of who lives where. Weapons are distributed by neighbourhood. Training is systematic.\n\nIn mid-1993, a new radio station launches: Radio Mille Collines, RTLM, 106.3 FM. It plays popular music. Between songs its announcers call Tutsi inyenzi — cockroaches — and inzoka — snakes. They read names aloud. Addresses. They describe which roads people are using to flee. The radio is not propaganda. It is a real-time targeting system.',
       ticker: 'RTLM broadcast range: all of Kigali and surrounding prefectures — 24 hours a day.'
     },
     {
@@ -40,7 +40,7 @@ export const BRIEFING_PAGES = {
       h: 'Rwanda Peace Accord Signed. Power-Sharing Agreement Reached.',
       deck: 'Habyarimana government and RPF agree to transitional government — Hutu Power factions immediately denounce deal as betrayal',
       body: 'After a year of negotiations in Arusha, Tanzania, the Rwandan government and the Rwandan Patriotic Front signed a comprehensive peace agreement today. The Arusha Accords establish a broad-based transitional government including the RPF and opposition parties, integration of RPF soldiers into the national army, and a timeline toward elections under a new constitution.\n\nA small UN peacekeeping mission — UNAMIR — will monitor the ceasefire and political transition. Its mandate is limited to observation. It cannot enforce the agreement or use force unless directly attacked.\n\nHardliners in the Akazu — the president\'s inner circle — publicly reject the accords. They have spent years building Hutu Power. The accords would dismantle what they built. They call it surrender. They begin organising to ensure it never takes effect.\n\nThe weapons distribution continues. The militia training continues. The Arusha Accords are signed. They are not implemented.',
-      ticker: 'Hutu Power response to Arusha: "We will never share power with the Tutsi enemy." — RTLM broadcast, August 1993.'
+      ticker: 'Hutu Power leaders publicly denounced the Arusha Accords as surrender. Militia training and weapons distribution accelerated.'
     },
     {
       vol: 'Vol. LX — No. 11',
@@ -95,7 +95,7 @@ export const BRIEFING_PAGES = {
       price: 'Cinq francs',
       hSize: 'sz-lg',
       hClass: 'alert',
-      h: 'Hutu Power Arms Militias. Radio Takes to the Airwaves. Lists Are Compiled.',
+      h: 'Hutu Power Arms Militias. Lists Are Compiled. RTLM Takes to the Airwaves in 1993.',
       deck: 'Government distributes machetes by neighbourhood as RTLM broadcasts Tutsi names and escape routes',
       body: 'As civil war continues in the north, the government arms civilian militias — the Interahamwe — and distributes machetes to villages across Rwanda. Training is systematic. The weapons are not hidden.\n\nRadio Mille Collines, RTLM, 106.3 FM, broadcasts music and comedy. Between programmes, announcers call Tutsi inyenzi — cockroaches — and read their names and addresses aloud. It is a real-time targeting system.\n\nModerate Hutu politicians — those who spoke against ethnic violence, those who refused Hutu Power rallies — are being watched. Their names recorded. You did not attend the last rally. That was noted. Your name is on a list.\n\nLast August, the government signed the Arusha Accords with the RPF — a peace agreement requiring power-sharing. Hutu Power called it treason. Moderate politicians who supported the deal are now on the same lists as Tutsi. Refusing to attend a rally is enough to mark you as a traitor to the cause.',
       ticker: 'RTLM announcer Georges Ruggiu — convicted of incitement to genocide, The Hague, 2000.'
