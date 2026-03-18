@@ -271,8 +271,11 @@ class UIController {
   }
 
   handleRoleSelected(data) {
-    this.showScreen('scene');
+  if (data && data.roleId) {
+    this.currentRoleId = data.roleId;
   }
+  this.showScreen('scene');
+}
 
   handleBriefingBack(data) {
     if (data && data.missionId) {
