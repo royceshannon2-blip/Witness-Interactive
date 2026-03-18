@@ -292,38 +292,40 @@ class UIController {
   }
 
   showScreen(screenName, data = {}) {
-    const validScreens = [
-      'loading', 'landing', 'timeline', 'role-selection', 'scene',
-      'outcome', 'historical-ripple', 'knowledge-checkpoint', 'results-card'
-    ];
-    
-    if (!validScreens.includes(screenName)) {
-      console.error(`UIController.showScreen: Invalid screen name "${screenName}"`);
-      return;
-    }
-    
-    const existingScreens = this.appContainer.querySelectorAll('.screen');
-    existingScreens.forEach(screen => screen.classList.remove('active'));
-    const roleSpecificScreens = ['outcome', 'historical-ripple', 'knowledge-checkpoint', 'results-card'];
-  if (roleSpecificScreens.includes(screenName)) {
+  const validScreens = [
+    'loading', 'landing', 'timeline', 'role-selection', 'scene',
+    'outcome', 'historical-ripple', 'knowledge-checkpoint', 'results-card'
+  ];
+
+  if (!validScreens.includes(screenName)) {
+    console.error(`UIController.showScreen: Invalid screen name "${screenName}"`);
+    return;
+  }
+
+  const existingScreens = this.appContainer.querySelectorAll('.screen');
+  existingScreens.forEach(screen => screen.classList.remove('active'));
+
+  // Destroy and recreate these screens every visit so content is always fresh
+  const alwaysRecreate = ['role-selection', 'outcome', 'historical-ripple', 'knowledge-checkpoint', 'results-card'];
+  if (alwaysRecreate.includes(screenName)) {
     const stale = document.getElementById(`${screenName}-screen`);
     if (stale) stale.remove();
   }
-    
-    let screenElement = document.getElementById(`${screenName}-screen`);
-    
+
+  let screenElement = document.getElementById(`${screenName}-screen`);
+
+  if (screenElement) {
+    screenElement.classList.add('active');
+  } else {
+    screenElement = this.createScreen(screenName, data);
     if (screenElement) {
+      this.appContainer.appendChild(screenElement);
       screenElement.classList.add('active');
-    } else {
-      screenElement = this.createScreen(screenName, data);
-      if (screenElement) {
-        this.appContainer.appendChild(screenElement);
-        screenElement.classList.add('active');
-      }
     }
-    
-    this.currentScreen = screenName;
   }
+
+  this.currentScreen = screenName;
+}
 
   createScreen(screenName, data) {
     const screen = document.createElement('div');
