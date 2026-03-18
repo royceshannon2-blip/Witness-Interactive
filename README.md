@@ -4,6 +4,10 @@
 
 Witness Interactive: Pearl Harbor is a browser-based educational history game that places students in the December 7, 1941 attack on Pearl Harbor. Play as a Japanese Naval Aviator, an American Sailor aboard the USS Arizona, or an American Civilian to experience this pivotal moment from multiple viewpoints.
 
+
+https://github.com/user-attachments/assets/3ba0015b-3f7b-4851-a044-b09edc0e4599
+
+
 ## 🎓 Educational Value
 
 This game is designed for **AP US History students** and aligns with AP curriculum standards:
