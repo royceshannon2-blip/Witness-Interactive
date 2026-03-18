@@ -382,9 +382,9 @@ const hutuModerateOutcomes = [
       rw_saved_at_roadblock: true,
       rw_full_confession: true
     },
-    epilogue: `You survived. You successfully hid Celestin in the attic when the militia knocked, and you misdirected the commander who came looking for "cockroaches." Later, at the market roadblock, you risked your life to wave Tutsi families through by falsely claiming their identity cards were valid. You actively resisted the genocide from inside the machinery.
+    epilogue: `You survived. When the militia leader knocked and his eyes flicked to the ceiling where Celestin was hiding, you looked him in the face and sent him to a neighbor's house instead. At the market roadblock, your shaking hands took the clipboard and lied again — declaring Tutsi identity cards valid and waving families through to safety while the commander watched.
 
-At the gacaca court, you held nothing back. You detailed the lists you saw as a communal secretary, named the commander who ran the market roadblock, and confessed how the system worked. Celestin testified on your behalf, telling the village how you hid him while your children stayed silent. You helped convict the architects of the local massacres. You are known in Kigali as a righteous man, a Hutu who chose humanity when it meant death.`
+At the gacaca court in 2007, you held nothing back. You detailed every list you processed as communal secretary, named the commander who ran the market checkpoint, and confessed exactly how the bureaucratic machinery of genocide worked from the inside. Celestin sat in the front row and testified on your behalf, telling the village how you hid him in the attic while your children played quietly below. Your full confession helped convict the architects of the local massacres. In Kigali, you are known as a man who chose humanity when choosing otherwise would have been easier — and who then had the courage to tell the truth about the moments when his humanity wavered.`
   },
 
   {
@@ -396,9 +396,9 @@ At the gacaca court, you held nothing back. You detailed the lists you saw as a 
       rw_saved_at_roadblock: true,
       rw_partial_confession: true
     },
-    epilogue: `You survived. You hid Celestin in the attic and misdirected the militia leader whose eyes flicked upward at the creaking floorboard. At the market roadblock, your shaking hands handed back Tutsi identity cards, falsely claiming they were valid. 
+    epilogue: `You survived. You hid Celestin in the attic and misdirected the militia leader whose eyes flicked upward at the creaking floorboard. At the market roadblock, your shaking hands handed back Tutsi identity cards, falsely claiming they were valid while the commander watched you.
 
-At the gacaca court, you testified to your heroics but held back the names of the militia commanders. You knew they still lived nearby, and you feared retaliation against your wife and children. Celestin watched you omit the darkest truths of your time as communal secretary. The court accepted your testimony, but the village knows there are gaps. You walk a delicate line in the new Rwanda—a savior who couldn't afford to be a complete witness.`
+At the gacaca court in 2007, you testified to your acts of rescue but withheld the names of the militia commanders who assigned you to that checkpoint. They still lived nearby, and you feared retaliation against your wife and children. Celestin watched you omit the darkest portions of what you knew as communal secretary — the names, the lists, the chain of command above the roadblock. The court accepted your testimony. The village knows you saved lives. The village also knows there are gaps in your account. You walk a careful line in the new Rwanda: a man who rescued his neighbor, who lied to protect families at the checkpoint, and who then could not bring himself to name the men who put him there.`
   },
 
   {
@@ -408,11 +408,11 @@ At the gacaca court, you testified to your heroics but held back the names of th
       rw_helped_celestin: true,
       rw_misdirected_militia: true,
       rw_saved_at_roadblock: true,
-      rw_denied_knowledge: true
+      rw_denied_participation: true
     },
-    epilogue: `You survived. You saved Celestin by hiding him in the attic and lying to the militia leader who came to your door. You saved families at the market roadblock by falsifying identity checks. But the trauma of those days broke your willingness to participate in the aftermath.
+    epilogue: `You survived. You hid Celestin in the attic, lied to the militia leader whose eyes flicked to the ceiling, and later waved Tutsi families through the market roadblock by falsely claiming their identity cards were valid. You actively defied the machinery of the genocide from inside it.
 
-At the gacaca court, when asked to detail the lists you handled as a communal secretary, you claimed you remembered nothing. You denied knowledge of the organizers. You had done enough by surviving and saving lives; you refused to endanger your family further by becoming an informant. Celestin knows what you did for him, but the official court record only notes your refusal to testify. You carry the guilt of silence alongside the pride of having saved lives.`
+But at the gacaca court in 2007, when the judge asked you to detail the lists you handled as communal secretary and to name the commanders above you, you claimed you remembered nothing. You denied any administrative role in the killings. You had done enough — you survived, you saved lives, and you refused to endanger your family further by becoming an informant in a village where the perpetrators still lived. Celestin knows what you did for him, and he did not challenge your silence. The official court record notes your refusal to testify. You carry the private pride of what you did in the attic and at the checkpoint alongside the quieter weight of what you chose not to say when it might have mattered.`
   },
 
   {
@@ -423,9 +423,9 @@ At the gacaca court, when asked to detail the lists you handled as a communal se
       rw_complied_at_roadblock: true,
       rw_confessed_complicity: true
     },
-    epilogue: `You survived, but the moral cost was immense. You hid Celestin in your attic and lied to the militia to protect him. Yet, when assigned to the market roadblock, your courage failed. When the commander handed you the clipboard and watched you check identity cards, you waved the Tutsi through to be killed, participating in the very machinery you had just defied.
+    epilogue: `You survived, but the moral cost was immense. When the militia leader knocked and asked about the noise from above, you looked him in the face and misdirected him, keeping Celestin alive in your attic. Yet when they assigned you to the market roadblock, your courage failed. You took the clipboard. You checked the colonial-era identity cards. You separated the Tutsi for the militia and waved them toward their deaths.
 
-At the gacaca court as a Category Two accused, you didn't hide from what you became. You confessed fully, detailing how you processed the lists and separated the families at the market. Celestin testified that you saved him, while widows in the crowd listened to you admit to condemning their husbands. Because of your complete confession, your sentence was reduced. You live in a village that knows exactly what you did, and exactly what you saved.`
+At the gacaca court in 2008, accused under Category Two, you did not hide from what you had done. You confessed fully — detailing how you processed the identity cards at the checkpoint and what happened to the people you separated. Celestin testified that you had hidden him in your attic while widows in the crowd listened to you admit to condemning their husbands. Because of your complete confession, your sentence was reduced to community service alongside prison time. You live in a village that knows you hid a man in your attic, and knows what you did at the market roadblock, and knows that you finally told the truth about both.`
   },
 
   {
@@ -436,9 +436,9 @@ At the gacaca court as a Category Two accused, you didn't hide from what you bec
       rw_complied_at_roadblock: true,
       rw_minimized_role: true
     },
-    epilogue: `You survived. You successfully hid Celestin in the attic, but when you were forced to staff the market roadblock, you broke under the pressure. You checked the colonial identity cards and separated the Tutsi, letting the militia drag them away.
+    epilogue: `You survived. You hid Celestin in the attic and sent the militia away from your door. But when you were assigned to the market roadblock, you broke. You took the clipboard and processed the identity cards, separating the Tutsi families the militia dragged away.
 
-At the gacaca court, you leaned heavily on Celestin's testimony of your heroism while minimizing your crimes. You claimed the commander forced you, that you were just a terrified communal secretary holding a clipboard. The survivors from the market roadblock hissed at your excuses. The judges, weighing your lifesaving actions in the attic against your participation at the checkpoint, gave you a moderate sentence. You return to your sector bearing the stigma of a man who participated in the slaughter and lacked the courage to fully own up to it.`
+At the gacaca court in 2008, you leaned heavily on Celestin's testimony about the attic while minimizing your crimes at the checkpoint. You told the judges you were terrified — just a communal secretary forced to hold a clipboard, with machetes behind you. The survivors from the market roadblock hissed at your account. They remembered you managing the lists. The judges, weighing your act of rescue in the attic against your compliance at the checkpoint, issued a moderate sentence. You return to your sector carrying the stigma of a man who saved one neighbor and helped condemn others, and who lacked the courage to own all of it in front of the people it cost.`
   },
 
   {
@@ -449,9 +449,9 @@ At the gacaca court, you leaned heavily on Celestin's testimony of your heroism 
       rw_complied_at_roadblock: true,
       rw_denied_charges: true
     },
-    epilogue: `You survived. You hid Celestin in the attic, but when you went to the market roadblock, you followed the commander's orders and checked the identity cards that sent Tutsi families to their deaths.
+    epilogue: `You survived. You hid Celestin in the attic and lied to the militia leader who came to your door. But when you were assigned to the market roadblock, you complied — taking the clipboard and checking the identity cards that sent Tutsi families to their deaths.
 
-When brought before the gacaca court, you used Celestin's survival as your absolute shield and flatly denied participating at the roadblock. You looked at the widows in the grass and demanded proof, claiming you were only present, not participating. Due to conflicting witness accounts, you were acquitted on the roadblock charges. You beat the system legally, but everyone in the sector remembers you holding that clipboard. You live inside the gap between Rwanda's official record and the neighborhood's memory.`
+When brought before the gacaca court in 2008, you used Celestin's survival as an absolute shield and flatly denied any participation at the checkpoint. You looked at the widows seated in the grass and demanded proof, claiming you were only present and not responsible for what the militia did with the cards you processed. Conflicting witness accounts created enough doubt for an acquittal on the roadblock charges. You were not convicted. But everyone in the sector sat at that same checkpoint. Everyone saw you holding that clipboard. You live inside the gap between what Rwanda's official record says about you and what the neighborhood knows.`
   },
 
   {
@@ -462,9 +462,9 @@ When brought before the gacaca court, you used Celestin's survival as your absol
       rw_continued_compliance: true,
       rw_confessed_complicity: true
     },
-    epilogue: `You survived. When the Hutu Power organizer called your name at the rally, you accepted the clipboard. You staffed the market roadblock. You checked the colonial-era identity cards, separating Tutsi to be killed by the militia. You survived by becoming part of the genocide's bureaucracy.
+    epilogue: `You survived. When the Hutu Power organizer called your name at the rally and handed you the clipboard, you took it. For days at the market checkpoint, you processed the colonial-era identity cards, separating Tutsi families and managing the lists of addresses as a communal secretary who had become part of the genocide's administrative machinery.
 
-Years later, you sat on the grass as a Category Two accused at the gacaca court. You didn't hide. You confessed fully, naming the commander who gave you the clipboard and detailing exactly how you processed the lists as a communal secretary. The widows in the crowd listened to your full accounting. Because of your complete confession, your sentence was reduced, blending prison time with community service. You live in a village that knows exactly what you did, but also knows you finally told the truth.`
+Years later, you sat on the grass as a Category Two accused at the gacaca court. You did not minimize what you had done. You confessed fully — naming the commander who handed you the clipboard at the rally, detailing how you processed the lists, and describing exactly what happened to the people you separated at the checkpoint. The widows in the crowd listened to your full accounting. Because of your complete confession, your sentence was reduced, blending prison time with community service. You live in a village that knows exactly what you did at that roadblock, and also knows that when it came time to account for it, you told the truth without flinching.`
   },
 
   {
@@ -475,9 +475,9 @@ Years later, you sat on the grass as a Category Two accused at the gacaca court.
       rw_continued_compliance: true,
       rw_minimized_role: true
     },
-    epilogue: `You survived. You staffed the market roadblock after accepting the assignment at the rally, checking identity cards and letting the militia take the Tutsi away. 
+    epilogue: `You survived. You accepted the clipboard at the rally and spent days at the market checkpoint, processing identity cards and managing the lists of addresses as part of the genocide's bureaucratic machinery.
 
-At the gacaca court, you minimized your role. You claimed the commander forced you, that you never actually touched a machete, that you were just a terrified secretary holding a clipboard. The survivors in the crowd hissed. They remembered you managing the lists. The judges, lacking the full truth and facing contradictory witness statements, gave you a moderate sentence. You return to your sector bearing the stigma of an unrepentant participant who lacked the courage to own their actions.`
+At the gacaca court, you minimized your role. You told the judges the commander forced you, that you were a frightened communal secretary just holding a clipboard, that you never personally harmed anyone. The survivors in the crowd hissed. They remembered you reading from those lists by name. The judges, facing contradictory witness accounts and your refusal to offer a complete confession, handed down a moderate sentence. You return to your sector bearing the permanent stigma of a man who participated in the slaughter, who had the opportunity to own it fully before a court, and who chose instead to call it circumstance.`
   },
 
   {
@@ -488,9 +488,95 @@ At the gacaca court, you minimized your role. You claimed the commander forced y
       rw_continued_compliance: true,
       rw_denied_charges: true
     },
-    epilogue: `You survived. You staffed the roadblock, managing the lists of addresses and identifying the Tutsi for the militia commander. 
+    epilogue: `You survived. You accepted the assignment at the rally and spent days at the market checkpoint, processing the colonial-era identity cards and managing the address lists as a communal secretary embedded in the machinery of the genocide.
 
-When brought before the gacaca court, you flatly denied everything. You looked at the widows in the grass and demanded proof. You claimed you were home, that you were mistaken for someone else. Your arrogant denial outraged the community. Because you showed zero remorse and refused the reconciliation process, the judges handed down the maximum penalty. You were sent to a central prison, an unrepentant cog in the bureaucratic machinery of the genocide.`
+When brought before the gacaca court, you denied everything. You looked at the widows seated in the grass and demanded proof. You claimed mistaken identity. You expressed no remorse and refused the reconciliation process the court was built around. Because you showed zero contrition and rejected the system entirely, the judges handed down the maximum available sentence. You were sent to a central prison. You beat no one. You convinced no one. The village that watched you hold that clipboard every morning at the checkpoint watched you be taken away, and they remembered both.`
+  },
+
+  // BETRAYAL PATH OUTCOMES (hide Celestin → reveal Celestin → participate → gacaca 04b)
+  // HM-1 fix: paths 7-9. Player hid Celestin then broke and revealed him. Must NOT say "misdirected."
+  {
+    id: "rw-hm-outcome-betrayal-survived-confessor",
+    survived: true,
+    conditions: {
+      rw_helped_celestin: true,
+      rw_revealed_celestin: true,
+      rw_participated_directly: true,
+      rw_confessed_complicity: true
+    },
+    epilogue: `You survived, but the weight of what you did never left you. You opened your door to Celestin and hid him in the attic. When the militia leader's eyes flicked to the ceiling and the floorboard creaked, you broke. You told them where he was. You heard the machetes from outside. To prove your loyalty afterward, you participated at the roadblock — not just checking cards, but doing what the commander asked of you.
+
+At the gacaca court in 2008, accused under Category Two, you told the full truth. You confessed to revealing Celestin. You confessed to what you did at the roadblock. The court heard you name the commander, describe the process, account for every choice. Celestin's son sat in the crowd. He was old enough to understand. Because you confessed completely, your sentence was reduced — community service alongside prison time. You live in a village that knows you first tried to protect a man and then betrayed him, and that when given the chance to account for it, you did not flinch.`
+  },
+
+  {
+    id: "rw-hm-outcome-betrayal-survived-minimized",
+    survived: true,
+    conditions: {
+      rw_helped_celestin: true,
+      rw_revealed_celestin: true,
+      rw_participated_directly: true,
+      rw_minimized_role: true
+    },
+    epilogue: `You survived. You hid Celestin in the attic. When the militia leader pushed and the floorboard creaked, you broke and told them where he was. You heard the machetes. To prove your loyalty afterward, you participated at the roadblock — doing what the commander required of someone who had just proven themselves.
+
+At the gacaca court in 2008, facing Category Two charges, you minimized. You described yourself as a terrified communal secretary who had tried to hide a neighbor and then panicked under direct threat. You asked the court to weigh your initial instinct to shelter Celestin against what came after. The survivors in the crowd did not accept that framing. Neither, entirely, did the judges. Your sentence was moderate. You return to your sector carrying the particular stigma of a man whose first impulse was human and whose second was not, and who could not bring himself to own the second fully.`
+  },
+
+  {
+    id: "rw-hm-outcome-betrayal-survived-denied",
+    survived: true,
+    conditions: {
+      rw_helped_celestin: true,
+      rw_revealed_celestin: true,
+      rw_participated_directly: true,
+      rw_denied_charges: true
+    },
+    epilogue: `You survived. You hid Celestin in the attic. When the militia leader's eyes flicked upward and the pressure became unbearable, you broke and revealed where he was hiding. You heard the machetes. To cement your loyalty, you participated at the roadblock.
+
+When brought before the gacaca court in 2008, you denied the roadblock charges entirely. You presented your initial attempt to hide Celestin as proof of your character, erasing what followed from your account. Celestin's son was in the crowd. He knew the sequence of what had happened in that house. The witnesses who had been at the roadblock knew the other half. The court acquitted you on the direct participation charges due to conflicting accounts. You were not convicted. But the village carries both facts — the attic and what came after — and the official record's silence on one of them is not the same as it not having happened.`
+  },
+
+  // FLIGHT PATH SURVIVAL OUTCOMES (flee Kigali → countryside → gacaca witness 04d)
+  // HM-2 fix: paths 13-15. Player fled to Gitarama, stayed hidden, reached postwar gacaca as witness.
+  // ORDER: relocated first (fewest conditions, catches path 15 "no flag" tie-break),
+  //        then witness/silent which score higher on their specific gacaca paths.
+  {
+    id: "rw-hm-outcome-flight-survived-relocated",
+    survived: true,
+    conditions: {
+      rw_fled_kigali: true,
+      rw_stayed_hidden: true
+    },
+    epilogue: `You survived. You sent Celestin away and packed your family into the dark before dawn, driving south through the roadblocks toward your cousin's village near Gitarama. You made it. You stayed. You farmed and kept quiet for eleven years, and your cousin's village became your home.
+
+In 2005, when the gacaca judge came asking questions about Kigali, you moved again. Not far. Another village. A different distance. You had been a communal secretary. You knew things. You had also done nothing — not participated, not resisted, not stayed. You had just left. Rwanda's new identity policy said you were simply Rwandan now. But your children still asked why you left Kigali. Your wife still flinched at the radio. You relocated because it was the only answer you had ever known how to give.`
+  },
+
+  {
+    id: "rw-hm-outcome-flight-survived-witness",
+    survived: true,
+    conditions: {
+      rw_fled_kigali: true,
+      rw_stayed_hidden: true,
+      rw_testified_as_witness: true
+    },
+    epilogue: `You survived. When the radio announced the president's death and Celestin knocked at your door, you sent him away and packed your family before dawn. You abandoned your post as communal secretary and fled south through the smoke toward your cousin's village near Gitarama. You hid there — farming, staying quiet, avoiding the village meetings, listening to the dogs and the rumors — through all hundred days.
+
+In 2005, when the gacaca judge came to your cousin's village asking for testimony about what had happened in Kigali, you agreed to speak. Not as a perpetrator. As a witness. You described the lists you had seen as communal secretary, the administrative structure of the roadblocks, the names of the commanders. You gave the court the bureaucratic map of what had happened from the inside of the system you had fled. You did not kill anyone. You did not save anyone. You ran. The testimony you gave afterward was the only thing you had left to offer, and you gave it.`
+  },
+
+  {
+    id: "rw-hm-outcome-flight-survived-silent",
+    survived: true,
+    conditions: {
+      rw_fled_kigali: true,
+      rw_stayed_hidden: true,
+      rw_refused_testimony: true
+    },
+    epilogue: `You survived. You turned Celestin away at the door and fled before dawn with your wife and children, south through the checkpoints and the smoke toward your cousin's village near Gitarama. You survived the hundred days in the countryside — hidden, quiet, doing farm work, staying away from the Hutu Power meetings, never knowing if Celestin made it.
+
+In 2005, when the gacaca judge came to the village asking for testimony about Kigali, you refused. You had been a communal secretary. You knew things — the lists, the chain of command, the structure of the roadblocks. But you had also fled. You had not participated. You had not saved anyone. You had simply left, and you had kept leaving in every direction that meant not having to account for what you knew. Your silence was not innocence. It was the shape of the choice you had made in April 1994, extended forward through the years that followed.`
   },
 
   // DEATH OUTCOMES (Occurring BEFORE gacaca courts)
@@ -506,9 +592,9 @@ When brought before the gacaca court, you flatly denied everything. You looked a
       historicalRate: "Thousands of Hutu moderates who sheltered Tutsi were killed if discovered",
       yourChoices: "You hid Celestin and misdirected the militia. You were identified."
     },
-    deathEpilogueEarly: `You didn't survive. You made the brave choice to hide Celestin in your attic, and you misdirected the militia commander who knocked on your door. But secrets rarely lasted in Kigali. 
+    deathEpilogueEarly: `You didn't survive. You hid Celestin in your attic and looked the militia leader in the face when his eyes flicked to the ceiling, sending him to another house instead. In the days that followed, you were assigned to the market roadblock — and whether you held the line there or broke under the pressure and followed orders, it made no difference in the end. The Interahamwe traced the misdirection back to you.
 
-Before the genocide ended, the Interahamwe discovered your deception. You were executed for sheltering a Tutsi, paying the ultimate price for your humanity. Your death happened during the hundred days of slaughter, long before the gacaca courts were established to seek justice. You died as a moderate who refused to let your neighbor be murdered.`
+You were killed before the RPF could reach the city, identified as the kind of Hutu moderate the genocide's architects had placed on lists weeks before it began. You died during the hundred days themselves, long before the gacaca courts opened in 2005 to pursue justice. You never stood before a judge. You never heard whether Celestin survived. The choices you made at the checkpoint — in either direction — died with you, unrecorded.`
   },
 
   {
@@ -523,9 +609,9 @@ Before the genocide ended, the Interahamwe discovered your deception. You were e
       historicalRate: "Many who initially sheltered Tutsi but later complied were still targeted",
       yourChoices: "You hid Celestin, then revealed him, then participated. You were identified."
     },
-    deathEpilogueEarly: `You didn't survive. You initially hid Celestin in your attic, but when the militia commander pushed, you broke. You revealed his location, letting them drag your neighbor out. To prove your loyalty afterward, you participated at the roadblock. 
+    deathEpilogueEarly: `You didn't survive. You opened your door to Celestin and hid him in the attic. But when the militia leader pushed and your wife gripped your arm and the floorboard creaked above you, you broke. You told them where Celestin was. You heard the machetes. To prove your loyalty afterward, you stood at the roadblock.
 
-Despite joining the machinery of the genocide, it didn't save you. You were killed during the RPF advance in the summer of 1994, executed as a perpetrator before the genocide officially ended. You never saw the gacaca courts. You died carrying the horrific guilt of betraying the man hiding in your ceiling.`
+Participating in the machinery did not save you. You were killed during the RPF advance in the summer of 1994, executed as a perpetrator before the genocide officially ended. You never saw the gacaca courts. You died carrying the specific, unresolvable weight of having hidden a man in your ceiling and then told armed men where to find him. There was no process after. No confession. No judgment. Only what you did, and then the silence.`
   },
 
   {
@@ -539,9 +625,9 @@ Despite joining the machinery of the genocide, it didn't save you. You were kill
       historicalRate: "Thousands of Hutu perpetrators were killed or died before the gacaca courts opened in 2005",
       yourChoices: "You staffed the roadblock and followed orders. You were identified before you could claim you were forced."
     },
-    deathEpilogueEarly: `You didn't survive. When your name was called at the rally, you took the clipboard. You spent your final weeks staffing the market roadblock, checking identity cards and separating Tutsi for the militia. 
+    deathEpilogueEarly: `You didn't survive. When the Hutu Power organizer called your name at the rally, you took the clipboard. You spent your final days at the market checkpoint, processing the colonial-era identity cards and managing the address lists for the militia commander.
 
-You were killed during the RPF advance in July 1994 as they captured Kigali and summarily executed known perpetrators. Your death occurred in the chaos of the war's end, long before the gacaca courts opened in 2005. You never got the chance to stand before the widows, to confess, or to make excuses. You died as an active participant in the genocide.`
+You were killed during the RPF advance in July 1994 as they captured Kigali. The courts that would have heard your case — the gacaca proceedings that began in 2005 — never came. You never stood before the survivors in the grass. You never had the chance to confess or to claim you were forced or to fight the charges. You died as an active participant in the genocide's bureaucratic machinery, at a checkpoint you had chosen to staff, before any process existed to make sense of what you had done.`
   },
 
   {
@@ -553,13 +639,13 @@ You were killed during the RPF advance in July 1994 as they captured Kigali and 
     deathContext: {
       cause: "Killed during the genocide after fleeing Kigali",
       historicalRate: "Thousands of Tutsi and Hutu moderates were killed at roadblocks while attempting to flee Kigali",
-      yourChoices: "You told Celestin to leave, packed your family, and fled before dawn. You were identified."
+      yourChoices: "You told Celestin to leave, packed your family, and fled before dawn toward Gitarama. You were identified at a rural checkpoint."
     },
-    deathEpilogueEarly: `You didn't survive. When the radio announced the president's death, you turned Celestin away and fled Kigali with your wife and children before dawn. You abandoned your post as communal secretary and ran toward Gitarama. 
+    deathEpilogueEarly: `You didn't survive. When the radio announced the president's death and the smoke began rising over Kigali, you turned Celestin away and packed your family before dawn. You abandoned your post as communal secretary and fled south toward your cousin's village near Gitarama, moving through the dark while the city burned behind you.
 
-But the genocide was everywhere. You were caught at a rural roadblock during the 100 days of slaughter, long before the gacaca courts opened. Because you were an educated moderate from the capital who had abandoned your post, the local Interahamwe targeted you. You died trying to outrun the machinery of the genocide.`
+But the genocide reached everywhere the roads did. You were stopped at a rural checkpoint during the hundred days of killing. Because you were an educated moderate from Kigali who had abandoned his post — a communal secretary who had refused to attend the last Hutu Power rally, whose name was on lists — the local Interahamwe did not wave you through. You died trying to outrun the machinery of the genocide on a country road, long before the RPF captured Kigali and the killing stopped. You never made it to Gitarama. You never saw your cousin's farm. The flight that felt like survival was not.`
   }
-];-
+];
 
 // Export role data
 export default {
