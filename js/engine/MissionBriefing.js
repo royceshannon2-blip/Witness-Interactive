@@ -11,13 +11,36 @@
  */
 
 import { 
-  BRIEFING_PAGES, 
-  BRIEFING_CARDS, 
-  BRIEFING_FINALS,
-  BRIEFING_UI_TEXT,
-  BRIEFING_CARD_TEMPLATES
+  BRIEFING_PAGES    as RW_PAGES,
+  BRIEFING_CARDS    as RW_CARDS,
+  BRIEFING_FINALS   as RW_FINALS,
+  BRIEFING_UI_TEXT  as RW_UI_TEXT,
+  BRIEFING_CARD_TEMPLATES as RW_TEMPLATES
 } from '../content/missions/rwanda/briefing-content.js';
+
+import {
+  BRIEFING_PAGES    as UD_PAGES,
+  BRIEFING_CARDS    as UD_CARDS,
+  BRIEFING_FINALS   as UD_FINALS,
+  BRIEFING_UI_TEXT  as UD_UI_TEXT,
+  BRIEFING_CARD_TEMPLATES as UD_TEMPLATES
+} from '../content/missions/urban-design/briefing-content.js';
+
 import glossaryTooltip from './GlossaryTooltip.js';
+
+// Merge both missions' content into unified lookup objects keyed by roleKey.
+// Rwanda roleKeys: 'hutu' | 'tutsi' | 'un'
+// Urban Design roleKey: 'ud-resident'
+const BRIEFING_PAGES          = { ...RW_PAGES,     ...UD_PAGES     };
+const BRIEFING_CARDS          = { ...RW_CARDS,     ...UD_CARDS     };
+const BRIEFING_FINALS         = { ...RW_FINALS,    ...UD_FINALS    };
+const BRIEFING_CARD_TEMPLATES = { ...RW_TEMPLATES, ...UD_TEMPLATES };
+
+// UI text is per-mission (masthead name differs). Resolved in show() by missionId.
+const BRIEFING_UI_TEXT_MAP = {
+  'rwanda-genocide':   RW_UI_TEXT,
+  'aphg-urban-design': UD_UI_TEXT
+};
 
 class MissionBriefing {
   constructor(eventBus) {
@@ -28,14 +51,15 @@ class MissionBriefing {
   }
 
   hasBriefing(missionId) {
-    return missionId === 'rwanda-genocide';
+    return missionId === 'rwanda-genocide' || missionId === 'aphg-urban-design';
   }
 
   show(_missionId, roleId, onComplete) {
-    const roleKey = this._getRoleKey(roleId);
-    const pages = BRIEFING_PAGES[roleKey];
-    const card  = BRIEFING_CARDS[roleKey];
-    const final = BRIEFING_FINALS[roleKey];
+    const roleKey  = this._getRoleKey(roleId);
+    const uiText   = BRIEFING_UI_TEXT_MAP[_missionId] || RW_UI_TEXT;
+    const pages    = BRIEFING_PAGES[roleKey];
+    const card     = BRIEFING_CARDS[roleKey];
+    const final    = BRIEFING_FINALS[roleKey];
 
     if (!pages || !card || !final) {
       console.warn(`MissionBriefing: No briefing data for roleId "${roleId}" — skipping.`);
@@ -47,7 +71,7 @@ class MissionBriefing {
 
     this.container = document.createElement('div');
     this.container.id = 'mission-briefing-overlay';
-    this.container.innerHTML = this._buildHTML(roleKey);
+    this.container.innerHTML = this._buildHTML(roleKey, uiText);
     document.getElementById('app').appendChild(this.container);
     
     // Show intro tooltip immediately (non-blocking)
@@ -100,7 +124,7 @@ class MissionBriefing {
       }
 
       this._typeSequence(tasks, () => {
-        btn.textContent = isLast ? BRIEFING_UI_TEXT.buttons.seeCard : BRIEFING_UI_TEXT.buttons.continue;
+        btn.textContent = isLast ? uiText.buttons.seeCard : uiText.buttons.continue;
         btn.style.opacity  = '1';
         btn.style.pointerEvents = 'all';
         typing = false;
@@ -130,9 +154,10 @@ class MissionBriefing {
   // --- Private helpers ------------------------------------------------------
 
   _getRoleKey(roleId) {
-    if (roleId.includes('hutu'))   return 'hutu';
-    if (roleId.includes('tutsi'))  return 'tutsi';
-    if (roleId.includes('un') || roleId.includes('peacekeeper')) return 'un';
+    if (roleId === 'ud-resident')                                    return 'ud-resident';
+    if (roleId.includes('hutu'))                                     return 'hutu';
+    if (roleId.includes('tutsi'))                                    return 'tutsi';
+    if (roleId.includes('un') || roleId.includes('peacekeeper'))     return 'un';
     return null;
   }
 
@@ -273,10 +298,48 @@ class MissionBriefing {
     const template = BRIEFING_CARD_TEMPLATES[roleKey];
     if (!template) return '';
 
-    if (roleKey === 'tutsi') return this._buildTutsiCard(template);
-    if (roleKey === 'hutu')  return this._buildHutuCard(template);
-    if (roleKey === 'un')    return this._buildUnCard(template);
+    if (roleKey === 'tutsi')       return this._buildTutsiCard(template);
+    if (roleKey === 'hutu')        return this._buildHutuCard(template);
+    if (roleKey === 'un')          return this._buildUnCard(template);
+    if (roleKey === 'ud-resident') return this._buildUrbanResidentCard(template);
     return '';
+  }
+
+  _buildUrbanResidentCard(t) {
+    return `<div class="physical-card ud-deed-card">
+  <div class="pc-header-band pc-deed-header">
+    <span class="pc-republic" style="letter-spacing:2px;">${t.headerBand.republic}</span>
+    <span class="pc-type">${t.headerBand.type}</span>
+  </div>
+  <div class="pc-body">
+    <div class="pc-photo-col">
+      <div class="pc-photo-box pc-photo-deed">
+        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="70" height="70" style="opacity:0.85;">
+          <polygon points="40,8 72,32 8,32" fill="#8a6a3a" stroke="#5a4020" stroke-width="1.5"/>
+          <rect x="16" y="32" width="48" height="36" fill="#c8a870" stroke="#8a6a3a" stroke-width="1"/>
+          <rect x="32" y="48" width="16" height="20" fill="#6a4a20" stroke="#5a3a10" stroke-width="0.8"/>
+          <rect x="20" y="36" width="10" height="10" fill="#d4c090" stroke="#8a6a3a" stroke-width="0.6"/>
+          <rect x="50" y="36" width="10" height="10" fill="#d4c090" stroke="#8a6a3a" stroke-width="0.6"/>
+        </svg>
+        <div class="pc-photo-label" style="color:#5a3a10;">${t.photoLabel}</div>
+      </div>
+      <svg class="pc-stamp" viewBox="0 0 44 44" style="transform:rotate(-8deg); opacity:0.82;">
+        <circle cx="22" cy="22" r="20" fill="none" stroke="rgba(160,20,20,0.7)" stroke-width="2"/>
+        <circle cx="22" cy="22" r="16" fill="rgba(160,20,20,0.1)" stroke="rgba(160,20,20,0.4)" stroke-width="1"/>
+        <text x="22" y="13" text-anchor="middle" font-size="3" fill="rgba(160,20,20,0.85)" font-family="Times New Roman">${t.stamp.line1}</text>
+        <text x="22" y="24" text-anchor="middle" font-size="6" font-weight="700" fill="rgba(160,20,20,0.95)" font-family="Times New Roman">${t.stamp.line2}</text>
+        <text x="22" y="31" text-anchor="middle" font-size="3" fill="rgba(160,20,20,0.75)" font-family="Times New Roman">${t.stamp.line3}</text>
+      </svg>
+    </div>
+    <div class="pc-fields">
+      ${t.fields.map(f => `<div class="pc-field"><span class="pc-lbl ud-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('\n      ')}
+    </div>
+  </div>
+  <div class="pc-footer ud-deed-footer">
+    <span>${t.footer.issued}</span><span>${t.footer.valid}</span><span>${t.footer.number}</span>
+  </div>
+  <div class="pc-age-tint pc-age-pristine"></div>
+</div>`;
   }
 
 _buildTutsiCard(t) {
@@ -404,12 +467,12 @@ _buildTutsiCard(t) {
 </div>`;
   }
 
-  _buildHTML(roleKey) {
+  _buildHTML(roleKey, uiText) {
     const cardHTML = this._buildCardHTML(roleKey);
     return `<button id="mb-back-button" class="back-button" aria-label="Back to role selection">← Back</button>
 <div class="mb-paper">
   <div class="mb-mast">
-    <div class="mb-mast-name">${BRIEFING_UI_TEXT.masthead.name}</div>
+    <div class="mb-mast-name">${uiText.masthead.name}</div>
     <div class="mb-rule-double"></div>
     <div class="mb-meta">
       <span id="m-vol">Vol. LXI</span>
@@ -422,18 +485,18 @@ _buildTutsiCard(t) {
     <div class="mb-col-rule"><div class="mb-col-dot"></div></div>
     <div class="mb-headline sz-lg" id="hl"></div>
     <div class="mb-deck-el" id="mb-deck"></div>
-    <div class="mb-byline">${BRIEFING_UI_TEXT.masthead.byline}</div>
+    <div class="mb-byline">${uiText.masthead.byline}</div>
     <div class="mb-body-el" id="mb-body"></div>
     <div class="mb-ticker-el" id="mb-ticker"></div>
     <button class="mb-cont-btn" id="mb-cont" style="opacity:0;pointer-events:none"></button>
   </div>
   <div id="mb-card-section">
-    <div class="mb-card-eyebrow">${BRIEFING_UI_TEXT.cardEyebrow}</div>
+    <div class="mb-card-eyebrow">${uiText.cardEyebrow}</div>
     ${cardHTML}
     <div id="mb-id-note"></div>
     <div id="mb-final-bar">
       <div id="mb-final-text"></div>
-      <button class="mb-cont-btn" id="mb-begin" style="margin-top:0.8rem;opacity:0;pointer-events:none">${BRIEFING_UI_TEXT.buttons.enterMission}</button>
+      <button class="mb-cont-btn" id="mb-begin" style="margin-top:0.8rem;opacity:0;pointer-events:none">${uiText.buttons.enterMission}</button>
     </div>
   </div>
 </div>`;
