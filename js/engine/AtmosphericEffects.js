@@ -371,6 +371,28 @@ class AtmosphericEffects {
     } else if (sceneId === 'rw-un-scene-04d') {
       this.createBorderGlow('rgba(160, 175, 200, 0.4)', 5000);
     }
+
+    // ── URBAN DESIGN RESIDENT ──────────────────────────────────
+    else if (sceneId === 'ud-res-scene-01') {
+      this.createBorderGlow('rgba(139, 0, 0, 0.5)', 5000); // Era 1: Redlining
+    } else if (sceneId === 'ud-res-scene-02') {
+      this.createBorderGlow('rgba(139, 0, 0, 0.55)', 5000);
+    } else if (sceneId === 'ud-res-scene-03') {
+      this.createBorderGlow('rgba(139, 0, 0, 0.6)', 6000);
+    } else if (sceneId === 'ud-res-scene-04') {
+      // Era 2: Blockbusting - subtle gray
+      this.createBorderGlow('rgba(100, 100, 100, 0.3)', 5000);
+    } else if (sceneId === 'ud-res-scene-05') {
+      this.createBorderGlow('rgba(100, 100, 100, 0.3)', 5000);
+    } else if (sceneId === 'ud-res-scene-06') {
+      this.createBorderGlow('rgba(100, 100, 100, 0.35)', 5000);
+    } else if (sceneId === 'ud-res-scene-07') {
+      this.createBorderGlow('rgba(255, 107, 53, 0.5)', 5000); // Era 3: Heat Island
+    } else if (sceneId === 'ud-res-scene-08') {
+      this.createBorderGlow('rgba(255, 107, 53, 0.55)', 5000);
+    } else if (sceneId === 'ud-res-scene-09') {
+      this.createBorderGlow('rgba(255, 107, 53, 0.6)', 6000);
+    }
   }
 
   /**

@@ -38,6 +38,7 @@ import UpdateNotesPanel from './ui/UpdateNotesPanel.js';
 // Content imports
 import pearlHarborMission from './content/missions/pearl-harbor/mission.js';
 import rwandaMission from './content/missions/rwanda/mission.js';
+import urbanDesignMission from './content/missions/urban-design/mission.js';
 import uiContent from './content/ui-content.js';
 
 /**
@@ -64,7 +65,7 @@ async function initializeApp() {
     console.log('✓ ConsequenceSystem initialized');
     
     // 4. Initialize SceneStateMachine (manages scene transitions)
-    const sceneStateMachine = new SceneStateMachine(eventBus);
+    const sceneStateMachine = new SceneStateMachine(eventBus, consequenceSystem);
     console.log('✓ SceneStateMachine initialized');
     
     // 4.5. Initialize MissionBriefing (newspaper-style mission briefings)
@@ -82,6 +83,10 @@ async function initializeApp() {
     // 7b. Load Rwanda Genocide mission
     missionRegistry.register(rwandaMission);
     console.log('✓ Rwanda Genocide mission loaded');
+    
+    // 7c. Load Urban Design mission
+    missionRegistry.register(urbanDesignMission);
+    console.log('✓ Urban Design mission loaded');
     
     // 7. Initialize TimelineSelector (mission selection UI)
     const timelineSelector = new TimelineSelector(eventBus, missionRegistry);
