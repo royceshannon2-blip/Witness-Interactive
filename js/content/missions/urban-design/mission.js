@@ -69,7 +69,7 @@ const urbanDesignMission = {
       id: 'ud-ripple-02',
       date: '1944-06-22',
       title: 'GI Bill Excludes Black Veterans',
-      description: 'The GI Bill offered home loans to returning WWII veterans, but local banks and realtors denied Black veterans access to suburban housing. White veterans bought homes in Levittown and similar suburbs. Black veterans were steered to redlined urban areas. The wealth gap began: home equity became the primary wealth-building tool for white families.',
+      description: 'The Servicemen\'s Readjustment Act of 1944 provided low-interest home loans to returning veterans. Administration ran through local banks operating under FHA underwriting criteria, which continued to reference HOLC grade designations. Black veterans were denied access to suburban mortgage markets at documented rates. White veterans purchased homes in Levittown and comparable developments. Black veterans were directed to urban areas carrying D-grade designations. The Urban Institute (2018) estimates that differential home equity accumulation in this period accounts for a significant share of the current racial wealth disparity.',
       apTheme: 'spatial-analysis',
       animationDelay: 2000
     },
@@ -77,7 +77,7 @@ const urbanDesignMission = {
       id: 'ud-ripple-03',
       date: '1948-05-03',
       title: 'Shelley v. Kraemer Bans Racial Covenants',
-      description: 'The Supreme Court ruled that courts could not enforce racial covenants in property deeds. However, the decision did not ban the covenants themselves, and informal discrimination continued. Redlining persisted through bank policies and realtor practices. The spatial pattern was already set.',
+      description: 'The Supreme Court ruled in Shelley v. Kraemer that courts could not enforce racially restrictive covenants in property deeds. The decision did not prohibit the covenants themselves. The FHA Underwriting Manual had recommended restrictive covenants as a tool for maintaining neighborhood grade stability. Informal discrimination in lending and real estate practice continued. The spatial distribution of capital established by the HOLC grading system remained in effect.',
       apTheme: 'continuity',
       animationDelay: 3000
     },
@@ -85,7 +85,7 @@ const urbanDesignMission = {
       id: 'ud-ripple-04',
       date: '1956-06-29',
       title: 'Interstate Highway Act Destroys Black Neighborhoods',
-      description: 'The Federal-Aid Highway Act funded interstate highways through urban cores. Planners routed highways through Black neighborhoods, destroying homes and businesses. In city after city, I-95, I-10, I-5 cut through redlined districts. The highways created physical barriers, isolating communities and accelerating disinvestment.',
+      description: 'The Federal-Aid Highway Act of 1956 funded interstate highway construction through urban cores. Route selection in multiple cities placed highways through neighborhoods carrying HOLC D-grade designations. The Federal Highway Administration\'s own post-construction studies documented displacement of residents and businesses, physical fragmentation of neighborhoods, and accelerated disinvestment in adjacent areas. In cities including Miami, New Orleans, and Syracuse, the highway corridors followed the boundaries of formerly redlined districts.',
       apTheme: 'human-environment-interaction',
       animationDelay: 4000
     },
@@ -93,7 +93,7 @@ const urbanDesignMission = {
       id: 'ud-ripple-05',
       date: '1968-04-11',
       title: 'Fair Housing Act Outlaws Discrimination',
-      description: 'One week after Martin Luther King Jr.\'s assassination, Congress passed the Fair Housing Act, banning discrimination in housing sales and rentals. But the law could not undo 34 years of redlining. The wealth gap, the tax base erosion, the infrastructure neglect—all remained. Spatial inequality had become structural.',
+      description: 'The Fair Housing Act of 1968 prohibited discrimination in housing sales, rentals, and financing. The Act did not include a mechanism to reverse the capital distribution patterns established by 34 years of HOLC and FHA policy. The Federal Reserve Bank of Chicago (2017) documents that the racial wealth gap — primarily attributable to differential home equity accumulation — was already structurally embedded in the spatial distribution of property values, tax bases, and infrastructure investment.',
       apTheme: 'continuity',
       animationDelay: 5000
     },
@@ -101,7 +101,7 @@ const urbanDesignMission = {
       id: 'ud-ripple-06',
       date: '1990-01-01',
       title: 'New Urbanism Proposes Mixed-Use Development',
-      description: 'Urban planners promoted New Urbanism: walkable neighborhoods, mixed-use development, public transit. The movement offered solutions to sprawl and car dependency. But in formerly redlined areas, "revitalization" often meant gentrification. Long-term residents faced displacement as property values rose.',
+      description: 'Urban planners and architects associated with the Congress for the New Urbanism promoted mixed-use, walkable neighborhood design as a response to suburban sprawl and urban disinvestment. Applied to formerly D-grade areas, mixed-use development increased property values and reduced heat island effects through green infrastructure. The National Low Income Housing Coalition documented that in comparable developments, market rents increased 20 to 40 percent within five years, displacing long-term residents who had remained through decades of reduced municipal services.',
       apTheme: 'comparison',
       animationDelay: 6000
     },
@@ -109,7 +109,7 @@ const urbanDesignMission = {
       id: 'ud-ripple-07',
       date: '2015-01-01',
       title: 'Environmental Justice Research Documents Heat Islands',
-      description: 'Researchers mapped urban heat islands using satellite data. The pattern was clear: formerly redlined neighborhoods were 5°F to 12°F hotter than green-graded areas. Decades of disinvestment meant fewer trees, more asphalt, less green space. The 1930s maps predicted 21st-century temperatures.',
+      description: 'Researchers at the University of Richmond\'s Digital Scholarship Lab, Portland State University, and Virginia Commonwealth University published findings from the "Mapping Inequality" project and subsequent peer-reviewed studies. Hoffman, Shandas, and Pendleton (2020) overlaid digitized HOLC maps on satellite thermal imaging across 108 U.S. cities. Neighborhoods graded D in the 1930s recorded surface temperatures 5°F to 12°F higher than A-grade areas in the same cities. The mechanism: reduced tree canopy coverage and higher impervious surface ratios resulting from decades of reduced capital investment following the D-grade designation.',
       apTheme: 'human-environment-interaction',
       animationDelay: 7000
     },
@@ -117,7 +117,7 @@ const urbanDesignMission = {
       id: 'ud-ripple-08',
       date: '2024-01-01',
       title: 'The Wealth Gap Persists',
-      description: 'Ninety years after the National Housing Act, the median white family holds 8 to 10 times the wealth of the median Black family. Most of that gap is home equity—denied in 1934, compounded over generations. The divided city remains divided. The question is no longer why, but what comes next.',
+      description: 'The Federal Reserve\'s Survey of Consumer Finances (2022) documents a median white family net worth of approximately $285,000 against a median Black family net worth of approximately $44,900. The Federal Reserve Bank of Chicago (2017) attributes a substantial portion of this disparity to differential home equity accumulation beginning in the 1930s. Most of the gap is in home equity — the primary intergenerational wealth transfer mechanism in postwar America, access to which was determined in significant part by HOLC grade designations assigned between 1935 and 1940.',
       apTheme: 'causation',
       animationDelay: 8000
     }
