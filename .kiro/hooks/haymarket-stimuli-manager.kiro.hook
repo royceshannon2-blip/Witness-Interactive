@@ -1,0 +1,13 @@
+{
+  "name": "Validate StimuliManager deduplication and no-op",
+  "version": "1.0.0",
+  "description": "When StimuliManager.js is saved, verify deduplication Set and no-op behavior are present.",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["js/engine/StimuliManager.js"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Read the saved file. Verify:\n1. A `Set` is initialized in the constructor to track shown document IDs (e.g., `this.shownDocuments = new Set()`)\n2. Before showing any document, the Set is checked and the document is skipped if already shown\n3. The Set is updated after a document is shown\n4. The handler for `scene:transition` has a guard for absent/null/empty `stimuliUnlock` — it takes no action and emits no events in that case\n5. All communication is via EventBus — no direct DOM manipulation in the class (DOM manipulation should be in UIController)\n\nReport any violations."
+  }
+}

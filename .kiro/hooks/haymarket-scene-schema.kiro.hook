@@ -1,0 +1,13 @@
+{
+  "name": "Validate Haymarket scene schema",
+  "version": "1.0.0",
+  "description": "When any haymarket role file is saved, verify every scene has all required fields and that deathCheckpoint is never true.",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["js/content/missions/haymarket/lucy-parsons.js", "js/content/missions/haymarket/karl-brenner.js", "js/content/missions/haymarket/james-doyle.js"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Read the saved file. For every scene object, verify:\n1. `apThemes` is a non-empty array with values from: causation, contextualization, continuity, perspective, argumentation, complexity\n2. `apKeyConcept` matches pattern KC-X.X.X\n3. `apUnit` is present and non-empty\n4. `spiceT` is a non-empty array\n5. `stimuliUnlock` is present (may be empty array)\n6. `predictionQuestion` is present (may be null)\n7. `timedChoice` is present (may be null)\n8. `deathCheckpoint` is false or absent — NEVER true\n9. All `consequences` keys start with `hm_`\n10. `psychologyEffects` keys (if present) are only: morale, loyalty, humanity, composure — never 'awareness'\n11. All `ambientTrack` and `narratorAudio` paths start with `./` not `/`\n12. The last item in the `outcomes` array has `conditions: {}`\n\nReport any violations with the scene ID and field name."
+  }
+}

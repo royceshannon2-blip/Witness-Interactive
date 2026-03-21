@@ -1,0 +1,13 @@
+{
+  "name": "Validate ConsequenceSystem Haymarket additions",
+  "version": "1.0.0",
+  "description": "When ConsequenceSystem.js is saved, verify Haymarket survival cases and range-check support are present.",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["js/engine/ConsequenceSystem.js"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Read the saved file. Verify:\n1. `determineSurvival()` has cases for 'hm-lucy-parsons', 'hm-karl-brenner', 'hm-james-doyle' returning `{ survived: true, deathChance: 0, modifiers: {} }`\n2. `calculateOutcome()` or `_scoreConditions()` includes a branch that handles object-type condition values (range-check with gte/lte) in addition to the existing boolean/exact match\n3. `shouldDieNow()` returns `{ dies: false }` for all three Haymarket role IDs\n\nReport any missing cases."
+  }
+}

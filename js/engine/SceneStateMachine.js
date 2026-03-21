@@ -45,12 +45,17 @@ class SceneStateMachine {
   }
 
   /**
-   * Load a role's scene sequence
+   * Load a role's scene sequence.
+   * If the role export includes an `initFlags` object, each flag is applied
+   * via consequenceSystem.setFlag() BEFORE the first scene transition fires.
+   * This is required for hm_lp_movement_trust (must start at 0, not undefined).
+   *
    * @param {string} missionId
    * @param {string} roleId
    * @param {Array}  scenes
+   * @param {object} [role]   - Full role export (optional); used to read initFlags
    */
-  loadRole(missionId, roleId, scenes) {
+  loadRole(missionId, roleId, scenes, role = null) {
     if (typeof missionId !== 'string' || typeof roleId !== 'string') {
       console.error('SceneStateMachine.loadRole: missionId and roleId must be strings');
       return;
@@ -76,6 +81,15 @@ class SceneStateMachine {
     this.currentRoleId       = roleId;
     this.scenes              = validScenes;
     this.currentSceneIndex   = 0;
+
+    // Apply initFlags BEFORE first scene transition fires.
+    // This guarantees numeric flags like hm_lp_movement_trust start at their
+    // declared value (0) rather than undefined or any psychology-system default.
+    if (role && role.initFlags && this.consequenceSystem) {
+      for (const [flagName, value] of Object.entries(role.initFlags)) {
+        this.consequenceSystem.setFlag(flagName, value);
+      }
+    }
 
     const firstScene = this.getCurrentScene();
     if (firstScene) {

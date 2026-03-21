@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glossary Tooltips Test</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body {
+      padding: 2rem;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .test-section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: var(--color-bg-panel);
+      border: 1px solid var(--color-border);
+      border-radius: 4px;
+    }
+    .test-section h2 {
+      color: var(--color-accent-gold);
+      margin-bottom: 1rem;
+    }
+    .test-section p {
+      line-height: 1.8;
+      color: var(--color-text-primary);
+    }
+  </style>
+</head>
+<body>
+  <h1 style="color: var(--color-accent-gold); text-align: center;">Glossary Tooltips Test</h1>
+  
+  <div class="test-section">
+    <h2>Test 1: Basic Terms</h2>
+    <p id="test1">
+      The Tutsi population was targeted by Hutu extremists during the genocide. 
+      The Interahamwe militias were organized by Hutu Power ideologues who used 
+      RTLM radio to spread propaganda.
+    </p>
+  </div>
+  
+  <div class="test-section">
+    <h2>Test 2: Organizations and Places</h2>
+    <p id="test2">
+      UNAMIR peacekeepers in Kigali were commanded by General Dallaire. 
+      The RPF advanced from Uganda while the Arusha Accords collapsed.
+      Many sought refuge at the Hôtel des Mille Collines.
+    </p>
+  </div>
+  
+  <div class="test-section">
+    <h2>Test 3: Legal Terms</h2>
+    <p id="test3">
+      After the genocide, gacaca courts processed over a million cases.
+      The ICTR in Arusha prosecuted senior organizers. The Genocide Convention
+      obligated intervention, but UNAMIR's mandate restricted action.
+    </p>
+  </div>
+  
+  <div class="test-section">
+    <h2>Test 4: People and Concepts</h2>
+    <p id="test4">
+      President Habyarimana's plane was shot down on April 6, 1994.
+      Prime Minister Uwilingiyimana, a Hutu moderate, was killed the next day.
+      The concept of Responsibility to Protect emerged partly from Rwanda's lessons.
+    </p>
+  </div>
+  
+  <div class="test-section">
+    <h2>Test 5: Compound Terms</h2>
+    <p id="test5">
+      The gacaca courts used Category Two classifications for direct perpetrators.
+      A communal secretary had access to population records. The city of Butare
+      and Gitarama saw different patterns of violence than Kigali.
+    </p>
+  </div>
+  
+  <button id="show-intro" style="margin: 2rem auto; display: block;">
+    Show Intro Message Again
+  </button>
+  
+  <script type="module">
+    import glossaryTooltip from './js/engine/GlossaryTooltip.js';
+    
+    // Apply glossary to all test sections
+    document.querySelectorAll('.test-section p').forEach(p => {
+      glossaryTooltip.apply(p);
+    });
+    
+    // Test intro message
+    document.getElementById('show-intro').addEventListener('click', () => {
+      // Reset the flag to show intro again
+      glossaryTooltip.introShown = false;
+      glossaryTooltip.showIntro();
+    });
+    
+    console.log('✓ Glossary tooltips applied to all test sections');
+    console.log('✓ Hover over underlined terms to see definitions');
+    console.log('✓ Terms are keyboard accessible (Tab + Enter/Space)');
+  </script>
+</body>
+</html>

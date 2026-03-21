@@ -319,3 +319,82 @@ console.assert(!stateMachine10.validateChoice(invalidChoice3, 'test-scene'), 'Sh
 console.log('✓ Test 10 passed');
 
 console.log('\n✅ All SceneStateMachine tests passed!');
+
+// ─── TASK 2.3: initFlags tests ────────────────────────────────────────────
+
+console.log('\n=== initFlags Tests (Task 2.3) ===\n');
+
+import ConsequenceSystem from './ConsequenceSystem.js';
+
+// Test IF-1: initFlags are applied before first scene transition
+console.log('Test IF-1: initFlags applied before first scene:transition fires');
+const ifEventBus1 = new EventBus();
+const ifCS1 = new ConsequenceSystem(ifEventBus1);
+const ifSSM1 = new SceneStateMachine(ifEventBus1, ifCS1);
+
+let flagValueAtTransition = undefined;
+ifEventBus1.on('scene:transition', () => {
+  // Capture the flag value at the moment the first scene fires
+  flagValueAtTransition = ifCS1.getFlag('hm_lp_movement_trust');
+});
+
+const ifRole1 = {
+  id: 'hm-lucy-parsons',
+  initFlags: { hm_lp_movement_trust: 0 },
+  scenes: [createValidScene('hm-lp-scene-01', null)]
+};
+
+ifSSM1.loadRole('haymarket-affair', 'hm-lucy-parsons', ifRole1.scenes, ifRole1);
+
+console.assert(
+  flagValueAtTransition === 0,
+  `IF-1 failed: hm_lp_movement_trust should be 0 at first transition, got ${flagValueAtTransition}`
+);
+console.log('✓ initFlags applied before first scene:transition');
+
+// Test IF-2: each key in initFlags is set via setFlag
+console.log('\nTest IF-2: multiple initFlags keys all applied');
+const ifEventBus2 = new EventBus();
+const ifCS2 = new ConsequenceSystem(ifEventBus2);
+const ifSSM2 = new SceneStateMachine(ifEventBus2, ifCS2);
+
+const ifRole2 = {
+  id: 'hm-test-role',
+  initFlags: { hm_lp_movement_trust: 0, hm_lp_some_other_flag: 2 },
+  scenes: [createValidScene('hm-test-scene-01', null)]
+};
+
+ifSSM2.loadRole('haymarket-affair', 'hm-test-role', ifRole2.scenes, ifRole2);
+
+console.assert(ifCS2.getFlag('hm_lp_movement_trust') === 0,    'IF-2a failed: hm_lp_movement_trust should be 0');
+console.assert(ifCS2.getFlag('hm_lp_some_other_flag') === 2,   'IF-2b failed: hm_lp_some_other_flag should be 2');
+console.log('✓ All initFlags keys applied correctly');
+
+// Test IF-3: loadRole without role param (backward compat) — no crash
+console.log('\nTest IF-3: loadRole without role param does not crash');
+const ifEventBus3 = new EventBus();
+const ifCS3 = new ConsequenceSystem(ifEventBus3);
+const ifSSM3 = new SceneStateMachine(ifEventBus3, ifCS3);
+
+let noCrash = true;
+try {
+  ifSSM3.loadRole('pearl-harbor', 'american-sailor', [createValidScene('ph-scene-01', null)]);
+} catch (e) {
+  noCrash = false;
+}
+console.assert(noCrash, 'IF-3 failed: loadRole without role param should not throw');
+console.log('✓ loadRole without role param is backward compatible');
+
+// Test IF-4: role with no initFlags — no crash, no flags set
+console.log('\nTest IF-4: role with no initFlags does not crash');
+const ifEventBus4 = new EventBus();
+const ifCS4 = new ConsequenceSystem(ifEventBus4);
+const ifSSM4 = new SceneStateMachine(ifEventBus4, ifCS4);
+
+const ifRole4 = { id: 'hm-karl-brenner', scenes: [createValidScene('hm-kb-scene-01', null)] };
+ifSSM4.loadRole('haymarket-affair', 'hm-karl-brenner', ifRole4.scenes, ifRole4);
+
+console.assert(Object.keys(ifCS4.getAllFlags()).length === 0, 'IF-4 failed: no flags should be set when initFlags absent');
+console.log('✓ Role without initFlags sets no flags');
+
+console.log('\n✅ All initFlags tests passed!');

@@ -1,0 +1,13 @@
+{
+  "name": "Validate mission.js postRippleQuestion and ripple events",
+  "version": "1.0.0",
+  "description": "When mission.js is saved, verify postRippleQuestion exists and ripple events have required fields.",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["js/content/missions/haymarket/mission.js"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Read the saved file. Verify:\n1. `postRippleQuestion` field exists on the mission object\n2. `postRippleQuestion` has: questionType, apSkill, spiceT, apUnit, question, options (4 items), correctId, explanation\n3. The correct answer in postRippleQuestion models AP skill 6.D — it should qualify or complicate an argument, not just support it\n4. `historicalRipple` array has at least 6 events\n5. Each ripple event has: id, date, title, description, apTheme, spiceT, apUnit, animationDelay\n6. `apUnits` array contains 'Unit 6.5', 'Unit 6.6', 'Unit 7.1'\n\nReport any violations."
+  }
+}

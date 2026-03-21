@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Haymarket Engine Tests — Tasks 2.1, 2.2, 2.3</title>
+  <style>
+    body { background: #0a0a0a; color: #E8DCC8; font-family: monospace; padding: 20px; }
+    h1 { color: #B8860B; }
+    h2 { color: #A89880; margin-top: 24px; }
+    #output { white-space: pre-wrap; font-size: 0.9rem; line-height: 1.6; }
+    .pass { color: #4caf50; }
+    .fail { color: #8B0000; font-weight: bold; }
+    .section { color: #009EDB; }
+  </style>
+</head>
+<body>
+  <h1>Haymarket Engine Tests</h1>
+  <h2>Tasks 2.1 (Range-Check), 2.2 (Haymarket Survival), 2.3 (initFlags)</h2>
+  <div id="output">Running tests...</div>
+
+  <script type="module">
+    import EventBus from './js/engine/EventBus.js';
+    import ConsequenceSystem from './js/engine/ConsequenceSystem.js';
+    import SceneStateMachine from './js/engine/SceneStateMachine.js';
+
+    const out = document.getElementById('output');
+    let passed = 0;
+    let failed = 0;
+
+    function log(msg, cls = '') {
+      const span = document.createElement('span');
+      if (cls) span.className = cls;
+      span.textContent = msg + '\n';
+      out.appendChild(span);
+    }
+
+    function assert(condition, label) {
+      if (condition) {
+        log('  ✓ ' + label, 'pass');
+        passed++;
+      } else {
+        log('  ✗ FAIL: ' + label, 'fail');
+        failed++;
+      }
+    }
+
+    function section(title) {
+      log('\n' + title, 'section');
+    }
+
+    function makeScene(id, nextScene = null) {
+      return {
+        id, narrative: 'Test narrative for ' + id,
+        apThemes: ['causation'],
+        choices: [{ id: id + '-c1', text: 'Choice', consequences: {}, nextScene }],
+        atmosphericEffect: null
+      };
+    }
+
+    out.textContent = '';
+
+    // ── TASK 2.1: Range-check condition evaluation ──────────────────────────
+
+    section('=== Task 2.1: Range-Check Conditions ===');
+
+    const rc = new ConsequenceSystem(new EventBus());
+
+    // { gte: 3 } with value 3 = match
+    rc.setFlag('hm_lp_movement_trust', 3);
+    const r1 = rc.calculateOutcome([
+      { id: 'high', survived: true, conditions: { hm_lp_movement_trust: { gte: 3 } } },
+      { id: 'def',  survived: true, conditions: {} }
+    ], true);
+    assert(r1 === 'high', '{ gte: 3 } with value 3 = match');
+
+    // { gte: 3 } with value 2 = no match
+    rc.reset(); rc.setFlag('hm_lp_movement_trust', 2);
+    const r2 = rc.calculateOutcome([
+      { id: 'high', survived: true, conditions: { hm_lp_movement_trust: { gte: 3 } } },
+      { id: 'def',  survived: true, conditions: {} }
+    ], true);
+    assert(r2 === 'def', '{ gte: 3 } with value 2 = no match');
+
+    // { lte: 1 } with value 1 = match
+    rc.reset(); rc.setFlag('hm_lp_movement_trust', 1);
+    const r3 = rc.calculateOutcome([
+      { id: 'low', survived: true, conditions: { hm_lp_movement_trust: { lte: 1 } } },
+      { id: 'def', survived: true, conditions: {} }
+    ], true);
+    assert(r3 === 'low', '{ lte: 1 } with value 1 = match');
+
+    // { lte: 1 } with value 2 = no match
+    rc.reset(); rc.setFlag('hm_lp_movement_trust', 2);
+    const r4 = rc.calculateOutcome([
+      { id: 'low', survived: true, conditions: { hm_lp_movement_trust: { lte: 1 } } },
+      { id: 'def', survived: true, conditions: {} }
+    ], true);
+    assert(r4 === 'def', '{ lte: 1 } with value 2 = no match');
+
+    // { gte: 2, lte: 4 } with value 3 = match
+    rc.reset(); rc.setFlag('hm_lp_movement_trust', 3);
+    const r5 = rc.calculateOutcome([
+      { id: 'mid', survived: true, conditions: { hm_lp_movement_trust: { gte: 2, lte: 4 } } },
+      { id: 'def', survived: true, conditions: {} }
+    ], true);
+    assert(r5 === 'mid', '{ gte: 2, lte: 4 } with value 3 = match');
+
+    // { gte: 2, lte: 4 } with value 1 = no match
+    rc.reset(); rc.setFlag('hm_lp_movement_trust', 1);
+    const r6 = rc.calculateOutcome([
+      { id: 'mid', survived: true, conditions: { hm_lp_movement_trust: { gte: 2, lte: 4 } } },
+      { id: 'def', survived: true, conditions: {} }
+    ], true);
+    assert(r6 === 'def', '{ gte: 2, lte: 4 } with value 1 = no match');
+
+    // { gte: 2, lte: 4 } with value 5 = no match
+    rc.reset(); rc.setFlag('hm_lp_movement_trust', 5);
+    const r7 = rc.calculateOutcome([
+      { id: 'mid', survived: true, conditions: { hm_lp_movement_trust: { gte: 2, lte: 4 } } },
+      { id: 'def', survived: true, conditions: {} }
+    ], true);
+    assert(r7 === 'def', '{ gte: 2, lte: 4 } with value 5 = no match');
+
+    // Boolean exact-match still works (regression check)
+    rc.reset(); rc.setFlag('hm_lp_spoke_publicly', true);
+    const r8 = rc.calculateOutcome([
+      { id: 'spoke', survived: true, conditions: { hm_lp_spoke_publicly: true } },
+      { id: 'def',   survived: true, conditions: {} }
+    ], true);
+    assert(r8 === 'spoke', 'Boolean exact-match unchanged after range-check extension');
+
+    // ── TASK 2.2: Haymarket survival ────────────────────────────────────────
+
+    section('=== Task 2.2: Haymarket Survival ===');
+
+    const sv = new ConsequenceSystem(new EventBus());
+
+    const lpS = sv.determineSurvival('hm-lucy-parsons');
+    assert(lpS.survived === true,   'hm-lucy-parsons: survived = true');
+    assert(lpS.deathChance === 0,   'hm-lucy-parsons: deathChance = 0');
+
+    const kbS = sv.determineSurvival('hm-karl-brenner');
+    assert(kbS.survived === true,   'hm-karl-brenner: survived = true');
+    assert(kbS.deathChance === 0,   'hm-karl-brenner: deathChance = 0');
+
+    const jdS = sv.determineSurvival('hm-james-doyle');
+    assert(jdS.survived === true,   'hm-james-doyle: survived = true');
+    assert(jdS.deathChance === 0,   'hm-james-doyle: deathChance = 0');
+
+    // shouldDieNow returns dies:false for all three
+    for (const roleId of ['hm-lucy-parsons', 'hm-karl-brenner', 'hm-james-doyle']) {
+      const d = sv.shouldDieNow(roleId);
+      assert(d.dies === false,      `shouldDieNow(${roleId}): dies = false`);
+      assert(d.deathChance === 0,   `shouldDieNow(${roleId}): deathChance = 0`);
+      assert(d.reason === '',       `shouldDieNow(${roleId}): reason = ''`);
+    }
+
+    // ── TASK 2.3: initFlags ─────────────────────────────────────────────────
+
+    section('=== Task 2.3: initFlags Support ===');
+
+    // initFlags applied before first scene:transition
+    const eb1 = new EventBus();
+    const cs1 = new ConsequenceSystem(eb1);
+    const ssm1 = new SceneStateMachine(eb1, cs1);
+    let flagAtTransition = undefined;
+    eb1.on('scene:transition', () => { flagAtTransition = cs1.getFlag('hm_lp_movement_trust'); });
+
+    ssm1.loadRole('haymarket-affair', 'hm-lucy-parsons',
+      [makeScene('hm-lp-scene-01')],
+      { id: 'hm-lucy-parsons', initFlags: { hm_lp_movement_trust: 0 } }
+    );
+    assert(flagAtTransition === 0, 'initFlags applied before first scene:transition fires');
+
+    // Multiple initFlags keys all applied
+    const eb2 = new EventBus();
+    const cs2 = new ConsequenceSystem(eb2);
+    const ssm2 = new SceneStateMachine(eb2, cs2);
+    ssm2.loadRole('haymarket-affair', 'hm-test',
+      [makeScene('hm-test-01')],
+      { id: 'hm-test', initFlags: { hm_lp_movement_trust: 0, hm_lp_other: 2 } }
+    );
+    assert(cs2.getFlag('hm_lp_movement_trust') === 0, 'initFlags: hm_lp_movement_trust = 0');
+    assert(cs2.getFlag('hm_lp_other') === 2,          'initFlags: hm_lp_other = 2');
+
+    // Backward compat: no role param — no crash
+    const eb3 = new EventBus();
+    const cs3 = new ConsequenceSystem(eb3);
+    const ssm3 = new SceneStateMachine(eb3, cs3);
+    let noCrash = true;
+    try { ssm3.loadRole('pearl-harbor', 'american-sailor', [makeScene('ph-01')]); }
+    catch (e) { noCrash = false; }
+    assert(noCrash, 'loadRole without role param does not crash (backward compat)');
+
+    // Role with no initFlags — no flags set
+    const eb4 = new EventBus();
+    const cs4 = new ConsequenceSystem(eb4);
+    const ssm4 = new SceneStateMachine(eb4, cs4);
+    ssm4.loadRole('haymarket-affair', 'hm-karl-brenner',
+      [makeScene('hm-kb-01')],
+      { id: 'hm-karl-brenner' }  // no initFlags key
+    );
+    assert(Object.keys(cs4.getAllFlags()).length === 0, 'Role without initFlags sets no flags');
+
+    // ── Summary ─────────────────────────────────────────────────────────────
+
+    section('=== Summary ===');
+    log(`\nPassed: ${passed}  Failed: ${failed}`, failed > 0 ? 'fail' : 'pass');
+    if (failed === 0) log('✅ All tests passed!', 'pass');
+
+    // Expose result for Playwright
+    window.__testResult = { passed, failed };
+  </script>
+</body>
+</html>

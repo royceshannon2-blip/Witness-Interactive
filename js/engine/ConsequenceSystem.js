@@ -92,6 +92,11 @@ class ConsequenceSystem {
       case 'hutu-moderate':      return this._survivalHM(flags);
       case 'tutsi-survivor':     return this._survivalTS(flags);
       case 'un-peacekeeper':     return this._survivalUN(flags);
+      // Haymarket roles — no death mechanic
+      case 'hm-lucy-parsons':
+      case 'hm-karl-brenner':
+      case 'hm-james-doyle':
+        return { survived: true, deathChance: 0, modifiers: {} };
       default:
         console.warn(`ConsequenceSystem: unknown roleId "${roleId}", defaulting to survived`);
         return { survived: true, deathChance: 0, modifiers: {} };
@@ -259,123 +264,15 @@ class ConsequenceSystem {
         return this._shouldDieNowTS(flags);
       case 'un-peacekeeper':
         return this._shouldDieNowUN(flags);
+      // Haymarket roles — no death checkpoints
+      case 'hm-lucy-parsons':
+      case 'hm-karl-brenner':
+      case 'hm-james-doyle':
+        return { dies: false, reason: '', deathChance: 0 };
       default:
         // Pearl Harbor roles don't have mid-story death checkpoints
         return { dies: false, reason: '', deathChance: 0 };
     }
-  }
-
-  /**
-   * Hutu Moderate mid-story death check
-   * Only the rescue+misdirect+roadblock path triggers immediate death
-   */
-  _shouldDieNowHM(flags) {
-    // High-risk rescue path: hid Celestin, misdirected militia, falsified cards at roadblock
-    if (flags.rw_helped_celestin && flags.rw_misdirected_militia && flags.rw_saved_at_roadblock) {
-      let deathChance = 0.15; // base
-      deathChance += 0.30; // helped Celestin
-      deathChance += 0.15; // misdirected militia
-      deathChance += 0.20; // saved at roadblock
-      // Total: 0.80 (80% death chance)
-
-      const roll = Math.random();
-      const dies = roll < deathChance;
-
-      console.log(`[shouldDieNow] HM rescue path: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} dies=${dies}`);
-
-      return {
-        dies,
-        reason: 'Killed by Interahamwe militia after being identified as a Tutsi-protector at the roadblock',
-        deathChance
-      };
-    }
-
-    // All other paths continue to aftermath scenes
-    return { dies: false, reason: '', deathChance: 0 };
-  }
-
-  /**
-   * Tutsi Survivor mid-story death check
-   * Players who escaped church but didn't reach safety may die before aftermath
-   */
-  _shouldDieNowTS(flags) {
-    // Escaped church, high death chance if didn't reach UN protection or hide effectively
-    if (flags.rw_escaped_church && flags.rw_witnessed_massacre) {
-      let deathChance = 0.75; // base
-      deathChance -= 0.30; // escaped church
-
-      // If reached UN protection, much safer
-      if (flags.rw_reached_un_protection) {
-        deathChance -= 0.25;
-      }
-
-      // If stayed hidden in ditch, somewhat safer
-      if (flags.rw_stayed_hidden_ditch) {
-        deathChance -= 0.20;
-      }
-
-      // Roll for death if still at significant risk
-      if (deathChance > 0.20) {
-        const roll = Math.random();
-        const dies = roll < deathChance;
-
-        console.log(`[shouldDieNow] TS escape path: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} dies=${dies}`);
-
-        return {
-          dies,
-          reason: 'Killed at a roadblock after escaping the church massacre',
-          deathChance
-        };
-      }
-    }
-
-    // All other paths continue to aftermath scenes
-    return { dies: false, reason: '', deathChance: 0 };
-  }
-
-  /**
-   * UN Peacekeeper mid-story death check
-   * Players who defied orders and held position face death during militia assault
-   */
-  _shouldDieNowUN(flags) {
-    // Defied orders and held hotel under attack
-    if (flags.rw_defied_orders && flags.rw_stayed_after_withdrawal && flags.rw_held_hotel) {
-      let deathChance = 0.05; // base
-      deathChance += 0.20; // defied orders
-      deathChance += 0.15; // held hotel
-      deathChance += 0.10; // stayed after withdrawal
-      // Total: 0.50 (50% death chance)
-
-      const roll = Math.random();
-      const dies = roll < deathChance;
-
-      console.log(`[shouldDieNow] UN defiance path: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} dies=${dies}`);
-
-      return {
-        dies,
-        reason: 'Killed defending civilians during militia assault on the hotel in July 1994',
-        deathChance
-      };
-    }
-
-    // Left Rwanda - almost no death chance
-    if (flags.rw_left_rwanda) {
-      const deathChance = 0.01;
-      const roll = Math.random();
-      const dies = roll < deathChance;
-
-      if (dies) {
-        console.log(`[shouldDieNow] UN evacuation path: deathChance=${(deathChance*100).toFixed(0)}% roll=${roll.toFixed(3)} dies=${dies}`);
-        return {
-          dies: true,
-          reason: 'Killed at convoy roadblock en route to airport',
-          deathChance
-        };
-      }
-    }
-
-    // All other paths continue to aftermath scenes
-    return { dies: false, reason: '', deathChance: 0 };
   }
 
   // ─── PEARL HARBOR SURVIVAL METHODS ────────────────────────────────────────
@@ -891,19 +788,48 @@ class ConsequenceSystem {
 
   /**
    * Score how many conditions in a rule are satisfied by current flags.
-   * Returns the count of matching conditions (not all-or-nothing).
-   * 
-   * Undefined flags are treated as false, so outcomes requiring a flag
-   * to be false will correctly match even if the player never triggered
-   * that event.
+   * Returns the count of matching conditions if ALL conditions pass,
+   * or -1 if any condition fails (indicating this rule should not be selected).
+   *
+   * Supports two condition syntaxes:
+   *   - Exact match (boolean/number): { flag: true } or { flag: 2 }
+   *   - Range check (object):         { flag: { gte: 3 } } or { flag: { lte: 1 } } or { flag: { gte: 2, lte: 4 } }
+   *
+   * Undefined flags are treated as false for exact matches, and 0 for range checks.
    */
   _scoreConditions(conditions) {
     let score = 0;
-    for (const [flag, expected] of Object.entries(conditions)) {
+    for (const [flag, conditionValue] of Object.entries(conditions)) {
       const actual = this.getFlag(flag);
-      // Treat undefined flags as false
-      const effectiveActual = actual !== undefined ? actual : false;
-      if (effectiveActual === expected) score++;
+
+      if (typeof conditionValue === 'object' && conditionValue !== null) {
+        // Range-check syntax: { gte: N } | { lte: N } | { gte: N, lte: N }
+        const numericActual = typeof actual === 'number' ? actual : 0;
+        let rangePass = true;
+
+        if (conditionValue.gte !== undefined) {
+          if (typeof conditionValue.gte !== 'number') {
+            console.warn(`ConsequenceSystem._scoreConditions: gte value for "${flag}" is not a number — skipping bound`);
+          } else if (numericActual < conditionValue.gte) {
+            rangePass = false;
+          }
+        }
+        if (rangePass && conditionValue.lte !== undefined) {
+          if (typeof conditionValue.lte !== 'number') {
+            console.warn(`ConsequenceSystem._scoreConditions: lte value for "${flag}" is not a number — skipping bound`);
+          } else if (numericActual > conditionValue.lte) {
+            rangePass = false;
+          }
+        }
+
+        if (!rangePass) return -1; // condition failed — rule does not match
+        score++;
+      } else {
+        // Existing exact-match logic — unchanged
+        const effectiveActual = actual !== undefined ? actual : false;
+        if (effectiveActual !== conditionValue) return -1; // condition failed
+        score++;
+      }
     }
     return score;
   }

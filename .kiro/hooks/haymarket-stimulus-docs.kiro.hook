@@ -1,0 +1,13 @@
+{
+  "name": "Validate stimulus document completeness",
+  "version": "1.0.0",
+  "description": "When stimulus-documents.js is saved, verify all 7 documents exist and have required fields including authentic text.",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["js/content/missions/haymarket/stimulus-documents.js"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Read the saved file. Verify:\n1. All 7 document IDs are present: hm-doc-0, hm-doc-1a, hm-doc-1b, hm-doc-2, hm-doc-3, hm-doc-4, hm-doc-5\n2. Every document has: id, title, source, date, text, spiceT (non-empty), apUnit (non-empty), pauseQuestion\n3. Every pauseQuestion has: question, options (array of 4), correctId, explanation\n4. `text` fields are not placeholder strings (not 'TODO', 'placeholder', '[authentic text here]', etc.) — they should contain actual quoted primary source content\n5. hm-doc-2 and hm-doc-4 pauseQuestion asks about sourcing (author's purpose, intended audience, or publication bias) — not just factual recall\n\nReport any violations."
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name": "Validate knowledge questions completeness",
+  "version": "1.0.0",
+  "description": "When knowledge-questions.js is saved, verify each role has all four question types and required metadata.",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["js/content/missions/haymarket/knowledge-questions.js"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Read the saved file. For each of the three role IDs (hm-lucy-parsons, hm-karl-brenner, hm-james-doyle):\n1. Filter questions by `roleSpecific` — each role must have at least 4 questions\n2. Verify at least one question of each `questionType`: 'before', 'during', 'cross-role', 'synthesis'\n3. Verify every question has: id, roleSpecific, questionType, apSkill, spiceT (non-empty), apUnit (non-empty), question, options (4 items), explanation\n4. Verify cross-role questions have `apSkill: 'perspective'`\n5. Verify synthesis questions have `apSkill: 'argumentation'`\n6. Verify question stems use APUSH exam phrasing ('Which of the following best explains...', 'most directly caused', etc.) — not vague phrasing\n7. Verify exactly one option has `correct: true` per question\n\nReport any violations with question ID."
+  }
+}

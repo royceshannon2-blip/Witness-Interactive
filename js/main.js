@@ -30,6 +30,7 @@ import AmbientSoundManager from './engine/AmbientSoundManager.js';
 import NarratorAudioManager from './engine/NarratorAudioManager.js';
 import SFXManager from './engine/SFXManager.js';
 import MissionBriefing from './engine/MissionBriefing.js';
+import StimuliManager from './engine/StimuliManager.js';
 
 // UI imports
 import FeedbackSurveyPanel from './ui/FeedbackSurveyPanel.js';
@@ -39,6 +40,7 @@ import UpdateNotesPanel from './ui/UpdateNotesPanel.js';
 import pearlHarborMission from './content/missions/pearl-harbor/mission.js';
 import rwandaMission from './content/missions/rwanda/mission.js';
 import urbanDesignMission from './content/missions/urban-design/mission.js';
+import haymarketMission from './content/missions/haymarket/mission.js';
 import uiContent from './content/ui-content.js';
 
 /**
@@ -60,6 +62,11 @@ async function initializeApp() {
     // Show loading screen
     eventBus.emit('game:initializing', { message: 'Loading game engine...' });
     
+    // 2.5. Initialize StimuliManager (primary source document display)
+    // Must be instantiated BEFORE any scene loads — it listens for scene:transition
+    const stimuliManager = new StimuliManager(eventBus);
+    console.log('✓ StimuliManager initialized');
+
     // 3. Initialize ConsequenceSystem (tracks player decisions)
     const consequenceSystem = new ConsequenceSystem(eventBus);
     console.log('✓ ConsequenceSystem initialized');
@@ -87,6 +94,10 @@ async function initializeApp() {
     // 7c. Load Urban Design mission
     missionRegistry.register(urbanDesignMission);
     console.log('✓ Urban Design mission loaded');
+
+    // 7d. Load Haymarket Affair mission
+    missionRegistry.register(haymarketMission);
+    console.log('✓ Haymarket Affair mission loaded');
     
     // 7. Initialize TimelineSelector (mission selection UI)
     const timelineSelector = new TimelineSelector(eventBus, missionRegistry);

@@ -1,0 +1,13 @@
+{
+  "name": "Validate Lucy Parsons initFlags",
+  "version": "1.0.0",
+  "description": "When lucy-parsons.js is saved, verify initFlags is present with movement_trust: 0.",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["js/content/missions/haymarket/lucy-parsons.js"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Read the saved file. Verify the default export object includes `initFlags: { hm_lp_movement_trust: 0 }`. If initFlags is absent or hm_lp_movement_trust is not 0, this is a critical bug — the flag will inherit an incorrect default value from the psychology system. Report this as a blocker."
+  }
+}

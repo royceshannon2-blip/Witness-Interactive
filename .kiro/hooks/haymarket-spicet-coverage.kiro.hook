@@ -1,0 +1,13 @@
+{
+  "name": "Validate SPICE-T coverage across Haymarket scenes",
+  "version": "1.0.0",
+  "description": "When any Haymarket role file is saved, check aggregate SPICE-T coverage.",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["js/content/missions/haymarket/lucy-parsons.js", "js/content/missions/haymarket/karl-brenner.js", "js/content/missions/haymarket/james-doyle.js"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Read the saved file and collect all `spiceT` values from all scenes. Note which SPICE-T themes are present. Report if any of the following themes are missing from this role's scenes: Social, Political, Cultural, Economic. Note: 'Interaction with Environment' and 'Technological' can be covered across roles — flag if absent but don't fail. The full 6-theme requirement applies across all 18 scenes, not per-role."
+  }
+}

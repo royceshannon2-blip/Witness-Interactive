@@ -1,11 +1,12 @@
 {
-  "version": "1.5.0",
-  "date": "2026-03-16",
+  "version": "1.6.0",
+  "date": "2026-03-21",
   "new": [
-    "New mission: The Divided City - Experience urban inequality from 1930s redlining to modern heat islands (AP Human Geography 6.10)",
-    "Follow one property through 90 years of urban policy across three eras",
-    "Silent mission design with enhanced visual atmospheric effects",
-    "8 historical ripple events covering 1934-2024 urban development"
+    "New mission: The Haymarket Affair — Experience the 1886 labor uprising from three perspectives (AP US History Unit 6.5)",
+    "Play as Lucy Parsons (labor organizer), Karl Brenner (German immigrant machinist), or James Doyle (Pinkerton detective)",
+    "Primary source documents unlock mid-scene — read real historical evidence as it becomes relevant",
+    "New prediction questions let you forecast consequences before they unfold",
+    "Movement trust meter tracks Lucy Parsons' credibility with the labor movement across six scenes"
   ],
   "fixed": []
 }

@@ -1,0 +1,13 @@
+{
+  "name": "Validate briefing content SPICE-T and stimuliUnlock",
+  "version": "1.0.0",
+  "description": "When briefing-content.js is saved, verify page 2 unlocks hm-doc-1b for all roles and all pages have required metadata.",
+  "when": {
+    "type": "fileEdited",
+    "patterns": ["js/content/missions/haymarket/briefing-content.js"]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Read the saved file. Verify:\n1. The second page object (index 1 in each role's pages array) includes `stimuliUnlock: ['hm-doc-1b']` — this must be present for hm-lucy-parsons, hm-karl-brenner, and hm-james-doyle\n2. Every page object has `spiceT` (non-empty), `apUnit` (non-empty), and `apTheme` fields\n3. Page 4 (index 3) includes `stimuliUnlock` referencing hm-doc-0\n4. The masthead is 'Chicago Daily Tribune' and byline is 'Special Report — Labor Bureau'\n5. BRIEFING_CARDS contains entries for all three role IDs\n\nReport any violations."
+  }
+}
