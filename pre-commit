@@ -116,11 +116,16 @@ for entry in $CRITICAL_FILES; do
   fi
 done
 
-# ── PASS 3: Check that JS files have an export ────────────────
+# ── PASS 3: Check that JS files have an export (skip test files) ─
 for filepath in $STAGED; do
   [ ! -f "$filepath" ] && continue
   ext="${filepath##*.}"
   [ "$ext" != "js" ] && continue
+
+  # Skip test files — they use describe/it blocks, no exports needed
+  case "$filepath" in
+    *.test.js) continue ;;
+  esac
 
   size=$(file_size "$filepath")
   [ "$size" -eq 0 ] && continue  # Already caught above
