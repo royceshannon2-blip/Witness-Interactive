@@ -1484,86 +1484,62 @@ class UIController {
   }
 
   _renderStimulusOverlay(doc) {
-    // Remove any existing overlay
-    const existing = document.getElementById('stimuli-overlay');
-    if (existing) existing.remove();
-
-    const overlay = document.createElement('div');
-    overlay.id = 'stimuli-overlay';
-    overlay.className = 'stimuli-overlay';
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-modal', 'true');
-    overlay.setAttribute('aria-labelledby', 'stimuli-doc-title');
-
-    // Inject dust particles into backdrop
-    this._injectDustParticles(overlay);
-
-    const spiceStr = (doc.spiceT || []).join(' · ');
-    const pq = doc.pauseQuestion;
-    const typeClass = this._stimuliDocTypeClass(doc);
-
-    // Illustration placeholder for Harper's Weekly visual sources
-    const illustrationHTML = typeClass === 'doc-type--harper-weekly'
-      ? `<div class="stimuli-illustration-placeholder" aria-hidden="true">[ ${this.content.stimuliOverlay?.illustrationLabel || 'Engraving'} — ${doc.title} ]</div>`
-      : '';
-
-    // Signature line for court transcripts
-    const signatureHTML = typeClass === 'doc-type--court-transcript'
-      ? `<div class="stimuli-signature" aria-label="Document signature line">${this.content.stimuliOverlay?.signatureLine || '_________________________'}</div>`
-      : '';
-
-    // Build options HTML
-    const optionsHTML = pq ? pq.options.map((opt, i) => {
-      const label = ['A', 'B', 'C', 'D'][i] || (i + 1);
-      return `<button class="option-button stimuli-option quest-option-button mt-sm" data-opt-id="${opt.id}" data-correct="${opt.correct}" aria-label="Option ${label}: ${opt.text}">${label}. ${opt.text}</button>`;
-    }).join('') : '';
-
-    const content = document.createElement('div');
-    content.className = `stimuli-content ${typeClass}`;
-    content.innerHTML = `
-      <div class="stimuli-meta">
-        <span class="ap-skill-tag">${spiceStr}</span>
-        <span class="stimuli-unit text-secondary">${doc.apUnit || ''}</span>
-      </div>
-      <h3 id="stimuli-doc-title" class="stimuli-title mt-sm">${doc.title}</h3>
-      <p class="stimuli-source">${doc.source} — ${doc.date}</p>
-      ${illustrationHTML}
-      <div class="stimuli-text mt-md">${doc.text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>
-      ${signatureHTML}
-      <button id="stimuli-dismiss" class="mt-lg hidden" aria-label="${this.content.stimuliOverlay?.continueButton || 'Continue'}">${this.content.stimuliOverlay?.continueButton || 'Continue'}</button>
-    `;
-
-    overlay.appendChild(content);
-    document.body.appendChild(overlay);
-
-    const dismissBtn = overlay.querySelector('#stimuli-dismiss');
-
-    if (!pq) {
-      // No pause question — allow immediate dismiss
-      dismissBtn.classList.remove('hidden');
-    } else {
-      // Show pause question modal once document is scrolled to bottom
-      this._attachScrollTrigger(content, doc, pq, dismissBtn);
-    }
-
-    // Wire dismiss button (shown after modal answered)
-    dismissBtn.addEventListener('click', () => {
-      this.eventBus.emit('stimuli:dismiss-requested', { documentId: doc.id });
+  // Remove any existing overlay
+  document.getElementById('stimuli-overlay')?.remove();
+ 
+  const overlay = document.createElement('div');
+  overlay.id = 'stimuli-overlay';
+  overlay.className = 'stimuli-overlay';
+  overlay.setAttribute('role', 'dialog');
+  overlay.setAttribute('aria-modal', 'true');
+  overlay.setAttribute('aria-labelledby', 'stimuli-doc-title');
+ 
+  this._injectDustParticles(overlay);
+ 
+  const spiceStr   = (doc.spiceT || []).join(' · ');
+  const typeClass  = this._stimuliDocTypeClass(doc);
+ 
+  const illustrationHTML = typeClass === 'doc-type--harper-weekly'
+    ? `<div class="stimuli-illustration-placeholder" aria-hidden="true">[ ${this.content.stimuliOverlay?.illustrationLabel || 'Engraving'} — ${doc.title} ]</div>`
+    : '';
+ 
+  const signatureHTML = typeClass === 'doc-type--court-transcript'
+    ? `<div class="stimuli-signature" aria-label="Document signature line">${this.content.stimuliOverlay?.signatureLine || '_________________________'}</div>`
+    : '';
+ 
+  const content = document.createElement('div');
+  content.className = `stimuli-content ${typeClass}`;
+  content.innerHTML = `
+    <div class="stimuli-meta">
+      <span class="ap-skill-tag">${spiceStr}</span>
+      <span class="stimuli-unit text-secondary">${doc.apUnit || ''}</span>
+    </div>
+    <h3 id="stimuli-doc-title" class="stimuli-title mt-sm">${doc.title}</h3>
+    <p class="stimuli-source">${doc.source} — ${doc.date}</p>
+    ${illustrationHTML}
+    <div class="stimuli-text mt-md">${doc.text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>
+    ${signatureHTML}
+  `;
+ 
+  overlay.appendChild(content);
+  document.body.appendChild(overlay);
+ 
+  // FIXED: Emit dom-ready inside requestAnimationFrame so the DOM is fully
+  // painted before StimuliRevealAnimator receives the element references.
+  // Previous bug: StimuliRevealAnimator queried .stimuli-content after
+  // stimuli:shown fired — element didn't exist yet, animation silently skipped.
+  requestAnimationFrame(() => {
+    this.eventBus.emit('stimuli:dom-ready', {
+      documentId: doc.id,
+      overlayEl:  overlay,
+      contentEl:  content
     });
-  }
-
-  /**
-   * Attach a scroll-to-bottom trigger on the stimuli content element.
-   * Once the player has scrolled to the bottom (or the doc is short enough
-   * to not need scrolling), mount the PauseQuestionModal.
-   * After the modal is answered, show the dismiss button.
-   *
-   * @param {HTMLElement} contentEl   — .stimuli-content
-   * @param {Object}      doc         — full document data
-   * @param {Object}      pq          — pauseQuestion object
-   * @param {HTMLElement} dismissBtn  — #stimuli-dismiss button
-   * @private
-   */
+  });
+ 
+  // Add "I've read this" button — the explicit gate for the pause question.
+  // Previous bug: scroll detection misfired after 600ms regardless of scroll state.
+  this._attachReadConfirmButton(content, doc);
+}
   _attachScrollTrigger(contentEl, doc, pq, dismissBtn) {
     // Cross-role prompt: pull from doc if present, else null
     const crossRolePrompt = doc.crossRolePrompt || null;
