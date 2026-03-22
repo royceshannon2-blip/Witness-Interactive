@@ -133,7 +133,6 @@ From somewhere to the south, on Desplaines Street, you hear the sound of boots o
         id: 'hm-lp-choice-03-a',
         text: 'Push forward toward the square — Albert is in there and the movement needs witnesses.',
         consequences: {
-          hm_lp_movement_trust: 1,
           hm_lp_entered_square: true
         },
         psychologyEffects: { morale: 1, loyalty: 1 },
@@ -179,7 +178,6 @@ The street in front of you is filling with people running away from the square. 
         id: 'hm-lp-choice-04-a',
         text: 'Run toward the square — Albert is in there. You have to find him.',
         consequences: {
-          hm_lp_movement_trust: 1,
           hm_lp_ran_toward_square: true
         },
         psychologyEffects: { loyalty: 1 },
