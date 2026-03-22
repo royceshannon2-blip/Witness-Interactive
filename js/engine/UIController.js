@@ -711,6 +711,7 @@ class UIController {
       return;
     }
     
+    
     const choiceButtons = document.querySelectorAll('.choice-button');
     let defaultChoiceButton = null;
     choiceButtons.forEach(button => {
@@ -741,6 +742,49 @@ class UIController {
       }
     );
   }
+
+  _mountPauseQuestion(contentEl, doc, crossRolePrompt) {
+  const { PauseQuestionModal } = window.__pqmModule || {};
+ 
+  // Dynamically import PauseQuestionModal if not already available
+  import('./PauseQuestionModal.js').then(({ default: PauseQuestionModal }) => {
+    const modal = new PauseQuestionModal(
+      this.eventBus,
+      doc.pauseQuestion,
+      doc.id,
+      crossRolePrompt
+    );
+    modal.mount();
+ 
+    const onAnswered = (data) => {
+      if (data.documentId !== doc.id) return;
+      this.eventBus.off('stimuli:pause-question-answered', onAnswered);
+ 
+      // Wait 800ms so player can read the explanation before dismiss appears
+      setTimeout(() => {
+        modal.destroy();
+        this._showDismissButton(contentEl, doc.id);
+      }, 800);
+    };
+ 
+    this.eventBus.on('stimuli:pause-question-answered', onAnswered);
+ 
+    // Inventory open from inside modal
+    const onInventoryOpen = () => this._openInventory();
+    this.eventBus.on('inventory:open-requested', onInventoryOpen);
+ 
+    // Clean up inventory listener when modal is destroyed
+    const origDestroy = modal.destroy.bind(modal);
+    modal.destroy = () => {
+      this.eventBus.off('inventory:open-requested', onInventoryOpen);
+      origDestroy();
+    };
+  }).catch(err => {
+    console.error('UIController: Failed to load PauseQuestionModal:', err);
+    // Fallback: allow dismiss without question
+    this._showDismissButton(contentEl, doc.id);
+  });
+}
 
   handleChoiceClick(choice) {
     this.eventBus.emit('choice:made', {
