@@ -85,9 +85,18 @@ const uiContent = {
     label: 'Before you decide — what do you predict will happen?'
   },
 
+  questExplainer: {
+    prediction:     { icon: '🔭', text: 'Before you decide — make your prediction. You\'ll see what actually happened.' },
+    'primary-source': { icon: '📜', text: 'Analyze the primary source. Answer the question to continue.' },
+    synthesis:      { icon: '🧭', text: 'AP Synthesis — connect what you witnessed to the broader historical arc.' },
+    checkpoint:     { icon: '✅', text: 'Knowledge Check — test what you learned through the mission.' }
+  },
+
   stimuliOverlay: {
     apAnalysisHeading: 'AP Analysis',
-    continueButton: 'Continue'
+    continueButton: 'Continue',
+    illustrationLabel: 'Engraving',
+    signatureLine: '_________________________'
   },
 
   inventory: {

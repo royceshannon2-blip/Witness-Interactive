@@ -58,8 +58,10 @@ class UIController {
     this.currentAmbientSound = null;
 
     // Inventory: tracks all document IDs shown this session (briefing + scenes)
-    
-    
+    this._inventoryDocIds = [];
+    this._inventoryDocData = new Map();
+    this.currentDocHasPauseQuestion = false;
+
     this.subscribeToEvents();
     this.setupSoundToggle();
     this.setupNarratorToggle();
@@ -82,6 +84,7 @@ class UIController {
  
     this.eventBus.on('stimuli:shown',      this.handleStimuliShown.bind(this));
     this.eventBus.on('stimuli:dismissed',  this.handleStimuliDismissed.bind(this));
+    this.eventBus.on('stimuli:view-ready', this.handleStimuliViewReady.bind(this));
     this.eventBus.on('scene:error', () => {
       console.warn('UIController: scene:error received — re-rendering current scene');
       if (this.currentSceneData && this.currentSceneData.scene) {
