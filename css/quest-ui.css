@@ -1,0 +1,211 @@
+/**
+ * Witness Interactive — Quest UI
+ * Fortnite-inspired quest-menu aesthetic for dark historical education context.
+ * Builds on top of CSS custom properties defined in css/style.css.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;1,500;1,700&display=swap');
+
+/* ============================================
+   Quest Panel
+   ============================================ */
+
+.quest-panel {
+    background: rgba(10, 14, 26, 0.75);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid rgba(212, 175, 55, 0.25);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        100% calc(100% - 20px),
+        calc(100% - 20px) 100%,
+        0 100%
+    );
+    padding: 1.5rem;
+}
+
+.quest-panel--primary {
+    border-color: rgba(212, 175, 55, 0.6);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        0 0 40px rgba(212, 175, 55, 0.12);
+}
+
+/* ============================================
+   Quest Heading
+   ============================================ */
+
+.quest-heading {
+    font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-accent-gold);
+    border-left: 4px solid var(--color-accent-gold);
+    padding-left: 0.75rem;
+    margin: 0 0 1rem;
+    line-height: var(--line-height-tight, 1.3);
+}
+
+/* ============================================
+   Quest Option Button
+   ============================================ */
+
+.quest-option-button {
+    display: block;
+    width: 100%;
+    padding: 0.85rem 1.25rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(212, 175, 55, 0.2);
+    color: var(--color-text-primary);
+    font-family: var(--font-family-ui, sans-serif);
+    font-size: 0.95rem;
+    text-align: left;
+    cursor: pointer;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 0 100%);
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+    min-height: 44px; /* accessibility: minimum touch target */
+}
+
+.quest-option-button:hover,
+.quest-option-button:focus-visible {
+    background: rgba(212, 175, 55, 0.1);
+    border-color: rgba(212, 175, 55, 0.7);
+    transform: translateX(4px);
+    outline: none;
+}
+
+.quest-option-button:focus-visible {
+    outline: 2px solid var(--color-accent-gold);
+    outline-offset: 2px;
+}
+
+.quest-option-button.correct {
+    background: rgba(76, 175, 80, 0.15);
+    border-color: #4caf50;
+    color: #4caf50;
+}
+
+.quest-option-button.incorrect {
+    background: rgba(244, 67, 54, 0.12);
+    border-color: #f44336;
+    color: #f44336;
+}
+
+/* ============================================
+   Quest Progress Bar
+   ============================================ */
+
+.quest-progress-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.quest-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--color-accent-gold), #ffe066);
+    border-radius: 3px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes quest-shimmer {
+    0% {
+        background-position: -200% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+.quest-progress-fill.near-complete {
+    background: linear-gradient(
+        90deg,
+        var(--color-accent-gold) 0%,
+        #ffe066 40%,
+        rgba(255, 255, 255, 0.5) 50%,
+        #ffe066 60%,
+        var(--color-accent-gold) 100%
+    );
+    background-size: 200% auto;
+    animation: quest-shimmer 1.4s linear infinite;
+}
+
+/* ============================================
+   Quest XP Badge
+   ============================================ */
+
+.quest-xp-badge {
+    display: inline-block;
+    background: rgba(212, 175, 55, 0.15);
+    border: 1px solid rgba(212, 175, 55, 0.5);
+    border-radius: 2px;
+    font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 10px;
+    color: var(--color-accent-gold);
+    line-height: 1.6;
+}
+
+/* ============================================
+   Quest Explainer
+   ============================================ */
+
+.quest-explainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 0.75rem;
+}
+
+.quest-explainer-icon {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: rgba(212, 175, 55, 0.12);
+    border: 1px solid rgba(212, 175, 55, 0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    line-height: 1;
+}
+
+.quest-explainer-text {
+    font-family: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    font-weight: 500;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: rgba(232, 220, 196, 0.7);
+    line-height: 1.4;
+}
+
+/* ============================================
+   Reduced Motion
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .quest-progress-fill {
+        transition: none;
+    }
+
+    .quest-progress-fill.near-complete {
+        animation: none;
+    }
+
+    .quest-option-button,
+    .quest-option-button:hover,
+    .quest-option-button:focus-visible {
+        transition: none;
+        transform: none;
+    }
+}
