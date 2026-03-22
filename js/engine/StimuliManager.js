@@ -22,6 +22,7 @@
  */
 
 import { getDocument } from '../content/missions/haymarket/stimulus-documents.js';
+import DocAnnotationLayer from './DocAnnotationLayer.js';
 
 class StimuliManager {
   /**
@@ -47,6 +48,9 @@ class StimuliManager {
 
     // Whether dismiss is force-allowed (missing pauseQuestion fallback)
     this._forceAllowDismiss = false;
+
+    // Active DocAnnotationLayer instance (one per open overlay)
+    this._docAnnotationLayer = null;
 
     // Subscribe to events
     this.eventBus.on('scene:transition', (data) => this.handleSceneTransition(data));
@@ -165,6 +169,12 @@ class StimuliManager {
 
     this.eventBus.emit('stimuli:dismissed', { documentId: docId, answeredCorrectly });
 
+    // Destroy annotation layer for the dismissed overlay
+    if (this._docAnnotationLayer) {
+      this._docAnnotationLayer.destroy();
+      this._docAnnotationLayer = null;
+    }
+
     // Show next document in queue
     this._showNext();
   }
@@ -241,6 +251,7 @@ class StimuliManager {
 
   /**
    * Attach text-selection highlight functionality to .stimuli-text inside the overlay.
+   * Also mounts the DocAnnotationLayer (charcoal underline + sticky notes).
    * Called after stimuli:shown fires and UIController has rendered the overlay DOM.
    * @param {Object} documentData
    * @private
@@ -251,6 +262,13 @@ class StimuliManager {
 
     const textContainer = overlay.querySelector('.stimuli-text');
     if (!textContainer) return;
+
+    // Mount DocAnnotationLayer (charcoal underline + sticky notes)
+    const contentEl = overlay.querySelector('.stimuli-content');
+    if (contentEl) {
+      this._docAnnotationLayer = new DocAnnotationLayer(contentEl);
+      this._docAnnotationLayer.mount();
+    }
 
     // Re-render any existing highlights for this document
     this._restoreHighlights(textContainer, documentData.id);
