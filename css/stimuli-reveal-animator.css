@@ -1,0 +1,111 @@
+/* StimuliRevealAnimator - Examination Surface Reveal Styles */
+
+/* World freeze: blur + dim scene elements */
+.sra-world-frozen {
+  filter: blur(4px) brightness(0.4);
+  transition: filter 200ms ease;
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sra-world-frozen { transition: none; }
+}
+
+/* Examination surface: dark wooden desk */
+.sra-surface {
+  position: fixed;
+  inset: 0;
+  z-index: 14;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4,3,2,0.88);
+  opacity: 0;
+  transition: opacity 150ms ease;
+  pointer-events: none;
+}
+.sra-surface--visible {
+  opacity: 1;
+}
+
+/* Spotlight sweep via background-image on the overlay */
+.sra-surface--spotlight {
+  background-image: radial-gradient(
+    ellipse 400px 600px at 50% 30%,
+    rgba(255,240,180,0.25) 0%,
+    transparent 70%
+  );
+  transition: background-image 200ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sra-surface { transition: none; }
+  .sra-surface--spotlight { transition: none; }
+}
+
+/* Document slam entrance */
+.sra-doc--slam {
+  animation: sraSlam 200ms cubic-bezier(0.25,0.46,0.45,0.94) both;
+}
+@keyframes sraSlam {
+  from { transform: translateY(-60px) rotate(-1.5deg); opacity: 0; }
+  to   { transform: translateY(0) rotate(-0.5deg); opacity: 1; }
+}
+
+/* Micro-thud on landing */
+.sra-doc--thud {
+  animation: sraThud 120ms ease both;
+}
+@keyframes sraThud {
+  0%   { transform: rotate(-0.5deg) translateY(0); }
+  30%  { transform: rotate(-0.5deg) translateY(3px); }
+  100% { transform: rotate(-0.5deg) translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sra-doc--slam { animation: none; }
+  .sra-doc--thud { animation: none; }
+}
+
+/* Dust mote container */
+.sra-dust {
+  position: fixed;
+  inset: 0;
+  z-index: 16;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Individual dust mote */
+.sra-dust-mote {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(255,240,180,0.4);
+  animation: sraMoteFloat var(--drift-duration, 3s) ease-out var(--drift-delay, 0s) forwards;
+}
+@keyframes sraMoteFloat {
+  0%   { transform: translateY(0) translateX(0); opacity: 0.4; }
+  100% { transform: translateY(-120px) translateX(var(--drift-x,10px)); opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sra-dust-mote { display: none; }
+}
+
+/* Content reveal animations */
+.sra-reveal-title {
+  animation: sraFadeIn 300ms ease 0ms both;
+}
+.sra-reveal-text {
+  animation: sraFadeIn 400ms ease 0ms both;
+}
+.sra-reveal-action {
+  animation: sraFadeIn 300ms ease 0ms both;
+}
+@keyframes sraFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sra-reveal-title,
+  .sra-reveal-text,
+  .sra-reveal-action { animation: none; }
+}
