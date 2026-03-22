@@ -1,0 +1,91 @@
+/* QuestionIntroAnimator - Cinematic Question Intro Styles */
+.qia-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 22;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.7) 100%);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  opacity: 0;
+  transition: opacity 200ms ease, backdrop-filter 200ms ease;
+}
+.qia-backdrop--visible {
+  opacity: 1;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .qia-backdrop, .qia-backdrop--visible {
+    transition: none; backdrop-filter: none; -webkit-backdrop-filter: none;
+  }
+}
+.qia-badge {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  z-index: 26;
+  font-family: Georgia, serif;
+  font-variant: small-caps;
+  font-size: 0.78rem;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 6px 20px;
+  border-radius: 2px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 200ms ease 200ms, transform 300ms cubic-bezier(0.34,1.56,0.64,1) 200ms;
+}
+.qia-badge--visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+.qia-badge--prediction {
+  color: #c8a030;
+  background: rgba(20,16,8,0.92);
+  border: 1px solid #d4af37;
+  box-shadow: 0 0 12px rgba(212,175,55,0.25);
+  filter: sepia(0.15);
+}
+.qia-badge--knowledge {
+  color: #7aafd4;
+  background: rgba(8,14,22,0.92);
+  border: 1px solid #4a7ba7;
+  box-shadow: 0 0 12px rgba(74,123,167,0.25);
+}
+@media (prefers-reduced-motion: reduce) {
+  .qia-badge { transition: none; transform: translateX(-50%) translateY(0); }
+}
+.pqm-wrapper.qia-modal-enter {
+  animation: qiaModalEnter 400ms cubic-bezier(0.34,1.56,0.64,1) both;
+}
+@keyframes qiaModalEnter {
+  from { opacity: 0; transform: translateY(16px) scale(0.94); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pqm-wrapper.qia-modal-enter { animation: none; }
+}
+.qia-word {
+  display: inline;
+  opacity: 0;
+  animation: qiaWordFade 120ms ease forwards;
+}
+@keyframes qiaWordFade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qia-word { animation: none; opacity: 1; }
+}
+.qia-option-hidden { opacity: 0; transform: translateY(6px); }
+.qia-option-reveal { animation: qiaOptionIn 180ms ease forwards; }
+@keyframes qiaOptionIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .qia-option-hidden { opacity: 1; transform: none; }
+  .qia-option-reveal { animation: none; }
+}
