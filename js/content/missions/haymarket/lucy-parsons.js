@@ -178,7 +178,9 @@ The street in front of you is filling with people running away from the square. 
         id: 'hm-lp-choice-04-a',
         text: 'Run toward the square — Albert is in there. You have to find him.',
         consequences: {
-          hm_lp_ran_toward_square: true
+          hm_lp_ran_toward_square: true,
+          hm_spies_arrested: true,
+          hm_fielden_arrested: true
         },
         psychologyEffects: { loyalty: +10 },
         nextScene: 'hm-lp-scene-05'
@@ -188,7 +190,9 @@ The street in front of you is filling with people running away from the square. 
         text: 'Shout to the people running past — tell them to stand their ground, that the movement cannot be scattered by one bomb.',
         consequences: {
           hm_lp_movement_trust: 1,
-          hm_lp_spoke_publicly: true
+          hm_lp_spoke_publicly: true,
+          hm_spies_arrested: true,
+          hm_fielden_arrested: true
         },
         psychologyEffects: { morale: +8 },
         nextScene: 'hm-lp-scene-05'
@@ -197,7 +201,9 @@ The street in front of you is filling with people running away from the square. 
         id: 'hm-lp-choice-04-c',
         text: 'Pull the children away from the square and run. Whatever is happening in there, they cannot be part of it.',
         consequences: {
-          hm_lp_fled_with_children: true
+          hm_lp_fled_with_children: true,
+          hm_spies_arrested: true,
+          hm_fielden_arrested: true
         },
         psychologyEffects: { humanity: +8 },
         nextScene: 'hm-lp-scene-05'
@@ -232,7 +238,8 @@ Around you, the city moves as it always does: delivery wagons, the smell of hors
         text: 'Publish in the Arbeiter-Zeitung — tell the workers\' story before the Tribune buries it.',
         consequences: {
           hm_lp_movement_trust: 1,
-          hm_lp_published_arbeiter: true
+          hm_lp_published_arbeiter: true,
+          hm_parsons_fled: true
         },
         psychologyEffects: { morale: +8 },
         nextScene: 'hm-lp-scene-06'
@@ -241,7 +248,8 @@ Around you, the city moves as it always does: delivery wagons, the smell of hors
         id: 'hm-lp-choice-05-b',
         text: 'Go underground. The arrests are happening fast. Publishing now means giving them your name.',
         consequences: {
-          hm_lp_went_underground: true
+          hm_lp_went_underground: true,
+          hm_parsons_fled: true
         },
         psychologyEffects: { composure: +8 },
         nextScene: 'hm-lp-scene-06'

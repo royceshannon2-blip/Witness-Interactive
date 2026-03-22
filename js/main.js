@@ -36,6 +36,7 @@ import StimuliManager from './engine/StimuliManager.js';
 import FeedbackSurveyPanel from './ui/FeedbackSurveyPanel.js';
 import UpdateNotesPanel from './ui/UpdateNotesPanel.js';
 import AnnotationInventory from './ui/AnnotationInventory.js';
+import WitnessList from './ui/WitnessList.js';
 
 // Engine imports (data stores)
 import AnnotationStore from './engine/AnnotationStore.js';
@@ -202,6 +203,10 @@ async function initializeApp() {
     // Initialize AnnotationInventory (persistent slide-out panel + toggle button)
     const annotationInventory = new AnnotationInventory(annotationStore, eventBus);
     console.log('✓ AnnotationInventory initialized');
+
+    // Initialize WitnessList (Haymarket witness sidebar)
+    const witnessList = new WitnessList(eventBus, consequenceSystem);
+    console.log('✓ WitnessList initialized');
 
     // Wire inventory:reopen-document → re-display the stimulus overlay
     eventBus.on('inventory:reopen-document', (data) => {

@@ -442,10 +442,6 @@ class UIController {
         </nav>
         <div id="scene-progress" class="text-center mt-md" role="status" aria-live="polite">
         </div>
-        <button id="inventory-toggle" class="inventory-toggle hidden" aria-label="View collected primary sources (0)" aria-haspopup="dialog">
-          <span class="inventory-icon" aria-hidden="true">📜</span>
-          <span id="inventory-count" class="inventory-count">0</span>
-        </button>
       </article>
     `;
   }
@@ -734,15 +730,8 @@ class UIController {
 
   attachEventListeners(screen, screenName) {
     if (screenName === 'scene') {
-      const inventoryBtn = screen.querySelector('#inventory-toggle');
-      if (inventoryBtn) {
-        inventoryBtn.addEventListener('click', () => {
-          this.haptics.light();
-          this._renderInventoryPanel();
-        });
-      }
-      // Sync button state in case docs were collected during briefing
-      this._updateInventoryButton();
+      // Inventory is managed by AnnotationInventory component (body-level toggle)
+      // No scene-screen inventory button to wire up
     }
 
     if (screenName === 'landing') {

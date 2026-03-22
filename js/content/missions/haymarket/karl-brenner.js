@@ -38,6 +38,7 @@ The Arbeiter-Zeitung says the time has come. The question is what you do with th
         id: 'hm-kb-choice-01-a',
         text: 'Read the Arbeiter-Zeitung aloud to Heinrich — the numbers need to be heard out loud.',
         consequences: {
+          hm_kb_community_standing: 1,
           hm_kb_read_arbeiter: true,
           hm_kb_solidarity_with_heinrich: true
         },
@@ -139,6 +140,7 @@ You are standing in the same place you were standing before. Nothing has changed
         id: 'hm-kb-choice-03-a',
         text: 'Go to the men on the ground — some of them may still be alive.',
         consequences: {
+          hm_kb_community_standing: 1,
           hm_kb_helped_wounded: true
         },
         psychologyEffects: { humanity: -3, loyalty: +5, composure: -8 },
@@ -184,6 +186,7 @@ Heinrich folds the circular and puts it in his coat pocket. He says he is going.
         id: 'hm-kb-choice-04-a',
         text: 'Go with Heinrich to the Haymarket meeting.',
         consequences: {
+          hm_kb_community_standing: 1,
           hm_kb_attended_haymarket: true
         },
         psychologyEffects: { morale: +8, loyalty: +10, humanity: +5, composure: -5 },
@@ -234,7 +237,9 @@ You cannot see where Heinrich is anymore.`,
           hm_kb_searched_for_heinrich: true,
           // hm_kb_arrested: historically, arrests of crowd members occurred the morning of May 5th —
           // this flag represents being identified by police at the square, leading to arrest next morning
-          hm_kb_arrested: true
+          hm_kb_arrested: true,
+          hm_spies_arrested: true,
+          hm_fielden_arrested: true
         },
         psychologyEffects: { morale: 0, loyalty: +15, humanity: +5, composure: -10 },
         nextScene: 'hm-kb-scene-06'
@@ -243,7 +248,9 @@ You cannot see where Heinrich is anymore.`,
         id: 'hm-kb-choice-05-b',
         text: 'Get out through the alley on Randolph Street — Heinrich knows the way home.',
         consequences: {
-          hm_kb_escaped_arrest: true
+          hm_kb_escaped_arrest: true,
+          hm_spies_arrested: true,
+          hm_fielden_arrested: true
         },
         psychologyEffects: { morale: -5, loyalty: +3, composure: +10 },
         nextScene: 'hm-kb-scene-06'
@@ -252,7 +259,9 @@ You cannot see where Heinrich is anymore.`,
         id: 'hm-kb-choice-05-c',
         text: 'Leave Chicago tonight. You know what comes next for German workers whose names are in the papers.',
         consequences: {
-          hm_kb_fled_chicago: true
+          hm_kb_fled_chicago: true,
+          hm_spies_arrested: true,
+          hm_fielden_arrested: true
         },
         psychologyEffects: { morale: -10, loyalty: -5, composure: +5 },
         nextScene: 'hm-kb-scene-06'
@@ -277,7 +286,7 @@ The question that you are asking is different. It is about what you do with your
     atmosphericEffect: null,
     ambientTrack: './audio/ambient/hm-ambient-courtroom.mp3',
     narratorAudio: './audio/narration/karl-brenner/hm-kb-scene-06.mp3',
-    stimuliUnlock: [],
+    stimuliUnlock: ['hm-doc-5'],
     predictionQuestion: null,
     timedChoice: null,
     deathCheckpoint: false,
@@ -286,6 +295,7 @@ The question that you are asking is different. It is about what you do with your
         id: 'hm-kb-choice-06-a',
         text: 'Stay in Chicago. Keep your name, your language, your identity. Let them come if they come.',
         consequences: {
+          hm_kb_community_standing: 1,
           hm_kb_stayed_chicago: true,
           hm_kb_kept_identity: true
         },
@@ -309,7 +319,7 @@ const karlBrennerOutcomes = [
   {
     id: 'hm-kb-outcome-witness',
     survived: true,
-    conditions: { hm_kb_attended_haymarket: true, hm_kb_escaped_arrest: true },
+    conditions: { hm_kb_attended_haymarket: true, hm_kb_escaped_arrest: true, hm_kb_community_standing: { gte: 2 } },
     epilogue: `You escaped the square on the night of May fourth. Heinrich found you the next morning at the tenement — he had gone out through a different alley, had walked home in the dark, had sat up until dawn waiting to hear your boots on the stairs.
 
 The arrests sweep through the German community on the West Side for weeks. You are not arrested. Your name is not in the papers. You were there and you got out and no one can prove it.
@@ -327,7 +337,7 @@ Heinrich stays. You both stay. You do not talk about Haymarket often. But you we
   {
     id: 'hm-kb-outcome-arrested',
     survived: true,
-    conditions: { hm_kb_attended_haymarket: true, hm_kb_arrested: true },
+    conditions: { hm_kb_attended_haymarket: true, hm_kb_arrested: true, hm_kb_community_standing: { gte: 1 } },
     epilogue: `You were arrested on the morning of May fifth. Not at the square — you had gotten out of the square — but on Blue Island Avenue, two blocks from the tenement, when a police officer recognized you from the march on May first. Your name was on a list.
 
 The cell in the Desplaines Street Station holds twelve men. Most of them are German. None of them threw the bomb. None of them know who did.
@@ -377,6 +387,7 @@ Heinrich Müller continues to work in Chicago. He anglicizes his name in 1892. H
 export default {
   id: 'hm-karl-brenner',
   name: 'Karl Brenner',
+  initFlags: { hm_kb_community_standing: 0 },
   scenes: karlBrennerScenes,
   outcomes: karlBrennerOutcomes
 };

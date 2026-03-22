@@ -40,6 +40,11 @@ class AnnotationStore {
    * @param {{id: string, text: string, color: string, colorLabel: string, apConcept: string|null, note: string, createdAt: number}} highlight
    */
   addHighlight(documentId, documentTitle, documentSource, highlight) {
+    const VALID_COLORS = { yellow: 'Evidence', blue: 'Context', pink: 'Perspective' };
+    if (!VALID_COLORS[highlight.color]) {
+      console.error(`AnnotationStore: invalid color "${highlight.color}" — must be yellow, blue, or pink`);
+      return;
+    }
     if (!this.data[documentId]) {
       this.data[documentId] = {
         documentTitle,
