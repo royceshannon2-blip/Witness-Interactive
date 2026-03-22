@@ -211,10 +211,15 @@ async function initializeApp() {
 
     // Wire inventory:reopen-document → re-display the stimulus overlay
     eventBus.on('inventory:reopen-document', (data) => {
-        if (!data || !data.documentId) return;
-        const docData = uiController._inventoryDocData.get(data.documentId);
-        if (docData) uiController._renderStimulusOverlay(docData);
-    });
+           if (!data?.documentId) return;
+           // AnnotationInventory emits this event when player clicks "Review ↗".
+           // The doc data lives in AnnotationInventory._collectedDocs.
+           // We ask StimuliManager to re-show it (bypasses deduplication for review).
+           // UIController._renderStimulusOverlay is called via stimuli:shown listener
+           // which StimuliManager emits, but for reviews we call directly:
+           const docData = annotationInventory.getCollectedDoc(data.documentId);
+           if (docData) uiController._renderStimulusOverlay(docData);
+       });
     
     // 17. Initialize FeedbackSurveyPanel (post-mission feedback)
     const feedbackSurveyPanel = new FeedbackSurveyPanel(eventBus, consequenceSystem);
