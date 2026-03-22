@@ -1432,27 +1432,11 @@ class UIController {
   // ── Stimulus Document Overlay (Haymarket Phase 1 / StimuliManager) ────────
 
   handleStimuliShown(data) {
-    if (!data || !data.documentId) return;
-    const { documentId, documentData } = data;
-    if (!documentData) {
-      console.warn(`UIController.handleStimuliShown: No document data for "${documentId}"`);
-      return;
-    }
-    // Add to session inventory (deduplication — StimuliManager already deduplicates,
-    // but guard here too in case of direct calls)
-    if (!this._inventoryDocData.has(documentId)) {
-      this._inventoryDocIds.push(documentId);
-      this._inventoryDocData.set(documentId, documentData);
-      this._updateInventoryButton();
-    }
-    this._renderStimulusOverlay(documentData);
-  }
-
-  handleStimuliDismissed(data) {
-    const overlay = document.getElementById('stimuli-overlay');
-    if (overlay) overlay.remove();
-  }
-
+  if (!data?.documentId || !data?.documentData) return;
+  // AnnotationInventory listens to stimuli:shown and tracks docs itself.
+  // UIController only needs to render the overlay DOM.
+  this._renderStimulusOverlay(data.documentData);
+}
   /**
    * Resolve a CSS class for the document card based on its id or documentType field.
    * @param {Object} doc
