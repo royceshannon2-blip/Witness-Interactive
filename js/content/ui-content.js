@@ -76,6 +76,15 @@ const uiContent = {
     placeholderNote: "(Sound coming soon)"
   },
   
+  predictionQuestion: {
+    label: 'Before you decide — what do you predict will happen?'
+  },
+
+  stimuliOverlay: {
+    apAnalysisHeading: 'AP Analysis',
+    continueButton: 'Continue'
+  },
+
   errors: {
     outcomeScreen: {
       noMissionOrRole: "Error: Unable to determine outcome. Mission or role data missing.",

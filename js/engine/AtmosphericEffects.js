@@ -240,6 +240,11 @@ class AtmosphericEffects {
     else if (sceneId === 'ac-scene-02') {
       this.createShake();
     }
+
+    // Haymarket — bomb scenes
+    else if (sceneId === 'hm-lp-scene-04' || sceneId === 'hm-kb-scene-05' || sceneId === 'hm-jd-scene-05') {
+      this.createShake();
+    }
   }
 
   /**
@@ -370,6 +375,26 @@ class AtmosphericEffects {
       this.createBorderGlow('rgba(130, 130, 140, 0.45)', 5000);
     } else if (sceneId === 'rw-un-scene-04d') {
       this.createBorderGlow('rgba(160, 175, 200, 0.4)', 5000);
+    }
+
+    // ── HAYMARKET AFFAIR ───────────────────────────────────────
+    else if (sceneId === 'hm-lp-scene-01' || sceneId === 'hm-kb-scene-01' || sceneId === 'hm-jd-scene-01') {
+      this.createBorderGlow('rgba(180, 140, 60, 0.35)', 4000); // candlelit amber — meeting halls
+    } else if (sceneId === 'hm-lp-scene-02' || sceneId === 'hm-jd-scene-02') {
+      this.createBorderGlow('rgba(100, 80, 40, 0.4)', 4000); // dim gaslight
+    } else if (sceneId === 'hm-kb-scene-02') {
+      this.createBorderGlow('rgba(120, 100, 50, 0.4)', 4000); // march — warm amber
+    } else if (sceneId === 'hm-lp-scene-03' || sceneId === 'hm-kb-scene-03' || sceneId === 'hm-jd-scene-03') {
+      this.createBorderGlow('rgba(160, 30, 20, 0.5)', 5000); // McCormick shooting — dark red
+    } else if (sceneId === 'hm-kb-scene-04' || sceneId === 'hm-jd-scene-04') {
+      this.createBorderGlow('rgba(140, 20, 20, 0.55)', 5000); // Revenge Circular — crisis red
+    } else if (sceneId === 'hm-lp-scene-04' || sceneId === 'hm-kb-scene-05' || sceneId === 'hm-jd-scene-05') {
+      this.createBorderGlow('rgba(200, 60, 0, 0.6)', 5000); // bomb — riot orange-red
+      this.createAsh();
+    } else if (sceneId === 'hm-lp-scene-05') {
+      this.createAftermath(); // morning after — desaturated
+    } else if (sceneId === 'hm-lp-scene-06' || sceneId === 'hm-kb-scene-06' || sceneId === 'hm-jd-scene-06') {
+      this.createBorderGlow('rgba(80, 70, 60, 0.45)', 5000); // courtroom — somber grey
     }
 
     // ── URBAN DESIGN RESIDENT ──────────────────────────────────

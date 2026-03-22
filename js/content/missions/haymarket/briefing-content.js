@@ -213,8 +213,141 @@ const BRIEFING_FINALS = {
 };
 
 const BRIEFING_UI_TEXT = {
-  masthead: 'Chicago Daily Tribune',
-  byline: 'Special Report — Labor Bureau'
+  masthead: {
+    name: 'Chicago Daily Tribune',
+    byline: 'Special Report — Labor Bureau'
+  },
+  cardEyebrow: 'Your Identity Document',
+  buttons: {
+    continue: 'Continue',
+    seeCard: 'See Your Identity',
+    enterMission: 'Enter the Mission'
+  }
+};
+
+// All three Haymarket roles share the same five briefing pages.
+// Keyed by roleId to match MissionBriefing.js lookup pattern.
+const _pages = BRIEFING_PAGES;
+export const BRIEFING_PAGES_KEYED = {
+  'hm-lucy-parsons': _pages,
+  'hm-karl-brenner': _pages,
+  'hm-james-doyle':  _pages
+};
+
+// Card templates for _buildCardHTML() — one per role
+export const BRIEFING_CARD_TEMPLATES = {
+  'hm-lucy-parsons': {
+    headerBand: {
+      republic: 'CHICAGO POLICE DEPARTMENT',
+      type: 'SURVEILLANCE FILE'
+    },
+    photoLabel: 'SUBJECT PHOTO',
+    stamp: {
+      line1: 'CHICAGO P.D.',
+      line2: 'ACTIVE',
+      line3: 'SURVEILLANCE'
+    },
+    fields: [
+      { label: 'SUBJECT', cssClass: 'pc-val-bold' },
+      { label: 'FILE NO.', cssClass: 'pc-val' },
+      { label: 'CLASSIFICATION', cssClass: 'pc-val-red' },
+      { label: 'DATE', cssClass: 'pc-val' },
+      { label: 'ASSOCIATION', cssClass: 'pc-val' }
+    ],
+    footer: {
+      issued: 'Issued: April 1886',
+      valid: 'Chicago, Illinois',
+      number: 'CPD-1886-0441'
+    }
+  },
+  'hm-karl-brenner': {
+    headerBand: {
+      republic: 'McCORMICK REAPER WORKS',
+      type: 'EMPLOYEE RECORD'
+    },
+    photoLabel: 'EMPLOYEE',
+    stamp: {
+      line1: 'McCORMICK',
+      line2: 'LOCKED',
+      line3: 'OUT'
+    },
+    fields: [
+      { label: 'EMPLOYEE', cssClass: 'pc-val-bold' },
+      { label: 'EMP. NO.', cssClass: 'pc-val' },
+      { label: 'STATUS', cssClass: 'pc-val-red' },
+      { label: 'DEPARTMENT', cssClass: 'pc-val' },
+      { label: 'DAILY WAGE', cssClass: 'pc-val' }
+    ],
+    footer: {
+      issued: 'Hired: March 1882',
+      valid: 'Blue Island Ave., Chicago',
+      number: 'EMP-2847'
+    }
+  },
+  'hm-james-doyle': {
+    headerBand: {
+      republic: 'PINKERTON NATIONAL DETECTIVE AGENCY',
+      type: 'OPERATIVE ASSIGNMENT'
+    },
+    photoLabel: 'OPERATIVE',
+    stamp: {
+      line1: 'PINKERTON',
+      line2: 'ACTIVE',
+      line3: 'UNDERCOVER'
+    },
+    fields: [
+      { label: 'OPERATIVE', cssClass: 'pc-val-bold' },
+      { label: 'ALIAS', cssClass: 'pc-val' },
+      { label: 'ASSIGNMENT', cssClass: 'pc-val' },
+      { label: 'HANDLER', cssClass: 'pc-val' },
+      { label: 'STATUS', cssClass: 'pc-val-red' }
+    ],
+    footer: {
+      issued: 'Assigned: Feb. 1886',
+      valid: 'Chicago Office',
+      number: 'CHI-1886-114'
+    }
+  }
+};
+
+// Card row data (typed out during briefing animation)
+export const BRIEFING_CARDS_KEYED = {
+  'hm-lucy-parsons': {
+    rows: [
+      ['SUBJECT', 'Lucy Parsons'],
+      ['FILE NO.', 'CPD-1886-0441'],
+      ['CLASSIFICATION', 'LABOR AGITATOR — ACTIVE SURVEILLANCE'],
+      ['DATE', 'April 1886'],
+      ['ASSOCIATION', 'IWPA; Central Labor Union']
+    ],
+    note: 'Subject is considered an effective public speaker and organizer. Surveillance recommended to continue. — Det. Sgt. M. Bonfield'
+  },
+  'hm-karl-brenner': {
+    rows: [
+      ['EMPLOYEE', 'Karl Brenner'],
+      ['EMP. NO.', '#2847'],
+      ['STATUS', 'LOCKOUT — EMPLOYMENT SUSPENDED'],
+      ['DEPARTMENT', 'Foundry — Press Operations'],
+      ['DAILY WAGE', '$1.50']
+    ],
+    note: 'Employee suspended February 16, 1886, pursuant to general lockout of union workers. Replacement labor secured through Pinkerton Agency.'
+  },
+  'hm-james-doyle': {
+    rows: [
+      ['OPERATIVE', 'James Doyle'],
+      ['ALIAS', 'James Reilly'],
+      ['ASSIGNMENT', 'CHI-1886-114 — IWPA Infiltration'],
+      ['HANDLER', 'Captain William Ward'],
+      ['STATUS', 'UNDERCOVER — ACTIVE']
+    ],
+    note: 'Cover identity established. Operative has attended three IWPA meetings without incident. Report weekly to Captain Ward.'
+  }
+};
+
+export const BRIEFING_FINALS_KEYED = {
+  'hm-lucy-parsons': BRIEFING_FINALS['hm-lucy-parsons'],
+  'hm-karl-brenner': BRIEFING_FINALS['hm-karl-brenner'],
+  'hm-james-doyle':  BRIEFING_FINALS['hm-james-doyle']
 };
 
 export { BRIEFING_PAGES, BRIEFING_CARDS, BRIEFING_FINALS, BRIEFING_UI_TEXT };

@@ -14,12 +14,14 @@
  *   stimuli:dismiss-requested — { documentId, noPauseQuestion? }
  *
  * Events emitted:
- *   stimuli:shown                  — { documentId }
+ *   stimuli:shown                  — { documentId, documentData }
  *   stimuli:pause-question-answered — { documentId, correct, selectedId }
  *   stimuli:dismissed              — { documentId, answeredCorrectly }
  *
  * Requirements: 4.1, 4.2, 4.3, 4.4, 4.5, 4.6, 4.7, 4.8, 23.3, 25.4
  */
+
+import { getDocument } from '../content/missions/haymarket/stimulus-documents.js';
 
 class StimuliManager {
   /**
@@ -48,6 +50,8 @@ class StimuliManager {
     this.eventBus.on('scene:transition', (data) => this.handleSceneTransition(data));
     this.eventBus.on('stimuli:answer-submitted', (data) => this._handleAnswerSubmitted(data));
     this.eventBus.on('stimuli:dismiss-requested', (data) => this._handleDismissRequested(data));
+    // Briefing pages can also unlock stimulus documents (Haymarket Phase 1)
+    this.eventBus.on('briefing:stimuli-unlock', (data) => this._handleBriefingUnlock(data));
   }
 
   /**
@@ -97,7 +101,19 @@ class StimuliManager {
     this._currentAnsweredCorrectly = false;
     this._forceAllowDismiss = false;
 
-    this.eventBus.emit('stimuli:shown', { documentId });
+    const documentData = getDocument(documentId);
+    if (!documentData) {
+      console.warn(`StimuliManager: No document data found for "${documentId}" — allowing immediate dismissal`);
+      this._forceAllowDismiss = true;
+    }
+
+    this.eventBus.emit('stimuli:shown', { documentId, documentData });
+
+    // If no pause question on the document, force-allow dismiss
+    if (documentData && !documentData.pauseQuestion) {
+      console.warn(`StimuliManager: Document "${documentId}" has no pauseQuestion — allowing immediate dismissal`);
+      this._forceAllowDismiss = true;
+    }
   }
 
   /**
@@ -191,6 +207,26 @@ class StimuliManager {
     }
 
     this.dismissDocument();
+  }
+
+  /**
+   * Handle briefing:stimuli-unlock event.
+   * Queues documents from a briefing page — same deduplication rules apply.
+   * @private
+   */
+  _handleBriefingUnlock(data) {
+    if (!data || !Array.isArray(data.documentIds) || data.documentIds.length === 0) return;
+
+    // Reset queue for this briefing page's documents
+    this._queue = [];
+
+    for (const docId of data.documentIds) {
+      if (!this.shownDocuments.has(docId)) {
+        this._queue.push(docId);
+      }
+    }
+
+    this._showNext();
   }
 }
 

@@ -73,6 +73,8 @@ class UIController {
     this.eventBus.on('timer:cancelled', this.handleTimerCancelled.bind(this));
     this.eventBus.on('sound:muted', this.handleSoundMuted.bind(this));
     this.eventBus.on('narrator:muted', this.handleNarratorMuted.bind(this));
+    this.eventBus.on('stimuli:shown', this.handleStimuliShown.bind(this));
+    this.eventBus.on('stimuli:dismissed', this.handleStimuliDismissed.bind(this));
     this.eventBus.on('scene:error', () => {
       console.warn('UIController: scene:error received — re-rendering current scene');
       if (this.currentSceneData && this.currentSceneData.scene) {
@@ -453,10 +455,12 @@ class UIController {
 
   renderHistoricalRippleScreen(data) {
     const c = this.content.historicalRipple;
+    const mission = this.missionRegistry ? this.missionRegistry.getMission(this.currentMissionId) : null;
+    const subtitle = mission?.rippleSubtitle || c.subtitle;
     return `
       <article class="ripple-content" role="article" aria-labelledby="ripple-title">
         <h2 id="ripple-title" class="text-center text-gold">${c.title}</h2>
-        <p class="text-center">${c.subtitle}</p>
+        <p class="text-center">${subtitle}</p>
         <section id="ripple-timeline" class="mt-lg" role="region" aria-label="Historical consequences timeline">
         </section>
         <button id="continue-to-checkpoint" class="mt-lg" aria-label="Continue to knowledge checkpoint">${c.buttonText}</button>
@@ -533,6 +537,11 @@ class UIController {
       });
       choicesContainer.appendChild(choiceButton);
     });
+
+    // Render prediction question above choices if present (Haymarket Phase 2)
+    if (scene.predictionQuestion) {
+      this._renderPredictionQuestion(choicesContainer, scene.predictionQuestion, scene.id);
+    }
     
     this.disableChoices();
     
@@ -959,6 +968,65 @@ class UIController {
       eventElement.appendChild(eventTheme);
       rippleTimelineContainer.appendChild(eventElement);
     });
+
+    // Render post-ripple synthesis question if present (Haymarket and future missions)
+    if (mission.postRippleQuestion) {
+      this._renderPostRippleQuestion(rippleTimelineContainer, mission.postRippleQuestion);
+    }
+  }
+
+  _renderPostRippleQuestion(container, prq) {
+    const wrapper = document.createElement('article');
+    wrapper.className = 'post-ripple-synthesis panel panel-parchment mt-lg';
+    wrapper.setAttribute('role', 'article');
+    wrapper.setAttribute('aria-labelledby', 'post-ripple-question-text');
+
+    const skillTag = document.createElement('span');
+    skillTag.className = 'ap-skill-tag';
+    skillTag.textContent = `AP Skill: ${this.formatApTheme(prq.apSkill)}`;
+    skillTag.setAttribute('aria-label', `AP reasoning skill: ${prq.apSkill}`);
+
+    const questionText = document.createElement('p');
+    questionText.id = 'post-ripple-question-text';
+    questionText.className = 'question-text mt-sm';
+    questionText.textContent = prq.question;
+
+    const optionsContainer = document.createElement('nav');
+    optionsContainer.className = 'question-options mt-sm';
+    optionsContainer.setAttribute('role', 'navigation');
+    optionsContainer.setAttribute('aria-label', 'Post-ripple synthesis question options');
+
+    const explanationEl = document.createElement('section');
+    explanationEl.className = 'question-explanation hidden mt-md';
+    explanationEl.setAttribute('role', 'region');
+    explanationEl.setAttribute('aria-label', 'Answer explanation');
+    explanationEl.innerHTML = `<h4>AP Analysis</h4><p>${prq.explanation}</p>`;
+
+    const displayLabels = ['A', 'B', 'C', 'D'];
+    prq.options.forEach((option, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'option-button';
+      btn.dataset.optionId = option.id;
+      btn.dataset.correct = option.correct;
+      btn.textContent = `${displayLabels[i] || (i + 1)}. ${option.text}`;
+      btn.setAttribute('aria-label', `Option ${displayLabels[i]}: ${option.text}`);
+      btn.addEventListener('click', () => {
+        this.haptics.light();
+        optionsContainer.querySelectorAll('.option-button').forEach(b => {
+          b.disabled = true;
+          if (b.dataset.correct === 'true') b.classList.add('correct');
+        });
+        btn.classList.add(option.correct ? 'correct' : 'incorrect');
+        explanationEl.classList.remove('hidden');
+      });
+      optionsContainer.appendChild(btn);
+    });
+
+    wrapper.appendChild(skillTag);
+    wrapper.appendChild(questionText);
+    wrapper.appendChild(optionsContainer);
+    wrapper.appendChild(explanationEl);
+    container.appendChild(wrapper);
   }
 
   formatApTheme(theme) {
@@ -1180,6 +1248,160 @@ class UIController {
       timerProgressFill.style.strokeDashoffset = offset;
     }
   }
+
+  // ── Prediction Question (Haymarket Phase 2) ──────────────────────────────
+
+  _renderPredictionQuestion(choicesContainer, pq, sceneId) {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'prediction-question panel panel-parchment mt-md';
+    wrapper.setAttribute('role', 'region');
+    wrapper.setAttribute('aria-label', 'Prediction question');
+
+    const label = document.createElement('p');
+    label.className = 'prediction-label text-secondary';
+    label.textContent = this.content.predictionQuestion?.label || 'Before you decide — what do you predict will happen?';
+
+    const questionText = document.createElement('p');
+    questionText.className = 'question-text mt-sm';
+    questionText.textContent = pq.question;
+
+    const optionsContainer = document.createElement('div');
+    optionsContainer.className = 'prediction-options mt-sm';
+
+    const revealEl = document.createElement('div');
+    revealEl.className = 'prediction-reveal panel mt-sm hidden';
+    revealEl.setAttribute('role', 'status');
+    revealEl.setAttribute('aria-live', 'polite');
+    revealEl.innerHTML = `<p class="text-secondary">${pq.reveal}</p>`;
+
+    pq.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option-button mt-sm';
+      btn.textContent = opt.text;
+      btn.dataset.predId = opt.id;
+      btn.setAttribute('aria-label', opt.text);
+      btn.addEventListener('click', () => {
+        optionsContainer.querySelectorAll('.option-button').forEach(b => {
+          b.disabled = true;
+          b.style.opacity = '0.6';
+        });
+        btn.style.opacity = '1';
+        btn.classList.add('selected');
+        revealEl.classList.remove('hidden');
+        this.eventBus.emit('prediction:answered', { sceneId, selectedId: opt.id });
+      });
+      optionsContainer.appendChild(btn);
+    });
+
+    wrapper.appendChild(label);
+    wrapper.appendChild(questionText);
+    wrapper.appendChild(optionsContainer);
+    wrapper.appendChild(revealEl);
+
+    // Insert before the first choice button so choices appear below
+    const firstChoice = choicesContainer.querySelector('.choice-button');
+    if (firstChoice) {
+      choicesContainer.insertBefore(wrapper, firstChoice);
+    } else {
+      choicesContainer.appendChild(wrapper);
+    }
+  }
+
+  // ── Stimulus Document Overlay (Haymarket Phase 1 / StimuliManager) ────────
+
+  handleStimuliShown(data) {
+    if (!data || !data.documentId) return;
+    const { documentId, documentData } = data;
+    if (!documentData) {
+      console.warn(`UIController.handleStimuliShown: No document data for "${documentId}"`);
+      return;
+    }
+    this._renderStimulusOverlay(documentData);
+  }
+
+  handleStimuliDismissed(data) {
+    const overlay = document.getElementById('stimuli-overlay');
+    if (overlay) overlay.remove();
+  }
+
+  _renderStimulusOverlay(doc) {
+    // Remove any existing overlay
+    const existing = document.getElementById('stimuli-overlay');
+    if (existing) existing.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'stimuli-overlay';
+    overlay.className = 'stimuli-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-labelledby', 'stimuli-doc-title');
+
+    const spiceStr = (doc.spiceT || []).join(' · ');
+    const pq = doc.pauseQuestion;
+
+    // Build options HTML
+    const optionsHTML = pq ? pq.options.map((opt, i) => {
+      const label = ['A', 'B', 'C', 'D'][i] || (i + 1);
+      return `<button class="option-button stimuli-option mt-sm" data-opt-id="${opt.id}" data-correct="${opt.correct}" aria-label="Option ${label}: ${opt.text}">${label}. ${opt.text}</button>`;
+    }).join('') : '';
+
+    overlay.innerHTML = `
+      <div class="stimuli-content panel panel-parchment">
+        <div class="stimuli-meta">
+          <span class="ap-skill-tag">${spiceStr}</span>
+          <span class="stimuli-unit text-secondary">${doc.apUnit || ''}</span>
+        </div>
+        <h3 id="stimuli-doc-title" class="stimuli-title text-gold mt-sm">${doc.title}</h3>
+        <p class="stimuli-source text-secondary">${doc.source} — ${doc.date}</p>
+        <div class="stimuli-text mt-md">${doc.text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>
+        ${pq ? `
+        <div class="stimuli-pause-question mt-lg">
+          <p class="question-text">${pq.question}</p>
+          <div class="stimuli-options mt-sm">${optionsHTML}</div>
+          <div class="stimuli-explanation hidden mt-md panel">
+            <h4>${this.content.stimuliOverlay?.apAnalysisHeading || 'AP Analysis'}</h4>
+            <p>${pq.explanation}</p>
+          </div>
+        </div>
+        ` : ''}
+        <button id="stimuli-dismiss" class="mt-lg hidden" aria-label="Continue">Continue</button>
+      </div>
+    `;
+
+    document.body.appendChild(overlay);
+
+    const dismissBtn = overlay.querySelector('#stimuli-dismiss');
+
+    if (!pq) {
+      // No pause question — allow immediate dismiss
+      dismissBtn.classList.remove('hidden');
+    }
+
+    // Wire option buttons
+    overlay.querySelectorAll('.stimuli-option').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const isCorrect = btn.dataset.correct === 'true';
+        overlay.querySelectorAll('.stimuli-option').forEach(b => {
+          b.disabled = true;
+          if (b.dataset.correct === 'true') b.classList.add('correct');
+        });
+        btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+        overlay.querySelector('.stimuli-explanation').classList.remove('hidden');
+        dismissBtn.classList.remove('hidden');
+        dismissBtn.focus();
+        this.eventBus.emit('stimuli:answer-submitted', {
+          documentId: doc.id,
+          selectedId: btn.dataset.optId,
+          correct: isCorrect
+        });
+      });
+    });
+
+    dismissBtn.addEventListener('click', () => {
+      this.eventBus.emit('stimuli:dismiss-requested', { documentId: doc.id });
+    });
+  }
+
 }
 
 export default UIController;

@@ -27,6 +27,7 @@ const haymarketMission = {
   teaser: 'Chicago, 1886 — a bomb, a trial, and the birth of the labor movement',
   roleSelectionSubtitle: 'Three perspectives on the night that changed American labor',
   apUnits: ['Unit 6.5', 'Unit 6.6', 'Unit 7.1'],
+  rippleSubtitle: 'The consequences of May 4th, 1886',
 
   roles: [
     {

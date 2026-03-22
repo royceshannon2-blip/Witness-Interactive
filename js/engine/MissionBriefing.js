@@ -26,20 +26,30 @@ import {
   BRIEFING_CARD_TEMPLATES as UD_TEMPLATES
 } from '../content/missions/urban-design/briefing-content.js';
 
+import {
+  BRIEFING_PAGES_KEYED as HM_PAGES,
+  BRIEFING_CARDS_KEYED as HM_CARDS,
+  BRIEFING_FINALS_KEYED as HM_FINALS,
+  BRIEFING_UI_TEXT  as HM_UI_TEXT,
+  BRIEFING_CARD_TEMPLATES as HM_TEMPLATES
+} from '../content/missions/haymarket/briefing-content.js';
+
 import glossaryTooltip from './GlossaryTooltip.js';
 
-// Merge both missions' content into unified lookup objects keyed by roleKey.
+// Merge all missions' content into unified lookup objects keyed by roleKey.
 // Rwanda roleKeys: 'hutu' | 'tutsi' | 'un'
 // Urban Design roleKey: 'ud-resident'
-const BRIEFING_PAGES          = { ...RW_PAGES,     ...UD_PAGES     };
-const BRIEFING_CARDS          = { ...RW_CARDS,     ...UD_CARDS     };
-const BRIEFING_FINALS         = { ...RW_FINALS,    ...UD_FINALS    };
-const BRIEFING_CARD_TEMPLATES = { ...RW_TEMPLATES, ...UD_TEMPLATES };
+// Haymarket roleKeys: 'hm-lucy-parsons' | 'hm-karl-brenner' | 'hm-james-doyle'
+const BRIEFING_PAGES          = { ...RW_PAGES,     ...UD_PAGES,     ...HM_PAGES     };
+const BRIEFING_CARDS          = { ...RW_CARDS,     ...UD_CARDS,     ...HM_CARDS     };
+const BRIEFING_FINALS         = { ...RW_FINALS,    ...UD_FINALS,    ...HM_FINALS    };
+const BRIEFING_CARD_TEMPLATES = { ...RW_TEMPLATES, ...UD_TEMPLATES, ...HM_TEMPLATES };
 
 // UI text is per-mission (masthead name differs). Resolved in show() by missionId.
 const BRIEFING_UI_TEXT_MAP = {
   'rwanda-genocide':   RW_UI_TEXT,
-  'aphg-urban-design': UD_UI_TEXT
+  'aphg-urban-design': UD_UI_TEXT,
+  'haymarket-affair':  HM_UI_TEXT
 };
 
 class MissionBriefing {
@@ -51,7 +61,9 @@ class MissionBriefing {
   }
 
   hasBriefing(missionId) {
-    return missionId === 'rwanda-genocide' || missionId === 'aphg-urban-design';
+    return missionId === 'rwanda-genocide'
+        || missionId === 'aphg-urban-design'
+        || missionId === 'haymarket-affair';
   }
 
   show(_missionId, roleId, onComplete) {
@@ -128,6 +140,12 @@ class MissionBriefing {
         btn.style.opacity  = '1';
         btn.style.pointerEvents = 'all';
         typing = false;
+
+        // Fire stimulus documents for this briefing page (Haymarket Phase 1)
+        // StimuliManager listens for briefing:stimuli-unlock and handles deduplication
+        if (p.stimuliUnlock && p.stimuliUnlock.length > 0) {
+          this.eventBus.emit('briefing:stimuli-unlock', { documentIds: p.stimuliUnlock });
+        }
         
         // Apply glossary only to text content elements, NOT the whole container.
         // Passing this.container rewrites all innerHTML including the button, resetting it to hidden.
@@ -155,6 +173,9 @@ class MissionBriefing {
 
   _getRoleKey(roleId) {
     if (roleId === 'ud-resident')                                    return 'ud-resident';
+    if (roleId === 'hm-lucy-parsons')                                return 'hm-lucy-parsons';
+    if (roleId === 'hm-karl-brenner')                                return 'hm-karl-brenner';
+    if (roleId === 'hm-james-doyle')                                 return 'hm-james-doyle';
     if (roleId.includes('hutu'))                                     return 'hutu';
     if (roleId.includes('tutsi'))                                    return 'tutsi';
     if (roleId.includes('un') || roleId.includes('peacekeeper'))     return 'un';
@@ -298,11 +319,61 @@ class MissionBriefing {
     const template = BRIEFING_CARD_TEMPLATES[roleKey];
     if (!template) return '';
 
-    if (roleKey === 'tutsi')       return this._buildTutsiCard(template);
-    if (roleKey === 'hutu')        return this._buildHutuCard(template);
-    if (roleKey === 'un')          return this._buildUnCard(template);
-    if (roleKey === 'ud-resident') return this._buildUrbanResidentCard(template);
+    if (roleKey === 'tutsi')          return this._buildTutsiCard(template);
+    if (roleKey === 'hutu')           return this._buildHutuCard(template);
+    if (roleKey === 'un')             return this._buildUnCard(template);
+    if (roleKey === 'ud-resident')    return this._buildUrbanResidentCard(template);
+    if (roleKey === 'hm-lucy-parsons'
+     || roleKey === 'hm-karl-brenner'
+     || roleKey === 'hm-james-doyle') return this._buildHaymarketCard(template, roleKey);
     return '';
+  }
+
+  _buildHaymarketCard(t, roleKey) {
+    const cardData = BRIEFING_CARDS[roleKey];
+    const rowsHTML = (cardData?.rows || []).map(([label, _]) =>
+      `<div class="pc-field"><span class="pc-lbl hm-lbl">${label}</span><span class="pc-val id-field-value"></span></div>`
+    ).join('\n      ');
+
+    // Stamp color varies by role
+    const stampColor = roleKey === 'hm-james-doyle'
+      ? 'rgba(80, 60, 20, 0.75)'   // Pinkerton — sepia brown
+      : roleKey === 'hm-karl-brenner'
+        ? 'rgba(60, 60, 60, 0.7)'  // McCormick — industrial grey
+        : 'rgba(120, 20, 20, 0.7)'; // CPD — dark red
+
+    return `<div class="physical-card hm-card hm-card-${roleKey.replace('hm-', '')}">
+  <div class="pc-header-band pc-hm-header">
+    <span class="pc-republic" style="letter-spacing:1px;font-size:0.65rem;">${t.headerBand.republic}</span>
+    <span class="pc-type">${t.headerBand.type}</span>
+  </div>
+  <div class="pc-body">
+    <div class="pc-photo-col">
+      <div class="pc-photo-box pc-photo-hm">
+        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="70" height="70" style="opacity:0.75;">
+          <rect x="10" y="8" width="60" height="64" rx="2" fill="#c8b890" stroke="#8a6a3a" stroke-width="1"/>
+          <circle cx="40" cy="30" r="14" fill="#a08060" stroke="#7a5a30" stroke-width="1"/>
+          <path d="M15 72 Q40 50 65 72" fill="#8a6a3a" stroke="none"/>
+        </svg>
+        <div class="pc-photo-label" style="color:#5a3a10;font-size:0.6rem;">${t.photoLabel}</div>
+      </div>
+      <svg class="pc-stamp" viewBox="0 0 44 44" style="transform:rotate(-10deg); opacity:0.78;">
+        <circle cx="22" cy="22" r="20" fill="none" stroke="${stampColor}" stroke-width="2"/>
+        <circle cx="22" cy="22" r="16" fill="rgba(0,0,0,0.05)" stroke="${stampColor.replace('0.7', '0.35').replace('0.75', '0.35')}" stroke-width="1"/>
+        <text x="22" y="13" text-anchor="middle" font-size="3" fill="${stampColor}" font-family="Times New Roman">${t.stamp.line1}</text>
+        <text x="22" y="24" text-anchor="middle" font-size="6" font-weight="700" fill="${stampColor}" font-family="Times New Roman">${t.stamp.line2}</text>
+        <text x="22" y="31" text-anchor="middle" font-size="3" fill="${stampColor}" font-family="Times New Roman">${t.stamp.line3}</text>
+      </svg>
+    </div>
+    <div class="pc-fields">
+      ${rowsHTML}
+    </div>
+  </div>
+  <div class="pc-footer hm-footer">
+    <span>${t.footer.issued}</span><span>${t.footer.valid}</span><span>${t.footer.number}</span>
+  </div>
+  <div class="pc-age-tint pc-age-worn"></div>
+</div>`;
   }
 
   _buildUrbanResidentCard(t) {

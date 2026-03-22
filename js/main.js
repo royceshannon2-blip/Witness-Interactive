@@ -231,8 +231,10 @@ async function initializeApp() {
         consequenceSystem.reset();
         
         // Define proceed function to load role scenes
+        // Pass full role object as 4th arg so SceneStateMachine can apply initFlags
+        // (required for hm_lp_movement_trust to start at 0, not undefined)
         const proceed = () => {
-            sceneStateMachine.loadRole(missionId, roleId, role.scenes);
+            sceneStateMachine.loadRole(missionId, roleId, role.scenes, role);
             console.log(`✓ Loaded role "${roleId}" with ${role.scenes.length} scenes`);
         };
         
