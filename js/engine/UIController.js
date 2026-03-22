@@ -743,6 +743,12 @@ class UIController {
     );
   }
 
+  _openInventory() {
+  // The unified AnnotationInventory handles its own toggle.
+  // We just programmatically click its toggle button.
+  const toggleBtn = document.getElementById('annotation-inventory-toggle');
+  if (toggleBtn) toggleBtn.click();
+}
   _mountPauseQuestion(contentEl, doc, crossRolePrompt) {
   const { PauseQuestionModal } = window.__pqmModule || {};
  
