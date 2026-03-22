@@ -1,0 +1,191 @@
+/**
+ * StimuliArchiveAnimator — Document Filing Animation
+ *
+ * Styles for the ~800ms "document flies into filing cabinet" sequence.
+ *
+ * Classes applied by StimuliArchiveAnimator.js:
+ *   .saa-doc--shrink      Phase 1: document card shrinks and lifts
+ *   .saa-doc--flying      Phase 3: document flies to inventory button
+ *   .saa-overlay--dimming Phase 1: spotlight dims
+ *   .saa-btn--pulse       Phase 2: inventory button magnetism ripple
+ *   .saa-btn--absorb      Phase 4: scale punch on absorption
+ *   .saa-btn--flash       Phase 4: gold flash on absorption
+ *   .saa-badge            Phase 4: +1 counter badge
+ *   .saa-badge--bounce    Phase 4: badge bounce-in animation
+ *   .saa-card--just-archived  Post-archive: gold left-border highlight in drawer
+ *
+ * All animations respect prefers-reduced-motion.
+ */
+
+/* ── Phase 1: Document shrink and lift ───────────────────────────────────── */
+.saa-doc--shrink {
+  animation: saaDocShrink 300ms ease-in forwards;
+}
+
+@keyframes saaDocShrink {
+  from {
+    transform: scale(1) rotate(-0.5deg) translateY(0);
+    border-radius: 2px;
+  }
+  to {
+    transform: scale(0.85) rotate(1deg) translateY(-10px);
+    border-radius: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saa-doc--shrink { animation: none; }
+}
+
+/* ── Phase 1: Spotlight dims ─────────────────────────────────────────────── */
+.saa-overlay--dimming {
+  transition: background 300ms ease;
+  /* Reduce the spotlight opacity from ~0.25 to ~0.08 */
+  background-image:
+    radial-gradient(ellipse 60% 55% at 50% 0%, rgba(200, 170, 100, 0.04) 0%, transparent 70%),
+    radial-gradient(ellipse 100% 100% at 50% 50%, rgba(4, 4, 8, 0.0) 0%, rgba(4, 4, 8, 0.82) 100%) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saa-overlay--dimming { transition: none; }
+}
+
+/* ── Phase 2: Inventory button magnetism pulse ───────────────────────────── */
+.saa-btn--pulse {
+  animation: saaBtnPulse 350ms ease-out 2;
+}
+
+@keyframes saaBtnPulse {
+  0%   { box-shadow: 0 2px 8px rgba(0,0,0,0.5), 0 0 0 0   rgba(212, 175, 55, 0.4); }
+  50%  { box-shadow: 0 2px 8px rgba(0,0,0,0.5), 0 0 0 16px rgba(212, 175, 55, 0);   }
+  100% { box-shadow: 0 2px 8px rgba(0,0,0,0.5), 0 0 0 0   rgba(212, 175, 55, 0);   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saa-btn--pulse { animation: none; }
+}
+
+/* ── Phase 3: Document flight ────────────────────────────────────────────── */
+/*
+ * Uses CSS custom properties --saa-fly-x and --saa-fly-y set by JS
+ * (calculated via getBoundingClientRect delta).
+ * The card is already positioned in the flow; we use a fixed-position clone
+ * approach via the animation — the card animates out of its current position.
+ */
+.saa-doc--flying {
+  position: fixed !important;
+  pointer-events: none;
+  z-index: 500;
+  animation: saaDocFly 350ms cubic-bezier(0.4, 0, 1, 1) forwards;
+}
+
+@keyframes saaDocFly {
+  0% {
+    transform: scale(0.85) rotate(1deg) translateY(-10px) translate(0, 0);
+    opacity: 1;
+  }
+  40% {
+    /* Mid-flight organic rotation */
+    transform: scale(0.55) rotate(-2deg) translate(
+      calc(var(--saa-fly-x, 0px) * 0.4),
+      calc(var(--saa-fly-y, 0px) * 0.4)
+    );
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(0.2) rotate(3deg) translate(
+      var(--saa-fly-x, 0px),
+      var(--saa-fly-y, 0px)
+    );
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saa-doc--flying { animation: none; opacity: 0; }
+}
+
+/* ── Phase 4: Inventory button absorption — scale punch ─────────────────── */
+.saa-btn--absorb {
+  animation: saaBtnAbsorb 80ms ease-out forwards;
+}
+
+@keyframes saaBtnAbsorb {
+  0%   { transform: scale(1); }
+  60%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saa-btn--absorb { animation: none; }
+}
+
+/* ── Phase 4: Inventory button gold flash ────────────────────────────────── */
+.saa-btn--flash {
+  animation: saaBtnFlash 200ms ease-out forwards;
+}
+
+@keyframes saaBtnFlash {
+  0%   { background: linear-gradient(135deg, #c8a870 0%, #b89050 60%, #a07838 100%); }
+  40%  { background: linear-gradient(135deg, #d4af37 0%, #c8a030 60%, #b89020 100%); }
+  100% { background: linear-gradient(135deg, #c8a870 0%, #b89050 60%, #a07838 100%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saa-btn--flash { animation: none; }
+}
+
+/* ── Phase 4: +1 badge counter ───────────────────────────────────────────── */
+/*
+ * .doc-inventory-trigger is position:fixed — absolute children anchor to it correctly.
+ */
+.saa-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 10px;
+  background: #d4af37;
+  color: #1a0e04;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+  pointer-events: none;
+}
+
+.saa-badge--bounce {
+  animation: saaBadgeBounce 300ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes saaBadgeBounce {
+  0%   { transform: scale(0); }
+  60%  { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saa-badge--bounce { animation: none; transform: scale(1); }
+}
+
+/* ── Post-archive: newly added document highlight in drawer ──────────────── */
+/*
+ * Gold left-border accent that fades to normal card style over 2 seconds.
+ * Applied to .doc-card--unlocked[data-doc-id="..."] in the inventory drawer.
+ */
+.saa-card--just-archived {
+  animation: saaCardHighlight 2200ms ease-out forwards;
+}
+
+@keyframes saaCardHighlight {
+  0%   { border-left: 3px solid #d4af37; background: rgba(212, 175, 55, 0.12); }
+  30%  { border-left: 3px solid #d4af37; background: rgba(212, 175, 55, 0.08); }
+  100% { border-left: 3px solid transparent; background: transparent; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .saa-card--just-archived { animation: none; }
+}

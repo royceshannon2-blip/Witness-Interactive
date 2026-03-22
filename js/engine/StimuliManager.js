@@ -23,6 +23,7 @@
 
 import { getDocument } from '../content/missions/haymarket/stimulus-documents.js';
 import DocAnnotationLayer from './DocAnnotationLayer.js';
+import StimuliArchiveAnimator from './StimuliArchiveAnimator.js';
 
 class StimuliManager {
   /**
@@ -52,12 +53,17 @@ class StimuliManager {
     // Active DocAnnotationLayer instance (one per open overlay)
     this._docAnnotationLayer = null;
 
+    // Archive animator — handles the "fly to filing cabinet" sequence
+    this._archiveAnimator = new StimuliArchiveAnimator(eventBus);
+
     // Subscribe to events
     this.eventBus.on('scene:transition', (data) => this.handleSceneTransition(data));
     this.eventBus.on('stimuli:answer-submitted', (data) => this._handleAnswerSubmitted(data));
     this.eventBus.on('stimuli:dismiss-requested', (data) => this._handleDismissRequested(data));
     // Briefing pages can also unlock stimulus documents (Haymarket Phase 1)
     this.eventBus.on('briefing:stimuli-unlock', (data) => this._handleBriefingUnlock(data));
+    // Archive complete — proceed with normal dismiss flow after animation finishes
+    this.eventBus.on('stimuli:archive-complete', (data) => this._handleArchiveComplete(data));
   }
 
   /**
@@ -224,6 +230,18 @@ class StimuliManager {
       this._forceAllowDismiss = true;
     }
 
+    // Route through the archive animator — it emits stimuli:archive-complete
+    // when the flight animation finishes, which then calls dismissDocument().
+    this.eventBus.emit('stimuli:archive-requested', { documentId: data.documentId });
+  }
+
+  /**
+   * Handle stimuli:archive-complete — called by StimuliArchiveAnimator after
+   * the document-flight animation finishes. Proceeds with the normal dismiss flow.
+   * @private
+   */
+  _handleArchiveComplete(data) {
+    if (!data || data.documentId !== this._currentDocumentId) return;
     this.dismissDocument();
   }
 
