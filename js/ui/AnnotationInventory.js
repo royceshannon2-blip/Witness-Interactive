@@ -527,6 +527,13 @@ class AnnotationInventory {
       .replace(/"/g, '&quot;')
       .replace(/'/g, '&#39;');
   }
+  Called by main.js inventory:reopen-document handler.
+        @param {string} documentId
+        @returns {Object|undefined} documentData
+      \/
+      getCollectedDoc(documentId) {
+          return this._collectedDocs.get(documentId);
+      }
 }
 
 export default AnnotationInventory;
