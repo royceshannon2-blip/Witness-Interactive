@@ -273,6 +273,7 @@ class UIController {
   handleMissionSelected(data) {
     if (data && data.missionId) {
       this.currentMissionId = data.missionId;
+      this._setMissionTheme(data.missionId);
     }
     this.showScreen('role-selection', data);
   }
@@ -307,6 +308,10 @@ class UIController {
   if (!validScreens.includes(screenName)) {
     console.error(`UIController.showScreen: Invalid screen name "${screenName}"`);
     return;
+  }
+
+  if (screenName === 'timeline' || screenName === 'landing') {
+    this._setMissionTheme(null);
   }
 
   const existingScreens = this.appContainer.querySelectorAll('.screen');
@@ -878,6 +883,19 @@ class UIController {
     }
   }
 
+  _setMissionTheme(missionId) {
+    document.body.classList.remove('mission-haymarket', 'mission-pearl-harbor', 'mission-rwanda', 'mission-urban');
+    if (missionId === 'haymarket-affair') {
+      document.body.classList.add('mission-haymarket');
+    } else if (missionId === 'pearl-harbor') {
+      document.body.classList.add('mission-pearl-harbor');
+    } else if (missionId === 'rwanda-genocide') {
+      document.body.classList.add('mission-rwanda');
+    } else if (missionId === 'aphg-urban-design') {
+      document.body.classList.add('mission-urban');
+    }
+  }
+
   updateEndingsCounter() {
     // Update the endings counter immediately when a role is completed
     const endingsCountElement = document.getElementById('endings-count');
@@ -1401,6 +1419,52 @@ class UIController {
     if (overlay) overlay.remove();
   }
 
+  /**
+   * Resolve a CSS class for the document card based on its id or documentType field.
+   * @param {Object} doc
+   * @returns {string}
+   * @private
+   */
+  _stimuliDocTypeClass(doc) {
+    const type = doc.documentType || '';
+    if (type === 'arbeiter-zeitung') return 'doc-type--arbeiter-zeitung';
+    if (type === 'pinkerton-report') return 'doc-type--pinkerton-report';
+    if (type === 'harper-weekly')    return 'doc-type--harper-weekly';
+    if (type === 'court-transcript') return 'doc-type--court-transcript';
+
+    // Fall back to id-based mapping for Haymarket docs
+    const id = doc.id || '';
+    if (id === 'hm-doc-1a' || id === 'hm-doc-1b' || id === 'hm-doc-3') return 'doc-type--arbeiter-zeitung';
+    if (id === 'hm-doc-0')  return 'doc-type--pinkerton-report';
+    if (id === 'hm-doc-2')  return 'doc-type--harper-weekly';
+    if (id === 'hm-doc-4')  return 'doc-type--harper-weekly';   // Chicago Tribune — same heavy-press style
+    if (id === 'hm-doc-5')  return 'doc-type--court-transcript'; // Altgeld pardon — legal document
+    return 'doc-type--default';
+  }
+
+  /**
+   * Inject floating dust particle divs into the overlay backdrop.
+   * @param {HTMLElement} overlay
+   * @private
+   */
+  _injectDustParticles(overlay) {
+    const dust = document.createElement('div');
+    dust.className = 'stimuli-dust';
+    dust.setAttribute('aria-hidden', 'true');
+    const count = 5;
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = 'stimuli-dust-particle';
+      p.style.setProperty('--drift-duration', `${7 + Math.random() * 6}s`);
+      p.style.setProperty('--drift-delay', `${Math.random() * 4}s`);
+      p.style.setProperty('--drift-x', `${(Math.random() - 0.5) * 60}px`);
+      p.style.left = `${10 + Math.random() * 80}%`;
+      p.style.bottom = '0';
+      dust.appendChild(p);
+    }
+    overlay.appendChild(dust);
+  }
+
   _renderStimulusOverlay(doc) {
     // Remove any existing overlay
     const existing = document.getElementById('stimuli-overlay');
@@ -1413,8 +1477,22 @@ class UIController {
     overlay.setAttribute('aria-modal', 'true');
     overlay.setAttribute('aria-labelledby', 'stimuli-doc-title');
 
+    // Inject dust particles into backdrop
+    this._injectDustParticles(overlay);
+
     const spiceStr = (doc.spiceT || []).join(' · ');
     const pq = doc.pauseQuestion;
+    const typeClass = this._stimuliDocTypeClass(doc);
+
+    // Illustration placeholder for Harper's Weekly visual sources
+    const illustrationHTML = typeClass === 'doc-type--harper-weekly'
+      ? `<div class="stimuli-illustration-placeholder" aria-hidden="true">[ ${this.content.stimuliOverlay?.illustrationLabel || 'Engraving'} — ${doc.title} ]</div>`
+      : '';
+
+    // Signature line for court transcripts
+    const signatureHTML = typeClass === 'doc-type--court-transcript'
+      ? `<div class="stimuli-signature" aria-label="Document signature line">${this.content.stimuliOverlay?.signatureLine || '_________________________'}</div>`
+      : '';
 
     // Build options HTML
     const optionsHTML = pq ? pq.options.map((opt, i) => {
@@ -1422,30 +1500,33 @@ class UIController {
       return `<button class="option-button stimuli-option quest-option-button mt-sm" data-opt-id="${opt.id}" data-correct="${opt.correct}" aria-label="Option ${label}: ${opt.text}">${label}. ${opt.text}</button>`;
     }).join('') : '';
 
-    overlay.innerHTML = `
-      <div class="stimuli-content panel panel-parchment">
-        <div class="stimuli-meta">
-          <span class="ap-skill-tag">${spiceStr}</span>
-          <span class="stimuli-unit text-secondary">${doc.apUnit || ''}</span>
-        </div>
-        <h3 id="stimuli-doc-title" class="stimuli-title text-gold mt-sm">${doc.title}</h3>
-        <p class="stimuli-source text-secondary">${doc.source} — ${doc.date}</p>
-        <div class="stimuli-text mt-md">${doc.text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>
-        ${pq ? `
-        <div class="stimuli-pause-question mt-lg">
-          ${this._buildQuestExplainer('primary-source')}
-          <p class="question-text">${pq.question}</p>
-          <div class="stimuli-options mt-sm">${optionsHTML}</div>
-          <div class="stimuli-explanation hidden mt-md panel">
-            <h4>${this.content.stimuliOverlay?.apAnalysisHeading || ''}</h4>
-            <p>${pq.explanation}</p>
-          </div>
-        </div>
-        ` : ''}
-        <button id="stimuli-dismiss" class="mt-lg hidden" aria-label="Continue">Continue</button>
+    const content = document.createElement('div');
+    content.className = `stimuli-content ${typeClass}`;
+    content.innerHTML = `
+      <div class="stimuli-meta">
+        <span class="ap-skill-tag">${spiceStr}</span>
+        <span class="stimuli-unit text-secondary">${doc.apUnit || ''}</span>
       </div>
+      <h3 id="stimuli-doc-title" class="stimuli-title mt-sm">${doc.title}</h3>
+      <p class="stimuli-source">${doc.source} — ${doc.date}</p>
+      ${illustrationHTML}
+      <div class="stimuli-text mt-md">${doc.text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>
+      ${signatureHTML}
+      ${pq ? `
+      <div class="stimuli-pause-question mt-lg">
+        ${this._buildQuestExplainer('primary-source')}
+        <p class="question-text">${pq.question}</p>
+        <div class="stimuli-options mt-sm">${optionsHTML}</div>
+        <div class="stimuli-explanation hidden mt-md panel">
+          <h4>${this.content.stimuliOverlay?.apAnalysisHeading || ''}</h4>
+          <p>${pq.explanation}</p>
+        </div>
+      </div>
+      ` : ''}
+      <button id="stimuli-dismiss" class="mt-lg hidden" aria-label="${this.content.stimuliOverlay?.continueButton || 'Continue'}">${this.content.stimuliOverlay?.continueButton || 'Continue'}</button>
     `;
 
+    overlay.appendChild(content);
     document.body.appendChild(overlay);
 
     const dismissBtn = overlay.querySelector('#stimuli-dismiss');
