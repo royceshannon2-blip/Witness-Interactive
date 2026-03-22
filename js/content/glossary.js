@@ -85,6 +85,32 @@ Object.assign(GLOSSARY, {
   "sequent occupance": "The concept that a place is shaped by the successive groups that have occupied it, each leaving cultural and physical imprints. Formerly redlined neighborhoods show sequent occupance through the layered effects of HOLC grading (1934), blockbusting (1960s), disinvestment (1970s–1990s), and contemporary gentrification pressure."
 });
 
+// ─── Haymarket / Labor Movement Terms ────────────────────────────────────────
+
+Object.assign(GLOSSARY, {
+  "picket": "A form of labor protest in which workers stand or march outside their workplace to publicize a strike, discourage strikebreakers from entering, and pressure employers to negotiate. In 1886, picketing was not legally protected — police and Pinkerton agents routinely broke up picket lines by force.",
+  "picketers": "Workers who stand or march outside a workplace during a strike to publicize the dispute and discourage strikebreakers. At McCormick Reaper Works in May 1886, picketers were met by Pinkerton guards and Chicago police, resulting in the shooting of several workers on May 3 — the event that directly triggered the Haymarket meeting.",
+  "Pinkerton": "The Pinkerton National Detective Agency — a private security firm hired by corporations to infiltrate labor unions, gather intelligence on organizers, and break strikes. By 1886, Pinkerton employed more agents than the entire U.S. Army. Their presence at McCormick Reaper Works on May 3, 1886 contributed directly to the violence that preceded Haymarket.",
+  "IWPA": "International Working People's Association — a Chicago-based anarchist labor organization founded in 1881. August Spies and Albert Parsons were prominent members. The IWPA organized the Haymarket meeting on May 4, 1886 to protest the police shooting of strikers at McCormick the day before.",
+  "Arbeiter-Zeitung": "A German-language labor newspaper published in Chicago. Its name means 'Workers' Newspaper.' Editor August Spies used it to organize Chicago's large German immigrant working class. He wrote the Revenge Circular in its offices on the night of May 3, 1886, hours after watching police shoot strikers at McCormick.",
+  "eight-hour movement": "A national labor campaign demanding the workday be reduced from 10–12 hours to 8 hours at the same daily wage. The movement set May 1, 1886 as a national strike deadline. An estimated 340,000 workers walked off the job that day — the largest coordinated labor action in American history to that point.",
+  "strikebreaker": "A worker hired to replace striking employees and keep a business operating during a labor dispute. Also called a 'scab.' Employers used Pinkerton agents to escort strikebreakers through picket lines, often resulting in violent confrontations.",
+  "anarchism": "A political philosophy rejecting all forms of involuntary government authority, advocating instead for voluntary cooperation and mutual aid. The Haymarket defendants were largely anarchists who believed capitalism and the state were inseparable systems of oppression. Their beliefs were used to convict them despite no evidence connecting them to the bomb.",
+  "conspiracy": "In the Haymarket trial, prosecutors argued that the defendants were guilty of murder not because they threw the bomb, but because their speeches and writings had created a 'conspiracy' that inspired the unknown bomber. This legal theory — that speech constitutes criminal conspiracy — set a precedent used against labor organizers for decades.",
+  "Knights of Labor": "The largest labor organization in the United States in the 1880s, with over 700,000 members by 1886. Unlike craft unions, the Knights organized across skill levels and included women and Black workers. The Haymarket affair was used to discredit the Knights, and membership collapsed from 700,000 to 100,000 within two years.",
+});
+
+/**
+ * Mission-specific example terms shown in the glossary intro overlay.
+ * Keyed by mission ID. Each value is a 3-element array of representative terms.
+ */
+export const GLOSSARY_INTRO_TERMS = {
+  'rwanda-genocide':   ['RTLM', 'gacaca', 'Interahamwe'],
+  'pearl-harbor':      ['Kido Butai', 'Battleship Row', 'USS Arizona'],
+  'aphg-urban-design': ['redlining', 'blockbusting', 'urban heat island'],
+  'haymarket-affair':  ['Arbeiter-Zeitung', 'Pinkerton', 'IWPA'],
+};
+
 /**
  * Apply glossary tooltips to a DOM element's text content.
  * Wraps recognized terms in <span class="glossary-term"> elements.

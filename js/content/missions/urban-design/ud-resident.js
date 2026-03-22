@@ -31,19 +31,47 @@ const udResidentScenes = [
         id: "ud-res-choice-01-a",
         text: "Question the grading criteria",
         consequences: { ud_questioned_appraisal: true },
-        nextScene: "ud-res-scene-02"
+        nextScene: "ud-res-scene-02a"
       },
       {
         id: "ud-res-choice-01-b",
         text: "Accept the assessment quietly",
         consequences: { ud_accepted_designation: true },
-        nextScene: "ud-res-scene-02"
+        nextScene: "ud-res-scene-02b"
       }
     ]
   },
 
   {
-    id: "ud-res-scene-02",
+    id: "ud-res-scene-02a",
+    narrative: `The appraiser pauses when you ask about the criteria. He opens the HOLC Underwriting Manual — dense government language, but the factors are listed plainly: physical condition of the housing stock, proximity to industrial zones, income levels, and "racial and ethnic composition of the neighborhood." He does not defend it. He points to the column where your block's demographics were recorded. You ask him to write down the criteria. He does.
+
+Three weeks later, the map arrives. Your neighborhood is outlined in red ink. Grade D. "Hazardous." You challenged the process. The appraiser heard you. He filled out the form exactly the same way. The criteria are not a mistake or an oversight. They are the policy.
+
+Banks will not issue FHA-insured mortgages in D-grade zones. Property assessments begin to fall — not because housing conditions have changed, but because the federal designation has removed the primary mechanism of capital access. Your neighbor two blocks west, in a C-grade zone, watches his assessed value hold. Yours declines. You have the appraiser's notes in your hand. The grade boundary is not marked on the street, but you know exactly where it falls and why.`,
+    apThemes: ["causation", "spatial-analysis"],
+    atmosphericEffect: null,
+    ambientTrack: null,
+    narratorAudio: null,
+    soundEffects: null,
+    choices: [
+      {
+        id: "ud-res-choice-02a-a",
+        text: "Document the discrimination — record the criteria in writing",
+        consequences: { ud_documented_appraisal: true },
+        nextScene: "ud-res-scene-03"
+      },
+      {
+        id: "ud-res-choice-02a-b",
+        text: "Focus on maintaining the property despite the designation",
+        consequences: { ud_maintained_property: true },
+        nextScene: "ud-res-scene-03"
+      }
+    ]
+  },
+
+  {
+    id: "ud-res-scene-02b",
     narrative: `The map arrives three weeks later. Your neighborhood is outlined in red ink. Grade D. "Hazardous." The letter from HOLC is bureaucratic in tone. It states that lending institutions will reference these maps to assess mortgage risk. Banks will not issue FHA-insured mortgages in D-grade zones. Property assessments begin to fall — not because housing conditions have changed, but because the federal designation has removed the primary mechanism of capital access. Your neighbor's house, structurally identical to yours, sits two blocks west in a C-grade zone. His assessed value holds. Yours declines. The grade boundary is not marked on the street, but it determines where investment flows, where businesses locate, where the city schedules infrastructure maintenance. The HOLC map is now on file with lending institutions across the city.`,
     apThemes: ["causation", "spatial-analysis"],
     atmosphericEffect: null,
@@ -52,13 +80,13 @@ const udResidentScenes = [
     soundEffects: null,
     choices: [
       {
-        id: "ud-res-choice-02-a",
+        id: "ud-res-choice-02b-a",
         text: "Document the discrimination",
         consequences: { ud_documented_appraisal: true },
         nextScene: "ud-res-scene-03"
       },
       {
-        id: "ud-res-choice-02-b",
+        id: "ud-res-choice-02b-b",
         text: "Focus on maintaining property",
         consequences: { ud_maintained_property: true },
         nextScene: "ud-res-scene-03"

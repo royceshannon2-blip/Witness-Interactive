@@ -400,7 +400,7 @@ class AtmosphericEffects {
     // ── URBAN DESIGN RESIDENT ──────────────────────────────────
     else if (sceneId === 'ud-res-scene-01') {
       this.createBorderGlow('rgba(139, 0, 0, 0.5)', 5000); // Era 1: Redlining
-    } else if (sceneId === 'ud-res-scene-02') {
+    } else if (sceneId === 'ud-res-scene-02a' || sceneId === 'ud-res-scene-02b') {
       this.createBorderGlow('rgba(139, 0, 0, 0.55)', 5000);
     } else if (sceneId === 'ud-res-scene-03') {
       this.createBorderGlow('rgba(139, 0, 0, 0.6)', 6000);

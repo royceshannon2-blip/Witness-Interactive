@@ -38,7 +38,9 @@ const uiContent = {
   
   outcome: {
     title: "Your Story",
-    buttonText: "Continue"
+    buttonText: "Continue",
+    survivedLabel: "You Survived",
+    didNotSurviveLabel: "You Did Not Survive"
   },
   
   historicalRipple: {
@@ -51,13 +53,16 @@ const uiContent = {
   knowledgeCheckpoint: {
     title: "Knowledge Checkpoint",
     subtitle: "Test your understanding of the historical context",
-    buttonText: "View Results"
+    buttonText: "View Results",
+    explanationHeading: "Explanation:"
   },
   
   resultsCard: {
     title: "Mission Complete",
     copyButtonText: "Copy Results",
-    playAgainButtonText: "Play Another Role"
+    playAgainButtonText: "Play Another Role",
+    copySuccessMessage: "Results copied to clipboard!",
+    copyFailMessage: "Failed to copy results. Please try again."
   },
   
   progress: {
@@ -83,6 +88,10 @@ const uiContent = {
   stimuliOverlay: {
     apAnalysisHeading: 'AP Analysis',
     continueButton: 'Continue'
+  },
+
+  inventory: {
+    panelTitle: "Primary Sources Collected"
   },
 
   errors: {

@@ -4,7 +4,7 @@
  * Singleton — one tooltip element reused for all terms.
  */
 
-import { applyGlossaryToElement } from '../content/glossary.js';
+import { applyGlossaryToElement, GLOSSARY_INTRO_TERMS } from '../content/glossary.js';
 
 class GlossaryTooltip {
   constructor() {
@@ -93,20 +93,22 @@ class GlossaryTooltip {
    * Show the one-time intro message explaining the feature.
    * Resolves when the student dismisses it.
    */
-  showIntro() {
+  showIntro(missionId = null) {
     return new Promise((resolve) => {
       if (this.introShown) { resolve(); return; }
       this.introShown = true;
-      
+
+      const terms = GLOSSARY_INTRO_TERMS[missionId] || GLOSSARY_INTRO_TERMS['rwanda-genocide'];
+
       const overlay = document.createElement('div');
       overlay.className = 'glossary-intro-overlay';
       overlay.innerHTML = `
         <div class="glossary-intro-box">
           <h3>— Historical Terms —</h3>
           <p>
-            Words like <span class="glossary-intro-demo">RTLM</span>, 
-            <span class="glossary-intro-demo">gacaca</span>, and 
-            <span class="glossary-intro-demo">Interahamwe</span> appear throughout.<br><br>
+            Words like <span class="glossary-intro-demo">${terms[0]}</span>, 
+            <span class="glossary-intro-demo">${terms[1]}</span>, and 
+            <span class="glossary-intro-demo">${terms[2]}</span> appear throughout.<br><br>
             Hover over any underlined term to see its definition.
           </p>
           <button class="glossary-intro-btn">Understood →</button>

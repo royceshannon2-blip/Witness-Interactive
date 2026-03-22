@@ -53,6 +53,10 @@ class UIController {
     this.currentRoleId = null;
     this.completedRoles = new Set();
     this.currentAmbientSound = null;
+
+    // Inventory: tracks all document IDs shown this session (briefing + scenes)
+    this._inventoryDocIds = [];
+    this._inventoryDocData = new Map(); // docId → documentData
     
     this.subscribeToEvents();
     this.setupSoundToggle();
@@ -437,6 +441,10 @@ class UIController {
         </nav>
         <div id="scene-progress" class="text-center mt-md" role="status" aria-live="polite">
         </div>
+        <button id="inventory-toggle" class="inventory-toggle hidden" aria-label="View collected primary sources (0)" aria-haspopup="dialog">
+          <span class="inventory-icon" aria-hidden="true">📜</span>
+          <span id="inventory-count" class="inventory-count">0</span>
+        </button>
       </article>
     `;
   }
@@ -677,6 +685,18 @@ class UIController {
   }
 
   attachEventListeners(screen, screenName) {
+    if (screenName === 'scene') {
+      const inventoryBtn = screen.querySelector('#inventory-toggle');
+      if (inventoryBtn) {
+        inventoryBtn.addEventListener('click', () => {
+          this.haptics.light();
+          this._renderInventoryPanel();
+        });
+      }
+      // Sync button state in case docs were collected during briefing
+      this._updateInventoryButton();
+    }
+
     if (screenName === 'landing') {
       const beginButton = screen.querySelector('#begin-button');
       if (beginButton) {
@@ -855,36 +875,38 @@ class UIController {
       return;
     }
     if (!this.currentMissionId || !this.currentRoleId) {
-      outcomeResultContainer.innerHTML = '<p>Error: Unable to determine outcome. Mission or role data missing.</p>';
+      outcomeResultContainer.innerHTML = `<p>${this.content.errors?.outcomeScreen?.noMissionOrRole || 'Error: Unable to determine outcome.'}</p>`;
       return;
     }
     
     const mission = this.missionRegistry.getMission(this.currentMissionId);
     if (!mission) {
-      outcomeResultContainer.innerHTML = '<p>Error: Mission data not found.</p>';
+      outcomeResultContainer.innerHTML = `<p>${this.content.errors?.outcomeScreen?.missionNotFound || 'Error: Mission data not found.'}</p>`;
       return;
     }
     
     const role = mission.roles.find(r => r.id === this.currentRoleId);
     if (!role || !role.outcomes) {
-      outcomeResultContainer.innerHTML = '<p>Error: Role outcome data not found.</p>';
+      outcomeResultContainer.innerHTML = `<p>${this.content.errors?.outcomeScreen?.roleNotFound || 'Error: Role outcome data not found.'}</p>`;
       return;
     }
     
     const survivalResult = this.consequenceSystem.determineSurvival(this.currentRoleId);
     const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes, survivalResult.survived);
     if (!outcomeId) {
-      outcomeResultContainer.innerHTML = '<p>Error: Unable to determine outcome based on your choices.</p>';
+      outcomeResultContainer.innerHTML = `<p>${this.content.errors?.outcomeScreen?.noOutcomeId || 'Error: Unable to determine outcome based on your choices.'}</p>`;
       return;
     }
     
     const outcome = role.outcomes.find(o => o.id === outcomeId);
     if (!outcome) {
-      outcomeResultContainer.innerHTML = '<p>Error: Outcome data not found.</p>';
+      outcomeResultContainer.innerHTML = `<p>${this.content.errors?.outcomeScreen?.outcomeNotFound || 'Error: Outcome data not found.'}</p>`;
       return;
     }
     
-    const survivalStatus = outcome.survived ? 'You Survived' : 'You Did Not Survive';
+    const survivalStatus = outcome.survived
+      ? this.content.outcome?.survivedLabel
+      : this.content.outcome?.didNotSurviveLabel;
     const survivalClass = outcome.survived ? 'text-success' : 'text-danger';
     
     // Use early death epilogue if player died mid-story
@@ -1000,7 +1022,7 @@ class UIController {
     explanationEl.className = 'question-explanation hidden mt-md';
     explanationEl.setAttribute('role', 'region');
     explanationEl.setAttribute('aria-label', 'Answer explanation');
-    explanationEl.innerHTML = `<h4>AP Analysis</h4><p>${prq.explanation}</p>`;
+    explanationEl.innerHTML = `<h4>${this.content.stimuliOverlay?.apAnalysisHeading || ''}</h4><p>${prq.explanation}</p>`;
 
     const displayLabels = ['A', 'B', 'C', 'D'];
     prq.options.forEach((option, i) => {
@@ -1040,19 +1062,19 @@ class UIController {
       return;
     }
     if (!this.currentMissionId || !this.currentRoleId) {
-      questionsContainer.innerHTML = '<p>Error: Unable to load questions. Mission or role data missing.</p>';
+      questionsContainer.innerHTML = `<p>${this.content.errors?.knowledgeCheckpoint?.noMissionOrRole || 'Error: Unable to load questions.'}</p>`;
       return;
     }
     
     const mission = this.missionRegistry.getMission(this.currentMissionId);
     if (!mission || !mission.knowledgeQuestions) {
-      questionsContainer.innerHTML = '<p>Error: Knowledge questions not found.</p>';
+      questionsContainer.innerHTML = `<p>${this.content.errors?.knowledgeCheckpoint?.noQuestions || 'Error: Knowledge questions not found.'}</p>`;
       return;
     }
     
     const roleQuestions = mission.knowledgeQuestions.filter(q => q.roleSpecific === this.currentRoleId);
     if (roleQuestions.length === 0) {
-      questionsContainer.innerHTML = '<p>Error: No questions available for this role.</p>';
+      questionsContainer.innerHTML = `<p>${this.content.errors?.knowledgeCheckpoint?.noRoleQuestions || 'Error: No questions available for this role.'}</p>`;
       return;
     }
     
@@ -1115,7 +1137,7 @@ class UIController {
       explanationContainer.className = 'question-explanation hidden mt-md';
       explanationContainer.setAttribute('role', 'region');
       explanationContainer.setAttribute('aria-label', 'Answer explanation');
-      explanationContainer.innerHTML = `<h4>Explanation:</h4><p>${question.explanation}</p>`;
+      explanationContainer.innerHTML = `<h4>${this.content.knowledgeCheckpoint?.explanationHeading || 'Explanation:'}</h4><p>${question.explanation}</p>`;
       
       questionElement.appendChild(questionHeader);
       questionElement.appendChild(questionText);
@@ -1195,9 +1217,9 @@ class UIController {
     }
     const success = await this.resultsCard.copyCardText();
     if (success) {
-      alert('Results copied to clipboard!');
+      alert(this.content.resultsCard?.copySuccessMessage || '');
     } else {
-      alert('Failed to copy results. Please try again.');
+      alert(this.content.resultsCard?.copyFailMessage || '');
     }
   }
 
@@ -1259,7 +1281,7 @@ class UIController {
 
     const label = document.createElement('p');
     label.className = 'prediction-label text-secondary';
-    label.textContent = this.content.predictionQuestion?.label || 'Before you decide — what do you predict will happen?';
+    label.textContent = this.content.predictionQuestion?.label || '';
 
     const questionText = document.createElement('p');
     questionText.className = 'question-text mt-sm';
@@ -1316,6 +1338,13 @@ class UIController {
       console.warn(`UIController.handleStimuliShown: No document data for "${documentId}"`);
       return;
     }
+    // Add to session inventory (deduplication — StimuliManager already deduplicates,
+    // but guard here too in case of direct calls)
+    if (!this._inventoryDocData.has(documentId)) {
+      this._inventoryDocIds.push(documentId);
+      this._inventoryDocData.set(documentId, documentData);
+      this._updateInventoryButton();
+    }
     this._renderStimulusOverlay(documentData);
   }
 
@@ -1359,7 +1388,7 @@ class UIController {
           <p class="question-text">${pq.question}</p>
           <div class="stimuli-options mt-sm">${optionsHTML}</div>
           <div class="stimuli-explanation hidden mt-md panel">
-            <h4>${this.content.stimuliOverlay?.apAnalysisHeading || 'AP Analysis'}</h4>
+            <h4>${this.content.stimuliOverlay?.apAnalysisHeading || ''}</h4>
             <p>${pq.explanation}</p>
           </div>
         </div>
@@ -1400,6 +1429,87 @@ class UIController {
     dismissBtn.addEventListener('click', () => {
       this.eventBus.emit('stimuli:dismiss-requested', { documentId: doc.id });
     });
+  }
+
+  // ── Document Inventory ────────────────────────────────────────────────────
+
+  /**
+   * Update the inventory toggle button count and visibility.
+   * Called whenever a new document is added to the inventory.
+   */
+  _updateInventoryButton() {
+    const btn = document.getElementById('inventory-toggle');
+    if (!btn) return;
+    const count = this._inventoryDocIds.length;
+    if (count === 0) {
+      btn.classList.add('hidden');
+      return;
+    }
+    btn.classList.remove('hidden');
+    const countEl = btn.querySelector('#inventory-count');
+    if (countEl) countEl.textContent = count;
+    btn.setAttribute('aria-label', `View collected primary sources (${count})`);
+  }
+
+  /**
+   * Render the inventory panel — a list of all collected documents.
+   * Clicking a document re-opens the stimulus overlay for review.
+   */
+  _renderInventoryPanel() {
+    const existing = document.getElementById('inventory-panel');
+    if (existing) { existing.remove(); return; } // toggle off
+
+    const panel = document.createElement('div');
+    panel.id = 'inventory-panel';
+    panel.className = 'inventory-panel';
+    panel.setAttribute('role', 'dialog');
+    panel.setAttribute('aria-modal', 'true');
+    panel.setAttribute('aria-labelledby', 'inventory-panel-title');
+
+    const heading = document.createElement('h3');
+    heading.id = 'inventory-panel-title';
+    heading.className = 'inventory-panel-title text-gold';
+    heading.textContent = this.content.inventory?.panelTitle || 'Primary Sources Collected';
+
+    const closeBtn = document.createElement('button');
+    closeBtn.className = 'inventory-close';
+    closeBtn.setAttribute('aria-label', 'Close primary sources panel');
+    closeBtn.textContent = '✕';
+    closeBtn.addEventListener('click', () => panel.remove());
+
+    const list = document.createElement('ul');
+    list.className = 'inventory-list';
+    list.setAttribute('role', 'list');
+
+    this._inventoryDocIds.forEach(docId => {
+      const doc = this._inventoryDocData.get(docId);
+      if (!doc) return;
+
+      const item = document.createElement('li');
+      item.className = 'inventory-item';
+      item.setAttribute('role', 'listitem');
+
+      const btn = document.createElement('button');
+      btn.className = 'inventory-doc-button';
+      btn.setAttribute('aria-label', `Review: ${doc.title}`);
+      btn.innerHTML = `
+        <span class="inventory-doc-title">${doc.title}</span>
+        <span class="inventory-doc-meta text-secondary">${doc.source}</span>
+      `;
+      btn.addEventListener('click', () => {
+        panel.remove();
+        this._renderStimulusOverlay(doc);
+      });
+
+      item.appendChild(btn);
+      list.appendChild(item);
+    });
+
+    panel.appendChild(closeBtn);
+    panel.appendChild(heading);
+    panel.appendChild(list);
+    document.body.appendChild(panel);
+    closeBtn.focus();
   }
 
 }

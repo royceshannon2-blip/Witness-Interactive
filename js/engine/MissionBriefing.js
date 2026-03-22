@@ -88,7 +88,7 @@ class MissionBriefing {
     
     // Show intro tooltip immediately (non-blocking)
     // Do NOT apply glossary highlighting yet — it mutates innerHTML and corrupts the typewriter
-    glossaryTooltip.showIntro();
+    glossaryTooltip.showIntro(_missionId);
 
     // Add back button handler
     const backButton = this.container.querySelector('#mb-back-button');
@@ -267,9 +267,10 @@ class MissionBriefing {
     };
 
     const noteEl = cardSec.querySelector('#mb-id-note');
-    noteEl.innerHTML = '';
+    if (noteEl) noteEl.innerHTML = '';
 
     const typeNote = () => {
+      if (!noteEl) { typeFinal(); return; }
       const text = card.note;
       let j = 0;
       noteEl.innerHTML = '<span class="mb-cursor"></span>';
@@ -330,49 +331,207 @@ class MissionBriefing {
   }
 
   _buildHaymarketCard(t, roleKey) {
-    const cardData = BRIEFING_CARDS[roleKey];
-    const rowsHTML = (cardData?.rows || []).map(([label, _]) =>
-      `<div class="pc-field"><span class="pc-lbl hm-lbl">${label}</span><span class="pc-val id-field-value"></span></div>`
-    ).join('\n      ');
+    if (roleKey === 'hm-lucy-parsons') return this._buildLucyParsonsCard(t);
+    if (roleKey === 'hm-karl-brenner') return this._buildKarlBrennerCard(t);
+    if (roleKey === 'hm-james-doyle')  return this._buildJamesDoyleCard(t);
+    return '';
+  }
 
-    // Stamp color varies by role
-    const stampColor = roleKey === 'hm-james-doyle'
-      ? 'rgba(80, 60, 20, 0.75)'   // Pinkerton — sepia brown
-      : roleKey === 'hm-karl-brenner'
-        ? 'rgba(60, 60, 60, 0.7)'  // McCormick — industrial grey
-        : 'rgba(120, 20, 20, 0.7)'; // CPD — dark red
+  _buildLucyParsonsCard(t) {
+    const cardData = BRIEFING_CARDS['hm-lucy-parsons'];
+    const rowsHTML = (cardData?.rows || []).map(([label]) =>
+      `<div class="surv-field"><div class="surv-field-label">${label}</div><div class="surv-field-value id-field-value"></div></div>`
+    ).join('\n        ');
 
-    return `<div class="physical-card hm-card hm-card-${roleKey.replace('hm-', '')}">
-  <div class="pc-header-band pc-hm-header">
-    <span class="pc-republic" style="letter-spacing:1px;font-size:0.65rem;">${t.headerBand.republic}</span>
-    <span class="pc-type">${t.headerBand.type}</span>
-  </div>
-  <div class="pc-body">
-    <div class="pc-photo-col">
-      <div class="pc-photo-box pc-photo-hm">
-        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" width="70" height="70" style="opacity:0.75;">
-          <rect x="10" y="8" width="60" height="64" rx="2" fill="#c8b890" stroke="#8a6a3a" stroke-width="1"/>
-          <circle cx="40" cy="30" r="14" fill="#a08060" stroke="#7a5a30" stroke-width="1"/>
-          <path d="M15 72 Q40 50 65 72" fill="#8a6a3a" stroke="none"/>
-        </svg>
-        <div class="pc-photo-label" style="color:#5a3a10;font-size:0.6rem;">${t.photoLabel}</div>
-      </div>
-      <svg class="pc-stamp" viewBox="0 0 44 44" style="transform:rotate(-10deg); opacity:0.78;">
-        <circle cx="22" cy="22" r="20" fill="none" stroke="${stampColor}" stroke-width="2"/>
-        <circle cx="22" cy="22" r="16" fill="rgba(0,0,0,0.05)" stroke="${stampColor.replace('0.7', '0.35').replace('0.75', '0.35')}" stroke-width="1"/>
-        <text x="22" y="13" text-anchor="middle" font-size="3" fill="${stampColor}" font-family="Times New Roman">${t.stamp.line1}</text>
-        <text x="22" y="24" text-anchor="middle" font-size="6" font-weight="700" fill="${stampColor}" font-family="Times New Roman">${t.stamp.line2}</text>
-        <text x="22" y="31" text-anchor="middle" font-size="3" fill="${stampColor}" font-family="Times New Roman">${t.stamp.line3}</text>
-      </svg>
+    return `<div class="hm-surveillance-card">
+  <div class="surv-header">
+    <div>
+      <div class="surv-dept">City of Chicago</div>
+      <div class="surv-dept" style="font-size:0.7rem;color:#e8dcc4;">Police Department</div>
+      <div class="surv-dept" style="margin-top:2px;">Bureau of Criminal Intelligence</div>
     </div>
-    <div class="pc-fields">
+    <svg class="surv-shield" viewBox="0 0 40 46" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 2 L38 10 L38 30 C38 38 20 44 20 44 C20 44 2 38 2 30 L2 10 Z" fill="none" stroke="#c8c0a0" stroke-width="2"/>
+      <path d="M20 8 L33 14 L33 29 C33 35 20 40 20 40 C20 40 7 35 7 29 L7 14 Z" fill="rgba(200,192,160,0.12)" stroke="#c8c0a0" stroke-width="1"/>
+      <text x="20" y="23" text-anchor="middle" font-size="6" fill="#c8c0a0" font-family="serif" font-style="italic">CHICAGO</text>
+      <text x="20" y="30" text-anchor="middle" font-size="5" fill="#c8c0a0" font-family="serif">I WILL</text>
+    </svg>
+  </div>
+  <div class="surv-classification">▲ CONFIDENTIAL — LABOR INTELLIGENCE FILE ▲</div>
+  <div class="surv-body">
+    <div class="surv-photo-col">
+      <div class="surv-photo-frame">
+        <svg viewBox="0 0 130 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="130" height="160" fill="#a09070"/>
+          <path d="M35 95 Q50 110 65 115 Q80 110 95 95 L100 155 L30 155 Z" fill="#5a4020" opacity="0.8"/>
+          <path d="M45 60 Q50 65 65 67 Q80 65 85 60 L90 95 Q80 98 65 100 Q50 98 40 95 Z" fill="#4a3018" opacity="0.9"/>
+          <rect x="61" y="45" width="8" height="18" fill="#c8a870" opacity="0.9" rx="2"/>
+          <ellipse cx="65" cy="36" rx="17" ry="20" fill="#c8a870" opacity="0.95"/>
+          <path d="M48 26 Q50 15 65 14 Q80 15 82 26 Q78 18 65 17 Q52 18 48 26Z" fill="#3a2010" opacity="0.9"/>
+          <path d="M65 14 L65 8 Q72 10 76 16" stroke="#3a2010" stroke-width="2" fill="none" opacity="0.7"/>
+          <path d="M50 60 Q56 55 65 54 Q74 55 80 60" stroke="#8a7050" stroke-width="1.5" fill="none" opacity="0.8"/>
+          <rect x="58" y="53" width="14" height="6" rx="3" fill="#8a7050" opacity="0.7"/>
+          <path d="M40 75 Q32 85 34 100" stroke="#4a3018" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.8"/>
+          <path d="M90 75 Q98 85 96 100" stroke="#4a3018" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.8"/>
+          <ellipse cx="34" cy="103" rx="5" ry="6" fill="#c8a870" opacity="0.8"/>
+          <ellipse cx="96" cy="103" rx="5" ry="6" fill="#c8a870" opacity="0.8"/>
+          <rect x="0" y="140" width="130" height="20" fill="#3a2a10" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="surv-photo-label">SUBJECT PHOTOGRAPH<br>ON FILE — BUREAU COPY</div>
+      <div class="surv-file-num">FILE NO. CPD-1886-0441</div>
+    </div>
+    <div class="surv-fields">
       ${rowsHTML}
     </div>
   </div>
-  <div class="pc-footer hm-footer">
-    <span>${t.footer.issued}</span><span>${t.footer.valid}</span><span>${t.footer.number}</span>
+  <div class="surv-notes">
+    <span class="surv-notes-label">Intelligence Notes — Filed by Det. Sgt. M. Bonfield</span>
+    <span id="mb-id-note" style="display:block;"></span>
   </div>
-  <div class="pc-age-tint pc-age-worn"></div>
+  <svg class="surv-stamp" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <path id="topArc" d="M17 55 a38 38 0 1 1 76 0"/>
+      <path id="botArc" d="M93 55 a38 38 0 1 1 -76 0"/>
+    </defs>
+    <circle cx="55" cy="55" r="52" fill="none" stroke="#8b1a1a" stroke-width="3"/>
+    <circle cx="55" cy="55" r="44" fill="none" stroke="#8b1a1a" stroke-width="1.5"/>
+    <text font-size="8" font-family="Oswald,sans-serif" font-weight="700" fill="#8b1a1a" letter-spacing="3">
+      <textPath href="#topArc">ACTIVE · SURVEILLANCE · CPD</textPath>
+    </text>
+    <text font-size="7" font-family="Oswald,sans-serif" fill="#8b1a1a" letter-spacing="2">
+      <textPath href="#botArc">BUREAU OF CRIMINAL INTELLIGENCE</textPath>
+    </text>
+    <text x="55" y="52" text-anchor="middle" font-size="9" font-weight="700" font-family="Oswald,sans-serif" fill="#8b1a1a">1886</text>
+    <text x="55" y="63" text-anchor="middle" font-size="7" font-family="Oswald,sans-serif" fill="#8b1a1a">CHICAGO</text>
+  </svg>
+  <div class="surv-footer">
+    <span>${t.footer.issued}</span>
+    <span>Reviewed: Weekly</span>
+    <span>Classification: RESTRICTED</span>
+  </div>
+</div>`;
+  }
+
+  _buildKarlBrennerCard(t) {
+    const cardData = BRIEFING_CARDS['hm-karl-brenner'];
+    const rowsHTML = (cardData?.rows || []).map(([label]) =>
+      `<div class="emp-row"><div class="emp-row-label">${label}</div><div class="emp-row-value id-field-value"></div></div>`
+    ).join('\n        ');
+
+    return `<div class="hm-employee-card">
+  <div class="emp-header">
+    <div>
+      <div class="emp-company">McCormick Harvesting Machine Co.</div>
+      <div class="emp-est" style="margin-top:3px;font-style:italic;">Blue Island Avenue · Chicago, Illinois</div>
+    </div>
+    <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" opacity="0.7">
+      <circle cx="18" cy="18" r="16" fill="none" stroke="#c8a830" stroke-width="1.5"/>
+      <path d="M8 26 Q12 16 18 12 Q24 8 30 10" stroke="#c8a830" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="8" cy="26" r="3" fill="#c8a830"/>
+      <line x1="8" y1="26" x2="5" y2="30" stroke="#c8a830" stroke-width="2"/>
+      <line x1="8" y1="26" x2="10" y2="30" stroke="#c8a830" stroke-width="2"/>
+      <text x="18" y="34" text-anchor="middle" font-size="4" fill="#c8a830" font-family="serif">EST. 1847</text>
+    </svg>
+  </div>
+  <div class="emp-rule"></div>
+  <div class="emp-title-band">
+    <div class="emp-doc-title">Employee Record &amp; Service Ledger</div>
+    <div class="emp-year">FISCAL YEAR 1886</div>
+  </div>
+  <div class="emp-body">
+    <div class="emp-worker-banner">
+      <div>
+        <div class="emp-worker-number">EMPLOYEE #2847</div>
+        <div class="emp-worker-label">Foundry — Press Operations</div>
+      </div>
+      <div class="emp-status">LOCKOUT</div>
+    </div>
+    <div class="emp-grid">
+      ${rowsHTML}
+    </div>
+    <div class="emp-note">
+      <span class="emp-note-label">Superintendent's Note</span>
+      <span id="mb-id-note" style="display:block;"></span>
+    </div>
+  </div>
+  <svg class="emp-stamp" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="45" cy="45" r="40" fill="none" stroke="#2a3520" stroke-width="3"/>
+    <circle cx="45" cy="45" r="12" fill="#2a3520"/>
+    <circle cx="45" cy="45" r="5" fill="#f2ead8"/>
+    <g fill="#2a3520">
+      <rect x="42" y="3" width="6" height="10" rx="1"/>
+      <rect x="42" y="77" width="6" height="10" rx="1"/>
+      <rect x="3" y="42" width="10" height="6" rx="1"/>
+      <rect x="77" y="42" width="10" height="6" rx="1"/>
+      <rect x="15" y="14" width="8" height="8" rx="1" transform="rotate(45 19 18)"/>
+      <rect x="65" y="14" width="8" height="8" rx="1" transform="rotate(45 69 18)"/>
+      <rect x="15" y="64" width="8" height="8" rx="1" transform="rotate(45 19 68)"/>
+      <rect x="65" y="64" width="8" height="8" rx="1" transform="rotate(45 69 68)"/>
+    </g>
+    <text x="45" y="52" text-anchor="middle" font-size="7" font-family="Oswald,sans-serif" fill="#f2ead8" font-weight="700">McCORMICK</text>
+  </svg>
+  <div class="emp-footer">
+    <span>${t.footer.number}</span>
+    <span>${t.footer.valid}</span>
+    <span>Pinkerton copies: on file</span>
+  </div>
+</div>`;
+  }
+
+  _buildJamesDoyleCard(t) {
+    const cardData = BRIEFING_CARDS['hm-james-doyle'];
+    const rowsHTML = (cardData?.rows || []).map(([label]) =>
+      `<div class="pink-field"><div class="pink-field-label">${label}</div><div class="pink-field-value id-field-value"></div></div>`
+    ).join('\n        ');
+
+    return `<div class="hm-pinkerton-card">
+  <div class="pink-header">
+    <div>
+      <div class="pink-agency">Pinkerton National Detective Agency</div>
+      <div style="font-family:'Courier Prime',monospace;font-size:0.5rem;color:#7a6a40;letter-spacing:1px;margin-top:2px;">CHICAGO FIELD OFFICE — 191 DEARBORN STREET</div>
+    </div>
+    <div class="pink-eye">
+      <svg width="38" height="28" viewBox="0 0 38 28" xmlns="http://www.w3.org/2000/svg" opacity="0.8">
+        <path d="M2 14 Q10 2 19 2 Q28 2 36 14 Q28 26 19 26 Q10 26 2 14Z" fill="none" stroke="#c8a830" stroke-width="1.5"/>
+        <circle cx="19" cy="14" r="6" fill="none" stroke="#c8a830" stroke-width="1.5"/>
+        <circle cx="19" cy="14" r="2.5" fill="#c8a830"/>
+        <line x1="19" y1="3" x2="19" y2="6" stroke="#c8a830" stroke-width="1"/>
+        <line x1="19" y1="22" x2="19" y2="25" stroke="#c8a830" stroke-width="1"/>
+      </svg>
+      <div class="pink-eye-text">We Never<br>Sleep</div>
+    </div>
+  </div>
+  <div class="pink-case-band">
+    <div>
+      <div style="font-size:0.48rem;color:#6a4a10;letter-spacing:2px;font-family:'Oswald',sans-serif;text-transform:uppercase;">Assignment No.</div>
+      <div class="pink-case-num">CHI-1886-114</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:0.48rem;color:#6a4a10;letter-spacing:2px;font-family:'Oswald',sans-serif;text-transform:uppercase;margin-bottom:2px;">Opened</div>
+      <div class="pink-date">03 FEB 1886</div>
+    </div>
+  </div>
+  <div class="pink-body">
+    <div class="pink-classify-bar">◆ &nbsp; OPERATIVE ASSIGNMENT — INTERNAL USE ONLY &nbsp; ◆</div>
+    ${rowsHTML}
+    <div class="pink-divider"></div>
+    <div class="pink-instructions">
+      <span class="pink-instructions-label">Standing Instructions / Notes</span>
+      <div class="pink-instructions-text">
+        <span id="mb-id-note"></span>
+      </div>
+    </div>
+  </div>
+  <svg class="pink-stamp" viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 30 Q20 4 40 4 Q60 4 78 30 Q60 56 40 56 Q20 56 2 30Z" fill="none" stroke="#1a1a1a" stroke-width="4"/>
+    <circle cx="40" cy="30" r="14" fill="none" stroke="#1a1a1a" stroke-width="4"/>
+    <circle cx="40" cy="30" r="6" fill="#1a1a1a"/>
+  </svg>
+  <div class="pink-footer">
+    <span>${t.footer.issued} · ${t.footer.valid}</span>
+    <span class="pink-warning">UNAUTHORIZED DISCLOSURE PROHIBITED</span>
+  </div>
 </div>`;
   }
 
@@ -540,6 +699,9 @@ _buildTutsiCard(t) {
 
   _buildHTML(roleKey, uiText) {
     const cardHTML = this._buildCardHTML(roleKey);
+    const isHaymarket = roleKey && roleKey.startsWith('hm-');
+    // Haymarket cards embed #mb-id-note inside the card itself; other cards need it outside.
+    const noteDiv = isHaymarket ? '' : '<div id="mb-id-note"></div>';
     return `<button id="mb-back-button" class="back-button" aria-label="Back to role selection">← Back</button>
 <div class="mb-paper">
   <div class="mb-mast">
@@ -564,7 +726,7 @@ _buildTutsiCard(t) {
   <div id="mb-card-section">
     <div class="mb-card-eyebrow">${uiText.cardEyebrow}</div>
     ${cardHTML}
-    <div id="mb-id-note"></div>
+    ${noteDiv}
     <div id="mb-final-bar">
       <div id="mb-final-text"></div>
       <button class="mb-cont-btn" id="mb-begin" style="margin-top:0.8rem;opacity:0;pointer-events:none">${uiText.buttons.enterMission}</button>

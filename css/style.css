@@ -3503,3 +3503,733 @@ body.effect-shake #app {
         font-size: 0.88rem;
     }
 }
+
+/* ============================================
+   Primary Source Inventory
+   ============================================ */
+
+/* Floating toggle button — bottom-right of scene screen */
+.inventory-toggle {
+    position: fixed;
+    bottom: var(--spacing-lg);
+    right: var(--spacing-lg);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.85rem;
+    background: var(--color-surface-raised);
+    border: 1px solid var(--color-choice-border);
+    color: var(--color-text-secondary);
+    font-family: var(--font-family-ui);
+    font-size: 0.85rem;
+    cursor: pointer;
+    border-radius: 2px;
+    transition: border-color 0.15s, color 0.15s;
+    min-height: 44px;
+}
+
+.inventory-toggle:hover {
+    border-color: var(--color-gold);
+    color: var(--color-text-primary);
+}
+
+.inventory-icon {
+    font-size: 1rem;
+    line-height: 1;
+}
+
+.inventory-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.2rem;
+    height: 1.2rem;
+    background: var(--color-gold);
+    color: var(--color-background);
+    font-size: 0.7rem;
+    font-weight: 600;
+    border-radius: 50%;
+    padding: 0 0.2rem;
+}
+
+/* Inventory panel — slides in from right */
+.inventory-panel {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(360px, 92vw);
+    height: 100%;
+    background: var(--color-surface);
+    border-left: 1px solid var(--color-choice-border);
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing-lg);
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.inventory-panel-title {
+    font-family: var(--font-family-primary);
+    font-size: 1rem;
+    color: var(--color-gold);
+    margin: 0 0 var(--spacing-md);
+    padding-right: 2rem; /* room for close button */
+}
+
+.inventory-close {
+    position: absolute;
+    top: var(--spacing-md);
+    right: var(--spacing-md);
+    background: none;
+    border: none;
+    color: var(--color-text-secondary);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    min-height: 44px;
+    min-width: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.inventory-close:hover {
+    color: var(--color-text-primary);
+}
+
+.inventory-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.inventory-item {
+    border: 1px solid var(--color-choice-border);
+    border-radius: 2px;
+}
+
+.inventory-doc-button {
+    width: 100%;
+    text-align: left;
+    background: var(--color-choice-default);
+    border: none;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    transition: background 0.15s;
+    min-height: 44px;
+}
+
+.inventory-doc-button:hover {
+    background: var(--color-choice-hover);
+}
+
+.inventory-doc-title {
+    font-family: var(--font-family-primary);
+    font-size: 0.9rem;
+    color: var(--color-text-primary);
+    line-height: 1.4;
+}
+
+.inventory-doc-meta {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .inventory-panel {
+        animation: slideInRight 0.2s ease-out;
+    }
+    @keyframes slideInRight {
+        from { transform: translateX(100%); }
+        to   { transform: translateX(0); }
+    }
+}
+
+/* ============================================
+   Haymarket Identity Cards
+   Three distinct document aesthetics:
+   1. CPD Surveillance File (Lucy Parsons)
+   2. McCormick Employee Record (Karl Brenner)
+   3. Pinkerton Operative Dossier (James Doyle)
+   ============================================ */
+
+/* --- Shared card wrapper --- */
+.hm-surveillance-card,
+.hm-employee-card,
+.hm-pinkerton-card {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+}
+
+/* ── Card 1: Lucy Parsons — CPD Surveillance File ── */
+.hm-surveillance-card {
+    background: #e8d8b8;
+    border: 1px solid #a08050;
+    font-family: 'Special Elite', 'Courier New', cursive;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7), inset 0 0 60px rgba(100,70,20,0.2);
+}
+
+.surv-header {
+    background: #1a1a2e;
+    padding: 10px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #8b1a1a;
+}
+
+.surv-dept {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 700;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    color: #c8c0a0;
+    text-transform: uppercase;
+}
+
+.surv-shield {
+    width: 32px;
+    height: 36px;
+}
+
+.surv-classification {
+    background: #8b1a1a;
+    text-align: center;
+    padding: 6px;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: #ffe8b0;
+    text-transform: uppercase;
+}
+
+.surv-body {
+    padding: 16px 20px 20px;
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 16px;
+    position: relative;
+}
+
+.surv-photo-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.surv-photo-frame {
+    width: 130px;
+    height: 160px;
+    border: 2px solid #6a4a20;
+    background: #b8a880;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.surv-photo-frame svg {
+    width: 100%;
+    height: 100%;
+}
+
+.surv-photo-label {
+    font-size: 0.48rem;
+    color: #5a3a10;
+    text-align: center;
+    letter-spacing: 1px;
+    font-family: 'Special Elite', 'Courier New', cursive;
+}
+
+.surv-file-num {
+    font-size: 0.55rem;
+    color: #5a3a10;
+    text-align: center;
+    font-family: 'Special Elite', 'Courier New', cursive;
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid rgba(100,60,20,0.3);
+}
+
+.surv-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 4px;
+}
+
+.surv-field {
+    border-bottom: 0.5px solid rgba(100,60,20,0.35);
+    padding-bottom: 6px;
+}
+
+.surv-field-label {
+    font-size: 0.5rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #6a4010;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 400;
+    margin-bottom: 1px;
+}
+
+.surv-field-value {
+    font-size: 0.85rem;
+    color: #1a0e04;
+    font-family: 'Special Elite', 'Courier New', cursive;
+    line-height: 1.2;
+    min-height: 1rem;
+}
+
+.surv-notes {
+    margin: 0 20px 16px;
+    padding: 10px 12px;
+    background: rgba(100,60,20,0.08);
+    border-left: 3px solid #8b1a1a;
+    font-size: 0.72rem;
+    color: #2a1a04;
+    line-height: 1.6;
+    font-family: 'Special Elite', 'Courier New', cursive;
+    position: relative;
+    z-index: 2;
+}
+
+.surv-notes-label {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 0.52rem;
+    letter-spacing: 2px;
+    color: #6a3010;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.surv-stamp {
+    position: absolute;
+    bottom: 24px;
+    right: 16px;
+    width: 110px;
+    height: 110px;
+    z-index: 15;
+    opacity: 0.22;
+    transform: rotate(-12deg);
+    pointer-events: none;
+}
+
+.surv-footer {
+    background: #1a1a2e;
+    padding: 5px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.surv-footer span {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 0.45rem;
+    letter-spacing: 1px;
+    color: #8880a0;
+    text-transform: uppercase;
+}
+
+/* ── Card 2: Karl Brenner — McCormick Employee Record ── */
+.hm-employee-card {
+    background: #f2ead8;
+    border: 1px solid #8a7040;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+.emp-header {
+    background: #2a3520;
+    padding: 10px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.emp-company {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-style: italic;
+    color: #d0c898;
+    font-size: 1rem;
+}
+
+.emp-est {
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    font-size: 0.55rem;
+    color: #8a9878;
+    letter-spacing: 1px;
+}
+
+.emp-rule {
+    height: 2px;
+    background: linear-gradient(to right, #5a7040, #c8a830, #5a7040);
+}
+
+.emp-title-band {
+    background: #f2ead8;
+    border-bottom: 1px solid rgba(80,60,20,0.4);
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.emp-doc-title {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 0.9rem;
+    color: #2a1e04;
+    letter-spacing: 1px;
+}
+
+.emp-year {
+    font-size: 0.7rem;
+    color: #6a5020;
+    letter-spacing: 2px;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+.emp-body {
+    padding: 12px 16px 16px;
+    position: relative;
+}
+
+.emp-worker-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(80,100,60,0.12);
+    border: 1px solid rgba(80,100,60,0.3);
+    padding: 6px 10px;
+    margin-bottom: 12px;
+}
+
+.emp-worker-number {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a2e10;
+    letter-spacing: 2px;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+.emp-worker-label {
+    font-size: 0.5rem;
+    color: #4a6030;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+}
+
+.emp-status {
+    font-size: 0.65rem;
+    color: #8b1a1a;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border: 1px solid #8b1a1a;
+    padding: 2px 8px;
+    text-transform: uppercase;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+.emp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+}
+
+.emp-row {
+    padding: 6px 4px;
+    border-bottom: 1px dashed rgba(80,60,20,0.25);
+}
+
+.emp-row.full {
+    grid-column: 1 / -1;
+}
+
+.emp-row-label {
+    font-size: 0.48rem;
+    color: #4a6030;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 400;
+}
+
+.emp-row-value {
+    font-size: 0.82rem;
+    color: #1a1204;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    font-weight: 700;
+    min-height: 1rem;
+}
+
+.emp-note {
+    margin-top: 12px;
+    padding: 8px 10px;
+    background: rgba(139,26,26,0.06);
+    border-left: 2px solid #8b1a1a;
+    font-size: 0.65rem;
+    color: #2a1604;
+    line-height: 1.5;
+    position: relative;
+    z-index: 2;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+.emp-note-label {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 0.48rem;
+    letter-spacing: 2px;
+    color: #6a3010;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.emp-stamp {
+    position: absolute;
+    bottom: 50px;
+    right: 20px;
+    width: 90px;
+    height: 90px;
+    opacity: 0.12;
+    transform: rotate(8deg);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.emp-footer {
+    background: #2a3520;
+    padding: 5px 16px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.emp-footer span {
+    font-size: 0.45rem;
+    color: #7a9060;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+}
+
+/* ── Card 3: James Doyle — Pinkerton Operative Dossier ── */
+.hm-pinkerton-card {
+    background: #e0c87a;
+    border: 1px solid #a08030;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7), inset 0 0 80px rgba(120,80,0,0.15);
+}
+
+/* Confidential corner ribbon */
+.hm-pinkerton-card::after {
+    content: 'CONFIDENTIAL';
+    position: absolute;
+    top: 12px;
+    right: -28px;
+    background: #1a1a1a;
+    color: #e0c87a;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 3px 36px;
+    transform: rotate(45deg);
+    z-index: 20;
+    pointer-events: none;
+}
+
+.pink-header {
+    background: #1a1a1a;
+    padding: 10px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pink-agency {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    color: #e0c87a;
+    text-transform: uppercase;
+}
+
+.pink-eye {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.pink-eye-text {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-style: italic;
+    font-size: 0.6rem;
+    color: #b0a060;
+    text-align: right;
+    line-height: 1.2;
+}
+
+.pink-case-band {
+    background: rgba(0,0,0,0.12);
+    border-bottom: 1px solid rgba(100,70,0,0.4);
+    border-top: 1px solid rgba(100,70,0,0.4);
+    padding: 6px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pink-case-num {
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1a1204;
+    letter-spacing: 2px;
+}
+
+.pink-date {
+    font-size: 0.6rem;
+    color: #6a4a10;
+    letter-spacing: 1px;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+}
+
+.pink-body {
+    padding: 12px 16px 16px;
+    position: relative;
+}
+
+.pink-classify-bar {
+    background: #1a1a1a;
+    color: #e0c87a;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 700;
+    font-size: 0.6rem;
+    letter-spacing: 4px;
+    text-align: center;
+    padding: 4px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.pink-field {
+    margin-bottom: 9px;
+    position: relative;
+    z-index: 2;
+}
+
+.pink-field-label {
+    font-size: 0.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #6a4a10;
+    margin-bottom: 1px;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 400;
+}
+
+.pink-field-value {
+    font-size: 0.82rem;
+    color: #1a0e04;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    line-height: 1.3;
+    min-height: 1rem;
+}
+
+.pink-divider {
+    height: 1px;
+    background: rgba(100,70,0,0.3);
+    margin: 10px 0;
+}
+
+.pink-instructions {
+    background: rgba(0,0,0,0.06);
+    border: 1px dashed rgba(100,70,0,0.4);
+    padding: 10px 12px;
+    position: relative;
+    z-index: 2;
+    margin-top: 8px;
+}
+
+.pink-instructions-label {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 0.5rem;
+    letter-spacing: 3px;
+    color: #6a3010;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.pink-instructions-text {
+    font-size: 0.7rem;
+    color: #2a1604;
+    line-height: 1.55;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+.pink-stamp {
+    position: absolute;
+    bottom: 55px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    opacity: 0.08;
+    transform: rotate(-5deg);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.pink-footer {
+    background: #1a1a1a;
+    padding: 5px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.pink-footer span {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 0.45rem;
+    letter-spacing: 1px;
+    color: #6a5a30;
+    text-transform: uppercase;
+}
+
+.pink-warning {
+    color: #c04020 !important;
+}
+
+/* Mobile adjustments for Haymarket cards */
+@media (max-width: 600px) {
+    .surv-body {
+        grid-template-columns: 100px 1fr;
+        gap: 10px;
+    }
+    .surv-photo-frame {
+        width: 100px;
+        height: 130px;
+    }
+    .surv-field-value { font-size: 0.78rem; }
+    .emp-grid { grid-template-columns: 1fr; }
+    .emp-worker-number { font-size: 0.9rem; }
+    .pink-agency { font-size: 0.7rem; }
+}

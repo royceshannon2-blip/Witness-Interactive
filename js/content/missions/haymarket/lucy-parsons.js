@@ -25,9 +25,9 @@ You lower the paper. The candle flame bends in a draft from under the door. The 
     apUnit: 'Unit 6.5',
     spiceT: ['Social', 'Economic'],
     atmosphericEffect: null,
-    ambientTrack: 'hm-ambient-westside-evening.mp3',
-    narratorAudio: 'audio/narration/lucy-parsons/hm-lp-scene-01.mp3',
-    stimuliUnlock: ['hm-doc-1a'],
+    ambientTrack: './audio/ambient/hm-ambient-westside-evening.mp3',
+    narratorAudio: './audio/narration/lucy-parsons/hm-lp-scene-01.mp3',
+    stimuliUnlock: ['hm-doc-1a', 'hm-doc-1b'],
     predictionQuestion: null,
     timedChoice: null,
     deathCheckpoint: false,
@@ -39,7 +39,7 @@ You lower the paper. The candle flame bends in a draft from under the door. The 
           hm_lp_movement_trust: 1,
           hm_lp_spoke_publicly: true
         },
-        psychologyEffects: { morale: 1, humanity: 1 },
+        psychologyEffects: { morale: 8, humanity: 5 },
         nextScene: 'hm-lp-scene-02'
       },
       {
@@ -48,7 +48,7 @@ You lower the paper. The candle flame bends in a draft from under the door. The 
         consequences: {
           hm_lp_stayed_quiet: true
         },
-        psychologyEffects: { composure: 1 },
+        psychologyEffects: { composure: 5 },
         nextScene: 'hm-lp-scene-02'
       }
     ]
@@ -69,8 +69,8 @@ Wilhelm does not meet your eyes. He says he thought you should know. Then he wal
     apUnit: 'Unit 6.5',
     spiceT: ['Political', 'Social'],
     atmosphericEffect: null,
-    ambientTrack: 'hm-ambient-westside-evening.mp3',
-    narratorAudio: 'audio/narration/lucy-parsons/hm-lp-scene-02.mp3',
+    ambientTrack: './audio/ambient/hm-ambient-westside-evening.mp3',
+    narratorAudio: './audio/narration/lucy-parsons/hm-lp-scene-02.mp3',
     stimuliUnlock: ['hm-doc-2'],
     predictionQuestion: null,
     timedChoice: null,
@@ -83,7 +83,7 @@ Wilhelm does not meet your eyes. He says he thought you should know. Then he wal
           hm_lp_movement_trust: 1,
           hm_lp_warned_others: true
         },
-        psychologyEffects: { morale: 1, loyalty: 1 },
+        psychologyEffects: { morale: +8, loyalty: +8 },
         nextScene: 'hm-lp-scene-03'
       },
       {
@@ -92,7 +92,7 @@ Wilhelm does not meet your eyes. He says he thought you should know. Then he wal
         consequences: {
           hm_lp_stayed_quiet: true
         },
-        psychologyEffects: { composure: 1 },
+        psychologyEffects: { composure: +8 },
         nextScene: 'hm-lp-scene-03'
       }
     ]
@@ -113,8 +113,8 @@ From somewhere to the south, on Desplaines Street, you hear the sound of boots o
     apUnit: 'Unit 6.5',
     spiceT: ['Political', 'Social'],
     atmosphericEffect: null,
-    ambientTrack: 'hm-ambient-haymarket-crowd.mp3',
-    narratorAudio: 'audio/narration/lucy-parsons/hm-lp-scene-03.mp3',
+    ambientTrack: './audio/ambient/hm-ambient-haymarket-crowd.mp3',
+    narratorAudio: './audio/narration/lucy-parsons/hm-lp-scene-03.mp3',
     stimuliUnlock: [],
     predictionQuestion: {
       question: 'The Revenge Circular has been distributed. What do you predict will be the most immediate consequence of workers gathering at Haymarket Square tonight?',
@@ -135,7 +135,7 @@ From somewhere to the south, on Desplaines Street, you hear the sound of boots o
         consequences: {
           hm_lp_entered_square: true
         },
-        psychologyEffects: { morale: 1, loyalty: 1 },
+        psychologyEffects: { morale: +8, loyalty: +8 },
         nextScene: 'hm-lp-scene-04'
       },
       {
@@ -144,7 +144,7 @@ From somewhere to the south, on Desplaines Street, you hear the sound of boots o
         consequences: {
           hm_lp_stayed_with_children: true
         },
-        psychologyEffects: { humanity: 1 },
+        psychologyEffects: { humanity: +8 },
         nextScene: 'hm-lp-scene-04'
       }
     ]
@@ -167,8 +167,8 @@ The street in front of you is filling with people running away from the square. 
     apUnit: 'Unit 6.5',
     spiceT: ['Political', 'Social', 'Interaction with Environment'],
     atmosphericEffect: 'shake',
-    ambientTrack: 'hm-ambient-chaos.mp3',
-    narratorAudio: 'audio/narration/lucy-parsons/hm-lp-scene-04.mp3',
+    ambientTrack: './audio/ambient/hm-ambient-chaos.mp3',
+    narratorAudio: './audio/narration/lucy-parsons/hm-lp-scene-04.mp3',
     stimuliUnlock: [],
     predictionQuestion: null,
     timedChoice: { enabled: true, duration: 14000, defaultChoice: 'hm-lp-choice-04-c' },
@@ -180,7 +180,7 @@ The street in front of you is filling with people running away from the square. 
         consequences: {
           hm_lp_ran_toward_square: true
         },
-        psychologyEffects: { loyalty: 1 },
+        psychologyEffects: { loyalty: +10 },
         nextScene: 'hm-lp-scene-05'
       },
       {
@@ -190,7 +190,7 @@ The street in front of you is filling with people running away from the square. 
           hm_lp_movement_trust: 1,
           hm_lp_spoke_publicly: true
         },
-        psychologyEffects: { morale: 1 },
+        psychologyEffects: { morale: +8 },
         nextScene: 'hm-lp-scene-05'
       },
       {
@@ -199,7 +199,7 @@ The street in front of you is filling with people running away from the square. 
         consequences: {
           hm_lp_fled_with_children: true
         },
-        psychologyEffects: { humanity: 1 },
+        psychologyEffects: { humanity: +8 },
         nextScene: 'hm-lp-scene-05'
       }
     ]
@@ -220,8 +220,8 @@ Around you, the city moves as it always does: delivery wagons, the smell of hors
     apUnit: 'Unit 6.5',
     spiceT: ['Political', 'Cultural', 'Technological'],
     atmosphericEffect: null,
-    ambientTrack: 'hm-ambient-streets-morning.mp3',
-    narratorAudio: 'audio/narration/lucy-parsons/hm-lp-scene-05.mp3',
+    ambientTrack: './audio/ambient/hm-ambient-streets-morning.mp3',
+    narratorAudio: './audio/narration/lucy-parsons/hm-lp-scene-05.mp3',
     stimuliUnlock: ['hm-doc-4'],
     predictionQuestion: null,
     timedChoice: null,
@@ -234,7 +234,7 @@ Around you, the city moves as it always does: delivery wagons, the smell of hors
           hm_lp_movement_trust: 1,
           hm_lp_published_arbeiter: true
         },
-        psychologyEffects: { morale: 1 },
+        psychologyEffects: { morale: +8 },
         nextScene: 'hm-lp-scene-06'
       },
       {
@@ -243,7 +243,7 @@ Around you, the city moves as it always does: delivery wagons, the smell of hors
         consequences: {
           hm_lp_went_underground: true
         },
-        psychologyEffects: { composure: 1 },
+        psychologyEffects: { composure: +8 },
         nextScene: 'hm-lp-scene-06'
       }
     ]
@@ -268,8 +268,8 @@ The question is what you do with what comes next.`,
     apUnit: 'Unit 6.5',
     spiceT: ['Political', 'Social'],
     atmosphericEffect: null,
-    ambientTrack: 'hm-ambient-courtroom.mp3',
-    narratorAudio: 'audio/narration/lucy-parsons/hm-lp-scene-06.mp3',
+    ambientTrack: './audio/ambient/hm-ambient-courtroom.mp3',
+    narratorAudio: './audio/narration/lucy-parsons/hm-lp-scene-06.mp3',
     stimuliUnlock: ['hm-doc-5'],
     predictionQuestion: null,
     timedChoice: null,
@@ -282,7 +282,7 @@ The question is what you do with what comes next.`,
           hm_lp_movement_trust: 1,
           hm_lp_vowed_to_continue: true
         },
-        psychologyEffects: { morale: 1, loyalty: 1 },
+        psychologyEffects: { morale: +8, loyalty: +8 },
         nextScene: 'outcome'
       },
       {
@@ -291,7 +291,7 @@ The question is what you do with what comes next.`,
         consequences: {
           hm_lp_grieved_privately: true
         },
-        psychologyEffects: { humanity: 1 },
+        psychologyEffects: { humanity: +8 },
         nextScene: 'outcome'
       }
     ]
