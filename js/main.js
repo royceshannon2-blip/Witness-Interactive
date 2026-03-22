@@ -182,6 +182,7 @@ async function initializeApp() {
     // Pass components object with interactive polish features
     const components = {
         typewriterEffect,
+        stimuliManager,
         sceneTransition,
         atmosphericEffects,
         timedChoiceSystem,
