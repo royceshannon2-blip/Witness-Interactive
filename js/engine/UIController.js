@@ -39,6 +39,7 @@ class UIController {
     this.timedChoiceSystem = components.timedChoiceSystem || null;
     this.ambientSoundManager = components.ambientSoundManager || null;
     this.narratorAudioManager = components.narratorAudioManager || null;
+    this.annotationStore = components.annotationStore || null;
     this.haptics = new HapticFeedback();
     this.appContainer = document.getElementById('app');
     
@@ -493,16 +494,63 @@ class UIController {
     const c = this.content.resultsCard;
     const cardData = { ...data, outcome: this.currentOutcome };
     const cardHTML = this.resultsCard ? this.resultsCard.generateCard(cardData) : '<p>Error: Results card generator not available.</p>';
+
+    // Build annotations section if any highlights exist
+    let annotationsHTML = '';
+    if (this.annotationStore && this.annotationStore.getHighlightCount() > 0) {
+      const docs = this.annotationStore.getAllDocuments();
+      const docsHTML = docs.map(doc => {
+        const highlightsHTML = doc.highlights.map(h => {
+          const apTag = h.apConcept ? `<span class="ap-theme-badge">${this._escapeHTML(h.apConcept)}</span>` : '';
+          const noteHTML = h.note ? `<p class="annotation-note">${this._escapeHTML(h.note)}</p>` : '';
+          return `
+            <div class="results-annotation-item">
+              <span class="annotation-dot annotation-dot--${h.color}" aria-label="${h.colorLabel} highlight"></span>
+              <div>
+                <p class="annotation-quote">&ldquo;${this._escapeHTML(h.text)}&rdquo;</p>
+                ${noteHTML}
+                ${apTag}
+              </div>
+            </div>`;
+        }).join('');
+        return `
+          <div class="results-annotation-doc">
+            <h4>${this._escapeHTML(doc.documentTitle)}</h4>
+            <p class="text-secondary">${this._escapeHTML(doc.documentSource)}</p>
+            ${highlightsHTML}
+          </div>`;
+      }).join('');
+
+      annotationsHTML = `
+        <section class="results-annotations mt-lg" role="region" aria-label="Your source annotations">
+          <h3 class="text-gold">Your Source Annotations</h3>
+          <p class="text-secondary">These are the primary sources you annotated during the mission.</p>
+          ${docsHTML}
+        </section>`;
+    }
+
     return `
       <article class="results-content text-center" role="article" aria-labelledby="results-title">
         <h2 id="results-title" class="text-gold">${c.title}</h2>
         <section id="results-card" class="panel panel-parchment mt-lg" role="region" aria-label="Your game results">
           ${cardHTML}
         </section>
+        ${annotationsHTML}
         <button id="copy-results" class="mt-md" aria-label="Copy results to clipboard">${c.copyButtonText}</button>
         <button id="play-again" class="mt-md" aria-label="Play again with a different role">${c.playAgainButtonText}</button>
       </article>
     `;
+  }
+
+  // Escape HTML for safe insertion into the DOM
+  _escapeHTML(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 
   renderScene(scene, sceneIndex, totalScenes) {

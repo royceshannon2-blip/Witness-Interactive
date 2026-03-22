@@ -35,6 +35,10 @@ import StimuliManager from './engine/StimuliManager.js';
 // UI imports
 import FeedbackSurveyPanel from './ui/FeedbackSurveyPanel.js';
 import UpdateNotesPanel from './ui/UpdateNotesPanel.js';
+import AnnotationInventory from './ui/AnnotationInventory.js';
+
+// Engine imports (data stores)
+import AnnotationStore from './engine/AnnotationStore.js';
 
 // Content imports
 import pearlHarborMission from './content/missions/pearl-harbor/mission.js';
@@ -64,7 +68,10 @@ async function initializeApp() {
     
     // 2.5. Initialize StimuliManager (primary source document display)
     // Must be instantiated BEFORE any scene loads — it listens for scene:transition
-    const stimuliManager = new StimuliManager(eventBus);
+    const annotationStore = new AnnotationStore();
+    console.log('✓ AnnotationStore initialized');
+
+    const stimuliManager = new StimuliManager(eventBus, annotationStore);
     console.log('✓ StimuliManager initialized');
 
     // 3. Initialize ConsequenceSystem (tracks player decisions)
@@ -178,7 +185,8 @@ async function initializeApp() {
         atmosphericEffects,
         timedChoiceSystem,
         ambientSoundManager,
-        narratorAudioManager
+        narratorAudioManager,
+        annotationStore
     };
     const uiController = new UIController(
         eventBus, 
@@ -190,6 +198,17 @@ async function initializeApp() {
         components
     );
     console.log('✓ UIController initialized');
+
+    // Initialize AnnotationInventory (persistent slide-out panel + toggle button)
+    const annotationInventory = new AnnotationInventory(annotationStore, eventBus);
+    console.log('✓ AnnotationInventory initialized');
+
+    // Wire inventory:reopen-document → re-display the stimulus overlay
+    eventBus.on('inventory:reopen-document', (data) => {
+        if (!data || !data.documentId) return;
+        const docData = uiController._inventoryDocData.get(data.documentId);
+        if (docData) uiController._renderStimulusOverlay(docData);
+    });
     
     // 17. Initialize FeedbackSurveyPanel (post-mission feedback)
     const feedbackSurveyPanel = new FeedbackSurveyPanel(eventBus, consequenceSystem);

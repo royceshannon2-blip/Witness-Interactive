@@ -1,0 +1,656 @@
+/**
+ * Annotation System Styles
+ *
+ * Covers:
+ * - Highlight marks inside .stimuli-text
+ * - Floating highlight toolbar
+ * - Inline note editor
+ * - Inventory toggle button (fixed, left side)
+ * - Inventory slide-out panel
+ * - Results card annotation section
+ *
+ * All colors use CSS custom properties from style.css.
+ * All animations respect prefers-reduced-motion.
+ * All touch targets minimum 44px.
+ */
+
+/* ── Annotation color tokens ─────────────────────────────────────────────── */
+:root {
+  --annotation-yellow:      rgba(255, 220, 50, 0.35);
+  --annotation-yellow-solid: #ffdc32;
+  --annotation-blue:        rgba(100, 160, 255, 0.35);
+  --annotation-blue-solid:  #64a0ff;
+  --annotation-pink:        rgba(255, 100, 160, 0.35);
+  --annotation-pink-solid:  #ff64a0;
+}
+
+/* ── Highlight marks ─────────────────────────────────────────────────────── */
+mark.annotation-highlight {
+  background: transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  padding: 0 1px;
+  position: relative;
+  transition: filter var(--transition-fast);
+}
+
+mark.annotation-highlight--yellow { background: var(--annotation-yellow); }
+mark.annotation-highlight--blue   { background: var(--annotation-blue); }
+mark.annotation-highlight--pink   { background: var(--annotation-pink); }
+
+mark.annotation-highlight:hover,
+mark.annotation-highlight:focus {
+  filter: brightness(1.3);
+  outline: 2px solid currentColor;
+  outline-offset: 1px;
+}
+
+mark.annotation-highlight.has-note::after {
+  content: '✎';
+  font-size: 0.65rem;
+  vertical-align: super;
+  margin-left: 2px;
+  opacity: 0.7;
+}
+
+/* ── Floating highlight toolbar ──────────────────────────────────────────── */
+.annotation-toolbar {
+  position: fixed;
+  z-index: 250;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-bg-panel, #2a2f3e);
+  border: 1px solid var(--color-border, #3a3f4e);
+  border-radius: var(--border-radius-sm, 4px);
+  padding: 6px 8px;
+  box-shadow: var(--shadow-md);
+  /* Repositioned via JS */
+}
+
+.annotation-toolbar-color {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform var(--transition-fast), border-color var(--transition-fast);
+}
+
+.annotation-toolbar-color:hover,
+.annotation-toolbar-color:focus {
+  transform: scale(1.15);
+  border-color: var(--color-text-primary, #e8dcc4);
+  outline: none;
+}
+
+.annotation-toolbar-color--yellow { background: var(--annotation-yellow-solid); }
+.annotation-toolbar-color--blue   { background: var(--annotation-blue-solid); }
+.annotation-toolbar-color--pink   { background: var(--annotation-pink-solid); }
+
+.annotation-toolbar-note {
+  min-height: 28px;
+  padding: 4px 10px;
+  font-size: var(--font-size-small, 0.875rem);
+  font-family: var(--font-family-ui);
+  background: transparent;
+  border: 1px solid var(--color-border, #3a3f4e);
+  border-radius: var(--border-radius-sm, 4px);
+  color: var(--color-text-primary, #e8dcc4);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--transition-fast);
+}
+
+.annotation-toolbar-note:hover,
+.annotation-toolbar-note:focus {
+  background: var(--color-bg-secondary, #1a1f2e);
+}
+
+/* ── Inline note editor (inside stimuli overlay or inventory) ────────────── */
+.annotation-note-editor {
+  margin-top: var(--spacing-sm, 1rem);
+  padding: var(--spacing-sm, 1rem);
+  background: var(--color-bg-secondary, #1a1f2e);
+  border: 1px solid var(--color-border, #3a3f4e);
+  border-radius: var(--border-radius-sm, 4px);
+}
+
+.annotation-note-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--color-bg-primary, #0a0e1a);
+  border: 1px solid var(--color-border, #3a3f4e);
+  border-radius: var(--border-radius-sm, 4px);
+  color: var(--color-text-primary, #e8dcc4);
+  font-family: var(--font-family-primary, Georgia, serif);
+  font-size: var(--font-size-small, 0.875rem);
+  line-height: var(--line-height-base, 1.6);
+  padding: 8px;
+  resize: vertical;
+  min-height: 72px; /* 3 rows */
+}
+
+.annotation-note-input:focus {
+  outline: 2px solid var(--color-accent-gold, #d4af37);
+  outline-offset: 1px;
+}
+
+.annotation-concept-select {
+  margin-top: var(--spacing-xs, 0.5rem);
+  width: 100%;
+  background: var(--color-bg-primary, #0a0e1a);
+  border: 1px solid var(--color-border, #3a3f4e);
+  border-radius: var(--border-radius-sm, 4px);
+  color: var(--color-text-primary, #e8dcc4);
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-small, 0.875rem);
+  padding: 6px 8px;
+  min-height: 44px;
+}
+
+.annotation-concept-select:focus {
+  outline: 2px solid var(--color-accent-gold, #d4af37);
+  outline-offset: 1px;
+}
+
+.annotation-editor-actions {
+  display: flex;
+  gap: var(--spacing-xs, 0.5rem);
+  margin-top: var(--spacing-xs, 0.5rem);
+}
+
+.annotation-editor-actions button {
+  min-height: 44px;
+  padding: 8px 16px;
+  font-size: var(--font-size-small, 0.875rem);
+  border-radius: var(--border-radius-sm, 4px);
+  cursor: pointer;
+  border: 1px solid var(--color-border, #3a3f4e);
+  font-family: var(--font-family-ui);
+}
+
+.annotation-save-btn {
+  background: var(--color-accent-gold, #d4af37);
+  color: #0a0e1a;
+  font-weight: 600;
+}
+
+.annotation-cancel-btn {
+  background: transparent;
+  color: var(--color-text-secondary, #b8a888);
+}
+
+/* ── Inventory toggle button (fixed, left side, vertically centered) ─────── */
+.inventory-toggle {
+  position: fixed;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  min-height: 56px;
+  padding: 8px 4px;
+  background: var(--color-bg-panel, #2a2f3e);
+  border: 1px solid var(--color-border, #3a3f4e);
+  border-left: none;
+  border-radius: 0 var(--border-radius-sm, 4px) var(--border-radius-sm, 4px) 0;
+  color: var(--color-text-primary, #e8dcc4);
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.inventory-toggle:hover,
+.inventory-toggle:focus {
+  background: var(--color-bg-secondary, #1a1f2e);
+  box-shadow: var(--shadow-md);
+  outline: 2px solid var(--color-accent-gold, #d4af37);
+  outline-offset: -2px;
+}
+
+.inventory-toggle-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.inventory-badge {
+  margin-top: 4px;
+  background: var(--color-accent-gold, #d4af37);
+  color: #0a0e1a;
+  border-radius: 50%;
+  font-size: 0.65rem;
+  font-family: var(--font-family-ui);
+  font-weight: 700;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.inventory-badge.hidden {
+  display: none;
+}
+
+/* ── Inventory panel (slide-out drawer) ──────────────────────────────────── */
+.annotation-inventory-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 320px;
+  z-index: 300;
+  background: var(--color-bg-secondary, #1a1f2e);
+  border-right: 1px solid var(--color-border, #3a3f4e);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transform: translateX(-100%);
+  transition: transform 300ms ease;
+}
+
+.annotation-inventory-panel.open {
+  transform: translateX(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .annotation-inventory-panel {
+    transition: none;
+  }
+}
+
+/* Mobile: full width */
+@media (max-width: 768px) {
+  .annotation-inventory-panel {
+    width: 100vw;
+  }
+}
+
+.inventory-backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .inventory-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 299;
+    background: rgba(0, 0, 0, 0.6);
+  }
+}
+
+/* Panel header */
+.inventory-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm, 1rem) var(--spacing-md, 1.5rem);
+  border-bottom: 1px solid var(--color-border, #3a3f4e);
+  flex-shrink: 0;
+}
+
+.inventory-heading {
+  margin: 0;
+  font-size: 1rem;
+  font-family: var(--font-family-ui);
+  color: var(--color-accent-gold, #d4af37);
+  font-weight: 600;
+}
+
+.inventory-close-btn {
+  min-width: 44px;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--border-radius-sm, 4px);
+  color: var(--color-text-secondary, #b8a888);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.inventory-close-btn:hover,
+.inventory-close-btn:focus {
+  color: var(--color-text-primary, #e8dcc4);
+  border-color: var(--color-border, #3a3f4e);
+  outline: none;
+}
+
+/* Panel body */
+.inventory-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-sm, 1rem) var(--spacing-md, 1.5rem);
+}
+
+.inventory-empty-state {
+  color: var(--color-text-secondary, #b8a888);
+  font-size: var(--font-size-small, 0.875rem);
+  font-family: var(--font-family-ui);
+  line-height: var(--line-height-base, 1.6);
+  margin-top: var(--spacing-md, 1.5rem);
+  text-align: center;
+}
+
+/* Per-document section */
+.inventory-doc-section {
+  margin-bottom: var(--spacing-lg, 2rem);
+  padding-bottom: var(--spacing-md, 1.5rem);
+  border-bottom: 1px solid var(--color-border, #3a3f4e);
+}
+
+.inventory-doc-section:last-child {
+  border-bottom: none;
+}
+
+.inventory-doc-title {
+  margin: 0 0 4px;
+  font-size: 0.9rem;
+  font-family: var(--font-family-ui);
+  color: var(--color-text-primary, #e8dcc4);
+  font-weight: 600;
+}
+
+.inventory-doc-source {
+  margin: 0 0 var(--spacing-sm, 1rem);
+  font-size: 0.75rem;
+  font-family: var(--font-family-ui);
+  color: var(--color-text-secondary, #b8a888);
+}
+
+/* Highlight list */
+.inventory-highlights-list {
+  list-style: none;
+  margin: 0 0 var(--spacing-sm, 1rem);
+  padding: 0;
+}
+
+.inventory-highlight-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(58, 63, 78, 0.5);
+}
+
+.inventory-highlight-row:last-child {
+  border-bottom: none;
+}
+
+/* Color dot */
+.annotation-dot {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-top: 5px;
+}
+
+.annotation-dot--yellow { background: var(--annotation-yellow-solid); }
+.annotation-dot--blue   { background: var(--annotation-blue-solid); }
+.annotation-dot--pink   { background: var(--annotation-pink-solid); }
+
+.inventory-highlight-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.inventory-highlight-quote {
+  margin: 0 0 4px;
+  font-size: 0.8rem;
+  font-family: var(--font-family-primary, Georgia, serif);
+  color: var(--color-text-primary, #e8dcc4);
+  line-height: 1.5;
+  font-style: italic;
+}
+
+.inventory-highlight-note {
+  margin: 4px 0 0;
+  font-size: 0.75rem;
+  font-family: var(--font-family-ui);
+  color: var(--color-text-secondary, #b8a888);
+  font-style: italic;
+  line-height: 1.4;
+}
+
+/* AP concept badge */
+.ap-theme-badge {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 6px;
+  font-size: 0.65rem;
+  font-family: var(--font-family-ui);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  background: rgba(212, 175, 55, 0.15);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 2px;
+  color: var(--color-accent-gold, #d4af37);
+}
+
+/* Edit / Delete action buttons */
+.inventory-highlight-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.inventory-highlight-row:hover .inventory-highlight-actions,
+.inventory-highlight-row:focus-within .inventory-highlight-actions {
+  opacity: 1;
+}
+
+.inventory-edit-btn,
+.inventory-delete-btn {
+  min-height: 28px;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  font-family: var(--font-family-ui);
+  background: transparent;
+  border: 1px solid var(--color-border, #3a3f4e);
+  border-radius: var(--border-radius-sm, 4px);
+  color: var(--color-text-secondary, #b8a888);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.inventory-edit-btn:hover,
+.inventory-edit-btn:focus {
+  color: var(--color-text-primary, #e8dcc4);
+  border-color: var(--color-accent-gold, #d4af37);
+  outline: none;
+}
+
+.inventory-delete-btn:hover,
+.inventory-delete-btn:focus {
+  color: var(--color-accent-red, #c41e3a);
+  border-color: var(--color-accent-red, #c41e3a);
+  outline: none;
+}
+
+/* Inline editor inside inventory */
+.inventory-inline-editor {
+  padding: var(--spacing-sm, 1rem);
+  background: var(--color-bg-panel, #2a2f3e);
+  border: 1px solid var(--color-border, #3a3f4e);
+  border-radius: var(--border-radius-sm, 4px);
+  margin: 8px 0;
+}
+
+.inventory-editor-actions {
+  display: flex;
+  gap: var(--spacing-xs, 0.5rem);
+  margin-top: var(--spacing-xs, 0.5rem);
+}
+
+.inventory-editor-save,
+.inventory-editor-cancel {
+  min-height: 44px;
+  padding: 8px 14px;
+  font-size: var(--font-size-small, 0.875rem);
+  font-family: var(--font-family-ui);
+  border-radius: var(--border-radius-sm, 4px);
+  cursor: pointer;
+  border: 1px solid var(--color-border, #3a3f4e);
+}
+
+.inventory-editor-save {
+  background: var(--color-accent-gold, #d4af37);
+  color: #0a0e1a;
+  font-weight: 600;
+  border-color: var(--color-accent-gold, #d4af37);
+}
+
+.inventory-editor-cancel {
+  background: transparent;
+  color: var(--color-text-secondary, #b8a888);
+}
+
+/* Delete confirmation */
+.inventory-delete-confirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 0;
+  font-size: 0.75rem;
+  font-family: var(--font-family-ui);
+  color: var(--color-text-secondary, #b8a888);
+}
+
+.confirm-yes,
+.confirm-no {
+  min-height: 32px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-family: var(--font-family-ui);
+  border-radius: var(--border-radius-sm, 4px);
+  cursor: pointer;
+  border: 1px solid var(--color-border, #3a3f4e);
+  background: transparent;
+  color: var(--color-text-primary, #e8dcc4);
+}
+
+.confirm-yes {
+  border-color: var(--color-accent-red, #c41e3a);
+  color: var(--color-accent-red, #c41e3a);
+}
+
+.confirm-yes:hover { background: rgba(196, 30, 58, 0.15); }
+.confirm-no:hover  { background: var(--color-bg-panel, #2a2f3e); }
+
+/* Re-open document button */
+.inventory-reopen-btn {
+  min-height: 44px;
+  width: 100%;
+  padding: 8px 12px;
+  font-size: var(--font-size-small, 0.875rem);
+  font-family: var(--font-family-ui);
+  background: transparent;
+  border: 1px solid var(--color-border, #3a3f4e);
+  border-radius: var(--border-radius-sm, 4px);
+  color: var(--color-text-secondary, #b8a888);
+  cursor: pointer;
+  text-align: left;
+  transition: color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.inventory-reopen-btn:hover,
+.inventory-reopen-btn:focus {
+  color: var(--color-text-primary, #e8dcc4);
+  border-color: var(--color-accent-gold, #d4af37);
+  outline: none;
+}
+
+/* ── Results card annotation section ─────────────────────────────────────── */
+.results-annotations {
+  text-align: left;
+  margin-top: var(--spacing-lg, 2rem);
+  padding-top: var(--spacing-lg, 2rem);
+  border-top: 1px solid var(--color-border, #3a3f4e);
+}
+
+.results-annotations h3 {
+  margin: 0 0 var(--spacing-xs, 0.5rem);
+  font-size: 1.1rem;
+  color: var(--color-accent-gold, #d4af37);
+}
+
+.results-annotations > p {
+  margin: 0 0 var(--spacing-md, 1.5rem);
+  font-size: var(--font-size-small, 0.875rem);
+  color: var(--color-text-secondary, #b8a888);
+  font-family: var(--font-family-ui);
+}
+
+.results-annotation-doc {
+  margin-bottom: var(--spacing-md, 1.5rem);
+  padding-bottom: var(--spacing-md, 1.5rem);
+  border-bottom: 1px solid var(--color-border, #3a3f4e);
+}
+
+.results-annotation-doc:last-child {
+  border-bottom: none;
+}
+
+.results-annotation-doc h4 {
+  margin: 0 0 2px;
+  font-size: 0.9rem;
+  font-family: var(--font-family-ui);
+  color: var(--color-text-primary, #e8dcc4);
+}
+
+.results-annotation-doc > p {
+  margin: 0 0 var(--spacing-sm, 1rem);
+  font-size: 0.75rem;
+  color: var(--color-text-secondary, #b8a888);
+  font-family: var(--font-family-ui);
+}
+
+.results-annotation-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(58, 63, 78, 0.4);
+}
+
+.results-annotation-item:last-child {
+  border-bottom: none;
+}
+
+.annotation-quote {
+  margin: 0 0 4px;
+  font-size: 0.85rem;
+  font-family: var(--font-family-primary, Georgia, serif);
+  color: var(--color-text-primary, #e8dcc4);
+  font-style: italic;
+  line-height: 1.5;
+}
+
+.annotation-note {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  font-family: var(--font-family-ui);
+  color: var(--color-text-secondary, #b8a888);
+  font-style: italic;
+}
+
+/* ── Utility: mt-lg spacing helper (if not in style.css) ─────────────────── */
+.mt-lg { margin-top: var(--spacing-lg, 2rem); }
