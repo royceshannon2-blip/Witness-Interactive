@@ -1034,11 +1034,19 @@ class UIController {
     }
   }
 
+  _buildQuestExplainer(type) {
+    const map = this.content.questExplainer || {};
+    const { icon = '', text = '' } = map[type] || {};
+    return `<div class="quest-explainer"><div class="quest-explainer-icon">${icon}</div><span class="quest-explainer-text">${text}</span></div>`;
+  }
+
   _renderPostRippleQuestion(container, prq) {
     const wrapper = document.createElement('article');
     wrapper.className = 'post-ripple-synthesis panel panel-parchment mt-lg';
     wrapper.setAttribute('role', 'article');
     wrapper.setAttribute('aria-labelledby', 'post-ripple-question-text');
+
+    wrapper.insertAdjacentHTML('afterbegin', this._buildQuestExplainer('synthesis'));
 
     const skillTag = document.createElement('span');
     skillTag.className = 'ap-skill-tag';
@@ -1064,7 +1072,7 @@ class UIController {
     const displayLabels = ['A', 'B', 'C', 'D'];
     prq.options.forEach((option, i) => {
       const btn = document.createElement('button');
-      btn.className = 'option-button';
+      btn.className = 'option-button quest-option-button';
       btn.dataset.optionId = option.id;
       btn.dataset.correct = option.correct;
       btn.textContent = `${displayLabels[i] || (i + 1)}. ${option.text}`;
@@ -1129,6 +1137,7 @@ class UIController {
       
       const questionHeader = document.createElement('header');
       questionHeader.className = 'question-header';
+      questionHeader.insertAdjacentHTML('afterbegin', this._buildQuestExplainer('checkpoint'));
       
       const questionNumber = document.createElement('h3');
       questionNumber.className = 'question-number';
@@ -1320,6 +1329,8 @@ class UIController {
     label.className = 'prediction-label text-secondary';
     label.textContent = this.content.predictionQuestion?.label || '';
 
+    wrapper.insertAdjacentHTML('afterbegin', this._buildQuestExplainer('prediction'));
+
     const questionText = document.createElement('p');
     questionText.className = 'question-text mt-sm';
     questionText.textContent = pq.question;
@@ -1335,7 +1346,7 @@ class UIController {
 
     pq.options.forEach(opt => {
       const btn = document.createElement('button');
-      btn.className = 'option-button mt-sm';
+      btn.className = 'option-button quest-option-button mt-sm';
       btn.textContent = opt.text;
       btn.dataset.predId = opt.id;
       btn.setAttribute('aria-label', opt.text);
@@ -1408,7 +1419,7 @@ class UIController {
     // Build options HTML
     const optionsHTML = pq ? pq.options.map((opt, i) => {
       const label = ['A', 'B', 'C', 'D'][i] || (i + 1);
-      return `<button class="option-button stimuli-option mt-sm" data-opt-id="${opt.id}" data-correct="${opt.correct}" aria-label="Option ${label}: ${opt.text}">${label}. ${opt.text}</button>`;
+      return `<button class="option-button stimuli-option quest-option-button mt-sm" data-opt-id="${opt.id}" data-correct="${opt.correct}" aria-label="Option ${label}: ${opt.text}">${label}. ${opt.text}</button>`;
     }).join('') : '';
 
     overlay.innerHTML = `
@@ -1422,6 +1433,7 @@ class UIController {
         <div class="stimuli-text mt-md">${doc.text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>
         ${pq ? `
         <div class="stimuli-pause-question mt-lg">
+          ${this._buildQuestExplainer('primary-source')}
           <p class="question-text">${pq.question}</p>
           <div class="stimuli-options mt-sm">${optionsHTML}</div>
           <div class="stimuli-explanation hidden mt-md panel">
