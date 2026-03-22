@@ -24,6 +24,7 @@ import AtmosphericEffects from './AtmosphericEffects.js';
 import TimedChoiceSystem from './TimedChoiceSystem.js';
 import { HapticFeedback } from './HapticFeedback.js';
 import glossaryTooltip from './GlossaryTooltip.js';
+import PauseQuestionModal from './PauseQuestionModal.js';
 
 class UIController {
   constructor(eventBus, timelineSelector, missionRegistry, consequenceSystem, resultsCard, uiContent, components = {}) {
@@ -1512,17 +1513,6 @@ class UIController {
       ${illustrationHTML}
       <div class="stimuli-text mt-md">${doc.text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>
       ${signatureHTML}
-      ${pq ? `
-      <div class="stimuli-pause-question mt-lg">
-        ${this._buildQuestExplainer('primary-source')}
-        <p class="question-text">${pq.question}</p>
-        <div class="stimuli-options mt-sm">${optionsHTML}</div>
-        <div class="stimuli-explanation hidden mt-md panel">
-          <h4>${this.content.stimuliOverlay?.apAnalysisHeading || ''}</h4>
-          <p>${pq.explanation}</p>
-        </div>
-      </div>
-      ` : ''}
       <button id="stimuli-dismiss" class="mt-lg hidden" aria-label="${this.content.stimuliOverlay?.continueButton || 'Continue'}">${this.content.stimuliOverlay?.continueButton || 'Continue'}</button>
     `;
 
@@ -1534,31 +1524,84 @@ class UIController {
     if (!pq) {
       // No pause question — allow immediate dismiss
       dismissBtn.classList.remove('hidden');
+    } else {
+      // Show pause question modal once document is scrolled to bottom
+      this._attachScrollTrigger(content, doc, pq, dismissBtn);
     }
 
-    // Wire option buttons
-    overlay.querySelectorAll('.stimuli-option').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const isCorrect = btn.dataset.correct === 'true';
-        overlay.querySelectorAll('.stimuli-option').forEach(b => {
-          b.disabled = true;
-          if (b.dataset.correct === 'true') b.classList.add('correct');
-        });
-        btn.classList.add(isCorrect ? 'correct' : 'incorrect');
-        overlay.querySelector('.stimuli-explanation').classList.remove('hidden');
-        dismissBtn.classList.remove('hidden');
-        dismissBtn.focus();
-        this.eventBus.emit('stimuli:answer-submitted', {
-          documentId: doc.id,
-          selectedId: btn.dataset.optId,
-          correct: isCorrect
-        });
-      });
-    });
-
+    // Wire dismiss button (shown after modal answered)
     dismissBtn.addEventListener('click', () => {
       this.eventBus.emit('stimuli:dismiss-requested', { documentId: doc.id });
     });
+  }
+
+  /**
+   * Attach a scroll-to-bottom trigger on the stimuli content element.
+   * Once the player has scrolled to the bottom (or the doc is short enough
+   * to not need scrolling), mount the PauseQuestionModal.
+   * After the modal is answered, show the dismiss button.
+   *
+   * @param {HTMLElement} contentEl   — .stimuli-content
+   * @param {Object}      doc         — full document data
+   * @param {Object}      pq          — pauseQuestion object
+   * @param {HTMLElement} dismissBtn  — #stimuli-dismiss button
+   * @private
+   */
+  _attachScrollTrigger(contentEl, doc, pq, dismissBtn) {
+    // Cross-role prompt: pull from doc if present, else null
+    const crossRolePrompt = doc.crossRolePrompt || null;
+
+    let modalMounted = false;
+
+    const maybeShowModal = () => {
+      if (modalMounted) return;
+      // Check if scrolled to bottom (within 40px tolerance)
+      const atBottom = contentEl.scrollHeight - contentEl.scrollTop - contentEl.clientHeight < 40;
+      if (!atBottom) return;
+
+      modalMounted = true;
+      contentEl.removeEventListener('scroll', maybeShowModal);
+
+      const modal = new PauseQuestionModal(this.eventBus, pq, doc.id, crossRolePrompt);
+
+      // After answer submitted, destroy modal and show dismiss button
+      const onAnswered = (data) => {
+        if (data.documentId !== doc.id) return;
+        this.eventBus.off('stimuli:pause-question-answered', onAnswered);
+        // Small delay so player sees the explanation before dismiss appears
+        setTimeout(() => {
+          modal.destroy();
+          dismissBtn.classList.remove('hidden');
+          dismissBtn.focus();
+        }, 800);
+      };
+      this.eventBus.on('stimuli:pause-question-answered', onAnswered);
+
+      // Inventory open: toggle inventory panel without closing modal
+      const onInventoryOpen = () => {
+        this._renderInventoryPanel();
+      };
+      this.eventBus.on('inventory:open-requested', onInventoryOpen);
+
+      // Clean up inventory listener when modal is gone
+      const origDestroy = modal.destroy.bind(modal);
+      modal.destroy = () => {
+        this.eventBus.off('inventory:open-requested', onInventoryOpen);
+        origDestroy();
+      };
+
+      modal.mount();
+    };
+
+    // If content is short enough to not scroll, show immediately after a beat
+    const isScrollable = contentEl.scrollHeight > contentEl.clientHeight + 40;
+    if (!isScrollable) {
+      setTimeout(maybeShowModal, 600);
+    } else {
+      contentEl.addEventListener('scroll', maybeShowModal, { passive: true });
+      // Also check on initial render in case content fits
+      setTimeout(maybeShowModal, 400);
+    }
   }
 
   // ── Document Inventory ────────────────────────────────────────────────────

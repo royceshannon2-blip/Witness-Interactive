@@ -1,0 +1,492 @@
+/**
+ * PauseQuestionModal — Framed Notice Board
+ *
+ * Appears after the stimulus document is scrolled/read.
+ * z-index: 25 — above stimuli overlay (z:15), below modals (z:100).
+ *
+ * Structure:
+ *   .pqm-backdrop              — game scene visible at 20% opacity, blurred
+ *   .pqm-frame                 — ornate SVG border notice board
+ *     .pqm-body                — lined paper question area
+ *       .pqm-question          — question stem
+ *       .pqm-options           — ledger-line radio rows
+ *     .pqm-actions             — embossed brass plate buttons
+ *   .pqm-cross-role-card       — offset card top-right, 80% scale, 2deg rotation
+ *
+ * Entrance: drops from above with slight bounce (bounceIn keyframe).
+ */
+
+/* ── Backdrop ────────────────────────────────────────────────────────────── */
+.pqm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+
+  /* Game scene visible at 20% — achieved by a dark overlay on top of the
+     already-blurred stimuli-overlay backdrop */
+  background: rgba(6, 4, 2, 0.80);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* ── Main modal wrapper (positions frame + cross-role card) ──────────────── */
+.pqm-wrapper {
+  position: relative;
+  max-width: 640px;
+  width: 100%;
+  /* Entrance animation */
+  animation: pqmBounceIn 420ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes pqmBounceIn {
+  from {
+    opacity: 0;
+    transform: translateY(-48px) scale(0.96);
+  }
+  70% {
+    transform: translateY(6px) scale(1.01);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pqm-wrapper {
+    animation: none;
+  }
+}
+
+/* ── Ornate frame ────────────────────────────────────────────────────────── */
+.pqm-frame {
+  position: relative;
+  background: #1c1a14;
+  border: 3px solid #8a6a3a;
+  border-radius: 3px;
+  padding: 0;
+  box-shadow:
+    0 0 0 1px #5a4020,
+    0 0 0 5px #1c1a14,
+    0 0 0 6px #8a6a3a,
+    0 12px 48px rgba(0, 0, 0, 0.8),
+    inset 0 0 40px rgba(0, 0, 0, 0.4);
+}
+
+/* SVG ornate border — injected as .pqm-border-svg by JS */
+.pqm-border-svg {
+  position: absolute;
+  inset: -2px;
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  pointer-events: none;
+  z-index: 1;
+  overflow: visible;
+}
+
+/* Frame header band */
+.pqm-header {
+  position: relative;
+  z-index: 2;
+  padding: 0.75rem 1.5rem 0.6rem;
+  border-bottom: 1px solid rgba(138, 106, 58, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: linear-gradient(180deg, rgba(138, 106, 58, 0.12) 0%, transparent 100%);
+}
+
+.pqm-header-label {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #8a6a3a;
+}
+
+.pqm-spice-tag {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: rgba(138, 106, 58, 0.7);
+}
+
+/* ── Lined paper body ────────────────────────────────────────────────────── */
+.pqm-body {
+  position: relative;
+  z-index: 2;
+  padding: 1.5rem 1.75rem 1.25rem;
+
+  /* Lined paper: warm off-white with horizontal rules */
+  background-color: #f2ead8;
+  background-image:
+    repeating-linear-gradient(
+      transparent,
+      transparent 27px,
+      rgba(138, 106, 58, 0.18) 27px,
+      rgba(138, 106, 58, 0.18) 28px
+    );
+
+  /* Left margin rule */
+  border-left: 3px solid rgba(180, 80, 60, 0.25);
+  margin-left: 2.5rem;
+}
+
+/* Red margin line */
+.pqm-body::before {
+  content: '';
+  position: absolute;
+  left: -2.5rem;
+  top: 0;
+  bottom: 0;
+  width: 2.5rem;
+  background: #f2ead8;
+  border-right: 2px solid rgba(180, 80, 60, 0.3);
+}
+
+.pqm-question {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.98rem;
+  line-height: 1.75;
+  color: #1a1208;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(138, 106, 58, 0.2);
+}
+
+/* ── Ledger-line option rows ─────────────────────────────────────────────── */
+.pqm-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.pqm-option-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.55rem 0;
+  border-bottom: 1px solid rgba(138, 106, 58, 0.15);
+  cursor: pointer;
+  transition: background 0.12s ease;
+  border-radius: 1px;
+}
+
+.pqm-option-row:last-child {
+  border-bottom: none;
+}
+
+.pqm-option-row:hover {
+  background: rgba(138, 106, 58, 0.07);
+}
+
+.pqm-option-row:focus-within {
+  outline: 2px solid #8a6a3a;
+  outline-offset: 1px;
+}
+
+/* Brass radio bullet */
+.pqm-radio {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  margin-top: 2px;
+  border-radius: 50%;
+  border: 2px solid #8a6a3a;
+  background: radial-gradient(circle at 35% 35%, #e8c870, #b8860b 60%, #7a5010);
+  box-shadow:
+    inset 0 1px 2px rgba(255, 220, 100, 0.4),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.3),
+    0 1px 3px rgba(0, 0, 0, 0.4);
+  position: relative;
+  cursor: pointer;
+  transition: box-shadow 0.12s ease;
+}
+
+/* Hidden real radio input */
+.pqm-radio-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  cursor: pointer;
+}
+
+/* Selected state: inner dot */
+.pqm-option-row.selected .pqm-radio::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1a1208;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+}
+
+.pqm-option-row.selected .pqm-radio {
+  box-shadow:
+    inset 0 1px 2px rgba(255, 220, 100, 0.6),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.3),
+    0 0 6px rgba(212, 175, 55, 0.5);
+}
+
+/* Correct / incorrect feedback */
+.pqm-option-row.correct .pqm-radio {
+  border-color: #2a6a2a;
+  background: radial-gradient(circle at 35% 35%, #80e080, #2a8a2a 60%, #1a5a1a);
+}
+
+.pqm-option-row.incorrect .pqm-radio {
+  border-color: #8b0000;
+  background: radial-gradient(circle at 35% 35%, #e08080, #8b2020 60%, #5a1010);
+}
+
+.pqm-option-row.disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
+.pqm-option-label {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #1a1208;
+  flex: 1;
+  cursor: pointer;
+}
+
+.pqm-option-row.correct .pqm-option-label  { color: #1a4a1a; font-weight: 600; }
+.pqm-option-row.incorrect .pqm-option-label { color: #6a1010; text-decoration: line-through; }
+
+/* ── Explanation panel ───────────────────────────────────────────────────── */
+.pqm-explanation {
+  margin-top: 1rem;
+  padding: 0.85rem 1rem;
+  background: rgba(138, 106, 58, 0.1);
+  border-left: 3px solid #8a6a3a;
+  border-radius: 1px;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: #1a1208;
+}
+
+.pqm-explanation.hidden { display: none; }
+
+/* ── Embossed brass action buttons ──────────────────────────────────────── */
+.pqm-actions {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  gap: 0.75rem;
+  padding: 1rem 1.75rem 1.25rem;
+  background: #1c1a14;
+  border-top: 1px solid rgba(138, 106, 58, 0.3);
+  flex-wrap: wrap;
+}
+
+/* Shared brass plate base */
+.pqm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  padding: 0.5rem 1.4rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.1s ease, background 0.15s ease;
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.pqm-btn:focus {
+  outline: 2px solid #d4af37;
+  outline-offset: 2px;
+}
+
+.pqm-btn:active {
+  transform: translateY(1px);
+}
+
+/* Primary: Submit Answer — embossed brass */
+.pqm-btn-submit {
+  background: linear-gradient(180deg, #c8a030 0%, #8a6a10 50%, #b89030 100%);
+  color: #1a1208;
+  box-shadow:
+    0 2px 0 #5a4008,
+    0 3px 6px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 220, 80, 0.4);
+  flex: 1;
+  min-width: 160px;
+}
+
+.pqm-btn-submit:hover:not(:disabled) {
+  background: linear-gradient(180deg, #d4b840 0%, #9a7a20 50%, #c8a040 100%);
+  box-shadow:
+    0 2px 0 #5a4008,
+    0 4px 12px rgba(212, 175, 55, 0.45),
+    inset 0 1px 0 rgba(255, 220, 80, 0.5);
+}
+
+/* Active glow state (answer selected) */
+.pqm-btn-submit.ready {
+  box-shadow:
+    0 2px 0 #5a4008,
+    0 0 16px rgba(212, 175, 55, 0.6),
+    0 4px 12px rgba(212, 175, 55, 0.4),
+    inset 0 1px 0 rgba(255, 220, 80, 0.5);
+  animation: brassGlow 1.8s ease-in-out infinite;
+}
+
+@keyframes brassGlow {
+  0%, 100% { box-shadow: 0 2px 0 #5a4008, 0 0 12px rgba(212, 175, 55, 0.5), inset 0 1px 0 rgba(255,220,80,0.4); }
+  50%       { box-shadow: 0 2px 0 #5a4008, 0 0 24px rgba(212, 175, 55, 0.8), inset 0 1px 0 rgba(255,220,80,0.6); }
+}
+
+.pqm-btn-submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  animation: none;
+}
+
+/* Secondary: Open Inventory — darker brass */
+.pqm-btn-inventory {
+  background: linear-gradient(180deg, #4a3a20 0%, #2e2410 50%, #3e3018 100%);
+  color: #c8a870;
+  box-shadow:
+    0 2px 0 #1a1208,
+    0 3px 6px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(138, 106, 58, 0.3);
+  min-width: 140px;
+}
+
+.pqm-btn-inventory:hover {
+  background: linear-gradient(180deg, #5a4a28 0%, #3e3018 50%, #4e4020 100%);
+  color: #d4b880;
+  box-shadow:
+    0 2px 0 #1a1208,
+    0 4px 10px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(138, 106, 58, 0.4);
+}
+
+.pqm-btn-inventory .pqm-btn-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* ── Cross-Role Perspective card ─────────────────────────────────────────── */
+.pqm-cross-role-card {
+  position: absolute;
+  top: -18px;
+  right: -22px;
+  width: 200px;
+  z-index: 3;
+
+  /* 80% scale, 2deg rotation */
+  transform: rotate(2deg) scale(0.8);
+  transform-origin: top right;
+
+  background: #1c1a14;
+  border: 2px solid #8a6a3a;
+  border-radius: 2px;
+  box-shadow:
+    0 0 0 1px #5a4020,
+    0 0 0 3px #1c1a14,
+    0 0 0 4px #8a6a3a,
+    0 6px 20px rgba(0, 0, 0, 0.7);
+
+  /* Entrance: slight delay after main modal */
+  animation: pqmCardSlide 380ms 120ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes pqmCardSlide {
+  from {
+    opacity: 0;
+    transform: rotate(2deg) scale(0.8) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(2deg) scale(0.8) translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pqm-cross-role-card {
+    animation: none;
+  }
+}
+
+.pqm-cross-role-header {
+  padding: 0.4rem 0.6rem 0.3rem;
+  border-bottom: 1px solid rgba(138, 106, 58, 0.35);
+  background: linear-gradient(180deg, rgba(138, 106, 58, 0.15) 0%, transparent 100%);
+}
+
+.pqm-cross-role-label {
+  font-family: 'Courier New', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #8a6a3a;
+  display: block;
+}
+
+.pqm-cross-role-body {
+  padding: 0.5rem 0.6rem;
+  background-color: #f2ead8;
+  background-image: repeating-linear-gradient(
+    transparent, transparent 19px,
+    rgba(138, 106, 58, 0.18) 19px,
+    rgba(138, 106, 58, 0.18) 20px
+  );
+  font-family: Georgia, serif;
+  font-size: 0.72rem;
+  line-height: 1.55;
+  color: #1a1208;
+  min-height: 60px;
+}
+
+/* ── Mobile ──────────────────────────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .pqm-cross-role-card {
+    display: none; /* too cramped on small screens */
+  }
+
+  .pqm-body {
+    margin-left: 0;
+    border-left: none;
+    padding: 1.25rem 1rem;
+  }
+
+  .pqm-body::before {
+    display: none;
+  }
+
+  .pqm-actions {
+    flex-direction: column;
+    padding: 0.75rem 1rem 1rem;
+  }
+
+  .pqm-btn {
+    width: 100%;
+  }
+}
