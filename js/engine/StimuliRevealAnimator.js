@@ -1,372 +1,531 @@
 /**
- * StimuliRevealAnimator
+ * StimuliManager — Primary Source Document Display Engine
  *
- * Plays a dramatic ~900ms cinematic reveal whenever a stimulus document
- * appears. Triggered by the stimuli:shown EventBus event.
+ * FIXED ARCHITECTURE:
  *
- * Animation sequence:
- *   0ms        World freeze — blur/dim #scene-narrative and #scene-choices
- *   0–150ms    Examination surface slides up from translateY(40px)
- *   100–300ms  Spotlight beam sweeps down onto surface
- *   200–400ms  Document card slams down with spring + micro-thud shake
- *   300ms+     Dust motes spawn and float upward
- *   500–900ms  Title → body text → pause button fade in sequentially
+ * Previous bugs:
+ *   1. Documents appeared simultaneously with narrative (no typewriter gate)
+ *   2. Pause question mounted via broken scroll detection (fired after 600ms regardless)
+ *   3. Archive-to-dismiss race condition silently killed queue advancement
+ *   4. StimuliRevealAnimator queried .stimuli-content after UIController painted it —
+ *      timing race caused silent animation skips
  *
- * Respects prefers-reduced-motion — collapses all timings to 0.
+ * New flow:
+ *   scene:transition fires
+ *     → pending doc IDs stored, NOT shown yet
+ *     → typewriter:complete fires (player has read narrative)
+ *       → "View Document" button appears in scene choices area
+ *         → player clicks button
+ *           → stimuli:dom-ready emitted AFTER overlay is painted (requestAnimationFrame)
+ *             → StimuliRevealAnimator receives element reference directly
+ *               → player reads document
+ *                 → "I've read this" button appears
+ *                   → PauseQuestionModal mounts
+ *                     → player answers
+ *                       → dismiss button appears
+ *                         → player clicks dismiss
+ *                           → state committed synchronously
+ *                             → archive animation plays (cosmetic only)
+ *                               → queue advances to next doc
  *
  * Events consumed:
- *   stimuli:shown     — { documentId, documentData } — triggers play()
- *   stimuli:dismissed — { documentId }               — triggers teardown()
+ *   scene:transition          — stores pending doc IDs
+ *   typewriter:complete       — triggers "View Document" button
+ *   stimuli:answer-submitted  — { documentId, selectedId, correct }
+ *   stimuli:dismiss-requested — { documentId }
+ *   stimuli:archive-complete  — DOM cleanup only (no queue logic)
  *
  * Events emitted:
- *   stimuli-reveal:complete — { documentId } — document is now readable
- *
- * Architecture: engine layer — no content imports, no global variables.
+ *   stimuli:view-ready        — { documentId } — "View Document" button should appear
+ *   stimuli:dom-ready         — { documentId, overlayEl, contentEl } — animator hook
+ *   stimuli:shown             — { documentId, documentData } — inventory hook
+ *   stimuli:pause-question-answered — { documentId, correct, selectedId }
+ *   stimuli:dismissed         — { documentId, answeredCorrectly }
+ *   stimuli:archive-requested — { documentId } — triggers StimuliArchiveAnimator
  */
 
-// Map document IDs to their type class for styling
-const DOC_TYPE_MAP = {
-  'hm-doc-0':  'pinkerton-report',   // Hayes federal order — official govt doc
-  'hm-doc-1a': 'arbeiter-zeitung',   // Arbeiter-Zeitung newspaper
-  'hm-doc-1b': 'court-transcript',   // BLS wage data — ledger/report format
-  'hm-doc-2':  'harper-weekly',      // Harper's Weekly illustration
-  'hm-doc-3':  'arbeiter-zeitung',   // Revenge Circular — printed broadside
-  'hm-doc-4':  'harper-weekly',      // Chicago Tribune front page
-  'hm-doc-5':  'court-transcript'    // Altgeld pardon — official document
-};
+import { getDocument } from '../content/missions/haymarket/stimulus-documents.js';
+import DocAnnotationLayer from './DocAnnotationLayer.js';
+import StimuliArchiveAnimator from './StimuliArchiveAnimator.js';
 
-// Web Audio context — created lazily on first user interaction
-let _audioCtx = null;
-
-class StimuliRevealAnimator {
+class StimuliManager {
   /**
    * @param {EventBus} eventBus
+   * @param {AnnotationStore} [annotationStore]
    */
-  constructor(eventBus) {
-    this._eventBus = eventBus;
-    this._reduced  = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  constructor(eventBus, annotationStore = null) {
+    this.eventBus = eventBus;
+    this.annotationStore = annotationStore;
 
-    // Active elements
-    this._surfaceEl  = null;
-    this._dustEl     = null;
-    this._overlayEl  = null;
+    // Session-scoped deduplication
+    this.shownDocuments = new Set();
 
-    // IDs of frozen elements
-    this._frozenEls  = [];
+    // Queue of document IDs waiting to be shown for the current scene
+    this._queue = [];
 
-    // Bound handlers
-    this._onShown     = this._onShown.bind(this);
-    this._onDismissed = this._onDismissed.bind(this);
+    // Pending docs waiting for typewriter:complete
+    this._pendingQueue = [];
+    this._pendingSceneId = null;
 
-    this._eventBus.on('stimuli:shown',     this._onShown);
-    this._eventBus.on('stimuli:dismissed', this._onDismissed);
+    // The document ID currently being displayed (null if none)
+    this._currentDocumentId = null;
 
-    // Unlock audio on first user gesture
-    document.addEventListener('pointerdown', () => this._unlockAudio(), { once: true });
+    // Whether the current document's pause question has been answered
+    this._currentAnswered = false;
+    this._currentAnsweredCorrectly = false;
+
+    // Whether dismiss is force-allowed (missing pauseQuestion fallback)
+    this._forceAllowDismiss = false;
+
+    // Active DocAnnotationLayer instance (one per open overlay)
+    this._docAnnotationLayer = null;
+
+    // Archive animator
+    this._archiveAnimator = new StimuliArchiveAnimator(eventBus);
+
+    // One-time typewriter listener (stored so we can remove it on scene change)
+    this._typewriterHandler = null;
+
+    // Subscribe to events
+    this.eventBus.on('scene:transition',          (data) => this._handleSceneTransition(data));
+    this.eventBus.on('typewriter:complete',        (data) => this._handleTypewriterComplete(data));
+    this.eventBus.on('stimuli:answer-submitted',   (data) => this._handleAnswerSubmitted(data));
+    this.eventBus.on('stimuli:dismiss-requested',  (data) => this._handleDismissRequested(data));
+    this.eventBus.on('stimuli:archive-complete',   (data) => this._handleArchiveComplete(data));
+
+    // Briefing pages can unlock stimulus documents
+    this.eventBus.on('briefing:stimuli-unlock',    (data) => this._handleBriefingUnlock(data));
   }
 
-  // ── EventBus handlers ──────────────────────────────────────────────────────
+  // ─── Scene transition: store pending, do NOT show yet ───────────────────────
 
-  _onShown(data) {
-    if (!data) return;
-    const docType = DOC_TYPE_MAP[data.documentId] || 'default';
-    this.play(data.documentId, docType);
+  _handleSceneTransition(data) {
+    // Cancel any pending typewriter listener from previous scene
+    this._clearTypewriterListener();
+
+    // Reset pending state
+    this._pendingQueue = [];
+    this._pendingSceneId = null;
+
+    if (!data?.scene) return;
+
+    const unlock = data.scene.stimuliUnlock;
+    if (!Array.isArray(unlock) || unlock.length === 0) return;
+
+    // Filter already-shown docs
+    const toShow = unlock.filter(id => !this.shownDocuments.has(id));
+    if (toShow.length === 0) return;
+
+    // Store pending — wait for typewriter to finish
+    this._pendingQueue = toShow;
+    this._pendingSceneId = data.scene.id;
+
+    // Register typewriter:complete listener (fires once for this scene)
+    this._typewriterHandler = (twData) => {
+      if (twData?.sceneId !== this._pendingSceneId) return;
+      this._clearTypewriterListener();
+      this._queue = [...this._pendingQueue];
+      this._pendingQueue = [];
+      this._pendingSceneId = null;
+      // Signal UIController to show the "View Document" button
+      // The first doc ID is passed so UIController can label the button
+      if (this._queue.length > 0) {
+        this.eventBus.emit('stimuli:view-ready', {
+          documentId: this._queue[0],
+          count: this._queue.length
+        });
+      }
+    };
+
+    this.eventBus.on('typewriter:complete', this._typewriterHandler);
   }
 
-  _onDismissed() {
-    this._teardown();
+  _clearTypewriterListener() {
+    if (this._typewriterHandler) {
+      this.eventBus.off('typewriter:complete', this._typewriterHandler);
+      this._typewriterHandler = null;
+    }
   }
 
-  // ── Public API ─────────────────────────────────────────────────────────────
+  // ─── Called by UIController when player clicks "View Document" ───────────────
 
   /**
-   * Play the full reveal sequence.
-   * @param {string} documentId
-   * @param {string} docType — one of: arbeiter-zeitung | pinkerton-report | harper-weekly | court-transcript | default
+   * Called externally by UIController when the player clicks the
+   * "View Document" button that appears after typewriter:complete.
+   * Kicks off the actual document display pipeline.
    */
-  play(documentId, docType) {
-    if (this._reduced) {
-      this._playReduced(documentId, docType);
+  playerRequestedView() {
+    this._showNext();
+  }
+
+  // ─── Show next document in queue ─────────────────────────────────────────────
+
+  _showNext() {
+    if (this._queue.length === 0) return;
+    const nextId = this._queue.shift();
+    this._showDocument(nextId);
+  }
+
+  _showDocument(documentId) {
+    if (this.shownDocuments.has(documentId)) {
+      // Already shown this session — skip and advance
+      this._showNext();
       return;
     }
-    this._playFull(documentId, docType);
-  }
 
-  // ── Reduced-motion path ────────────────────────────────────────────────────
+    this.shownDocuments.add(documentId);
+    this._currentDocumentId = documentId;
+    this._currentAnswered = false;
+    this._currentAnsweredCorrectly = false;
+    this._forceAllowDismiss = false;
 
-  _playReduced(documentId, docType) {
-    this._applyDocType(docType);
-    this._eventBus.emit('stimuli-reveal:complete', { documentId });
-  }
+    const documentData = getDocument(documentId);
 
-  // ── Full animation path ────────────────────────────────────────────────────
+    if (!documentData) {
+      console.warn(`StimuliManager: No document data for "${documentId}" — skipping`);
+      this._forceAllowDismiss = true;
+    }
 
-  _playFull(documentId, docType) {
-    // Phase 1 (0ms): freeze world
-    this._freezeWorld();
+    if (documentData && !documentData.pauseQuestion) {
+      this._forceAllowDismiss = true;
+    }
 
-    // Phase 2 (0–150ms): examination surface slides up
-    this._surfaceEl = this._createSurface();
-    document.body.appendChild(this._surfaceEl);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        this._surfaceEl.classList.add('sra-surface--visible');
-      });
-    });
+    // Emit stimuli:shown so AnnotationInventory can track collected docs
+    this.eventBus.emit('stimuli:shown', { documentId, documentData });
 
-    // Phase 3 (100ms): spotlight sweeps down
-    setTimeout(() => {
-      this._surfaceEl.classList.add('sra-surface--spotlight');
-    }, 100);
-
-    // Phase 4 (200ms): document slams down
-    setTimeout(() => {
-      this._applyDocType(docType);
-      const content = document.querySelector('.stimuli-content');
-      if (content) {
-        content.classList.add('sra-doc--slam');
-        // Micro-thud at ~380ms after slam start (180ms into slam)
-        setTimeout(() => {
-          content.classList.add('sra-doc--thud');
-          this._playThudSound();
-          setTimeout(() => content.classList.remove('sra-doc--thud'), 120);
-        }, 180);
-      }
-    }, 200);
-
-    // Phase 5 (300ms): spawn dust motes
-    setTimeout(() => {
-      this._spawnDust();
-    }, 300);
-
-    // Phase 6 (500ms): reveal document content sequentially
-    setTimeout(() => {
-      this._revealContent(documentId);
-    }, 500);
-
-    // Sequence complete at 900ms
-    setTimeout(() => {
-      this._eventBus.emit('stimuli-reveal:complete', { documentId });
-    }, 900);
-  }
-
-  // ── World freeze ───────────────────────────────────────────────────────────
-
-  _freezeWorld() {
-    const targets = [
-      document.getElementById('scene-narrative'),
-      document.getElementById('scene-choices')
-    ].filter(Boolean);
-
-    targets.forEach(el => {
-      el.classList.add('sra-world-frozen');
-      // Disable all buttons inside choices
-      el.querySelectorAll('button').forEach(btn => {
-        btn.disabled = true;
-        btn.setAttribute('aria-disabled', 'true');
-      });
-      this._frozenEls.push(el);
-    });
-  }
-
-  _thawWorld() {
-    this._frozenEls.forEach(el => {
-      el.classList.remove('sra-world-frozen');
-      el.querySelectorAll('button').forEach(btn => {
-        btn.disabled = false;
-        btn.removeAttribute('aria-disabled');
-      });
-    });
-    this._frozenEls = [];
-  }
-
-  // ── Examination surface ────────────────────────────────────────────────────
-
-  _createSurface() {
-    const el = document.createElement('div');
-    el.className = 'sra-surface';
-    el.setAttribute('aria-hidden', 'true');
-    return el;
-  }
-
-  // ── Document type class ────────────────────────────────────────────────────
-
-  _applyDocType(docType) {
-    const content = document.querySelector('.stimuli-content');
-    if (!content) return;
-    // Remove any existing doc-type class
-    content.classList.forEach(cls => {
-      if (cls.startsWith('doc-type--')) content.classList.remove(cls);
-    });
-    content.classList.add(`doc-type--${docType}`);
-  }
-
-  // ── Dust motes ─────────────────────────────────────────────────────────────
-
-  _spawnDust() {
-    const content = document.querySelector('.stimuli-content');
-    if (!content) return;
-
-    const rect = content.getBoundingClientRect();
-    const container = document.createElement('div');
-    container.className = 'sra-dust';
-    container.setAttribute('aria-hidden', 'true');
-    document.body.appendChild(container);
-    this._dustEl = container;
-
-    const count = 6 + Math.floor(Math.random() * 3); // 6–8
-    for (let i = 0; i < count; i++) {
-      const mote = document.createElement('div');
-      mote.className = 'sra-dust-mote';
-
-      // Random position near document edges
-      const edge = Math.random();
-      let x, y;
-      if (edge < 0.5) {
-        // Top edge
-        x = rect.left + Math.random() * rect.width;
-        y = rect.top + Math.random() * 30;
-      } else {
-        // Side edges
-        x = edge < 0.75
-          ? rect.left + Math.random() * 20
-          : rect.right - Math.random() * 20;
-        y = rect.top + Math.random() * rect.height * 0.6;
-      }
-
-      const driftX = (Math.random() - 0.5) * 40; // ±20px
-      const duration = 2.5 + Math.random() * 1.5; // 2.5–4s
-      const delay    = Math.random() * 0.4;        // 0–400ms
-
-      mote.style.cssText = [
-        `left:${x}px`,
-        `top:${y}px`,
-        `--drift-x:${driftX}px`,
-        `animation-duration:${duration}s`,
-        `animation-delay:${delay}s`
-      ].join(';');
-
-      container.appendChild(mote);
+    // After UIController paints the overlay, it will emit stimuli:dom-ready
+    // with element references. StimuliRevealAnimator listens for that directly.
+    // We attach the annotation layer once dom-ready fires.
+    if (this.annotationStore && documentData) {
+      const domReadyHandler = (domData) => {
+        if (domData?.documentId !== documentId) return;
+        this.eventBus.off('stimuli:dom-ready', domReadyHandler);
+        this._attachAnnotationOverlay(documentData, domData.contentEl);
+      };
+      this.eventBus.on('stimuli:dom-ready', domReadyHandler);
     }
   }
 
-  // ── Content reveal ─────────────────────────────────────────────────────────
+  // ─── Answer submitted ─────────────────────────────────────────────────────────
 
-  _revealContent(documentId) {
-    const content = document.querySelector('.stimuli-content');
-    if (!content) return;
+  _handleAnswerSubmitted(data) {
+    if (!data || data.documentId !== this._currentDocumentId) return;
 
-    // Apply letterpress SVG filter to text
-    this._applyLetterpressFilter(content);
+    this._currentAnswered = true;
+    this._currentAnsweredCorrectly = !!data.correct;
 
-    // Title
-    const title = content.querySelector('.stimuli-title');
-    if (title) title.classList.add('sra-reveal-title');
-
-    // Body text (300ms after title)
-    setTimeout(() => {
-      const text = content.querySelector('.stimuli-text');
-      if (text) text.classList.add('sra-reveal-text');
-    }, 300);
-
-    // Pause question button / prompt (200ms after text)
-    setTimeout(() => {
-      const pq = content.querySelector('.stimuli-pause-question, #stimuli-dismiss');
-      if (pq) pq.classList.add('sra-reveal-action');
-    }, 500);
+    this.eventBus.emit('stimuli:pause-question-answered', {
+      documentId: data.documentId,
+      correct: !!data.correct,
+      selectedId: data.selectedId
+    });
   }
 
-  // ── Letterpress SVG filter ─────────────────────────────────────────────────
+  // ─── Dismiss requested ────────────────────────────────────────────────────────
 
-  _applyLetterpressFilter(content) {
-    // Inject SVG filter defs once into the document
-    if (!document.getElementById('sra-letterpress-filter')) {
-      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      svg.setAttribute('id', 'sra-filter-defs');
-      svg.setAttribute('aria-hidden', 'true');
-      svg.style.cssText = 'position:absolute;width:0;height:0;overflow:hidden';
-      svg.innerHTML = `
-        <defs>
-          <filter id="sra-letterpress-filter" x="-5%" y="-5%" width="110%" height="110%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4"
-                          seed="2" result="noise"/>
-            <feDisplacementMap in="SourceGraphic" in2="noise"
-                               scale="1.2" xChannelSelector="R" yChannelSelector="G"
-                               result="displaced"/>
-            <feComposite in="displaced" in2="SourceGraphic" operator="in"/>
-          </filter>
-        </defs>
-      `;
-      document.body.appendChild(svg);
+  _handleDismissRequested(data) {
+    if (!data || data.documentId !== this._currentDocumentId) return;
+
+    const canDismiss = this._currentAnswered
+      || this._forceAllowDismiss
+      || !!data.noPauseQuestion;
+
+    if (!canDismiss) return;
+
+    // CRITICAL FIX: Commit all state synchronously BEFORE the async animation.
+    // Previous bug: archive animation (800ms async) completed after state was
+    // already mutated by the next scene transition, causing silent queue failure.
+    const docId = this._currentDocumentId;
+    const answeredCorrectly = this._currentAnsweredCorrectly;
+
+    // Clear tracking immediately — re-entrant events cannot corrupt state
+    this._currentDocumentId = null;
+    this._currentAnswered = false;
+    this._currentAnsweredCorrectly = false;
+    this._forceAllowDismiss = false;
+
+    // Destroy annotation layer
+    if (this._docAnnotationLayer) {
+      this._docAnnotationLayer.destroy();
+      this._docAnnotationLayer = null;
     }
 
-    const textEl = content.querySelector('.stimuli-text');
-    if (textEl) textEl.style.filter = 'url(#sra-letterpress-filter)';
+    // Trigger archive animation (purely cosmetic from this point)
+    this.eventBus.emit('stimuli:archive-requested', { documentId: docId });
+
+    // Advance queue and emit dismissed after archive animation completes.
+    // 820ms = slightly longer than the 800ms archive animation.
+    setTimeout(() => {
+      this.eventBus.emit('stimuli:dismissed', { documentId: docId, answeredCorrectly });
+      // If more docs in queue, emit view-ready for next one
+      if (this._queue.length > 0) {
+        this.eventBus.emit('stimuli:view-ready', {
+          documentId: this._queue[0],
+          count: this._queue.length
+        });
+      }
+    }, 820);
   }
 
-  // ── Web Audio thud ─────────────────────────────────────────────────────────
+  // ─── Archive complete: DOM cleanup ONLY, no queue logic ──────────────────────
 
-  _unlockAudio() {
+  _handleArchiveComplete(data) {
+    // Archive animator has finished the flight animation.
+    // Just ensure the overlay DOM is gone. Queue was already advanced above.
+    const overlay = document.getElementById('stimuli-overlay');
+    if (overlay) overlay.remove();
+  }
+
+  // ─── Typewriter complete handler (stored on instance, removed per-scene) ─────
+
+  _handleTypewriterComplete(data) {
+    // This is only used as a fallback — the real handler is registered
+    // per-scene in _handleSceneTransition via _typewriterHandler.
+    // This global listener is intentionally empty.
+  }
+
+  // ─── Briefing unlock (same flow as scene unlock, but no typewriter gate) ─────
+
+  _handleBriefingUnlock(data) {
+    if (!Array.isArray(data?.documentIds) || data.documentIds.length === 0) return;
+
+    const toShow = data.documentIds.filter(id => !this.shownDocuments.has(id));
+    if (toShow.length === 0) return;
+
+    // Briefing docs bypass the typewriter gate — they appear when unlocked
+    // because the briefing itself IS the reading experience
+    this._queue = [...this._queue, ...toShow];
+
+    if (this._currentDocumentId === null) {
+      this.eventBus.emit('stimuli:view-ready', {
+        documentId: this._queue[0],
+        count: this._queue.length
+      });
+    }
+  }
+
+  // ─── Annotation overlay ───────────────────────────────────────────────────────
+
+  _attachAnnotationOverlay(documentData, contentEl) {
+    if (!contentEl) {
+      contentEl = document.querySelector('.stimuli-content');
+    }
+    if (!contentEl) return;
+
+    const textContainer = contentEl.querySelector('.stimuli-text');
+    if (!textContainer) return;
+
+    // Mount DocAnnotationLayer (charcoal underline + sticky notes)
+    this._docAnnotationLayer = new DocAnnotationLayer(contentEl);
+    this._docAnnotationLayer.mount();
+
+    // Restore any existing highlights for this document
+    this._restoreHighlights(textContainer, documentData.id);
+
+    // Selection → highlight toolbar
+    const onSelectionEnd = () => {
+      const selection = window.getSelection();
+      const selectedText = selection ? selection.toString().trim() : '';
+      if (!selectedText) return;
+      const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+      if (!range || !textContainer.contains(range.commonAncestorContainer)) return;
+      this._showHighlightToolbar(range, selectedText, documentData);
+    };
+
+    textContainer.addEventListener('mouseup', onSelectionEnd);
+    textContainer.addEventListener('touchend', onSelectionEnd);
+
+    // Click existing highlight → note editor
+    textContainer.addEventListener('click', (e) => {
+      const mark = e.target.closest('mark.annotation-highlight');
+      if (!mark) return;
+      const highlightId = mark.dataset.highlightId;
+      if (highlightId) this._openNoteEditor(mark, documentData.id, highlightId);
+    });
+  }
+
+  _showHighlightToolbar(range, selectedText, documentData) {
+    document.getElementById('annotation-toolbar')?.remove();
+
+    const rect = range.getBoundingClientRect();
+    const toolbar = document.createElement('div');
+    toolbar.id = 'annotation-toolbar';
+    toolbar.className = 'annotation-toolbar';
+    toolbar.setAttribute('role', 'toolbar');
+    toolbar.setAttribute('aria-label', 'Highlight options');
+
+    const colors = [
+      { color: 'yellow', label: 'Evidence' },
+      { color: 'blue',   label: 'Context' },
+      { color: 'pink',   label: 'Perspective' }
+    ];
+
+    colors.forEach(({ color, label }) => {
+      const btn = document.createElement('button');
+      btn.className = `annotation-toolbar-color annotation-toolbar-color--${color}`;
+      btn.setAttribute('aria-label', `Highlight as ${label}`);
+      btn.title = label;
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toolbar.remove();
+        this._applyHighlight(range, selectedText, color, label, documentData);
+      });
+      toolbar.appendChild(btn);
+    });
+
+    const noteBtn = document.createElement('button');
+    noteBtn.className = 'annotation-toolbar-note';
+    noteBtn.textContent = 'Add Note';
+    noteBtn.setAttribute('aria-label', 'Add note to selection');
+    noteBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toolbar.remove();
+      const highlightId = this._applyHighlight(range, selectedText, 'yellow', 'Evidence', documentData);
+      if (highlightId) {
+        const mark = document.querySelector(`mark[data-highlight-id="${highlightId}"]`);
+        if (mark) this._openNoteEditor(mark, documentData.id, highlightId);
+      }
+    });
+    toolbar.appendChild(noteBtn);
+    document.body.appendChild(toolbar);
+
+    const pad = 8;
+    const tw  = toolbar.offsetWidth;
+    const top = Math.max(pad, rect.top + window.scrollY - toolbar.offsetHeight - pad);
+    const left = Math.min(
+      window.innerWidth - tw - pad,
+      Math.max(pad, rect.left + window.scrollX + rect.width / 2 - tw / 2)
+    );
+    toolbar.style.top  = `${top}px`;
+    toolbar.style.left = `${left}px`;
+
+    const dismiss = (e) => {
+      if (!toolbar.contains(e.target)) {
+        toolbar.remove();
+        document.removeEventListener('mousedown', dismiss);
+        document.removeEventListener('touchstart', dismiss);
+      }
+    };
+    setTimeout(() => {
+      document.addEventListener('mousedown', dismiss);
+      document.addEventListener('touchstart', dismiss);
+    }, 0);
+  }
+
+  _applyHighlight(range, selectedText, color, colorLabel, documentData) {
     try {
-      _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    } catch (_) { /* audio not available */ }
-  }
+      const id   = `highlight_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
+      const mark = document.createElement('mark');
+      mark.className = `annotation-highlight annotation-highlight--${color}`;
+      mark.dataset.highlightId = id;
+      mark.setAttribute('aria-label', `${colorLabel} highlight: ${selectedText}`);
+      mark.setAttribute('tabindex', '0');
+      range.surroundContents(mark);
 
-  _playThudSound() {
-    if (!_audioCtx) return;
-    try {
-      // Short low-frequency thud: noise burst filtered to ~80Hz
-      const bufferSize = _audioCtx.sampleRate * 0.08; // 80ms
-      const buffer = _audioCtx.createBuffer(1, bufferSize, _audioCtx.sampleRate);
-      const data   = buffer.getChannelData(0);
-      for (let i = 0; i < bufferSize; i++) {
-        data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 3);
-      }
+      this.annotationStore.addHighlight(
+        documentData.id,
+        documentData.title,
+        `${documentData.source} — ${documentData.date}`,
+        { id, text: selectedText, color, colorLabel, apConcept: null, note: '', createdAt: Date.now() }
+      );
 
-      const source = _audioCtx.createBufferSource();
-      source.buffer = buffer;
-
-      // Low-pass filter to shape into a thud
-      const filter = _audioCtx.createBiquadFilter();
-      filter.type = 'lowpass';
-      filter.frequency.value = 120;
-      filter.Q.value = 0.8;
-
-      const gain = _audioCtx.createGain();
-      gain.gain.setValueAtTime(0.18, _audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, _audioCtx.currentTime + 0.08);
-
-      source.connect(filter);
-      filter.connect(gain);
-      gain.connect(_audioCtx.destination);
-      source.start();
-    } catch (_) { /* audio error — silent fallback */ }
-  }
-
-  // ── Teardown ───────────────────────────────────────────────────────────────
-
-  _teardown() {
-    this._thawWorld();
-    this._surfaceEl?.remove();
-    this._surfaceEl = null;
-    this._dustEl?.remove();
-    this._dustEl = null;
-
-    // Remove reveal classes from content
-    const content = document.querySelector('.stimuli-content');
-    if (content) {
-      content.classList.remove('sra-doc--slam', 'sra-doc--thud');
-      content.style.filter = '';
-      const textEl = content.querySelector('.stimuli-text');
-      if (textEl) textEl.style.filter = '';
-      ['sra-reveal-title', 'sra-reveal-text', 'sra-reveal-action'].forEach(cls => {
-        content.querySelectorAll(`.${cls}`).forEach(el => el.classList.remove(cls));
-      });
+      this.eventBus.emit('annotation:added', { documentId: documentData.id, highlightId: id });
+      this.eventBus.emit('annotation:store-updated', {});
+      window.getSelection()?.removeAllRanges();
+      return id;
+    } catch (err) {
+      console.warn('StimuliManager: Could not apply highlight (cross-element selection):', err.message);
+      window.getSelection()?.removeAllRanges();
+      return null;
     }
+  }
 
-    // Remove SVG filter defs
-    document.getElementById('sra-filter-defs')?.remove();
+  _openNoteEditor(mark, documentId, highlightId) {
+    document.getElementById('annotation-note-editor')?.remove();
+
+    const doc       = this.annotationStore.getDocument(documentId);
+    const highlight = doc ? doc.highlights.find(h => h.id === highlightId) : null;
+
+    const editor = document.createElement('div');
+    editor.id = 'annotation-note-editor';
+    editor.className = 'annotation-note-editor';
+    editor.innerHTML = `
+      <textarea class="annotation-note-input" maxlength="300" rows="3"
+        placeholder="What does this tell you? How does it connect to the historical argument?">${highlight ? this._escapeHTML(highlight.note) : ''}</textarea>
+      <select class="annotation-concept-select" aria-label="AP concept">
+        <option value="">None</option>
+        <option value="Causation">Causation</option>
+        <option value="Continuity">Continuity</option>
+        <option value="Comparison">Comparison</option>
+        <option value="Contextualization">Contextualization</option>
+        <option value="Complexity">Complexity</option>
+      </select>
+      <div class="annotation-editor-actions">
+        <button class="annotation-save-btn">Save</button>
+        <button class="annotation-cancel-btn">Cancel</button>
+      </div>
+    `;
+
+    const select = editor.querySelector('.annotation-concept-select');
+    if (highlight?.apConcept) select.value = highlight.apConcept;
+
+    mark.after(editor);
+    editor.querySelector('textarea').focus();
+
+    editor.querySelector('.annotation-save-btn').addEventListener('click', () => {
+      const note      = editor.querySelector('textarea').value.trim();
+      const apConcept = select.value || null;
+      this.annotationStore.updateHighlight(documentId, highlightId, { note, apConcept });
+      if (note) mark.classList.add('has-note');
+      else mark.classList.remove('has-note');
+      editor.remove();
+      this.eventBus.emit('annotation:store-updated', {});
+    });
+
+    editor.querySelector('.annotation-cancel-btn').addEventListener('click', () => {
+      editor.remove();
+    });
+  }
+
+  _restoreHighlights(textContainer, documentId) {
+    const doc = this.annotationStore?.getDocument(documentId);
+    if (!doc || doc.highlights.length === 0) return;
+    doc.highlights.forEach(h => {
+      this._wrapTextInContainer(textContainer, h.text, h.color, h.colorLabel, h.id, !!h.note);
+    });
+  }
+
+  _wrapTextInContainer(container, text, color, colorLabel, highlightId, hasNote) {
+    if (!text) return;
+    const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      const idx = node.nodeValue.indexOf(text);
+      if (idx === -1) continue;
+      try {
+        const range = document.createRange();
+        range.setStart(node, idx);
+        range.setEnd(node, idx + text.length);
+        const mark = document.createElement('mark');
+        mark.className = `annotation-highlight annotation-highlight--${color}${hasNote ? ' has-note' : ''}`;
+        mark.dataset.highlightId = highlightId;
+        mark.setAttribute('aria-label', `${colorLabel} highlight: ${text}`);
+        mark.setAttribute('tabindex', '0');
+        range.surroundContents(mark);
+      } catch (_) { /* skip */ }
+      return;
+    }
+  }
+
+  _escapeHTML(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
   }
 }
 
-export default StimuliRevealAnimator;
+export default StimuliManager;
