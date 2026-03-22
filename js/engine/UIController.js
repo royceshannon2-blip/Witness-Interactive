@@ -1540,83 +1540,38 @@ class UIController {
   // Previous bug: scroll detection misfired after 600ms regardless of scroll state.
   this._attachReadConfirmButton(content, doc);
 }
-  _attachScrollTrigger(contentEl, doc, pq, dismissBtn) {
-    // Cross-role prompt: pull from doc if present, else null
-    const crossRolePrompt = doc.crossRolePrompt || null;
-
-    let modalMounted = false;
-
-    const maybeShowModal = () => {
-      if (modalMounted) return;
-      // Check if scrolled to bottom (within 40px tolerance)
-      const atBottom = contentEl.scrollHeight - contentEl.scrollTop - contentEl.clientHeight < 40;
-      if (!atBottom) return;
-
-      modalMounted = true;
-      contentEl.removeEventListener('scroll', maybeShowModal);
-
-      const modal = new PauseQuestionModal(this.eventBus, pq, doc.id, crossRolePrompt);
-
-      // After answer submitted, destroy modal and show dismiss button
-      const onAnswered = (data) => {
-        if (data.documentId !== doc.id) return;
-        this.eventBus.off('stimuli:pause-question-answered', onAnswered);
-        // Small delay so player sees the explanation before dismiss appears
-        setTimeout(() => {
-          modal.destroy();
-          dismissBtn.classList.remove('hidden');
-          dismissBtn.focus();
-        }, 800);
-      };
-      this.eventBus.on('stimuli:pause-question-answered', onAnswered);
-
-      // Inventory open: toggle inventory panel without closing modal
-      const onInventoryOpen = () => {
-        this._renderInventoryPanel();
-      };
-      this.eventBus.on('inventory:open-requested', onInventoryOpen);
-
-      // Clean up inventory listener when modal is gone
-      const origDestroy = modal.destroy.bind(modal);
-      modal.destroy = () => {
-        this.eventBus.off('inventory:open-requested', onInventoryOpen);
-        origDestroy();
-      };
-
-      modal.mount();
-    };
-
-    // If content is short enough to not scroll, show immediately after a beat
-    const isScrollable = contentEl.scrollHeight > contentEl.clientHeight + 40;
-    if (!isScrollable) {
-      setTimeout(maybeShowModal, 600);
-    } else {
-      contentEl.addEventListener('scroll', maybeShowModal, { passive: true });
-      // Also check on initial render in case content fits
-      setTimeout(maybeShowModal, 400);
-    }
-  }
-
-  // ── Document Inventory ────────────────────────────────────────────────────
-
-  /**
-   * Update the inventory toggle button count and visibility.
-   * Called whenever a new document is added to the inventory.
-   */
-  _updateInventoryButton() {
-    const btn = document.getElementById('inventory-toggle');
-    if (!btn) return;
-    const count = this._inventoryDocIds.length;
-    if (count === 0) {
-      btn.classList.add('hidden');
+  _attachReadConfirmButton(contentEl, doc) {
+  const crossRolePrompt = doc.crossRolePrompt || null;
+  let questionMounted = false;
+ 
+  const confirmBtn = document.createElement('button');
+  confirmBtn.id = 'stimuli-read-confirm';
+  confirmBtn.className = 'stimuli-read-confirm-btn mt-lg';
+  confirmBtn.setAttribute('aria-label', 'Confirm you have read this document and answer the question');
+  confirmBtn.textContent = "I've read this document →";
+ 
+  contentEl.appendChild(confirmBtn);
+ 
+  confirmBtn.addEventListener('click', () => {
+    if (questionMounted) return;
+    questionMounted = true;
+    confirmBtn.remove();
+ 
+    if (!doc.pauseQuestion) {
+      // No question — show dismiss button immediately
+      this._showDismissButton(contentEl, doc.id);
+      this.eventBus.emit('stimuli:answer-submitted', {
+        documentId: doc.id,
+        selectedId: null,
+        correct: false
+      });
       return;
     }
-    btn.classList.remove('hidden');
-    const countEl = btn.querySelector('#inventory-count');
-    if (countEl) countEl.textContent = count;
-    btn.setAttribute('aria-label', `View collected primary sources (${count})`);
-  }
-
+ 
+    this._mountPauseQuestion(contentEl, doc, crossRolePrompt);
+  });
+}
+ 
   /**
    * Render the inventory panel — a list of all collected documents.
    * Clicking a document re-opens the stimulus overlay for review.
