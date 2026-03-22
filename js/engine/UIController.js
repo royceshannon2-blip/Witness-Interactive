@@ -41,6 +41,7 @@ class UIController {
     this.ambientSoundManager = components.ambientSoundManager || null;
     this.narratorAudioManager = components.narratorAudioManager || null;
     this.annotationStore = components.annotationStore || null;
+    this.stimuliManager = components.stimuliManager || null;
     this.haptics = new HapticFeedback();
     this.appContainer = document.getElementById('app');
     
@@ -57,8 +58,7 @@ class UIController {
     this.currentAmbientSound = null;
 
     // Inventory: tracks all document IDs shown this session (briefing + scenes)
-    this._inventoryDocIds = [];
-    this._inventoryDocData = new Map(); // docId → documentData
+    
     
     this.subscribeToEvents();
     this.setupSoundToggle();
@@ -79,8 +79,9 @@ class UIController {
     this.eventBus.on('timer:cancelled', this.handleTimerCancelled.bind(this));
     this.eventBus.on('sound:muted', this.handleSoundMuted.bind(this));
     this.eventBus.on('narrator:muted', this.handleNarratorMuted.bind(this));
-    this.eventBus.on('stimuli:shown', this.handleStimuliShown.bind(this));
-    this.eventBus.on('stimuli:dismissed', this.handleStimuliDismissed.bind(this));
+    this.eventBus.on('stimuli:view-ready', this.handleStimuliViewReady.bind(this));
+    this.eventBus.on('stimuli:shown',      this.handleStimuliShown.bind(this));
+    this.eventBus.on('stimuli:dismissed',  this.handleStimuliDismissed.bind(this));
     this.eventBus.on('scene:error', () => {
       console.warn('UIController: scene:error received — re-rendering current scene');
       if (this.currentSceneData && this.currentSceneData.scene) {
@@ -286,6 +287,38 @@ class UIController {
   this.showScreen('scene');
 }
 
+  handleStimuliViewReady(data) {
+  // Called by StimuliManager after typewriter:complete, before any document shows.
+  // We inject a "View Document" button into the scene choices area.
+  // When the player clicks it, we call stimuliManager.playerRequestedView().
+  if (!data?.documentId) return;
+ 
+  const choicesContainer = document.getElementById('scene-choices');
+  if (!choicesContainer) return;
+ 
+  // Remove any existing view-doc button (e.g. from previous doc in queue)
+  document.getElementById('stimuli-view-doc-btn')?.remove();
+ 
+  const btn = document.createElement('button');
+  btn.id = 'stimuli-view-doc-btn';
+  btn.className = 'stimuli-view-doc-btn mt-sm';
+  btn.setAttribute('aria-label', 'View primary source document');
+ 
+  const count = data.count || 1;
+  btn.textContent = count > 1
+    ? `📄 View Primary Sources (${count})`
+    : '📄 View Primary Source';
+ 
+  btn.addEventListener('click', () => {
+    btn.remove();
+    if (this.stimuliManager) {
+      this.stimuliManager.playerRequestedView();
+    }
+  });
+ 
+  // Insert BEFORE choice buttons so it appears above them
+  choicesContainer.insertBefore(btn, choicesContainer.firstChild);
+}
   handleBriefingBack(data) {
     if (data && data.missionId) {
       this.eventBus.emit('mission:selected', { missionId: data.missionId });
