@@ -4,10 +4,6 @@
  * Intercepts the role:selected event and displays a role-specific
  * newspaper briefing before Scene 01 loads. Calls onComplete()
  * when the student clicks "Enter the mission".
- *
- * Architecture: Engine logic only, content imported from content layer.
- * CSS in css/style.css + css/chicago-tribune-briefing.css (Haymarket only)
- * Requirements: US-2.1, TR-2.2
  */
 import { BRIEFING_PAGES    as RW_PAGES,
          BRIEFING_CARDS    as RW_CARDS,
@@ -39,7 +35,6 @@ const BRIEFING_CARDS          = { ...RW_CARDS, ...UD_CARDS, ...HM_CARDS };
 const BRIEFING_FINALS         = { ...RW_FINALS, ...UD_FINALS, ...HM_FINALS };
 const BRIEFING_CARD_TEMPLATES = { ...RW_TEMPLATES, ...UD_TEMPLATES };
 
-// UI text is per-mission
 const BRIEFING_UI_TEXT_MAP = {
   'rwanda-genocide':   RW_UI_TEXT,
   'aphg-urban-design': UD_UI_TEXT,
@@ -127,7 +122,8 @@ class MissionBriefing {
       hl.innerHTML = '';
 
       ['mb-dateline','mb-deck','mb-body','mb-ticker'].forEach(id => {
-        this.container.querySelector('#' + id).innerHTML = '';
+        const el = this.container.querySelector('#' + id);
+        if (el) el.innerHTML = '';
       });
 
       const btn = this.container.querySelector('#mb-cont');
@@ -183,8 +179,9 @@ class MissionBriefing {
   }
 
   _disableTribuneCSS() {
-    if (this._tributeStyleEl) {
-      this._tributeStyleEl.disabled = true;
+    const el = document.getElementById('tribune-briefing-css');
+    if (el) {
+      el.disabled = true;
     }
   }
 
@@ -374,34 +371,16 @@ class MissionBriefing {
   </div>`;
   }
 
-  _buildCardHTML(roleKey) {
-    const template = BRIEFING_CARD_TEMPLATES[roleKey];
-    if (!template) return '';
-    if (roleKey === 'tutsi')       return this._buildTutsiCard(template);
-    if (roleKey === 'hutu')        return this._buildHutuCard(template);
-    if (roleKey === 'un')          return this._buildUnCard(template);
-    if (roleKey === 'ud-resident') return this._buildUrbanResidentCard(template);
-    return '';
-  }
-
-  _buildUrbanResidentCard(t) {
-    return `<div class="physical-card ud-deed-card"><div class="pc-header-band pc-deed-header"><span class="pc-republic" style="letter-spacing:2px;">${t.headerBand.republic}</span><span class="pc-type">${t.headerBand.type}</span></div><div class="pc-body"><div class="pc-fields">${t.fields.map(f=>`<div class="pc-field"><span class="pc-lbl ud-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('\n')}</div></div></div>`;
-  }
-
-  _buildTutsiCard(t) {
-    return `<div class="physical-card tutsi-card"><div class="pc-header-band pc-green"><span class="pc-republic">${t.headerBand.republic}</span><span class="pc-type">${t.headerBand.type}</span></div><div class="pc-body"><div class="pc-fields">${t.fields.map(f=>`<div class="pc-field"><span class="pc-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('')}</div></div></div>`;
-  }
-
-  _buildHutuCard(t) {
-    return `<div class="physical-card hutu-card"><div class="pc-header-band pc-green"><span class="pc-republic">${t.headerBand.republic}</span><span class="pc-type">${t.headerBand.type}</span></div><div class="pc-body"><div class="pc-fields">${t.fields.map(f=>`<div class="pc-field"><span class="pc-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('\n')}</div></div></div>`;
-  }
-
-  _buildUnCard(t) {
-    return `<div class="physical-card un-card"><div class="pc-header-band pc-un"><span class="pc-republic" style="letter-spacing:2px;">${t.headerBand.republic}</span><span class="pc-type">${t.headerBand.type}</span></div><div class="pc-body"><div class="pc-fields">${t.fields.map(f=>`<div class="pc-field"><span class="pc-lbl un-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('\n')}</div></div></div>`;
-  }
-
   _buildHTML(roleKey, uiText) {
-    const cardHTML = this._buildCardHTML(roleKey);
+    const template = BRIEFING_CARD_TEMPLATES[roleKey];
+    let cardHTML = '';
+    if (template) {
+       if (roleKey === 'tutsi') cardHTML = `<div class="physical-card tutsi-card"><div class="pc-header-band pc-green"><span class="pc-republic">${template.headerBand.republic}</span><span class="pc-type">${template.headerBand.type}</span></div><div class="pc-body"><div class="pc-fields">${template.fields.map(f=>`<div class="pc-field"><span class="pc-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('')}</div></div></div>`;
+       else if (roleKey === 'hutu') cardHTML = `<div class="physical-card hutu-card"><div class="pc-header-band pc-green"><span class="pc-republic">${template.headerBand.republic}</span><span class="pc-type">${template.headerBand.type}</span></div><div class="pc-body"><div class="pc-fields">${template.fields.map(f=>`<div class="pc-field"><span class="pc-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('\n')}</div></div></div>`;
+       else if (roleKey === 'un') cardHTML = `<div class="physical-card un-card"><div class="pc-header-band pc-un"><span class="pc-republic" style="letter-spacing:2px;">${template.headerBand.republic}</span><span class="pc-type">${template.headerBand.type}</span></div><div class="pc-body"><div class="pc-fields">${template.fields.map(f=>`<div class="pc-field"><span class="pc-lbl un-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('\n')}</div></div></div>`;
+       else if (roleKey === 'ud-resident') cardHTML = `<div class="physical-card ud-deed-card"><div class="pc-header-band pc-deed-header"><span class="pc-republic" style="letter-spacing:2px;">${template.headerBand.republic}</span><span class="pc-type">${template.headerBand.type}</span></div><div class="pc-body"><div class="pc-fields">${template.fields.map(f=>`<div class="pc-field"><span class="pc-lbl ud-lbl">${f.label}</span><span class="${f.cssClass} id-field-value"></span></div>`).join('\n')}</div></div></div>`;
+    }
+
     return `
 <button id="mb-back-button" class="back-button" aria-label="Back to role selection">← Back</button>
 <div class="mb-paper">
@@ -431,9 +410,6 @@ class MissionBriefing {
 </div>`;
   }
 
-  /**
-   * REWRITTEN WITH DEFENSIVE FALLBACKS
-   */
   _showCard(card, final, onComplete, isHaymarket = false) {
     const content = this.container.querySelector('#mb-content');
     content.style.display = 'none';
@@ -441,7 +417,6 @@ class MissionBriefing {
     cardSec.style.display = 'block';
 
     const fieldEls    = cardSec.querySelectorAll('.id-field-value');
-    // FIX: Guard against card.rows being undefined
     const fieldValues = (card.rows || []).map(r => r[1]);
     let fi = 0;
 
@@ -450,3 +425,122 @@ class MissionBriefing {
       const el  = fieldEls[fi];
       const txt = fieldValues[fi] || ''; 
       el.textContent = '';
+      let j = 0;
+      const iv = setInterval(() => {
+        j++;
+        el.textContent = txt.slice(0, j);
+        if (j >= txt.length) { clearInterval(iv); fi++; setTimeout(typeFields, 28); }
+      }, 16);
+    };
+
+    const noteEl = cardSec.querySelector('#mb-id-note');
+    noteEl.innerHTML = '';
+
+    const typeNote = () => {
+      const text = card.note || '';
+      if (!text) { setTimeout(typeFinal, 80); return; }
+      let j = 0;
+      noteEl.innerHTML = '<span class="mb-cursor"></span>';
+      const iv = setInterval(() => {
+        j++;
+        noteEl.innerHTML = text.slice(0, j) + '<span class="mb-cursor"></span>';
+        if (j >= text.length) { clearInterval(iv); noteEl.innerHTML = text; setTimeout(typeFinal, 80); }
+      }, 9);
+    };
+
+    const finalBar = cardSec.querySelector('#mb-final-bar');
+    const finalEl  = cardSec.querySelector('#mb-final-text');
+    const beginBtn = cardSec.querySelector('#mb-begin');
+
+    const typeFinal = () => {
+      finalBar.style.display = 'block';
+      const rawText = final || '';
+      const plain   = rawText.replace(/<[^>]+>/g, '');
+      let j = 0;
+      finalEl.innerHTML = '<span class="mb-cursor"></span>';
+      const iv = setInterval(() => {
+        j++;
+        finalEl.innerHTML = plain.slice(0, j) + '<span class="mb-cursor"></span>';
+        if (j >= plain.length) {
+          clearInterval(iv);
+          finalEl.innerHTML = rawText;
+          beginBtn.style.opacity = '1';
+          beginBtn.style.pointerEvents = 'all';
+        }
+      }, 13);
+    };
+
+    beginBtn.style.opacity = '0';
+    beginBtn.style.pointerEvents = 'none';
+    beginBtn.addEventListener('click', () => { this._cleanup(); onComplete(); });
+    typeFields();
+  }
+
+  _getRoleKey(roleId) {
+    if (roleId === 'ud-resident') return 'ud-resident';
+    if (roleId.includes('hutu'))  return 'hutu';
+    if (roleId.includes('tutsi')) return 'tutsi';
+    if (roleId.includes('un') || roleId.includes('peacekeeper')) return 'un';
+    return null;
+  }
+
+  _getCardKey(roleId) {
+    if (roleId === 'hm-lucy-parsons') return 'hm-lucy-parsons';
+    if (roleId === 'hm-karl-brenner') return 'hm-karl-brenner';
+    if (roleId === 'hm-james-doyle')  return 'hm-james-doyle';
+    return this._getRoleKey(roleId);
+  }
+
+  _getFinalKey(roleId) {
+    if (roleId === 'hm-lucy-parsons') return 'hm-lucy-parsons';
+    if (roleId === 'hm-karl-brenner') return 'hm-karl-brenner';
+    if (roleId === 'hm-james-doyle')  return 'hm-james-doyle';
+    if (roleId === 'ud-resident')     return 'ud-resident';
+    return this._getRoleKey(roleId);
+  }
+
+  _cleanup() {
+    if (this._activeIv) { clearInterval(this._activeIv); this._activeIv = null; }
+    this._seqToken = (this._seqToken || 0) + 1;
+    const old = document.getElementById('mission-briefing-overlay');
+    if (old) old.remove();
+    this._disableTribuneCSS();
+    this.container = null;
+  }
+
+  _setText(id, text) {
+    const el = this.container.querySelector('#' + id);
+    if (el) el.textContent = text;
+  }
+
+  _typeSequence(tasks, done) {
+    if (this._activeIv) { clearInterval(this._activeIv); this._activeIv = null; }
+    const token = ++this._seqToken;
+    let i = 0;
+    const run = () => {
+      if (token !== this._seqToken || !this.container) return;
+      if (i >= tasks.length) { if (done) done(); return; }
+      const t    = tasks[i++];
+      const el   = this.container.querySelector('#' + t.id);
+      if (!el) { setTimeout(run, 10); return; }
+      const text  = t.text || '';
+      const speed = t.speed || 18;
+      let   j     = 0;
+      el.innerHTML = '<span class="mb-cursor"></span>';
+      this._activeIv = setInterval(() => {
+        if (token !== this._seqToken) { clearInterval(this._activeIv); return; }
+        j++;
+        el.innerHTML = text.slice(0, j) + '<span class="mb-cursor"></span>';
+        if (j >= text.length) {
+          clearInterval(this._activeIv);
+          this._activeIv = null;
+          el.innerHTML = text;
+          setTimeout(run, t.pause || 40);
+        }
+      }, speed);
+    };
+    run();
+  }
+}
+
+export default MissionBriefing;
