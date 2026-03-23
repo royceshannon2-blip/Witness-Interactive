@@ -208,10 +208,12 @@ class MissionBriefing {
    * Rwanda / Urban Design briefings shown later in the same session.
    */
   _disableTribuneCSS() {
-    if (this._tributeStyleEl) {
-      this._tributeStyleEl.disabled = true;
-    }
+  const el = document.getElementById('tribune-briefing-css');
+  if (el) {
+    el.remove();
+    this._tributeStyleEl = null; // Reset so it can be re-added if they go back to Haymarket
   }
+}
 
   // ─── Tribune-specific methods ────────────────────────────────────────────────
 
