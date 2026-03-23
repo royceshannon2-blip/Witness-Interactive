@@ -42,6 +42,7 @@ class UIController {
     this.narratorAudioManager = components.narratorAudioManager || null;
     this.annotationStore = components.annotationStore || null;
     this.stimuliManager = components.stimuliManager || null;
+    this.currentDocHasPauseQuestion = false;
     this.haptics = new HapticFeedback();
     this.appContainer = document.getElementById('app');
     
@@ -107,7 +108,7 @@ class UIController {
     
     if (this.ambientSoundManager) {
       soundToggleButton.disabled = false;
-      soundToggleButton.setAttribute('aria-label', 'Toggle sound on/off');
+      soundToggleButton.setAttribute('aria-label', this.content.soundToggle?.toggleAriaLabel || 'Toggle sound on/off');
       soundToggleButton.addEventListener('click', () => {
         this.eventBus.emit('sound:toggle');
       });
@@ -128,7 +129,7 @@ class UIController {
       narratorToggleButton = document.createElement('button');
       narratorToggleButton.id = 'narrator-toggle';
       narratorToggleButton.className = 'narrator-toggle';
-      narratorToggleButton.setAttribute('aria-label', 'Toggle narrator audio on/off');
+      narratorToggleButton.setAttribute('aria-label', this.content.narratorToggle?.toggleAriaLabel || 'Toggle narrator audio on/off');
       
       const narratorIcon = document.createElement('span');
       narratorIcon.className = 'narrator-icon';
@@ -172,10 +173,10 @@ class UIController {
     
     if (muted) {
       soundIcon.textContent = '🔇';
-      soundToggleButton.setAttribute('aria-label', 'Sound is muted. Click to unmute.');
+      soundToggleButton.setAttribute('aria-label', this.content.soundToggle?.unmuteLabel || 'Sound is muted. Click to unmute.');
     } else {
       soundIcon.textContent = '🔊';
-      soundToggleButton.setAttribute('aria-label', 'Sound is on. Click to mute.');
+      soundToggleButton.setAttribute('aria-label', this.content.soundToggle?.muteLabel || 'Sound is on. Click to mute.');
     }
   }
 
@@ -188,11 +189,11 @@ class UIController {
     
     if (muted) {
       narratorIcon.textContent = '🔇';
-      narratorToggleButton.setAttribute('aria-label', 'Narrator is muted. Click to unmute.');
+      narratorToggleButton.setAttribute('aria-label', this.content.narratorToggle?.unmuteLabel || 'Narrator is muted. Click to unmute.');
       narratorToggleButton.classList.add('muted');
     } else {
       narratorIcon.textContent = '🔊';
-      narratorToggleButton.setAttribute('aria-label', 'Narrator is on. Click to mute.');
+      narratorToggleButton.setAttribute('aria-label', this.content.narratorToggle?.muteLabel || 'Narrator is on. Click to mute.');
       narratorToggleButton.classList.remove('muted');
     }
   }
@@ -200,8 +201,11 @@ class UIController {
   handleGameStart(data) {
     this.showScreen('landing');
     if (this.ambientSoundManager) {
-      this.ambientSoundManager.fadeIn('656124__itsthegoodstuff__nature-ambiance.wav', 1500);
-      this.currentAmbientSound = '656124__itsthegoodstuff__nature-ambiance.wav';
+      const track = this.content.landing.ambientTrack;
+      if (track) {
+        this.ambientSoundManager.fadeIn(track, 1500);
+        this.currentAmbientSound = track;
+      }
     }
   }
 
@@ -447,7 +451,7 @@ class UIController {
     
     return `
       <article class="role-selection-content" role="article" aria-labelledby="role-selection-title">
-        <button id="back-to-timeline" class="back-button" aria-label="Back to timeline">← Back</button>
+        <button id="back-to-timeline" class="back-button" aria-label="${c.backButtonAriaLabel}">${c.backButton}</button>
         <h2 id="role-selection-title" class="text-center text-gold">${c.title}</h2>
         <p class="text-center">${subtitle}</p>
         <section id="all-roles-completed-message" class="panel panel-parchment mt-lg hidden" role="region" aria-live="polite">
@@ -476,7 +480,7 @@ class UIController {
             </svg>
             <div class="timer-text">
               <span id="timer-seconds" class="timer-seconds">10</span>
-              <span class="timer-label">seconds</span>
+              <span class="timer-label">${this.content.timer?.secondsLabel || 'seconds'}</span>
             </div>
           </div>
         </div>
@@ -561,8 +565,8 @@ class UIController {
 
       annotationsHTML = `
         <section class="results-annotations mt-lg" role="region" aria-label="Your source annotations">
-          <h3 class="text-gold">Your Source Annotations</h3>
-          <p class="text-secondary">These are the primary sources you annotated during the mission.</p>
+          <h3 class="text-gold">${c.annotationsHeading}</h3>
+          <p class="text-secondary">${c.annotationsSubtitle}</p>
           ${docsHTML}
         </section>`;
     }
@@ -875,7 +879,7 @@ class UIController {
       const playAgainButton = screen.querySelector('#play-again');
       if (playAgainButton) {
         playAgainButton.addEventListener('click', () => {
-          this.eventBus.emit('mission:selected', 'pearl-harbor');
+          this.eventBus.emit('mission:selected', { missionId: this.currentMissionId });
         });
       }
     }
@@ -1339,9 +1343,11 @@ class UIController {
         scoreDisplay.className = 'checkpoint-score text-center mt-lg';
         const scorePercentage = Math.round((this.checkpointScore / this.checkpointTotalQuestions) * 100);
         const scoreClass = scorePercentage >= 70 ? 'text-success' : 'text-warning';
+        const scoreLabel = this.content.knowledgeCheckpoint?.scoreLabel || 'Your Score:';
+        const correctLabel = this.content.knowledgeCheckpoint?.correctLabel || '% Correct';
         scoreDisplay.innerHTML = `
-          <h3 class="${scoreClass}">Your Score: ${this.checkpointScore}/${this.checkpointTotalQuestions}</h3>
-          <p class="text-secondary">${scorePercentage}% Correct</p>
+          <h3 class="${scoreClass}">${scoreLabel} ${this.checkpointScore}/${this.checkpointTotalQuestions}</h3>
+          <p class="text-secondary">${scorePercentage}${correctLabel}</p>
         `;
         checkpointContent.insertBefore(scoreDisplay, viewResultsButton);
       }
@@ -1607,24 +1613,74 @@ class UIController {
       });
       return;
     }
- 
     this._mountPauseQuestion(contentEl, doc, crossRolePrompt);
   });
 }
- 
- _showDismissButton(contentEl, documentId) {
-    const dismissBtn = document.createElement('button');
-    dismissBtn.id = 'stimuli-dismiss';
-    dismissBtn.className = 'stimuli-dismiss-btn mt-md';
-    dismissBtn.setAttribute('aria-label', this.content.stimuliOverlay?.continueButton || 'Continue');
-    dismissBtn.textContent = this.content.stimuliOverlay?.continueButton || 'Continue →';
 
-    contentEl.appendChild(dismissBtn);
-    dismissBtn.focus();
+  // ── NEW: stimuli:view-ready handler ──────────────────────────────────────
+  handleStimuliViewReady(data) {
+    if (!data || !data.documentId) return;
+    const choicesContainer = document.getElementById('scene-choices');
+    if (!choicesContainer) return;
+    if (document.getElementById('stimuli-view-doc-btn')) return;
 
-    dismissBtn.addEventListener('click', () => {
-      this.eventBus.emit('stimuli:dismiss-requested', { documentId });
+    const btn = document.createElement('button');
+    btn.id = 'stimuli-view-doc-btn';
+    btn.className = 'stimuli-view-doc-btn';
+    btn.setAttribute('aria-label', 'View primary source document');
+    btn.textContent = '📄 View Document';
+    btn.addEventListener('click', () => {
+      btn.remove();
+      if (this.stimuliManager) this.stimuliManager.playerRequestedView();
     });
+    choicesContainer.insertBefore(btn, choicesContainer.firstChild);
+  }
+
+  // ── NEW: open the unified inventory panel ─────────────────────────────────
+  _openInventory() {
+    document.getElementById('annotation-inventory-toggle')?.click();
+  }
+
+  // ── NEW: mount pause question after player reads the document ─────────────
+  _mountPauseQuestion(contentEl, doc, crossRolePrompt) {
+    const pq = doc.pauseQuestion;
+    this.currentDocHasPauseQuestion = !!pq;
+
+    if (!pq) {
+      this._showDismissButton(contentEl, doc.id);
+      return;
+    }
+
+    const modal = new PauseQuestionModal(this.eventBus, pq, doc.id, crossRolePrompt || null);
+
+    const onAnswered = (answerData) => {
+      if (answerData.documentId !== doc.id) return;
+      this.eventBus.off('stimuli:pause-question-answered', onAnswered);
+      setTimeout(() => {
+        modal.destroy();
+        this._showDismissButton(contentEl, doc.id);
+      }, 800);
+    };
+    this.eventBus.on('stimuli:pause-question-answered', onAnswered);
+    modal.mount();
+  }
+
+  // ── NEW: show the dismiss/continue button ─────────────────────────────────
+  _showDismissButton(contentEl, documentId) {
+    if (contentEl.querySelector('#stimuli-dismiss-btn')) return;
+    const btn = document.createElement('button');
+    btn.id = 'stimuli-dismiss-btn';
+    btn.className = 'stimuli-dismiss-btn mt-lg';
+    btn.textContent = this.content.stimuliOverlay?.dismissButton || 'Continue →';
+    btn.setAttribute('aria-label', this.content.stimuliOverlay?.dismissButtonAriaLabel || 'Continue and archive this document');
+    btn.addEventListener('click', () => {
+      this.eventBus.emit('stimuli:dismiss-requested', {
+        documentId,
+        noPauseQuestion: !this.currentDocHasPauseQuestion
+      });
+    });
+    contentEl.appendChild(btn);
+    btn.focus();
   }
 
 } // ← this closes the UIController class

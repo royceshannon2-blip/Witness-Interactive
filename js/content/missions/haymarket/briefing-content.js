@@ -221,7 +221,44 @@ const BRIEFING_UI_TEXT = {
   buttons: {
     continue: 'Continue',
     seeCard: 'See Your Identity',
-    enterMission: 'Enter the Mission'
+    enterMission: 'Enter the Mission',
+    back: '← Back'
+  },
+  tribune: {
+    masthead: {
+      vol: 'VOL. XLII — NO. 124',
+      established: 'Established 1847',
+      price: 'TWO CENTS',
+      tagline: '"I WILL — CHICAGO"',
+      editionLabel: 'MORNING EDITION',
+      sectionRule: 'Latest Intelligence From the City and the Nation'
+    },
+    ornament: '— ✦ —',
+    leftCol: {
+      dateline: 'Chicago, Illinois',
+      byline: 'By Our Labor Correspondent',
+      adHead: 'McCormick Reaper Works',
+      adBody: 'The Greatest Labor-Saving Machine<br>Known to Civilization.<br><br>Blue Island Ave., Chicago.'
+    },
+    rightCol: {
+      dateline: 'Dispatches',
+      sidebar: [
+        {
+          head: 'THE STRIKE SITUATION',
+          text: 'Eighty thousand workingmen have pledged to lay down their tools on May the first. The demand: eight hours of labor for eight hours\'s pay.'
+        },
+        {
+          head: 'ANARCHIST AGITATORS',
+          text: 'Foreign-born radicals continue to distribute inflammatory literature in the German quarter. The Arbeiter-Zeitung calls for open insurrection.'
+        },
+        {
+          head: 'PINKERTON GUARDS',
+          text: 'The National Detective Agency has deployed additional operatives to monitor labor meetings across the West Side.'
+        }
+      ],
+      adHead: 'Pinkerton\'s<br>National Detective Agency',
+      adBody: 'We Never Sleep.<br>Chicago Office: Dearborn St.<br><br>Labor Intelligence.<br>Strike Protection.<br>Operative Infiltration.'
+    }
   }
 };
 

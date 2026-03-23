@@ -14,7 +14,8 @@ const uiContent = {
     subtitle: "History doesn't repeat itself. But you can witness it.",
     tagline: "Choose a moment. Inhabit a perspective. Live with the consequences.",
     context: "Every mission puts you inside a pivotal moment in history — not as an observer, but as someone who had to decide. Your choices reflect real decisions real people made. Some survived. Some didn't. All of them were changed.",
-    buttonText: "Choose Your Mission"
+    buttonText: "Choose Your Mission",
+    ambientTrack: "656124__itsthegoodstuff__nature-ambiance.wav"
   },
   
   timeline: {
@@ -33,7 +34,9 @@ const uiContent = {
     selectRoleAriaLabel: "Select role",
     playAgainAriaLabel: "Play again as",
     completionBadge: "✓ Completed",
-    completionBadgeAriaLabel: "Role completed"
+    completionBadgeAriaLabel: "Role completed",
+    backButton: "← Back",
+    backButtonAriaLabel: "Back to timeline"
   },
   
   outcome: {
@@ -54,7 +57,9 @@ const uiContent = {
     title: "Knowledge Checkpoint",
     subtitle: "Test your understanding of the historical context",
     buttonText: "View Results",
-    explanationHeading: "Explanation:"
+    explanationHeading: "Explanation:",
+    scoreLabel: "Your Score:",
+    correctLabel: "% Correct"
   },
   
   resultsCard: {
@@ -62,11 +67,17 @@ const uiContent = {
     copyButtonText: "Copy Results",
     playAgainButtonText: "Play Another Role",
     copySuccessMessage: "Results copied to clipboard!",
-    copyFailMessage: "Failed to copy results. Please try again."
+    copyFailMessage: "Failed to copy results. Please try again.",
+    annotationsHeading: "Your Source Annotations",
+    annotationsSubtitle: "These are the primary sources you annotated during the mission."
   },
   
   progress: {
     sceneLabel: "Scene"
+  },
+
+  timer: {
+    secondsLabel: "seconds"
   },
   
   comingSoon: {
@@ -76,9 +87,16 @@ const uiContent = {
   },
   
   soundToggle: {
-    muteLabel: "Mute Sound",
-    unmuteLabel: "Unmute Sound",
+    muteLabel: "Sound is on. Click to mute.",
+    unmuteLabel: "Sound is muted. Click to unmute.",
+    toggleAriaLabel: "Toggle sound on/off",
     placeholderNote: "(Sound coming soon)"
+  },
+
+  narratorToggle: {
+    muteLabel: "Narrator is on. Click to mute.",
+    unmuteLabel: "Narrator is muted. Click to unmute.",
+    toggleAriaLabel: "Toggle narrator audio on/off"
   },
   
   predictionQuestion: {
@@ -95,6 +113,8 @@ const uiContent = {
   stimuliOverlay: {
     apAnalysisHeading: 'AP Analysis',
     continueButton: 'Continue',
+    dismissButton: 'Continue →',
+    dismissButtonAriaLabel: 'Continue and archive this document',
     illustrationLabel: 'Engraving',
     signatureLine: '_________________________'
   },
