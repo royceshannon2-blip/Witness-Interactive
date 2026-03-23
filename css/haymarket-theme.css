@@ -1,0 +1,121 @@
+/**
+ * haymarket-theme.css — Haymarket Affair Mission Theme
+ *
+ * Applied via body.mission-haymarket, set by UIController._setMissionTheme()
+ * when missionId === 'haymarket-affair'.
+ *
+ * Visual concept: 1886 Chicago — industrial gaslight era.
+ * Warmer, more aged palette vs. the deep-navy Pearl Harbor default.
+ * Ink-press typography feel. Parchment and lampblack.
+ *
+ * All rules scoped under .mission-haymarket to prevent bleed-through
+ * when the player returns to the timeline or switches missions.
+ */
+
+/* ── Color token overrides ────────────────────────────────────────────────── */
+.mission-haymarket {
+  --color-bg-primary:   #0e0c09;
+  --color-bg-secondary: #1c1810;
+  --color-bg-panel:     #2a2318;
+  --color-text-primary:   #e8dcc0;
+  --color-text-secondary: #b0996e;
+  --color-accent-gold:  #c8962a;
+  --color-primary:      #c8962a;
+  --color-border: #3e3220;
+  --color-accent-red: #8b1a1a;
+}
+
+/* ── Background texture: subtle grain ────────────────────────────────────── */
+.mission-haymarket #app {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* ── Panels ───────────────────────────────────────────────────────────────── */
+.mission-haymarket .panel-parchment {
+  background: linear-gradient(135deg, #2a2318 0%, #1c1810 100%);
+  border-color: rgba(200, 150, 42, 0.25);
+}
+
+/* ── Choice buttons ───────────────────────────────────────────────────────── */
+.mission-haymarket .choice-button {
+  border-color: rgba(200, 150, 42, 0.4);
+  letter-spacing: 0.02em;
+}
+.mission-haymarket .choice-button:hover {
+  background-color: rgba(200, 150, 42, 0.12);
+  border-color: var(--color-accent-gold);
+}
+
+/* ── Scene narrative ──────────────────────────────────────────────────────── */
+.mission-haymarket #scene-narrative {
+  border-left: 3px solid var(--color-accent-gold);
+  line-height: 1.75;
+}
+
+/* ── Progress bar ─────────────────────────────────────────────────────────── */
+.mission-haymarket .progress-fill {
+  background: linear-gradient(90deg, #c8962a 0%, #8b1a1a 100%);
+}
+
+/* ── Ripple events ────────────────────────────────────────────────────────── */
+.mission-haymarket .ripple-event {
+  border-left-color: #c8962a;
+  background: linear-gradient(135deg, #2a2318 0%, #1c1810 100%);
+}
+.mission-haymarket .ripple-event-date {
+  color: #c8962a;
+  font-family: 'Courier New', Courier, monospace;
+  letter-spacing: 0.1em;
+}
+
+/* ── AP skill tags ────────────────────────────────────────────────────────── */
+.mission-haymarket .ap-skill-tag {
+  background-color: rgba(200, 150, 42, 0.15);
+  color: #c8962a;
+  border-color: rgba(200, 150, 42, 0.5);
+}
+
+/* ── Checkpoint questions ─────────────────────────────────────────────────── */
+.mission-haymarket .checkpoint-question {
+  background: rgba(20, 16, 10, 0.82);
+  border-color: rgba(200, 150, 42, 0.2);
+}
+
+/* ── Role cards ───────────────────────────────────────────────────────────── */
+.mission-haymarket .role-card {
+  background: linear-gradient(135deg, #2a2318 0%, #1c1810 100%);
+  border-color: rgba(200, 150, 42, 0.3);
+}
+.mission-haymarket .role-card:hover {
+  border-color: #c8962a;
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(200, 150, 42, 0.2);
+}
+.mission-haymarket .role-title { color: #c8962a; }
+
+/* ── Timeline ─────────────────────────────────────────────────────────────── */
+.mission-haymarket .timeline-node.unlocked .timeline-node-marker {
+  background-color: #c8962a;
+  border-color: #c8962a;
+  box-shadow: 0 0 20px rgba(200, 150, 42, 0.5);
+}
+
+/* ── Stimuli overlay ──────────────────────────────────────────────────────── */
+.mission-haymarket .stimuli-overlay { background: rgba(4, 3, 1, 0.88); }
+
+/* ── Morale HUD ───────────────────────────────────────────────────────────── */
+.mission-haymarket .morale-hud {
+  border-color: rgba(200, 150, 42, 0.3);
+  background: rgba(14, 12, 9, 0.9);
+}
+
+/* ── Glossary terms ───────────────────────────────────────────────────────── */
+.mission-haymarket .glossary-term { border-bottom-color: rgba(200, 150, 42, 0.5); }
+.mission-haymarket .glossary-term:hover { color: #d4a840; border-bottom-color: #c8962a; }
+
+/* ── Mission briefing ─────────────────────────────────────────────────────── */
+.mission-haymarket #mission-briefing-overlay { background: #080604; }
+.mission-haymarket .mb-mast-name {
+  color: #c8962a;
+  text-shadow: 0 0 20px rgba(200, 150, 42, 0.3);
+}
