@@ -1609,23 +1609,21 @@ class UIController {
   });
 }
  
-  /**
-   * Render the inventory panel — a list of all collected documents.
-   * Clicking a document re-opens the stimulus overlay for review.
-   */
-  _showDismissButton(contentEl, documentId) {
-  const dismissBtn = document.createElement('button');
-  dismissBtn.id = 'stimuli-dismiss';
-  dismissBtn.className = 'stimuli-dismiss-btn mt-md';
-  dismissBtn.setAttribute('aria-label', this.content.stimuliOverlay?.continueButton || 'Continue');
-  dismissBtn.textContent = this.content.stimuliOverlay?.continueButton || 'Continue →';
- 
-  contentEl.appendChild(dismissBtn);
-  dismissBtn.focus();
- 
-  dismissBtn.addEventListener('click', () => {
-    this.eventBus.emit('stimuli:dismiss-requested', { documentId });
-  });
-}
-  
+ _showDismissButton(contentEl, documentId) {
+    const dismissBtn = document.createElement('button');
+    dismissBtn.id = 'stimuli-dismiss';
+    dismissBtn.className = 'stimuli-dismiss-btn mt-md';
+    dismissBtn.setAttribute('aria-label', this.content.stimuliOverlay?.continueButton || 'Continue');
+    dismissBtn.textContent = this.content.stimuliOverlay?.continueButton || 'Continue →';
+
+    contentEl.appendChild(dismissBtn);
+    dismissBtn.focus();
+
+    dismissBtn.addEventListener('click', () => {
+      this.eventBus.emit('stimuli:dismiss-requested', { documentId });
+    });
+  }
+
+} // ← this closes the UIController class
+
 export default UIController;
