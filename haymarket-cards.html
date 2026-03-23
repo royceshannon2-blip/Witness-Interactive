@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haymarket Identity Cards Preview</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Special+Elite&family=Oswald:wght@400;600;700&family=IM+Fell+English:ital@0;1&family=Courier+Prime:wght@400;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #1a1510;
+    font-family: 'Courier Prime', monospace;
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+  }
+
+  h2 {
+    color: #d4af37;
+    font-family: 'IM Fell English', serif;
+    font-size: 1rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: -30px;
+    text-align: center;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     CARD 1: LUCY PARSONS — CPD SURVEILLANCE POSTER
+     Police/wanted aesthetic: bold slab type, faded red stamp,
+     aged paper, typewritten case notes
+     ═══════════════════════════════════════════════════════════ */
+
+  .hm-surveillance-card {
+    width: 480px;
+    background: #e8d8b8;
+    border: 1px solid #a08050;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7), inset 0 0 60px rgba(100,70,20,0.2);
+    font-family: 'Special Elite', cursive;
+  }
+
+  /* Paper grain texture */
+  .hm-surveillance-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+  }
+
+  .surv-header {
+    background: #1a1a2e;
+    padding: 10px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #8b1a1a;
+  }
+
+  .surv-dept {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    color: #c8c0a0;
+    text-transform: uppercase;
+  }
+
+  .surv-shield {
+    width: 32px;
+    height: 36px;
+    fill: #c8c0a0;
+    opacity: 0.85;
+  }
+
+  .surv-classification {
+    background: #8b1a1a;
+    text-align: center;
+    padding: 6px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: #ffe8b0;
+    text-transform: uppercase;
+  }
+
+  .surv-body {
+    padding: 16px 20px 20px;
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 16px;
+    position: relative;
+  }
+
+  .surv-photo-col {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .surv-photo-frame {
+    width: 130px;
+    height: 160px;
+    border: 2px solid #6a4a20;
+    background: #b8a880;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  /* SVG silhouette of a woman in profile */
+  .surv-photo-frame svg {
+    width: 100%;
+    height: 100%;
+    opacity: 0.75;
+  }
+
+  .surv-photo-label {
+    font-size: 0.48rem;
+    color: #5a3a10;
+    text-align: center;
+    letter-spacing: 1px;
+    font-family: 'Special Elite', cursive;
+  }
+
+  .surv-file-num {
+    font-size: 0.55rem;
+    color: #5a3a10;
+    text-align: center;
+    font-family: 'Special Elite', cursive;
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid rgba(100,60,20,0.3);
+  }
+
+  .surv-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 4px;
+  }
+
+  .surv-field {
+    border-bottom: 0.5px solid rgba(100,60,20,0.35);
+    padding-bottom: 6px;
+  }
+
+  .surv-field-label {
+    font-size: 0.5rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #6a4010;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+    margin-bottom: 1px;
+  }
+
+  .surv-field-value {
+    font-size: 0.85rem;
+    color: #1a0e04;
+    font-family: 'Special Elite', cursive;
+    line-height: 1.2;
+  }
+
+  .surv-field-value.danger {
+    color: #8b1a1a;
+    font-weight: bold;
+    letter-spacing: 1px;
+  }
+
+  .surv-notes {
+    margin: 0 20px 16px;
+    padding: 10px 12px;
+    background: rgba(100,60,20,0.08);
+    border-left: 3px solid #8b1a1a;
+    font-size: 0.72rem;
+    color: #2a1a04;
+    line-height: 1.6;
+    font-family: 'Special Elite', cursive;
+    position: relative;
+    z-index: 2;
+  }
+
+  .surv-notes-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.52rem;
+    letter-spacing: 2px;
+    color: #6a3010;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+  }
+
+  /* The red ACTIVE SURVEILLANCE stamp */
+  .surv-stamp {
+    position: absolute;
+    bottom: 24px;
+    right: 16px;
+    width: 110px;
+    height: 110px;
+    z-index: 15;
+    opacity: 0.22;
+    transform: rotate(-12deg);
+  }
+
+  .surv-footer {
+    background: #1a1a2e;
+    padding: 5px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .surv-footer span {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.45rem;
+    letter-spacing: 1px;
+    color: #8880a0;
+    text-transform: uppercase;
+  }
+
+
+  /* ═══════════════════════════════════════════════════════════
+     CARD 2: KARL BRENNER — McCORMICK EMPLOYEE RECORD
+     Industrial ledger aesthetic: tabular, ruled lines,
+     typewriter font, factory stamp, green ink columns
+     ═══════════════════════════════════════════════════════════ */
+
+  .hm-employee-card {
+    width: 480px;
+    background: #f2ead8;
+    border: 1px solid #8a7040;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+    font-family: 'Courier Prime', monospace;
+  }
+
+  .emp-header {
+    background: #2a3520;
+    padding: 10px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .emp-company {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    color: #d0c898;
+    font-size: 1rem;
+  }
+
+  .emp-est {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.55rem;
+    color: #8a9878;
+    letter-spacing: 1px;
+  }
+
+  .emp-rule {
+    height: 2px;
+    background: linear-gradient(to right, #5a7040, #c8a830, #5a7040);
+  }
+
+  .emp-title-band {
+    background: #f2ead8;
+    border-bottom: 1px solid rgba(80,60,20,0.4);
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+
+  .emp-doc-title {
+    font-family: 'IM Fell English', serif;
+    font-size: 0.9rem;
+    color: #2a1e04;
+    letter-spacing: 1px;
+  }
+
+  .emp-year {
+    font-size: 0.7rem;
+    color: #6a5020;
+    letter-spacing: 2px;
+  }
+
+  .emp-body {
+    padding: 12px 16px 16px;
+  }
+
+  /* Ruled ledger lines under the body */
+  .emp-body::before {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: 80px; bottom: 40px;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 23px,
+      rgba(80,100,60,0.12) 23px,
+      rgba(80,100,60,0.12) 24px
+    );
+    pointer-events: none;
+  }
+
+  .emp-worker-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(80,100,60,0.12);
+    border: 1px solid rgba(80,100,60,0.3);
+    padding: 6px 10px;
+    margin-bottom: 12px;
+  }
+
+  .emp-worker-number {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a2e10;
+    letter-spacing: 2px;
+  }
+
+  .emp-worker-label {
+    font-size: 0.5rem;
+    color: #4a6030;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  .emp-status {
+    font-size: 0.65rem;
+    color: #8b1a1a;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border: 1px solid #8b1a1a;
+    padding: 2px 8px;
+    text-transform: uppercase;
+  }
+
+  .emp-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .emp-row {
+    padding: 6px 4px;
+    border-bottom: 1px dashed rgba(80,60,20,0.25);
+  }
+
+  .emp-row.full {
+    grid-column: 1 / -1;
+  }
+
+  .emp-row-label {
+    font-size: 0.48rem;
+    color: #4a6030;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+  }
+
+  .emp-row-value {
+    font-size: 0.82rem;
+    color: #1a1204;
+    font-family: 'Courier Prime', monospace;
+    font-weight: 700;
+  }
+
+  .emp-row-value.red { color: #8b1a1a; }
+  .emp-row-value.small { font-size: 0.72rem; font-weight: 400; }
+
+  .emp-note {
+    margin-top: 12px;
+    padding: 8px 10px;
+    background: rgba(139,26,26,0.06);
+    border-left: 2px solid #8b1a1a;
+    font-size: 0.65rem;
+    color: #2a1604;
+    line-height: 1.5;
+    position: relative;
+    z-index: 2;
+  }
+
+  .emp-note-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.48rem;
+    letter-spacing: 2px;
+    color: #6a3010;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 3px;
+  }
+
+  /* Factory gear stamp */
+  .emp-stamp {
+    position: absolute;
+    bottom: 50px;
+    right: 20px;
+    width: 90px;
+    height: 90px;
+    opacity: 0.12;
+    transform: rotate(8deg);
+    z-index: 1;
+  }
+
+  .emp-footer {
+    background: #2a3520;
+    padding: 5px 16px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .emp-footer span {
+    font-size: 0.45rem;
+    color: #7a9060;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Oswald', sans-serif;
+  }
+
+
+  /* ═══════════════════════════════════════════════════════════
+     CARD 3: JAMES DOYLE — PINKERTON OPERATIVE DOSSIER
+     Intelligence/classified aesthetic: manila folder,
+     black redaction bars, case number, handler chain,
+     all-caps bureaucratic typewriter
+     ═══════════════════════════════════════════════════════════ */
+
+  .hm-pinkerton-card {
+    width: 480px;
+    background: #e0c87a;  /* manila */
+    border: 1px solid #a08030;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.7), inset 0 0 80px rgba(120,80,0,0.15);
+    font-family: 'Courier Prime', monospace;
+  }
+
+  /* Folder tab */
+  .hm-pinkerton-card::after {
+    content: 'CONFIDENTIAL';
+    position: absolute;
+    top: 12px;
+    right: -28px;
+    background: #1a1a1a;
+    color: #e0c87a;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 3px 36px;
+    transform: rotate(45deg);
+    z-index: 20;
+  }
+
+  .pink-header {
+    background: #1a1a1a;
+    padding: 10px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .pink-agency {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    color: #e0c87a;
+    text-transform: uppercase;
+  }
+
+  .pink-eye {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    opacity: 0.8;
+  }
+
+  .pink-eye-text {
+    font-family: 'IM Fell English', serif;
+    font-style: italic;
+    font-size: 0.6rem;
+    color: #b0a060;
+    text-align: right;
+    line-height: 1.2;
+  }
+
+  .pink-case-band {
+    background: rgba(0,0,0,0.12);
+    border-bottom: 1px solid rgba(100,70,0,0.4);
+    border-top: 1px solid rgba(100,70,0,0.4);
+    padding: 6px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .pink-case-num {
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1a1204;
+    letter-spacing: 2px;
+  }
+
+  .pink-date {
+    font-size: 0.6rem;
+    color: #6a4a10;
+    letter-spacing: 1px;
+    font-family: 'Oswald', sans-serif;
+  }
+
+  .pink-body {
+    padding: 12px 16px 16px;
+    position: relative;
+  }
+
+  .pink-classify-bar {
+    background: #1a1a1a;
+    color: #e0c87a;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 0.6rem;
+    letter-spacing: 4px;
+    text-align: center;
+    padding: 4px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+  }
+
+  .pink-field {
+    margin-bottom: 9px;
+    position: relative;
+    z-index: 2;
+  }
+
+  .pink-field-label {
+    font-size: 0.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #6a4a10;
+    margin-bottom: 1px;
+    font-family: 'Oswald', sans-serif;
+    font-weight: 400;
+  }
+
+  .pink-field-value {
+    font-size: 0.82rem;
+    color: #1a0e04;
+    font-family: 'Courier Prime', monospace;
+    line-height: 1.3;
+  }
+
+  .pink-field-value.code {
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: #1a1a1a;
+  }
+
+  /* Redaction bar */
+  .pink-redacted {
+    display: inline-block;
+    background: #1a1a1a;
+    color: #1a1a1a;
+    font-size: 0.82rem;
+    font-family: 'Courier Prime', monospace;
+    padding: 0 2px;
+    user-select: none;
+    letter-spacing: 1px;
+  }
+
+  .pink-divider {
+    height: 1px;
+    background: rgba(100,70,0,0.3);
+    margin: 10px 0;
+  }
+
+  .pink-instructions {
+    background: rgba(0,0,0,0.06);
+    border: 1px dashed rgba(100,70,0,0.4);
+    padding: 10px 12px;
+    position: relative;
+    z-index: 2;
+    margin-top: 8px;
+  }
+
+  .pink-instructions-label {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.5rem;
+    letter-spacing: 3px;
+    color: #6a3010;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .pink-instructions-text {
+    font-size: 0.7rem;
+    color: #2a1604;
+    line-height: 1.55;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  /* Pinkerton eye logo */
+  .pink-stamp {
+    position: absolute;
+    bottom: 55px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    opacity: 0.08;
+    transform: rotate(-5deg);
+    z-index: 1;
+  }
+
+  .pink-footer {
+    background: #1a1a1a;
+    padding: 5px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .pink-footer span {
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.45rem;
+    letter-spacing: 1px;
+    color: #6a5a30;
+    text-transform: uppercase;
+  }
+
+  .pink-footer .pink-warning {
+    color: #c04020;
+  }
+
+</style>
+</head>
+<body>
+
+<h2>Haymarket Identity Cards</h2>
+
+<!-- ═══════════════════════════════════════
+     CARD 1: LUCY PARSONS — SURVEILLANCE FILE
+     ═══════════════════════════════════════ -->
+
+<div class="hm-surveillance-card">
+
+  <div class="surv-header">
+    <div>
+      <div class="surv-dept">City of Chicago</div>
+      <div class="surv-dept" style="font-size:0.7rem; color:#e8dcc4;">Police Department</div>
+      <div class="surv-dept" style="margin-top:2px;">Bureau of Criminal Intelligence</div>
+    </div>
+    <!-- Chicago city seal (simplified SVG) -->
+    <svg class="surv-shield" viewBox="0 0 40 46" xmlns="http://www.w3.org/2000/svg">
+      <path d="M20 2 L38 10 L38 30 C38 38 20 44 20 44 C20 44 2 38 2 30 L2 10 Z" fill="none" stroke="#c8c0a0" stroke-width="2"/>
+      <path d="M20 8 L33 14 L33 29 C33 35 20 40 20 40 C20 40 7 35 7 29 L7 14 Z" fill="rgba(200,192,160,0.12)" stroke="#c8c0a0" stroke-width="1"/>
+      <text x="20" y="23" text-anchor="middle" font-size="6" fill="#c8c0a0" font-family="serif" font-style="italic">CHICAGO</text>
+      <text x="20" y="30" text-anchor="middle" font-size="5" fill="#c8c0a0" font-family="serif">I WILL</text>
+    </svg>
+  </div>
+
+  <div class="surv-classification">▲ CONFIDENTIAL — LABOR INTELLIGENCE FILE ▲</div>
+
+  <div class="surv-body">
+    <div class="surv-photo-col">
+      <div class="surv-photo-frame">
+        <!-- Female silhouette in period dress -->
+        <svg viewBox="0 0 130 160" xmlns="http://www.w3.org/2000/svg">
+          <rect width="130" height="160" fill="#a09070"/>
+          <!-- dress/skirt -->
+          <path d="M35 95 Q50 110 65 115 Q80 110 95 95 L100 155 L30 155 Z" fill="#5a4020" opacity="0.8"/>
+          <!-- bodice -->
+          <path d="M45 60 Q50 65 65 67 Q80 65 85 60 L90 95 Q80 98 65 100 Q50 98 40 95 Z" fill="#4a3018" opacity="0.9"/>
+          <!-- neck -->
+          <rect x="61" y="45" width="8" height="18" fill="#c8a870" opacity="0.9" rx="2"/>
+          <!-- head -->
+          <ellipse cx="65" cy="36" rx="17" ry="20" fill="#c8a870" opacity="0.95"/>
+          <!-- hair up -->
+          <path d="M48 26 Q50 15 65 14 Q80 15 82 26 Q78 18 65 17 Q52 18 48 26Z" fill="#3a2010" opacity="0.9"/>
+          <path d="M65 14 L65 8 Q72 10 76 16" stroke="#3a2010" stroke-width="2" fill="none" opacity="0.7"/>
+          <!-- high collar -->
+          <path d="M50 60 Q56 55 65 54 Q74 55 80 60" stroke="#8a7050" stroke-width="1.5" fill="none" opacity="0.8"/>
+          <rect x="58" y="53" width="14" height="6" rx="3" fill="#8a7050" opacity="0.7"/>
+          <!-- arms -->
+          <path d="M40 75 Q32 85 34 100" stroke="#4a3018" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.8"/>
+          <path d="M90 75 Q98 85 96 100" stroke="#4a3018" stroke-width="10" fill="none" stroke-linecap="round" opacity="0.8"/>
+          <!-- hands -->
+          <ellipse cx="34" cy="103" rx="5" ry="6" fill="#c8a870" opacity="0.8"/>
+          <ellipse cx="96" cy="103" rx="5" ry="6" fill="#c8a870" opacity="0.8"/>
+          <!-- shadow at bottom -->
+          <rect x="0" y="140" width="130" height="20" fill="#3a2a10" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="surv-photo-label">SUBJECT PHOTOGRAPH<br>ON FILE — BUREAU COPY</div>
+      <div class="surv-file-num">FILE NO. CPD-1886-0441</div>
+    </div>
+
+    <div class="surv-fields">
+      <div class="surv-field">
+        <div class="surv-field-label">Subject Name</div>
+        <div class="surv-field-value">PARSONS, Lucy E.<br><span style="font-size:0.65rem; color:#5a3a10;">(also: Lucy Diaz; Lucy González)</span></div>
+      </div>
+      <div class="surv-field">
+        <div class="surv-field-label">Occupation</div>
+        <div class="surv-field-value">Editor / Labor Agitator</div>
+      </div>
+      <div class="surv-field">
+        <div class="surv-field-label">Designation</div>
+        <div class="surv-field-value danger">KNOWN AGITATOR<br>ACTIVE SURVEILLANCE</div>
+      </div>
+      <div class="surv-field">
+        <div class="surv-field-label">Association</div>
+        <div class="surv-field-value" style="font-size:0.72rem;">Intl. Working People's Assoc.<br>Central Labor Union, Chicago</div>
+      </div>
+      <div class="surv-field">
+        <div class="surv-field-label">Known Associates</div>
+        <div class="surv-field-value" style="font-size:0.68rem;">Albert R. Parsons (husband)<br>August Spies · Samuel Fielden</div>
+      </div>
+      <div class="surv-field">
+        <div class="surv-field-label">Residence</div>
+        <div class="surv-field-value" style="font-size:0.75rem;">144 West Indiana St., Chicago</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="surv-notes">
+    <span class="surv-notes-label">Intelligence Notes — Filed by Det. Sgt. M. Bonfield</span>
+    Subject addresses meetings of working women on Near West Side. Contributes to The Alarm (English-language anarchist paper, ed. by husband). Believed to be of Mexican and Indian extraction. Considered an effective public speaker. Has organized sewing women at multiple addresses on W. Indiana and Milwaukee Ave. <strong>Surveillance to continue. All meetings to be documented.</strong>
+  </div>
+
+  <!-- Circular stamp -->
+  <svg class="surv-stamp" viewBox="0 0 110 110" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="55" cy="55" r="52" fill="none" stroke="#8b1a1a" stroke-width="3"/>
+    <circle cx="55" cy="55" r="44" fill="none" stroke="#8b1a1a" stroke-width="1.5"/>
+    <path d="M55 55 m-38 0 a38 38 0 1 1 76 0" fill="none"/>
+    <text font-size="8" font-family="Oswald, sans-serif" font-weight="700" fill="#8b1a1a" letter-spacing="3">
+      <textPath href="#topArc">ACTIVE · SURVEILLANCE · CPD</textPath>
+    </text>
+    <defs>
+      <path id="topArc" d="M17 55 a38 38 0 1 1 76 0"/>
+      <path id="botArc" d="M93 55 a38 38 0 1 1 -76 0"/>
+    </defs>
+    <text font-size="7" font-family="Oswald, sans-serif" fill="#8b1a1a" letter-spacing="2">
+      <textPath href="#botArc">BUREAU OF CRIMINAL INTELLIGENCE</textPath>
+    </text>
+    <text x="55" y="52" text-anchor="middle" font-size="9" font-weight="700" font-family="Oswald, sans-serif" fill="#8b1a1a">1886</text>
+    <text x="55" y="63" text-anchor="middle" font-size="7" font-family="Oswald, sans-serif" fill="#8b1a1a">CHICAGO</text>
+  </svg>
+
+  <div class="surv-footer">
+    <span>Issued: 12 Apr 1886</span>
+    <span>Reviewed: Weekly</span>
+    <span>Classification: RESTRICTED</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     CARD 2: KARL BRENNER — MCCORMICK LEDGER
+     ═══════════════════════════════════════ -->
+
+<div class="hm-employee-card">
+
+  <div class="emp-header">
+    <div>
+      <div class="emp-company">McCormick Harvesting Machine Co.</div>
+      <div class="emp-est" style="margin-top:3px; font-style:italic;">Blue Island Avenue · Chicago, Illinois</div>
+    </div>
+    <!-- Reaper icon -->
+    <svg width="36" height="36" viewBox="0 0 36 36" xmlns="http://www.w3.org/2000/svg" opacity="0.7">
+      <circle cx="18" cy="18" r="16" fill="none" stroke="#c8a830" stroke-width="1.5"/>
+      <path d="M8 26 Q12 16 18 12 Q24 8 30 10" stroke="#c8a830" stroke-width="2" fill="none" stroke-linecap="round"/>
+      <circle cx="8" cy="26" r="3" fill="#c8a830"/>
+      <line x1="8" y1="26" x2="5" y2="30" stroke="#c8a830" stroke-width="2"/>
+      <line x1="8" y1="26" x2="10" y2="30" stroke="#c8a830" stroke-width="2"/>
+      <text x="18" y="34" text-anchor="middle" font-size="4" fill="#c8a830" font-family="serif">EST. 1847</text>
+    </svg>
+  </div>
+
+  <div class="emp-rule"></div>
+
+  <div class="emp-title-band">
+    <div class="emp-doc-title">Employee Record & Service Ledger</div>
+    <div class="emp-year">FISCAL YEAR 1886</div>
+  </div>
+
+  <div class="emp-body">
+    <div class="emp-worker-banner">
+      <div>
+        <div class="emp-worker-number">EMPLOYEE #2847</div>
+        <div class="emp-worker-label">Foundry — Press Operations</div>
+      </div>
+      <div class="emp-status">LOCKOUT</div>
+    </div>
+
+    <div class="emp-grid">
+      <div class="emp-row">
+        <div class="emp-row-label">Full Name</div>
+        <div class="emp-row-value">BRENNER, Karl</div>
+      </div>
+      <div class="emp-row">
+        <div class="emp-row-label">Hire Date</div>
+        <div class="emp-row-value">14 Mar 1882</div>
+      </div>
+      <div class="emp-row">
+        <div class="emp-row-label">Nationality</div>
+        <div class="emp-row-value">German</div>
+      </div>
+      <div class="emp-row">
+        <div class="emp-row-label">Dept.</div>
+        <div class="emp-row-value">Foundry</div>
+      </div>
+      <div class="emp-row">
+        <div class="emp-row-label">Daily Wage</div>
+        <div class="emp-row-value red">$1.50 / day</div>
+      </div>
+      <div class="emp-row">
+        <div class="emp-row-label">Hours / Day</div>
+        <div class="emp-row-value red">10 hours</div>
+      </div>
+      <div class="emp-row">
+        <div class="emp-row-label">Days / Week</div>
+        <div class="emp-row-value">6 days</div>
+      </div>
+      <div class="emp-row">
+        <div class="emp-row-label">Annual Est.</div>
+        <div class="emp-row-value small">$450 (300 days)</div>
+      </div>
+      <div class="emp-row full">
+        <div class="emp-row-label">Supervisor</div>
+        <div class="emp-row-value">Foreman T. Haggerty — Foundry Division</div>
+      </div>
+      <div class="emp-row full">
+        <div class="emp-row-label">Status — as of 16 Feb 1886</div>
+        <div class="emp-row-value red">Employment suspended. General lockout of union workers.<br><span class="small">Replacement labor secured via Pinkerton N.D. Agency.</span></div>
+      </div>
+    </div>
+
+    <div class="emp-note">
+      <span class="emp-note-label">Superintendent's Note</span>
+      Employee is a member of Metal Workers' Union, Local 9. Name appears on subscription list of the Arbeiter-Zeitung. Has been observed attending labor meetings on Milwaukee Avenue. <strong>Do not rehire unless worker signs new contract waiving union membership.</strong>
+    </div>
+  </div>
+
+  <!-- Gear/factory stamp -->
+  <svg class="emp-stamp" viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="45" cy="45" r="40" fill="none" stroke="#2a3520" stroke-width="3"/>
+    <circle cx="45" cy="45" r="12" fill="#2a3520"/>
+    <circle cx="45" cy="45" r="5" fill="#f2ead8"/>
+    <!-- gear teeth -->
+    <g fill="#2a3520">
+      <rect x="42" y="3" width="6" height="10" rx="1"/>
+      <rect x="42" y="77" width="6" height="10" rx="1"/>
+      <rect x="3" y="42" width="10" height="6" rx="1"/>
+      <rect x="77" y="42" width="10" height="6" rx="1"/>
+      <rect x="15" y="14" width="8" height="8" rx="1" transform="rotate(45 19 18)"/>
+      <rect x="65" y="14" width="8" height="8" rx="1" transform="rotate(45 69 18)"/>
+      <rect x="15" y="64" width="8" height="8" rx="1" transform="rotate(45 19 68)"/>
+      <rect x="65" y="64" width="8" height="8" rx="1" transform="rotate(45 69 68)"/>
+    </g>
+    <text x="45" y="52" text-anchor="middle" font-size="7" font-family="Oswald, sans-serif" fill="#f2ead8" font-weight="700">McCORMICK</text>
+  </svg>
+
+  <div class="emp-footer">
+    <span>Record No. CHI-1886-2847</span>
+    <span>Filed: Payroll Office, Blue Island Ave.</span>
+    <span>Pinkerton copies: on file</span>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+     CARD 3: JAMES DOYLE — PINKERTON DOSSIER
+     ═══════════════════════════════════════ -->
+
+<div class="hm-pinkerton-card">
+
+  <div class="pink-header">
+    <div>
+      <div class="pink-agency">Pinkerton National Detective Agency</div>
+      <div style="font-family:'Courier Prime',monospace; font-size:0.5rem; color:#7a6a40; letter-spacing:1px; margin-top:2px;">CHICAGO FIELD OFFICE — 191 DEARBORN STREET</div>
+    </div>
+    <div class="pink-eye">
+      <!-- Pinkerton eye logo (simplified) -->
+      <svg width="38" height="28" viewBox="0 0 38 28" xmlns="http://www.w3.org/2000/svg" opacity="0.8">
+        <path d="M2 14 Q10 2 19 2 Q28 2 36 14 Q28 26 19 26 Q10 26 2 14Z" fill="none" stroke="#c8a830" stroke-width="1.5"/>
+        <circle cx="19" cy="14" r="6" fill="none" stroke="#c8a830" stroke-width="1.5"/>
+        <circle cx="19" cy="14" r="2.5" fill="#c8a830"/>
+        <!-- lashes -->
+        <line x1="19" y1="3" x2="19" y2="6" stroke="#c8a830" stroke-width="1"/>
+        <line x1="19" y1="22" x2="19" y2="25" stroke="#c8a830" stroke-width="1"/>
+      </svg>
+      <div class="pink-eye-text">We Never<br>Sleep</div>
+    </div>
+  </div>
+
+  <div class="pink-case-band">
+    <div>
+      <div style="font-size:0.48rem; color:#6a4a10; letter-spacing:2px; font-family:'Oswald',sans-serif; text-transform:uppercase;">Assignment No.</div>
+      <div class="pink-case-num">CHI-1886-114</div>
+    </div>
+    <div style="text-align:right;">
+      <div style="font-size:0.48rem; color:#6a4a10; letter-spacing:2px; font-family:'Oswald',sans-serif; text-transform:uppercase; margin-bottom:2px;">Opened</div>
+      <div class="pink-date">03 FEB 1886</div>
+    </div>
+  </div>
+
+  <div class="pink-body">
+    <div class="pink-classify-bar">
+      ◆ &nbsp; OPERATIVE ASSIGNMENT — INTERNAL USE ONLY &nbsp; ◆
+    </div>
+
+    <div class="pink-field">
+      <div class="pink-field-label">Operative Name</div>
+      <div class="pink-field-value code">DOYLE, James P.</div>
+    </div>
+
+    <div class="pink-field">
+      <div class="pink-field-label">Cover Alias</div>
+      <div class="pink-field-value code">James REILLY &nbsp;·&nbsp; "recently arrived laborer"</div>
+    </div>
+
+    <div class="pink-field">
+      <div class="pink-field-label">Handler</div>
+      <div class="pink-field-value">Capt. William Ward — Chicago Office</div>
+    </div>
+
+    <div class="pink-divider"></div>
+
+    <div class="pink-field">
+      <div class="pink-field-label">Target Organization</div>
+      <div class="pink-field-value code" style="color:#8b1a1a;">Intl. Working People's Association<br>Chicago Branch — West Side</div>
+    </div>
+
+    <div class="pink-field">
+      <div class="pink-field-label">Retained By</div>
+      <div class="pink-field-value">McCormick Harvesting Machine Co. · <span class="pink-redacted">████████████ ██████</span></div>
+    </div>
+
+    <div class="pink-field">
+      <div class="pink-field-label">Reporting Frequency</div>
+      <div class="pink-field-value">Weekly written report to Capt. Ward. Verbal briefing on demand.</div>
+    </div>
+
+    <div class="pink-divider"></div>
+
+    <div class="pink-instructions">
+      <span class="pink-instructions-label">Standing Instructions</span>
+      <div class="pink-instructions-text">
+        Attend all IWPA chapter meetings. Document speakers by name, description, and content of address. Identify organizational leadership and any discussion of coordinated action against client. Report any mention of weapons, bombs, or planned violence immediately. <span class="pink-redacted">████ ████████ ████ ████████████</span>. Cover identity must not be compromised. Operative assumes all risk of personal injury.
+      </div>
+    </div>
+  </div>
+
+  <!-- Eye stamp watermark -->
+  <svg class="pink-stamp" viewBox="0 0 80 60" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 30 Q20 4 40 4 Q60 4 78 30 Q60 56 40 56 Q20 56 2 30Z" fill="none" stroke="#1a1a1a" stroke-width="4"/>
+    <circle cx="40" cy="30" r="14" fill="none" stroke="#1a1a1a" stroke-width="4"/>
+    <circle cx="40" cy="30" r="6" fill="#1a1a1a"/>
+  </svg>
+
+  <div class="pink-footer">
+    <span>Pinkerton N.D. Agency — Chicago, 1886</span>
+    <span class="pink-warning">UNAUTHORIZED DISCLOSURE PROHIBITED</span>
+  </div>
+</div>
+
+</body>
+</html>

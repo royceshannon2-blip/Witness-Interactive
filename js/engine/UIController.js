@@ -1,21 +1,5 @@
 /**
  * UIController - DOM Manipulation and Screen Rendering
- * 
- * Handles all DOM manipulation and screen rendering for the game.
- * Subscribes to EventBus for state changes and renders appropriate screens.
- * Communicates only via EventBus - no direct component coupling.
- * 
- * Screen Types:
- * - landing: Title and intro
- * - timeline: Interactive historical timeline
- * - role-selection: Choose perspective
- * - scene: Narrative with choices
- * - outcome: Survival result and epilogue
- * - historical-ripple: Animated timeline
- * - knowledge-checkpoint: AP questions
- * - results-card: Shareable completion card
- * 
- * Requirements: 5.2, 5.3, 5.5, 18.4
  */
 
 import TypewriterEffect from './TypewriterEffect.js';
@@ -42,26 +26,25 @@ class UIController {
     this.narratorAudioManager = components.narratorAudioManager || null;
     this.annotationStore = components.annotationStore || null;
     this.stimuliManager = components.stimuliManager || null;
-    this.currentDocHasPauseQuestion = false;
     this.haptics = new HapticFeedback();
     this.appContainer = document.getElementById('app');
-    
+
     if (!this.appContainer) {
       console.error('UIController: #app container not found in DOM');
       return;
     }
-    
+
     this.currentScreen = 'loading';
     this.currentSceneData = null;
     this.currentMissionId = null;
     this.currentRoleId = null;
     this.completedRoles = new Set();
     this.currentAmbientSound = null;
+    this.currentDocHasPauseQuestion = false;
 
-    // Inventory: tracks all document IDs shown this session (briefing + scenes)
+    // Legacy inventory tracking (AnnotationInventory is the primary tracker now)
     this._inventoryDocIds = [];
     this._inventoryDocData = new Map();
-    this.currentDocHasPauseQuestion = false;
 
     this.subscribeToEvents();
     this.setupSoundToggle();
@@ -69,26 +52,25 @@ class UIController {
   }
 
   subscribeToEvents() {
-    this.eventBus.on('scene:transition', this.handleSceneTransition.bind(this));
-    this.eventBus.on('game:start', this.handleGameStart.bind(this));
-    this.eventBus.on('game:complete', this.handleGameComplete.bind(this));
-    this.eventBus.on('mission:selected', this.handleMissionSelected.bind(this));
-    this.eventBus.on('role:selected', this.handleRoleSelected.bind(this));
-    this.eventBus.on('briefing:back', this.handleBriefingBack.bind(this));
+    this.eventBus.on('scene:transition',    this.handleSceneTransition.bind(this));
+    this.eventBus.on('game:start',          this.handleGameStart.bind(this));
+    this.eventBus.on('game:complete',       this.handleGameComplete.bind(this));
+    this.eventBus.on('mission:selected',    this.handleMissionSelected.bind(this));
+    this.eventBus.on('role:selected',       this.handleRoleSelected.bind(this));
+    this.eventBus.on('briefing:back',       this.handleBriefingBack.bind(this));
     this.eventBus.on('checkpoint:complete', this.handleCheckpointComplete.bind(this));
-    this.eventBus.on('timer:started', this.handleTimerStarted.bind(this));
-    this.eventBus.on('timer:update', this.handleTimerUpdate.bind(this));
-    this.eventBus.on('timer:expired', this.handleTimerExpired.bind(this));
-    this.eventBus.on('timer:cancelled', this.handleTimerCancelled.bind(this));
-    this.eventBus.on('sound:muted', this.handleSoundMuted.bind(this));
-    this.eventBus.on('narrator:muted', this.handleNarratorMuted.bind(this));
- 
-    this.eventBus.on('stimuli:shown',      this.handleStimuliShown.bind(this));
-    this.eventBus.on('stimuli:dismissed',  this.handleStimuliDismissed.bind(this));
-    this.eventBus.on('stimuli:view-ready', this.handleStimuliViewReady.bind(this));
+    this.eventBus.on('timer:started',       this.handleTimerStarted.bind(this));
+    this.eventBus.on('timer:update',        this.handleTimerUpdate.bind(this));
+    this.eventBus.on('timer:expired',       this.handleTimerExpired.bind(this));
+    this.eventBus.on('timer:cancelled',     this.handleTimerCancelled.bind(this));
+    this.eventBus.on('sound:muted',         this.handleSoundMuted.bind(this));
+    this.eventBus.on('narrator:muted',      this.handleNarratorMuted.bind(this));
+    this.eventBus.on('stimuli:shown',       this.handleStimuliShown.bind(this));
+    this.eventBus.on('stimuli:dismissed',   this.handleStimuliDismissed.bind(this));
+    this.eventBus.on('stimuli:view-ready',  this.handleStimuliViewReady.bind(this));
     this.eventBus.on('scene:error', () => {
-      console.warn('UIController: scene:error received — re-rendering current scene');
-      if (this.currentSceneData && this.currentSceneData.scene) {
+      console.warn('UIController: scene:error — re-rendering current scene');
+      if (this.currentSceneData?.scene) {
         this.renderScene(
           this.currentSceneData.scene,
           this.currentSceneData.sceneIndex,
@@ -98,110 +80,66 @@ class UIController {
     });
   }
 
+  // ── Audio toggles ───────────────────────────────────────────────────────────
+
   setupSoundToggle() {
-    const soundToggleButton = document.getElementById('sound-toggle');
-    
-    if (!soundToggleButton) {
-      console.warn('UIController.setupSoundToggle: #sound-toggle button not found in DOM');
-      return;
-    }
-    
+    const btn = document.getElementById('sound-toggle');
+    if (!btn) { console.warn('UIController: #sound-toggle not found'); return; }
     if (this.ambientSoundManager) {
-      soundToggleButton.disabled = false;
-      soundToggleButton.setAttribute('aria-label', this.content.soundToggle?.toggleAriaLabel || 'Toggle sound on/off');
-      soundToggleButton.addEventListener('click', () => {
-        this.eventBus.emit('sound:toggle');
-      });
+      btn.disabled = false;
+      btn.addEventListener('click', () => this.eventBus.emit('sound:toggle'));
       this.updateSoundToggleIcon(this.ambientSoundManager.isMuted());
-    } else {
-      console.warn('UIController.setupSoundToggle: AmbientSoundManager not available, button remains disabled');
     }
   }
 
   setupNarratorToggle() {
-    if (!this.narratorAudioManager) {
-      return;
+    if (!this.narratorAudioManager) return;
+    let btn = document.getElementById('narrator-toggle');
+    if (!btn) {
+      btn = document.createElement('button');
+      btn.id = 'narrator-toggle';
+      btn.className = 'narrator-toggle';
+      btn.innerHTML = '<span class="narrator-icon">🔊</span>';
+      const soundBtn = document.getElementById('sound-toggle');
+      if (soundBtn?.parentNode) soundBtn.parentNode.insertBefore(btn, soundBtn.nextSibling);
+      else document.body.appendChild(btn);
     }
-    
-    let narratorToggleButton = document.getElementById('narrator-toggle');
-    
-    if (!narratorToggleButton) {
-      narratorToggleButton = document.createElement('button');
-      narratorToggleButton.id = 'narrator-toggle';
-      narratorToggleButton.className = 'narrator-toggle';
-      narratorToggleButton.setAttribute('aria-label', this.content.narratorToggle?.toggleAriaLabel || 'Toggle narrator audio on/off');
-      
-      const narratorIcon = document.createElement('span');
-      narratorIcon.className = 'narrator-icon';
-      narratorIcon.textContent = '🔊';
-      narratorToggleButton.appendChild(narratorIcon);
-      
-      const soundToggleButton = document.getElementById('sound-toggle');
-      if (soundToggleButton && soundToggleButton.parentNode) {
-        soundToggleButton.parentNode.insertBefore(narratorToggleButton, soundToggleButton.nextSibling);
-      } else {
-        document.body.appendChild(narratorToggleButton);
-      }
-    }
-    
-    narratorToggleButton.addEventListener('click', () => {
-      this.haptics.light();
-      this.eventBus.emit('narrator:toggle');
-    });
-    
+    btn.setAttribute('aria-label', 'Toggle narrator audio on/off');
+    btn.addEventListener('click', () => { this.haptics.light(); this.eventBus.emit('narrator:toggle'); });
     this.updateNarratorToggleIcon(this.narratorAudioManager.isMuted());
   }
 
   handleSoundMuted(data) {
-    if (data && typeof data.muted === 'boolean') {
-      this.updateSoundToggleIcon(data.muted);
-    }
+    if (data && typeof data.muted === 'boolean') this.updateSoundToggleIcon(data.muted);
   }
 
   handleNarratorMuted(data) {
-    if (data && typeof data.muted === 'boolean') {
-      this.updateNarratorToggleIcon(data.muted);
-    }
+    if (data && typeof data.muted === 'boolean') this.updateNarratorToggleIcon(data.muted);
   }
 
   updateSoundToggleIcon(muted) {
-    const soundToggleButton = document.getElementById('sound-toggle');
-    if (!soundToggleButton) return;
-    
-    const soundIcon = soundToggleButton.querySelector('.sound-icon');
-    if (!soundIcon) return;
-    
-    if (muted) {
-      soundIcon.textContent = '🔇';
-      soundToggleButton.setAttribute('aria-label', this.content.soundToggle?.unmuteLabel || 'Sound is muted. Click to unmute.');
-    } else {
-      soundIcon.textContent = '🔊';
-      soundToggleButton.setAttribute('aria-label', this.content.soundToggle?.muteLabel || 'Sound is on. Click to mute.');
-    }
+    const btn = document.getElementById('sound-toggle');
+    const icon = btn?.querySelector('.sound-icon');
+    if (!icon) return;
+    icon.textContent = muted ? '🔇' : '🔊';
+    btn.setAttribute('aria-label', muted ? 'Sound is muted. Click to unmute.' : 'Sound is on. Click to mute.');
   }
 
   updateNarratorToggleIcon(muted) {
-    const narratorToggleButton = document.getElementById('narrator-toggle');
-    if (!narratorToggleButton) return;
-    
-    const narratorIcon = narratorToggleButton.querySelector('.narrator-icon');
-    if (!narratorIcon) return;
-    
-    if (muted) {
-      narratorIcon.textContent = '🔇';
-      narratorToggleButton.setAttribute('aria-label', this.content.narratorToggle?.unmuteLabel || 'Narrator is muted. Click to unmute.');
-      narratorToggleButton.classList.add('muted');
-    } else {
-      narratorIcon.textContent = '🔊';
-      narratorToggleButton.setAttribute('aria-label', this.content.narratorToggle?.muteLabel || 'Narrator is on. Click to mute.');
-      narratorToggleButton.classList.remove('muted');
-    }
+    const btn = document.getElementById('narrator-toggle');
+    const icon = btn?.querySelector('.narrator-icon');
+    if (!icon) return;
+    icon.textContent = muted ? '🔇' : '🔊';
+    btn.setAttribute('aria-label', muted ? 'Narrator is muted. Click to unmute.' : 'Narrator is on. Click to mute.');
+    btn.classList.toggle('muted', muted);
   }
 
-  handleGameStart(data) {
+  // ── Game flow handlers ──────────────────────────────────────────────────────
+
+  handleGameStart() {
     this.showScreen('landing');
     if (this.ambientSoundManager) {
-      const track = this.content.landing.ambientTrack;
+      const track = this.content.landing?.ambientTrack;
       if (track) {
         this.ambientSoundManager.fadeIn(track, 1500);
         this.currentAmbientSound = track;
@@ -210,47 +148,21 @@ class UIController {
   }
 
   handleSceneTransition(data) {
-    if (!data || !data.scene) {
-      console.error('UIController.handleSceneTransition: Invalid scene data');
-      return;
-    }
+    if (!data?.scene) { console.error('UIController.handleSceneTransition: Invalid scene data'); return; }
     this.currentSceneData = data;
     this.renderScene(data.scene, data.sceneIndex, data.totalScenes);
   }
 
   handleGameComplete(data) {
-    // Handle both data.roleId and data.role for compatibility
     const roleId = data?.roleId || data?.role;
-    if (roleId) {
-      this.completedRoles.add(roleId);
-      this.currentRoleId = roleId;
-    }
-    if (data && data.missionId) {
-      this.currentMissionId = data.missionId;
-    }
-    
-    // Store early death context if present
-    if (data && data.diedEarly) {
-      this.earlyDeathContext = {
-        diedEarly: true,
-        deathReason: data.deathReason,
-        deathChance: data.deathChance
-      };
-    } else {
-      this.earlyDeathContext = null;
-    }
-    
-    // Update endings counter immediately
+    if (roleId) { this.completedRoles.add(roleId); this.currentRoleId = roleId; }
+    if (data?.missionId) this.currentMissionId = data.missionId;
+
+    this.earlyDeathContext = data?.diedEarly
+      ? { diedEarly: true, deathReason: data.deathReason, deathChance: data.deathChance }
+      : null;
+
     this.updateEndingsCounter();
-    
-    // Check if all roles completed
-    if (this.currentMissionId) {
-      const mission = this.missionRegistry.getMission(this.currentMissionId);
-      if (mission && this.completedRoles.size === mission.roles.length) {
-        console.log('[UIController] All roles completed for mission:', this.currentMissionId);
-      }
-    }
-    
     this.currentOutcome = this.calculateCurrentOutcome();
     this.showScreen('outcome', data);
   }
@@ -258,166 +170,122 @@ class UIController {
   calculateCurrentOutcome() {
     if (!this.currentMissionId || !this.currentRoleId) return null;
     const mission = this.missionRegistry.getMission(this.currentMissionId);
-    if (!mission) return null;
-    const role = mission.roles.find(r => r.id === this.currentRoleId);
-    if (!role || !role.outcomes) return null;
-    
-    // If player died early (mid-story), use survived=false
-    let survivalResult;
-    if (this.earlyDeathContext && this.earlyDeathContext.diedEarly) {
-      survivalResult = {
-        survived: false,
-        deathChance: this.earlyDeathContext.deathChance,
-        modifiers: { 'early_death': this.earlyDeathContext.deathReason }
-      };
-    } else {
-      survivalResult = this.consequenceSystem.determineSurvival(this.currentRoleId);
-    }
-    
+    const role = mission?.roles.find(r => r.id === this.currentRoleId);
+    if (!role?.outcomes) return null;
+
+    const survivalResult = this.earlyDeathContext?.diedEarly
+      ? { survived: false, deathChance: this.earlyDeathContext.deathChance, modifiers: {} }
+      : this.consequenceSystem.determineSurvival(this.currentRoleId);
+
     const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes, survivalResult.survived);
-    if (!outcomeId) return null;
-    return role.outcomes.find(o => o.id === outcomeId);
+    return outcomeId ? role.outcomes.find(o => o.id === outcomeId) : null;
   }
 
   handleMissionSelected(data) {
-    if (data && data.missionId) {
-      this.currentMissionId = data.missionId;
-      this._setMissionTheme(data.missionId);
-    }
+    if (data?.missionId) { this.currentMissionId = data.missionId; this._setMissionTheme(data.missionId); }
     this.showScreen('role-selection', data);
   }
 
   handleRoleSelected(data) {
-  if (data && data.roleId) {
-    this.currentRoleId = data.roleId;
+    if (data?.roleId) this.currentRoleId = data.roleId;
+    this.showScreen('scene');
   }
-  this.showScreen('scene');
-}
 
-  handleStimuliViewReady(data) {
-  // Called by StimuliManager after typewriter:complete, before any document shows.
-  // We inject a "View Document" button into the scene choices area.
-  // When the player clicks it, we call stimuliManager.playerRequestedView().
-  if (!data?.documentId) return;
- 
-  const choicesContainer = document.getElementById('scene-choices');
-  if (!choicesContainer) return;
- 
-  // Remove any existing view-doc button (e.g. from previous doc in queue)
-  document.getElementById('stimuli-view-doc-btn')?.remove();
- 
-  const btn = document.createElement('button');
-  btn.id = 'stimuli-view-doc-btn';
-  btn.className = 'stimuli-view-doc-btn mt-sm';
-  btn.setAttribute('aria-label', 'View primary source document');
- 
-  const count = data.count || 1;
-  btn.textContent = count > 1
-    ? `📄 View Primary Sources (${count})`
-    : '📄 View Primary Source';
- 
-  btn.addEventListener('click', () => {
-    btn.remove();
-    if (this.stimuliManager) {
-      this.stimuliManager.playerRequestedView();
-    }
-  });
- 
-  // Insert BEFORE choice buttons so it appears above them
-  choicesContainer.insertBefore(btn, choicesContainer.firstChild);
-}
   handleBriefingBack(data) {
-    if (data && data.missionId) {
-      this.eventBus.emit('mission:selected', { missionId: data.missionId });
-    } else if (this.currentMissionId) {
-      this.eventBus.emit('mission:selected', { missionId: this.currentMissionId });
-    } else {
-      this.showScreen('timeline');
-    }
+    const missionId = data?.missionId || this.currentMissionId;
+    if (missionId) this.eventBus.emit('mission:selected', { missionId });
+    else this.showScreen('timeline');
   }
 
   handleCheckpointComplete(data) {
     this.showScreen('results-card', data);
   }
 
+  // ── Stimuli handlers ────────────────────────────────────────────────────────
+
+  handleStimuliShown(data) {
+    if (!data?.documentId || !data?.documentData) return;
+    // AnnotationInventory tracks docs itself via this same event.
+    // UIController only renders the overlay DOM.
+    this._renderStimulusOverlay(data.documentData);
+  }
+
+  handleStimuliDismissed(data) {
+    // Remove the overlay from DOM after archive animation completes
+    document.getElementById('stimuli-overlay')?.remove();
+  }
+
+  handleStimuliViewReady(data) {
+    // StimuliManager signals a document is ready to view.
+    // Insert a "View Document" button above choice buttons.
+    if (!data?.documentId) return;
+    const choicesContainer = document.getElementById('scene-choices');
+    if (!choicesContainer) return;
+    document.getElementById('stimuli-view-doc-btn')?.remove();
+
+    const btn = document.createElement('button');
+    btn.id = 'stimuli-view-doc-btn';
+    btn.className = 'stimuli-view-doc-btn mt-sm';
+    btn.setAttribute('aria-label', 'View primary source document');
+    const count = data.count || 1;
+    btn.textContent = count > 1 ? `📄 View Primary Sources (${count})` : '📄 View Primary Source';
+    btn.addEventListener('click', () => {
+      btn.remove();
+      this.stimuliManager?.playerRequestedView();
+    });
+    choicesContainer.insertBefore(btn, choicesContainer.firstChild);
+  }
+
+  // ── Screen management ───────────────────────────────────────────────────────
+
   showScreen(screenName, data = {}) {
-  const validScreens = [
-    'loading', 'landing', 'timeline', 'role-selection', 'scene',
-    'outcome', 'historical-ripple', 'knowledge-checkpoint', 'results-card'
-  ];
-
-  if (!validScreens.includes(screenName)) {
-    console.error(`UIController.showScreen: Invalid screen name "${screenName}"`);
-    return;
-  }
-
-  if (screenName === 'timeline' || screenName === 'landing') {
-    this._setMissionTheme(null);
-  }
-
-  const existingScreens = this.appContainer.querySelectorAll('.screen');
-  existingScreens.forEach(screen => screen.classList.remove('active'));
-
-  // Destroy and recreate these screens every visit so content is always fresh
-  const alwaysRecreate = ['role-selection', 'outcome', 'historical-ripple', 'knowledge-checkpoint', 'results-card'];
-  if (alwaysRecreate.includes(screenName)) {
-    const stale = document.getElementById(`${screenName}-screen`);
-    if (stale) stale.remove();
-  }
-
-  let screenElement = document.getElementById(`${screenName}-screen`);
-
-  if (screenElement) {
-    screenElement.classList.add('active');
-  } else {
-    screenElement = this.createScreen(screenName, data);
-    if (screenElement) {
-      this.appContainer.appendChild(screenElement);
-      screenElement.classList.add('active');
+    const validScreens = [
+      'loading', 'landing', 'timeline', 'role-selection', 'scene',
+      'outcome', 'historical-ripple', 'knowledge-checkpoint', 'results-card'
+    ];
+    if (!validScreens.includes(screenName)) {
+      console.error(`UIController.showScreen: Invalid screen name "${screenName}"`);
+      return;
     }
-  }
 
-  this.currentScreen = screenName;
-}
+    if (screenName === 'timeline' || screenName === 'landing') this._setMissionTheme(null);
+
+    this.appContainer.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+
+    const alwaysRecreate = ['role-selection', 'outcome', 'historical-ripple', 'knowledge-checkpoint', 'results-card'];
+    if (alwaysRecreate.includes(screenName)) document.getElementById(`${screenName}-screen`)?.remove();
+
+    let screenElement = document.getElementById(`${screenName}-screen`);
+    if (!screenElement) {
+      screenElement = this.createScreen(screenName, data);
+      if (screenElement) this.appContainer.appendChild(screenElement);
+    }
+    if (screenElement) screenElement.classList.add('active');
+    this.currentScreen = screenName;
+  }
 
   createScreen(screenName, data) {
     const screen = document.createElement('div');
     screen.id = `${screenName}-screen`;
     screen.className = 'screen';
-    
+
     switch (screenName) {
-      case 'landing':
-        screen.innerHTML = this.renderLandingScreen();
-        break;
-      case 'timeline':
-        screen.innerHTML = this.renderTimelineScreen();
-        break;
-      case 'role-selection':
-        screen.innerHTML = this.renderRoleSelectionScreen(data);
-        break;
-      case 'scene':
-        screen.innerHTML = this.renderSceneScreen();
-        break;
-      case 'outcome':
-        screen.innerHTML = this.renderOutcomeScreen(data);
-        break;
-      case 'historical-ripple':
-        screen.innerHTML = this.renderHistoricalRippleScreen(data);
-        break;
-      case 'knowledge-checkpoint':
-        screen.innerHTML = this.renderKnowledgeCheckpointScreen(data);
-        break;
-      case 'results-card':
-        screen.innerHTML = this.renderResultsCardScreen(data);
-        break;
-      default:
-        console.error(`UIController.createScreen: Unknown screen type "${screenName}"`);
-        return null;
+      case 'landing':              screen.innerHTML = this.renderLandingScreen(); break;
+      case 'timeline':             screen.innerHTML = this.renderTimelineScreen(); break;
+      case 'role-selection':       screen.innerHTML = this.renderRoleSelectionScreen(data); break;
+      case 'scene':                screen.innerHTML = this.renderSceneScreen(); break;
+      case 'outcome':              screen.innerHTML = this.renderOutcomeScreen(data); break;
+      case 'historical-ripple':    screen.innerHTML = this.renderHistoricalRippleScreen(data); break;
+      case 'knowledge-checkpoint': screen.innerHTML = this.renderKnowledgeCheckpointScreen(data); break;
+      case 'results-card':         screen.innerHTML = this.renderResultsCardScreen(data); break;
+      default: console.error(`UIController.createScreen: Unknown screen "${screenName}"`); return null;
     }
-    
+
     this.attachEventListeners(screen, screenName);
     return screen;
   }
+
+  // ── Screen HTML renderers ───────────────────────────────────────────────────
 
   renderLandingScreen() {
     const c = this.content.landing;
@@ -438,8 +306,7 @@ class UIController {
       <article class="timeline-content" role="article" aria-labelledby="timeline-title">
         <h2 id="timeline-title" class="text-center text-gold">${c.title}</h2>
         <p class="text-center">${c.subtitle}</p>
-        <nav id="timeline-container" class="mt-lg" role="navigation" aria-label="Historical mission timeline">
-        </nav>
+        <nav id="timeline-container" class="mt-lg" role="navigation" aria-label="Historical mission timeline"></nav>
       </article>
     `;
   }
@@ -448,20 +315,18 @@ class UIController {
     const c = this.content.roleSelection;
     const mission = this.missionRegistry.getMission(this.currentMissionId);
     const subtitle = mission?.roleSelectionSubtitle || c.subtitle;
-    
     return `
       <article class="role-selection-content" role="article" aria-labelledby="role-selection-title">
-        <button id="back-to-timeline" class="back-button" aria-label="${c.backButtonAriaLabel}">${c.backButton}</button>
+        <button id="back-to-timeline" class="back-button" aria-label="Back to timeline">← Back</button>
         <h2 id="role-selection-title" class="text-center text-gold">${c.title}</h2>
         <p class="text-center">${subtitle}</p>
         <section id="all-roles-completed-message" class="panel panel-parchment mt-lg hidden" role="region" aria-live="polite">
           <h3 class="text-gold text-center">${c.allRolesCompletedTitle}</h3>
           <p class="text-center">${c.allRolesCompletedMessage}</p>
         </section>
-        <section id="role-cards-container" class="mt-lg" role="region" aria-label="Available roles">
-        </section>
+        <section id="role-cards-container" class="mt-lg" role="region" aria-label="Available roles"></section>
         <div class="endings-counter text-center mt-md" role="status" aria-live="polite">
-          <p class="text-secondary">${c.endingsLabel} <span id="endings-count" aria-label="Roles completed">0/3</span></p>
+          <p class="text-secondary">${c.endingsLabel} <span id="endings-count">0/3</span></p>
         </div>
       </article>
     `;
@@ -470,8 +335,7 @@ class UIController {
   renderSceneScreen() {
     return `
       <article class="scene-content" role="article" aria-labelledby="scene-narrative">
-        <section id="scene-narrative" class="panel panel-parchment" role="region" aria-label="Scene narrative">
-        </section>
+        <section id="scene-narrative" class="panel panel-parchment" role="region" aria-label="Scene narrative"></section>
         <div id="timer-display" class="timer-display hidden" role="timer" aria-live="assertive" aria-atomic="true">
           <div class="timer-circle">
             <svg class="timer-progress" viewBox="0 0 100 100" aria-hidden="true">
@@ -480,54 +344,49 @@ class UIController {
             </svg>
             <div class="timer-text">
               <span id="timer-seconds" class="timer-seconds">10</span>
-              <span class="timer-label">${this.content.timer?.secondsLabel || 'seconds'}</span>
+              <span class="timer-label">seconds</span>
             </div>
           </div>
         </div>
-        <nav id="scene-choices" class="mt-md" role="navigation" aria-label="Available choices">
-        </nav>
-        <div id="scene-progress" class="text-center mt-md" role="status" aria-live="polite">
-        </div>
+        <nav id="scene-choices" class="mt-md" role="navigation" aria-label="Available choices"></nav>
+        <div id="scene-progress" class="text-center mt-md" role="status" aria-live="polite"></div>
       </article>
     `;
   }
 
-  renderOutcomeScreen(data) {
+  renderOutcomeScreen() {
     const c = this.content.outcome;
     return `
       <article class="outcome-content text-center" role="article" aria-labelledby="outcome-title">
         <h2 id="outcome-title" class="text-gold">${c.title}</h2>
-        <section id="outcome-result" class="panel panel-parchment mt-lg" role="region" aria-label="Your outcome">
-        </section>
-        <button id="continue-to-ripple" class="mt-lg" aria-label="Continue to historical ripple timeline">${c.buttonText}</button>
+        <section id="outcome-result" class="panel panel-parchment mt-lg" role="region" aria-label="Your outcome"></section>
+        <button id="continue-to-ripple" class="mt-lg">${c.buttonText}</button>
       </article>
     `;
   }
 
-  renderHistoricalRippleScreen(data) {
+  renderHistoricalRippleScreen() {
     const c = this.content.historicalRipple;
-    const mission = this.missionRegistry ? this.missionRegistry.getMission(this.currentMissionId) : null;
+    const mission = this.missionRegistry?.getMission(this.currentMissionId);
     const subtitle = mission?.rippleSubtitle || c.subtitle;
     return `
       <article class="ripple-content" role="article" aria-labelledby="ripple-title">
         <h2 id="ripple-title" class="text-center text-gold">${c.title}</h2>
         <p class="text-center">${subtitle}</p>
-        <section id="ripple-timeline" class="mt-lg" role="region" aria-label="Historical consequences timeline">
-        </section>
-        <button id="continue-to-checkpoint" class="mt-lg" aria-label="Continue to knowledge checkpoint">${c.buttonText}</button>
+        <section id="ripple-timeline" class="mt-lg" role="region" aria-label="Historical consequences timeline"></section>
+        <button id="continue-to-checkpoint" class="mt-lg">${c.buttonText}</button>
       </article>
     `;
   }
 
-  renderKnowledgeCheckpointScreen(data) {
+  renderKnowledgeCheckpointScreen() {
     const c = this.content.knowledgeCheckpoint;
     return `
       <article class="checkpoint-content" role="article" aria-labelledby="checkpoint-title">
         <h2 id="checkpoint-title" class="text-center text-gold">${c.title}</h2>
         <p class="text-center">${c.subtitle}</p>
-        <section id="checkpoint-questions" class="mt-lg" role="region" aria-label="Knowledge assessment questions">
-        </section>
-        <button id="view-results" class="mt-lg hidden" aria-label="View your results">${c.buttonText}</button>
+        <section id="checkpoint-questions" class="mt-lg" role="region" aria-label="Knowledge assessment questions"></section>
+        <button id="view-results" class="mt-lg hidden">${c.buttonText}</button>
       </article>
     `;
   }
@@ -535,38 +394,31 @@ class UIController {
   renderResultsCardScreen(data) {
     const c = this.content.resultsCard;
     const cardData = { ...data, outcome: this.currentOutcome };
-    const cardHTML = this.resultsCard ? this.resultsCard.generateCard(cardData) : '<p>Error: Results card generator not available.</p>';
+    const cardHTML = this.resultsCard
+      ? this.resultsCard.generateCard(cardData)
+      : '<p>Error: Results card generator not available.</p>';
 
-    // Build annotations section if any highlights exist
     let annotationsHTML = '';
-    if (this.annotationStore && this.annotationStore.getHighlightCount() > 0) {
-      const docs = this.annotationStore.getAllDocuments();
-      const docsHTML = docs.map(doc => {
+    if (this.annotationStore?.getHighlightCount() > 0) {
+      const docsHTML = this.annotationStore.getAllDocuments().map(doc => {
         const highlightsHTML = doc.highlights.map(h => {
-          const apTag = h.apConcept ? `<span class="ap-theme-badge">${this._escapeHTML(h.apConcept)}</span>` : '';
-          const noteHTML = h.note ? `<p class="annotation-note">${this._escapeHTML(h.note)}</p>` : '';
-          return `
-            <div class="results-annotation-item">
-              <span class="annotation-dot annotation-dot--${h.color}" aria-label="${h.colorLabel} highlight"></span>
-              <div>
-                <p class="annotation-quote">&ldquo;${this._escapeHTML(h.text)}&rdquo;</p>
-                ${noteHTML}
-                ${apTag}
-              </div>
-            </div>`;
-        }).join('');
-        return `
-          <div class="results-annotation-doc">
-            <h4>${this._escapeHTML(doc.documentTitle)}</h4>
-            <p class="text-secondary">${this._escapeHTML(doc.documentSource)}</p>
-            ${highlightsHTML}
+          const apTag   = h.apConcept ? `<span class="ap-theme-badge">${this._escapeHTML(h.apConcept)}</span>` : '';
+          const noteHTML = h.note     ? `<p class="annotation-note">${this._escapeHTML(h.note)}</p>` : '';
+          return `<div class="results-annotation-item">
+            <span class="annotation-dot annotation-dot--${h.color}" aria-label="${h.colorLabel} highlight"></span>
+            <div><p class="annotation-quote">&ldquo;${this._escapeHTML(h.text)}&rdquo;</p>${noteHTML}${apTag}</div>
           </div>`;
+        }).join('');
+        return `<div class="results-annotation-doc">
+          <h4>${this._escapeHTML(doc.documentTitle)}</h4>
+          <p class="text-secondary">${this._escapeHTML(doc.documentSource)}</p>
+          ${highlightsHTML}
+        </div>`;
       }).join('');
-
       annotationsHTML = `
         <section class="results-annotations mt-lg" role="region" aria-label="Your source annotations">
-          <h3 class="text-gold">${c.annotationsHeading}</h3>
-          <p class="text-secondary">${c.annotationsSubtitle}</p>
+          <h3 class="text-gold">Your Source Annotations</h3>
+          <p class="text-secondary">These are the primary sources you annotated during the mission.</p>
           ${docsHTML}
         </section>`;
     }
@@ -578,556 +430,328 @@ class UIController {
           ${cardHTML}
         </section>
         ${annotationsHTML}
-        <button id="copy-results" class="mt-md" aria-label="Copy results to clipboard">${c.copyButtonText}</button>
-        <button id="play-again" class="mt-md" aria-label="Play again with a different role">${c.playAgainButtonText}</button>
+        <button id="copy-results" class="mt-md">${c.copyButtonText}</button>
+        <button id="play-again" class="mt-md">${c.playAgainButtonText}</button>
       </article>
     `;
   }
 
-  // Escape HTML for safe insertion into the DOM
   _escapeHTML(str) {
     if (!str) return '';
     return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
   }
 
+  // ── Scene rendering ─────────────────────────────────────────────────────────
+
   renderScene(scene, sceneIndex, totalScenes) {
-    if (!scene || !scene.narrative || !scene.choices) {
+    if (!scene?.narrative || !scene?.choices) {
       console.error('UIController.renderScene: Invalid scene object');
       return;
     }
-    
-    if (this.sceneTransition) {
-      this.sceneTransition.transition(null, scene, 'fade', 500);
-    }
-    
-    if (this.currentScreen !== 'scene') {
-      this.showScreen('scene');
-    }
-    
+
+    this.sceneTransition?.transition(null, scene, 'fade', 500);
+    if (this.currentScreen !== 'scene') this.showScreen('scene');
+
     const narrativeContainer = document.getElementById('scene-narrative');
-    const choicesContainer = document.getElementById('scene-choices');
-    const progressContainer = document.getElementById('scene-progress');
-    
+    const choicesContainer   = document.getElementById('scene-choices');
+    const progressContainer  = document.getElementById('scene-progress');
     if (!narrativeContainer || !choicesContainer || !progressContainer) {
-      console.error('UIController.renderScene: Scene containers not found in DOM');
+      console.error('UIController.renderScene: Scene containers not found');
       return;
     }
-    
+
     narrativeContainer.innerHTML = `<p>${scene.narrative}</p>`;
-    
     choicesContainer.innerHTML = '';
+
     scene.choices.forEach((choice, index) => {
-      const choiceButton = document.createElement('button');
-      choiceButton.className = 'choice-button mt-sm';
-      choiceButton.textContent = choice.text;
-      choiceButton.dataset.choiceId = choice.id;
-      choiceButton.dataset.nextScene = choice.nextScene;
-      choiceButton.dataset.consequences = JSON.stringify(choice.consequences || {});
-      choiceButton.setAttribute('aria-label', `Choice ${index + 1}: ${choice.text}`);
-      choiceButton.addEventListener('click', () => {
-        this.haptics.selection();
-        this.handleChoiceClick(choice);
-      });
-      choicesContainer.appendChild(choiceButton);
+      const btn = document.createElement('button');
+      btn.className = 'choice-button mt-sm';
+      btn.textContent = choice.text;
+      btn.dataset.choiceId = choice.id;
+      btn.dataset.nextScene = choice.nextScene;
+      btn.dataset.consequences = JSON.stringify(choice.consequences || {});
+      btn.setAttribute('aria-label', `Choice ${index + 1}: ${choice.text}`);
+      btn.addEventListener('click', () => { this.haptics.selection(); this.handleChoiceClick(choice); });
+      choicesContainer.appendChild(btn);
     });
 
-    // Render prediction question above choices if present (Haymarket Phase 2)
     if (scene.predictionQuestion) {
       this._renderPredictionQuestion(choicesContainer, scene.predictionQuestion, scene.id);
     }
-    
+
     this.disableChoices();
-    
-    if (this.typewriterEffect) {
-      const narrativeParagraph = narrativeContainer.querySelector('p');
-      if (narrativeParagraph) {
-        this.typewriterEffect.revealText(
-          narrativeParagraph,
-          scene.narrative,
-          30,
-          () => {
-            // Apply glossary highlighting after typewriter completes
-            glossaryTooltip.apply(narrativeContainer);
-            this.enableChoices();
-            this.eventBus.emit('typewriter:complete', { sceneId: scene.id });
-            // Start timer AFTER choices are enabled
-            if (this.currentSceneData?.timedChoice?.enabled && this.timedChoiceSystem) {
-              this.startTimedChoice(this.currentSceneData.timedChoice);
-            }
-          }
-        );
-      } else {
-        glossaryTooltip.apply(narrativeContainer);
-        this.enableChoices();
-        this.eventBus.emit('typewriter:complete', { sceneId: scene.id });
-        // Start timer AFTER choices are enabled
-        if (this.currentSceneData?.timedChoice?.enabled && this.timedChoiceSystem) {
-          this.startTimedChoice(this.currentSceneData.timedChoice);
-        }
-      }
-    } else {
+
+    const onTypewriterComplete = () => {
       glossaryTooltip.apply(narrativeContainer);
       this.enableChoices();
       this.eventBus.emit('typewriter:complete', { sceneId: scene.id });
-      // Start timer AFTER choices are enabled
-      if (this.currentSceneData?.timedChoice?.enabled && this.timedChoiceSystem) {
-        this.startTimedChoice(this.currentSceneData.timedChoice);
+      if (this.currentSceneData?.scene?.timedChoice?.enabled && this.timedChoiceSystem) {
+        this.startTimedChoice(this.currentSceneData.scene.timedChoice);
       }
+    };
+
+    if (this.typewriterEffect) {
+      const p = narrativeContainer.querySelector('p');
+      if (p) {
+        this.typewriterEffect.revealText(p, scene.narrative, 30, onTypewriterComplete);
+      } else {
+        onTypewriterComplete();
+      }
+    } else {
+      onTypewriterComplete();
     }
-    
+
     this.updateProgress(sceneIndex + 1, totalScenes);
-    
+
     if (scene.ambientTrack && this.ambientSoundManager) {
-      const currentAmbient = this.currentAmbientSound || null;
-      const newAmbient = scene.ambientTrack;
-      this.ambientSoundManager.crossfade(currentAmbient, newAmbient, 1500);
-      this.currentAmbientSound = newAmbient;
+      this.ambientSoundManager.crossfade(this.currentAmbientSound || null, scene.ambientTrack, 1500);
+      this.currentAmbientSound = scene.ambientTrack;
     }
   }
 
   enableChoices() {
-    const choiceButtons = document.querySelectorAll('.choice-button');
-    choiceButtons.forEach(button => {
-      button.disabled = false;
-      button.style.pointerEvents = 'auto';
-      button.style.opacity = '1';
+    document.querySelectorAll('.choice-button').forEach(btn => {
+      btn.disabled = false;
+      btn.style.pointerEvents = 'auto';
+      btn.style.opacity = '1';
     });
   }
 
   disableChoices() {
-    const choiceButtons = document.querySelectorAll('.choice-button');
-    choiceButtons.forEach(button => {
-      button.disabled = true;
-      button.style.pointerEvents = 'none';
-      button.style.opacity = '0.5';
+    document.querySelectorAll('.choice-button').forEach(btn => {
+      btn.disabled = true;
+      btn.style.pointerEvents = 'none';
+      btn.style.opacity = '0.5';
     });
   }
 
   startTimedChoice(timedChoiceConfig) {
-    if (!this.timedChoiceSystem) {
-      console.warn('UIController.startTimedChoice: TimedChoiceSystem not available');
-      return;
-    }
+    if (!this.timedChoiceSystem) { console.warn('UIController: TimedChoiceSystem not available'); return; }
     if (!timedChoiceConfig.duration || !timedChoiceConfig.defaultChoice) {
-      console.error('UIController.startTimedChoice: Invalid timedChoice configuration');
-      return;
+      console.error('UIController: Invalid timedChoice config'); return;
     }
-    
-    
-    const choiceButtons = document.querySelectorAll('.choice-button');
-    let defaultChoiceButton = null;
-    choiceButtons.forEach(button => {
-      if (button.dataset.choiceId === timedChoiceConfig.defaultChoice) {
-        defaultChoiceButton = button;
-      }
+
+    let defaultBtn = null;
+    document.querySelectorAll('.choice-button').forEach(btn => {
+      if (btn.dataset.choiceId === timedChoiceConfig.defaultChoice) defaultBtn = btn;
     });
-    
-    if (!defaultChoiceButton) {
-      console.error(`UIController.startTimedChoice: Default choice "${timedChoiceConfig.defaultChoice}" not found`);
-      return;
-    }
-    
+
+    if (!defaultBtn) { console.error(`UIController: Default choice "${timedChoiceConfig.defaultChoice}" not found`); return; }
+
     this.timedChoiceSystem.startTimer(
       timedChoiceConfig.duration,
       timedChoiceConfig.defaultChoice,
-      (choiceId) => {
-        // Ensure button is enabled before clicking
-        if (defaultChoiceButton && !defaultChoiceButton.disabled) {
-          defaultChoiceButton.click();
-        } else if (defaultChoiceButton) {
-          // Button still disabled — enable it first then click
-          defaultChoiceButton.disabled = false;
-          defaultChoiceButton.style.pointerEvents = 'auto';
-          defaultChoiceButton.style.opacity = '1';
-          defaultChoiceButton.click();
+      () => {
+        if (defaultBtn.disabled) {
+          defaultBtn.disabled = false;
+          defaultBtn.style.pointerEvents = 'auto';
+          defaultBtn.style.opacity = '1';
         }
+        defaultBtn.click();
       }
     );
   }
 
-    _openInventory() {
-    // The unified AnnotationInventory handles its own toggle.
-    // We just programmatically click its toggle button.
-    const toggleBtn = document.getElementById('annotation-inventory-toggle');
-    if (toggleBtn) toggleBtn.click();
-  }
- 
-  _mountPauseQuestion(contentEl, doc, crossRolePrompt) {
-    const modal = new PauseQuestionModal(
-      this.eventBus,
-      doc.pauseQuestion,
-      doc.id,
-      crossRolePrompt
-    );
-    modal.mount();
- 
-    const onAnswered = (data) => {
-      if (data.documentId !== doc.id) return;
-      this.eventBus.off('stimuli:pause-question-answered', onAnswered);
- 
-      // Wait 800ms so player can read the explanation before dismiss appears
-      setTimeout(() => {
-        modal.destroy();
-        this._showDismissButton(contentEl, doc.id);
-      }, 800);
-    };
- 
-    this.eventBus.on('stimuli:pause-question-answered', onAnswered);
- 
-    // Inventory open from inside modal
-    const onInventoryOpen = () => this._openInventory();
-    this.eventBus.on('inventory:open-requested', onInventoryOpen);
- 
-    // Clean up inventory listener when modal is destroyed
-    const origDestroy = modal.destroy.bind(modal);
-    modal.destroy = () => {
-      this.eventBus.off('inventory:open-requested', onInventoryOpen);
-      origDestroy();
-    };
-  }
- 
   handleChoiceClick(choice) {
-  this.eventBus.emit('choice:made', {
-    choiceId: choice.id,
-    nextSceneId: choice.nextScene,
-    consequences: choice.consequences || {}
-  });
-}
+    this.eventBus.emit('choice:made', {
+      choiceId:     choice.id,
+      nextSceneId:  choice.nextScene,
+      consequences: choice.consequences || {}
+    });
+  }
+
   updateProgress(current, total) {
-    const progressContainer = document.getElementById('scene-progress');
-    if (!progressContainer) return;
-    
-    const c = this.content.progress;
-    progressContainer.innerHTML = `
-      <p class="text-secondary">${c.sceneLabel} ${current} of ${total}</p>
+    const container = document.getElementById('scene-progress');
+    if (!container) return;
+    container.innerHTML = `
+      <p class="text-secondary">${this.content.progress?.sceneLabel || 'Scene'} ${current} of ${total}</p>
       <div class="progress-bar">
         <div class="progress-fill" style="width: ${(current / total) * 100}%"></div>
       </div>
     `;
   }
 
-  attachEventListeners(screen, screenName) {
-    if (screenName === 'scene') {
-      // Inventory is managed by AnnotationInventory component (body-level toggle)
-      // No scene-screen inventory button to wire up
-    }
+  // ── Event listener attachment ───────────────────────────────────────────────
 
+  attachEventListeners(screen, screenName) {
     if (screenName === 'landing') {
-      const beginButton = screen.querySelector('#begin-button');
-      if (beginButton) {
-        beginButton.addEventListener('click', () => {
-          this.haptics.light();
-          this.showScreen('timeline');
-        });
-      }
+      screen.querySelector('#begin-button')?.addEventListener('click', () => {
+        this.haptics.light(); this.showScreen('timeline');
+      });
     }
-    
     if (screenName === 'timeline') {
-      const timelineContainer = screen.querySelector('#timeline-container');
-      if (timelineContainer && this.timelineSelector) {
-        this.timelineSelector.render(timelineContainer);
-      }
+      const container = screen.querySelector('#timeline-container');
+      if (container && this.timelineSelector) this.timelineSelector.render(container);
     }
-    
     if (screenName === 'role-selection') {
       this.populateRoleCards(screen);
-      const backButton = screen.querySelector('#back-to-timeline');
-      if (backButton) {
-        backButton.addEventListener('click', () => {
-          this.haptics.light();
-          this.showScreen('timeline');
-        });
-      }
+      screen.querySelector('#back-to-timeline')?.addEventListener('click', () => {
+        this.haptics.light(); this.showScreen('timeline');
+      });
     }
-    
     if (screenName === 'outcome') {
       this.populateOutcomeScreen(screen);
-      const continueButton = screen.querySelector('#continue-to-ripple');
-      if (continueButton) {
-        continueButton.addEventListener('click', () => {
-          this.showScreen('historical-ripple');
-        });
-      }
+      screen.querySelector('#continue-to-ripple')?.addEventListener('click', () => this.showScreen('historical-ripple'));
     }
-    
     if (screenName === 'historical-ripple') {
       this.populateHistoricalRipple(screen);
-      const continueButton = screen.querySelector('#continue-to-checkpoint');
-      if (continueButton) {
-        continueButton.addEventListener('click', () => {
-          this.showScreen('knowledge-checkpoint');
-        });
-      }
+      screen.querySelector('#continue-to-checkpoint')?.addEventListener('click', () => this.showScreen('knowledge-checkpoint'));
     }
-    
     if (screenName === 'knowledge-checkpoint') {
       this.populateKnowledgeCheckpoint(screen);
     }
-    
     if (screenName === 'results-card') {
-      const copyButton = screen.querySelector('#copy-results');
-      if (copyButton) {
-        copyButton.addEventListener('click', () => {
-          this.copyResultsToClipboard();
-        });
-      }
-      const playAgainButton = screen.querySelector('#play-again');
-      if (playAgainButton) {
-        playAgainButton.addEventListener('click', () => {
-          this.eventBus.emit('mission:selected', { missionId: this.currentMissionId });
-        });
-      }
+      screen.querySelector('#copy-results')?.addEventListener('click', () => this.copyResultsToClipboard());
+      screen.querySelector('#play-again')?.addEventListener('click', () => {
+        this.eventBus.emit('mission:selected', { missionId: this.currentMissionId });
+      });
     }
   }
 
+  // ── Role cards ──────────────────────────────────────────────────────────────
+
   populateRoleCards(screen) {
-    const roleCardsContainer = screen.querySelector('#role-cards-container');
-    const endingsCountElement = screen.querySelector('#endings-count');
-    const allRolesCompletedMessage = screen.querySelector('#all-roles-completed-message');
-    
-    if (!roleCardsContainer) {
-      console.error('UIController.populateRoleCards: #role-cards-container not found');
-      return;
-    }
-    if (!this.currentMissionId) {
-      console.error('UIController.populateRoleCards: No mission ID stored');
-      return;
-    }
-    
+    const container = screen.querySelector('#role-cards-container');
+    if (!container || !this.currentMissionId) return;
+
     const mission = this.missionRegistry.getMission(this.currentMissionId);
-    if (!mission || !mission.roles) {
-      console.error(`UIController.populateRoleCards: Mission "${this.currentMissionId}" not found or has no roles`);
-      return;
-    }
-    
-    roleCardsContainer.innerHTML = '';
-    
+    if (!mission?.roles) return;
+
+    container.innerHTML = '';
     mission.roles.forEach(role => {
-      const roleCard = document.createElement('article');
-      roleCard.className = 'role-card';
-      roleCard.setAttribute('role', 'article');
-      roleCard.setAttribute('aria-labelledby', `role-title-${role.id}`);
-      
+      const card = document.createElement('article');
+      card.className = 'role-card';
+      card.setAttribute('aria-labelledby', `role-title-${role.id}`);
       const isCompleted = this.completedRoles.has(role.id);
-      if (isCompleted) roleCard.classList.add('completed');
-      
-      const roleTitle = document.createElement('h3');
-      roleTitle.id = `role-title-${role.id}`;
-      roleTitle.className = 'role-title';
-      roleTitle.textContent = role.name;
-      
-      const roleDescription = document.createElement('p');
-      roleDescription.className = 'role-description';
-      roleDescription.textContent = role.description;
-      
-      const selectButton = document.createElement('button');
-      selectButton.className = 'role-select-button';
-      selectButton.textContent = isCompleted ? this.content.roleSelection.playAgainButton : this.content.roleSelection.selectRoleButton;
-      selectButton.dataset.roleId = role.id;
-      selectButton.setAttribute('aria-label', `${isCompleted ? this.content.roleSelection.playAgainAriaLabel : this.content.roleSelection.selectRoleAriaLabel}: ${role.name}`);
-      
+      if (isCompleted) card.classList.add('completed');
+
+      const c = this.content.roleSelection;
+
       if (isCompleted) {
-        const completionBadge = document.createElement('span');
-        completionBadge.className = 'completion-badge';
-        completionBadge.textContent = this.content.roleSelection.completionBadge;
-        completionBadge.setAttribute('aria-label', this.content.roleSelection.completionBadgeAriaLabel);
-        roleCard.appendChild(completionBadge);
+        const badge = document.createElement('span');
+        badge.className = 'completion-badge';
+        badge.textContent = c.completionBadge;
+        card.appendChild(badge);
       }
-      
-      selectButton.addEventListener('click', () => {
+
+      card.innerHTML += `
+        <h3 id="role-title-${role.id}" class="role-title">${role.name}</h3>
+        <p class="role-description">${role.description}</p>
+        <button class="role-select-button" data-role-id="${role.id}"
+                aria-label="${isCompleted ? c.playAgainAriaLabel : c.selectRoleAriaLabel}: ${role.name}">
+          ${isCompleted ? c.playAgainButton : c.selectRoleButton}
+        </button>
+      `;
+
+      card.querySelector('.role-select-button').addEventListener('click', () => {
         this.haptics.medium();
-        this.handleRoleSelection(role.id);
+        this.eventBus.emit('role:selected', { missionId: this.currentMissionId, roleId: role.id });
       });
-      
-      roleCard.appendChild(roleTitle);
-      roleCard.appendChild(roleDescription);
-      roleCard.appendChild(selectButton);
-      roleCardsContainer.appendChild(roleCard);
+      container.appendChild(card);
     });
-    
-    const totalRoles = mission.roles.length;
-    const completedCount = this.completedRoles.size;
-    
-    if (endingsCountElement) {
-      endingsCountElement.textContent = `${completedCount}/${totalRoles}`;
-    }
-    if (allRolesCompletedMessage && completedCount === totalRoles) {
-      allRolesCompletedMessage.classList.remove('hidden');
+
+    const total = mission.roles.length;
+    const done  = this.completedRoles.size;
+    const countEl = screen.querySelector('#endings-count');
+    if (countEl) countEl.textContent = `${done}/${total}`;
+    if (done === total) screen.querySelector('#all-roles-completed-message')?.classList.remove('hidden');
+  }
+
+  updateEndingsCounter() {
+    const el = document.getElementById('endings-count');
+    if (!el || !this.currentMissionId) return;
+    const mission = this.missionRegistry.getMission(this.currentMissionId);
+    if (!mission) return;
+    el.textContent = `${this.completedRoles.size}/${mission.roles.length}`;
+    if (this.completedRoles.size === mission.roles.length) {
+      document.getElementById('all-roles-completed-message')?.classList.remove('hidden');
     }
   }
 
   _setMissionTheme(missionId) {
     document.body.classList.remove('mission-haymarket', 'mission-pearl-harbor', 'mission-rwanda', 'mission-urban');
-    if (missionId === 'haymarket-affair') {
-      document.body.classList.add('mission-haymarket');
-    } else if (missionId === 'pearl-harbor') {
-      document.body.classList.add('mission-pearl-harbor');
-    } else if (missionId === 'rwanda-genocide') {
-      document.body.classList.add('mission-rwanda');
-    } else if (missionId === 'aphg-urban-design') {
-      document.body.classList.add('mission-urban');
-    }
+    const map = {
+      'haymarket-affair':  'mission-haymarket',
+      'pearl-harbor':      'mission-pearl-harbor',
+      'rwanda-genocide':   'mission-rwanda',
+      'aphg-urban-design': 'mission-urban'
+    };
+    if (missionId && map[missionId]) document.body.classList.add(map[missionId]);
   }
 
-  updateEndingsCounter() {
-    // Update the endings counter immediately when a role is completed
-    const endingsCountElement = document.getElementById('endings-count');
-    if (!endingsCountElement || !this.currentMissionId) return;
-    
-    const mission = this.missionRegistry.getMission(this.currentMissionId);
-    if (!mission) return;
-    
-    const totalRoles = mission.roles.length;
-    const completedCount = this.completedRoles.size;
-    
-    endingsCountElement.textContent = `${completedCount}/${totalRoles}`;
-    
-    // Show all-roles-completed message if all roles are done
-    const allRolesCompletedMessage = document.getElementById('all-roles-completed-message');
-    if (allRolesCompletedMessage && completedCount === totalRoles) {
-      allRolesCompletedMessage.classList.remove('hidden');
-    }
-  }
-
-  handleRoleSelection(roleId) {
-    this.eventBus.emit('role:selected', {
-      missionId: this.currentMissionId,
-      roleId: roleId
-    });
-  }
+  // ── Outcome screen ──────────────────────────────────────────────────────────
 
   populateOutcomeScreen(screen) {
-    const outcomeResultContainer = screen.querySelector('#outcome-result');
-    if (!outcomeResultContainer) {
-      console.error('UIController.populateOutcomeScreen: #outcome-result container not found');
-      return;
-    }
+    const container = screen.querySelector('#outcome-result');
+    if (!container) return;
+
     if (!this.currentMissionId || !this.currentRoleId) {
-      outcomeResultContainer.innerHTML = `<p>${this.content.errors?.outcomeScreen?.noMissionOrRole || 'Error: Unable to determine outcome.'}</p>`;
-      return;
+      container.innerHTML = `<p>Error: Unable to determine outcome.</p>`; return;
     }
-    
+
     const mission = this.missionRegistry.getMission(this.currentMissionId);
-    if (!mission) {
-      outcomeResultContainer.innerHTML = `<p>${this.content.errors?.outcomeScreen?.missionNotFound || 'Error: Mission data not found.'}</p>`;
-      return;
-    }
-    
-    const role = mission.roles.find(r => r.id === this.currentRoleId);
-    if (!role || !role.outcomes) {
-      outcomeResultContainer.innerHTML = `<p>${this.content.errors?.outcomeScreen?.roleNotFound || 'Error: Role outcome data not found.'}</p>`;
-      return;
-    }
-    
+    const role    = mission?.roles.find(r => r.id === this.currentRoleId);
+    if (!role?.outcomes) { container.innerHTML = `<p>Error: Role outcome data not found.</p>`; return; }
+
     const survivalResult = this.consequenceSystem.determineSurvival(this.currentRoleId);
-    const outcomeId = this.consequenceSystem.calculateOutcome(role.outcomes, survivalResult.survived);
-    if (!outcomeId) {
-      outcomeResultContainer.innerHTML = `<p>${this.content.errors?.outcomeScreen?.noOutcomeId || 'Error: Unable to determine outcome based on your choices.'}</p>`;
-      return;
-    }
-    
-    const outcome = role.outcomes.find(o => o.id === outcomeId);
-    if (!outcome) {
-      outcomeResultContainer.innerHTML = `<p>${this.content.errors?.outcomeScreen?.outcomeNotFound || 'Error: Outcome data not found.'}</p>`;
-      return;
-    }
-    
-    const survivalStatus = outcome.survived
-      ? this.content.outcome?.survivedLabel
-      : this.content.outcome?.didNotSurviveLabel;
-    const survivalClass = outcome.survived ? 'text-success' : 'text-danger';
-    
-    // Use early death epilogue if player died mid-story
-    let epilogueText;
-    if (this.earlyDeathContext && this.earlyDeathContext.diedEarly) {
-      if (outcome.deathEpilogueEarly) {
-        epilogueText = outcome.deathEpilogueEarly;
-      } else {
-        console.warn('[UIController] Outcome', outcome.id, 'is missing deathEpilogueEarly — falling back to regular epilogue. Add this field.');
-        epilogueText = outcome.epilogue;
-      }
-    } else {
-      epilogueText = outcome.epilogue;
-    }
-    
-    outcomeResultContainer.innerHTML = `
-      <h3 class="${survivalClass}">${survivalStatus}</h3>
-      <div class="outcome-epilogue mt-md">
-        ${this.formatEpilogue(epilogueText)}
-      </div>
+    const outcomeId      = this.consequenceSystem.calculateOutcome(role.outcomes, survivalResult.survived);
+    const outcome        = outcomeId ? role.outcomes.find(o => o.id === outcomeId) : null;
+    if (!outcome) { container.innerHTML = `<p>Error: Outcome not found.</p>`; return; }
+
+    const survived     = outcome.survived;
+    const statusClass  = survived ? 'text-success' : 'text-danger';
+    const statusLabel  = survived
+      ? (this.content.outcome?.survivedLabel || 'You Survived')
+      : (this.content.outcome?.didNotSurviveLabel || 'You Did Not Survive');
+
+    let epilogue = (this.earlyDeathContext?.diedEarly && outcome.deathEpilogueEarly)
+      ? outcome.deathEpilogueEarly
+      : outcome.epilogue;
+
+    container.innerHTML = `
+      <h3 class="${statusClass}">${statusLabel}</h3>
+      <div class="outcome-epilogue mt-md">${this.formatEpilogue(epilogue)}</div>
     `;
   }
 
   formatEpilogue(epilogue) {
-    const paragraphs = epilogue.split('\n\n').filter(p => p.trim() !== '');
-    return paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
+    return (epilogue || '').split('\n\n')
+      .filter(p => p.trim())
+      .map(p => `<p>${p.trim()}</p>`)
+      .join('');
   }
 
+  // ── Historical ripple ───────────────────────────────────────────────────────
+
   populateHistoricalRipple(screen) {
-    const rippleTimelineContainer = screen.querySelector('#ripple-timeline');
-    if (!rippleTimelineContainer) {
-      console.error('UIController.populateHistoricalRipple: #ripple-timeline container not found');
-      return;
-    }
-    if (!this.currentMissionId) {
-      console.error('UIController.populateHistoricalRipple: No mission ID stored');
-      return;
-    }
-    
+    const container = screen.querySelector('#ripple-timeline');
+    if (!container || !this.currentMissionId) return;
+
     const mission = this.missionRegistry.getMission(this.currentMissionId);
-    if (!mission || !mission.historicalRipple) {
-      console.error(`UIController.populateHistoricalRipple: Mission "${this.currentMissionId}" not found or has no historical ripple events`);
-      return;
-    }
-    
-    rippleTimelineContainer.innerHTML = '';
-    
+    if (!mission?.historicalRipple) return;
+
+    container.innerHTML = '';
     mission.historicalRipple.forEach((event, index) => {
-      const eventElement = document.createElement('article');
-      eventElement.className = 'ripple-event';
-      eventElement.setAttribute('role', 'article');
-      eventElement.setAttribute('aria-labelledby', `ripple-event-title-${index}`);
-      eventElement.style.animationDelay = `${event.animationDelay}ms`;
-      
-      const eventHeader = document.createElement('header');
-      eventHeader.className = 'ripple-event-header';
-      
-      const eventDate = document.createElement('time');
-      eventDate.className = 'ripple-event-date';
-      eventDate.textContent = event.date;
-      eventDate.setAttribute('datetime', event.date);
-      eventHeader.appendChild(eventDate);
-      
-      const eventTitle = document.createElement('h3');
-      eventTitle.id = `ripple-event-title-${index}`;
-      eventTitle.className = 'ripple-event-title';
-      eventTitle.textContent = event.title;
-      
-      const eventDescription = document.createElement('p');
-      eventDescription.className = 'ripple-event-description';
-      eventDescription.textContent = event.description;
-      
-      const eventTheme = document.createElement('span');
-      eventTheme.className = 'ripple-event-theme';
-      eventTheme.textContent = `${this.content.historicalRipple.apThemeLabel} ${this.formatApTheme(event.apTheme)}`;
-      eventTheme.setAttribute('aria-label', `AP History theme: ${event.apTheme}`);
-      
-      eventElement.appendChild(eventHeader);
-      eventElement.appendChild(eventTitle);
-      eventElement.appendChild(eventDescription);
-      eventElement.appendChild(eventTheme);
-      rippleTimelineContainer.appendChild(eventElement);
+      const el = document.createElement('article');
+      el.className = 'ripple-event';
+      el.setAttribute('aria-labelledby', `ripple-event-title-${index}`);
+      el.style.animationDelay = `${event.animationDelay}ms`;
+      el.innerHTML = `
+        <header class="ripple-event-header">
+          <time class="ripple-event-date" datetime="${event.date}">${event.date}</time>
+        </header>
+        <h3 id="ripple-event-title-${index}" class="ripple-event-title">${event.title}</h3>
+        <p class="ripple-event-description">${event.description}</p>
+        <span class="ripple-event-theme" aria-label="AP theme: ${event.apTheme}">
+          ${this.content.historicalRipple?.apThemeLabel || 'AP Theme:'} ${this.formatApTheme(event.apTheme)}
+        </span>
+      `;
+      container.appendChild(el);
     });
 
-    // Render post-ripple synthesis question if present (Haymarket and future missions)
-    if (mission.postRippleQuestion) {
-      this._renderPostRippleQuestion(rippleTimelineContainer, mission.postRippleQuestion);
-    }
+    if (mission.postRippleQuestion) this._renderPostRippleQuestion(container, mission.postRippleQuestion);
   }
 
   _buildQuestExplainer(type) {
@@ -1139,15 +763,12 @@ class UIController {
   _renderPostRippleQuestion(container, prq) {
     const wrapper = document.createElement('article');
     wrapper.className = 'post-ripple-synthesis panel panel-parchment mt-lg';
-    wrapper.setAttribute('role', 'article');
     wrapper.setAttribute('aria-labelledby', 'post-ripple-question-text');
-
     wrapper.insertAdjacentHTML('afterbegin', this._buildQuestExplainer('synthesis'));
 
     const skillTag = document.createElement('span');
     skillTag.className = 'ap-skill-tag';
     skillTag.textContent = `AP Skill: ${this.formatApTheme(prq.apSkill)}`;
-    skillTag.setAttribute('aria-label', `AP reasoning skill: ${prq.apSkill}`);
 
     const questionText = document.createElement('p');
     questionText.id = 'post-ripple-question-text';
@@ -1156,23 +777,17 @@ class UIController {
 
     const optionsContainer = document.createElement('nav');
     optionsContainer.className = 'question-options mt-sm';
-    optionsContainer.setAttribute('role', 'navigation');
-    optionsContainer.setAttribute('aria-label', 'Post-ripple synthesis question options');
 
     const explanationEl = document.createElement('section');
     explanationEl.className = 'question-explanation hidden mt-md';
-    explanationEl.setAttribute('role', 'region');
-    explanationEl.setAttribute('aria-label', 'Answer explanation');
     explanationEl.innerHTML = `<h4>${this.content.stimuliOverlay?.apAnalysisHeading || ''}</h4><p>${prq.explanation}</p>`;
 
-    const displayLabels = ['A', 'B', 'C', 'D'];
-    prq.options.forEach((option, i) => {
+    ['A','B','C','D'].forEach((label, i) => {
+      const option = prq.options[i];
+      if (!option) return;
       const btn = document.createElement('button');
       btn.className = 'option-button quest-option-button';
-      btn.dataset.optionId = option.id;
-      btn.dataset.correct = option.correct;
-      btn.textContent = `${displayLabels[i] || (i + 1)}. ${option.text}`;
-      btn.setAttribute('aria-label', `Option ${displayLabels[i]}: ${option.text}`);
+      btn.textContent = `${label}. ${option.text}`;
       btn.addEventListener('click', () => {
         this.haptics.light();
         optionsContainer.querySelectorAll('.option-button').forEach(b => {
@@ -1182,6 +797,7 @@ class UIController {
         btn.classList.add(option.correct ? 'correct' : 'incorrect');
         explanationEl.classList.remove('hidden');
       });
+      btn.dataset.correct = option.correct;
       optionsContainer.appendChild(btn);
     });
 
@@ -1193,239 +809,168 @@ class UIController {
   }
 
   formatApTheme(theme) {
+    if (!theme) return '';
     return theme.charAt(0).toUpperCase() + theme.slice(1);
   }
 
+  // ── Knowledge checkpoint ────────────────────────────────────────────────────
+
   populateKnowledgeCheckpoint(screen) {
-    const questionsContainer = screen.querySelector('#checkpoint-questions');
-    if (!questionsContainer) {
-      console.error('UIController.populateKnowledgeCheckpoint: #checkpoint-questions container not found');
-      return;
-    }
-    if (!this.currentMissionId || !this.currentRoleId) {
-      questionsContainer.innerHTML = `<p>${this.content.errors?.knowledgeCheckpoint?.noMissionOrRole || 'Error: Unable to load questions.'}</p>`;
-      return;
-    }
-    
+    const container = screen.querySelector('#checkpoint-questions');
+    if (!container || !this.currentMissionId || !this.currentRoleId) return;
+
     const mission = this.missionRegistry.getMission(this.currentMissionId);
-    if (!mission || !mission.knowledgeQuestions) {
-      questionsContainer.innerHTML = `<p>${this.content.errors?.knowledgeCheckpoint?.noQuestions || 'Error: Knowledge questions not found.'}</p>`;
-      return;
+    const roleQuestions = mission?.knowledgeQuestions?.filter(q => q.roleSpecific === this.currentRoleId);
+    if (!roleQuestions?.length) {
+      container.innerHTML = `<p>Error: No questions available for this role.</p>`; return;
     }
-    
-    const roleQuestions = mission.knowledgeQuestions.filter(q => q.roleSpecific === this.currentRoleId);
-    if (roleQuestions.length === 0) {
-      questionsContainer.innerHTML = `<p>${this.content.errors?.knowledgeCheckpoint?.noRoleQuestions || 'Error: No questions available for this role.'}</p>`;
-      return;
-    }
-    
+
     this.checkpointAnswers = new Map();
     this.checkpointScore = 0;
     this.checkpointTotalQuestions = roleQuestions.length;
-    questionsContainer.innerHTML = '';
-    
+    container.innerHTML = '';
+
     roleQuestions.forEach((question, index) => {
-      const questionElement = document.createElement('article');
-      questionElement.className = 'checkpoint-question panel panel-parchment mt-md';
-      questionElement.dataset.questionId = question.id;
-      questionElement.setAttribute('role', 'article');
-      questionElement.setAttribute('aria-labelledby', `question-${index}-text`);
-      
-      const questionHeader = document.createElement('header');
-      questionHeader.className = 'question-header';
-      questionHeader.insertAdjacentHTML('afterbegin', this._buildQuestExplainer('checkpoint'));
-      
-      const questionNumber = document.createElement('h3');
-      questionNumber.className = 'question-number';
-      questionNumber.textContent = `Question ${index + 1}`;
-      
-      const apSkillTag = document.createElement('span');
-      apSkillTag.className = 'ap-skill-tag';
-      apSkillTag.textContent = `AP Skill: ${this.formatApTheme(question.apSkill)}`;
-      apSkillTag.setAttribute('aria-label', `AP reasoning skill: ${question.apSkill}`);
-      
-      questionHeader.appendChild(questionNumber);
-      questionHeader.appendChild(apSkillTag);
-      
-      const questionText = document.createElement('p');
-      questionText.id = `question-${index}-text`;
-      questionText.className = 'question-text';
-      questionText.textContent = question.question;
-      
-      const optionsContainer = document.createElement('nav');
-      optionsContainer.className = 'question-options mt-sm';
-      optionsContainer.setAttribute('role', 'navigation');
-      optionsContainer.setAttribute('aria-label', `Answer options for question ${index + 1}`);
-      
-      const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
-      const displayLabels = ['A', 'B', 'C', 'D'];
-      
-      shuffledOptions.forEach((option, displayIndex) => {
-        const label = displayLabels[displayIndex] || String(displayIndex + 1);
-        const optionButton = document.createElement('button');
-        optionButton.className = 'option-button';
-        optionButton.dataset.optionId = option.id;
-        optionButton.dataset.correct = option.correct;
-        optionButton.textContent = `${label}. ${option.text}`;
-        optionButton.setAttribute('aria-label', `Option ${label}: ${option.text}`);
-        optionButton.addEventListener('click', () => {
+      const el = document.createElement('article');
+      el.className = 'checkpoint-question panel panel-parchment mt-md';
+      el.setAttribute('aria-labelledby', `question-${index}-text`);
+
+      const header = document.createElement('header');
+      header.className = 'question-header';
+      header.insertAdjacentHTML('afterbegin', this._buildQuestExplainer('checkpoint'));
+      const num = document.createElement('h3');
+      num.className = 'question-number';
+      num.textContent = `Question ${index + 1}`;
+      const skillTag = document.createElement('span');
+      skillTag.className = 'ap-skill-tag';
+      skillTag.textContent = `AP Skill: ${this.formatApTheme(question.apSkill)}`;
+      header.appendChild(num);
+      header.appendChild(skillTag);
+
+      const qText = document.createElement('p');
+      qText.id = `question-${index}-text`;
+      qText.className = 'question-text';
+      qText.textContent = question.question;
+
+      const optContainer = document.createElement('nav');
+      optContainer.className = 'question-options mt-sm';
+
+      const explanation = document.createElement('section');
+      explanation.className = 'question-explanation hidden mt-md';
+      explanation.innerHTML = `<h4>${this.content.knowledgeCheckpoint?.explanationHeading || 'Explanation:'}</h4><p>${question.explanation}</p>`;
+
+      const shuffled = [...question.options].sort(() => Math.random() - 0.5);
+      shuffled.forEach((option, di) => {
+        const label = ['A','B','C','D'][di] || String(di + 1);
+        const btn = document.createElement('button');
+        btn.className = 'option-button';
+        btn.textContent = `${label}. ${option.text}`;
+        btn.dataset.optionId = option.id;
+        btn.dataset.correct  = option.correct;
+        btn.addEventListener('click', () => {
           this.haptics.light();
-          this.handleAnswerSelection(question, option, questionElement, optionsContainer);
+          this.handleAnswerSelection(question, option, el, optContainer);
         });
-        optionsContainer.appendChild(optionButton);
+        optContainer.appendChild(btn);
       });
-      
-      const explanationContainer = document.createElement('section');
-      explanationContainer.className = 'question-explanation hidden mt-md';
-      explanationContainer.setAttribute('role', 'region');
-      explanationContainer.setAttribute('aria-label', 'Answer explanation');
-      explanationContainer.innerHTML = `<h4>${this.content.knowledgeCheckpoint?.explanationHeading || 'Explanation:'}</h4><p>${question.explanation}</p>`;
-      
-      questionElement.appendChild(questionHeader);
-      questionElement.appendChild(questionText);
-      questionElement.appendChild(optionsContainer);
-      questionElement.appendChild(explanationContainer);
-      questionsContainer.appendChild(questionElement);
+
+      el.appendChild(header);
+      el.appendChild(qText);
+      el.appendChild(optContainer);
+      el.appendChild(explanation);
+      container.appendChild(el);
     });
   }
 
-  handleAnswerSelection(question, selectedOption, questionElement, optionsContainer) {
+  handleAnswerSelection(question, selectedOption, questionEl, optContainer) {
     if (this.checkpointAnswers.has(question.id)) return;
-    
+
     const isCorrect = selectedOption.correct === true;
-    this.checkpointAnswers.set(question.id, {
-      selectedAnswer: selectedOption.id,
-      correct: isCorrect
-    });
-    
+    this.checkpointAnswers.set(question.id, { selectedAnswer: selectedOption.id, correct: isCorrect });
     if (isCorrect) this.checkpointScore++;
-    
-    const optionButtons = optionsContainer.querySelectorAll('.option-button');
-    optionButtons.forEach(button => {
-      button.disabled = true;
-      const buttonCorrect = button.dataset.correct === 'true';
-      if (button.dataset.optionId === selectedOption.id) {
-        button.classList.add(isCorrect ? 'correct' : 'incorrect');
-      } else if (buttonCorrect) {
-        button.classList.add('correct');
-      }
+
+    optContainer.querySelectorAll('.option-button').forEach(btn => {
+      btn.disabled = true;
+      if (btn.dataset.optionId === selectedOption.id) btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+      else if (btn.dataset.correct === 'true') btn.classList.add('correct');
     });
-    
-    const explanationContainer = questionElement.querySelector('.question-explanation');
-    if (explanationContainer) explanationContainer.classList.remove('hidden');
-    
-    if (this.checkpointAnswers.size === this.checkpointTotalQuestions) {
-      this.showCheckpointResults();
-    }
+
+    questionEl.querySelector('.question-explanation')?.classList.remove('hidden');
+    if (this.checkpointAnswers.size === this.checkpointTotalQuestions) this.showCheckpointResults();
   }
 
   showCheckpointResults() {
-    const viewResultsButton = document.getElementById('view-results');
-    if (!viewResultsButton) {
-      console.error('UIController.showCheckpointResults: #view-results button not found');
-      return;
-    }
-    
-    viewResultsButton.classList.remove('hidden');
-    viewResultsButton.addEventListener('click', () => {
+    const btn = document.getElementById('view-results');
+    if (!btn) return;
+    btn.classList.remove('hidden');
+    btn.addEventListener('click', () => {
       this.eventBus.emit('checkpoint:complete', {
         score: this.checkpointScore,
         totalQuestions: this.checkpointTotalQuestions
       });
     });
-    
-    const checkpointContent = document.querySelector('.checkpoint-content');
-    if (checkpointContent) {
-      let scoreDisplay = document.getElementById('checkpoint-score');
-      if (!scoreDisplay) {
-        scoreDisplay = document.createElement('div');
-        scoreDisplay.id = 'checkpoint-score';
-        scoreDisplay.className = 'checkpoint-score text-center mt-lg';
-        const scorePercentage = Math.round((this.checkpointScore / this.checkpointTotalQuestions) * 100);
-        const scoreClass = scorePercentage >= 70 ? 'text-success' : 'text-warning';
-        const scoreLabel = this.content.knowledgeCheckpoint?.scoreLabel || 'Your Score:';
-        const correctLabel = this.content.knowledgeCheckpoint?.correctLabel || '% Correct';
-        scoreDisplay.innerHTML = `
-          <h3 class="${scoreClass}">${scoreLabel} ${this.checkpointScore}/${this.checkpointTotalQuestions}</h3>
-          <p class="text-secondary">${scorePercentage}${correctLabel}</p>
-        `;
-        checkpointContent.insertBefore(scoreDisplay, viewResultsButton);
-      }
-    }
+
+    const pct = Math.round((this.checkpointScore / this.checkpointTotalQuestions) * 100);
+    const scoreEl = document.createElement('div');
+    scoreEl.className = `checkpoint-score text-center mt-lg ${pct >= 70 ? 'text-success' : 'text-warning'}`;
+    scoreEl.innerHTML = `<h3>Score: ${this.checkpointScore}/${this.checkpointTotalQuestions}</h3><p>${pct}% Correct</p>`;
+    btn.parentNode?.insertBefore(scoreEl, btn);
   }
 
   async copyResultsToClipboard() {
-    if (!this.resultsCard) {
-      console.error('UIController.copyResultsToClipboard: ResultsCard component not available');
-      return;
-    }
+    if (!this.resultsCard) return;
     const success = await this.resultsCard.copyCardText();
-    if (success) {
-      alert(this.content.resultsCard?.copySuccessMessage || '');
-    } else {
-      alert(this.content.resultsCard?.copyFailMessage || '');
-    }
+    alert(success
+      ? (this.content.resultsCard?.copySuccessMessage || 'Copied!')
+      : (this.content.resultsCard?.copyFailMessage   || 'Failed to copy.')
+    );
   }
 
+  // ── Timer display ───────────────────────────────────────────────────────────
+
   handleTimerStarted(data) {
-    const timerDisplay = document.getElementById('timer-display');
-    if (!timerDisplay) return;
-    timerDisplay.classList.remove('hidden');
+    const el = document.getElementById('timer-display');
+    if (!el) return;
+    el.classList.remove('hidden');
     this.updateTimerDisplay(data.duration, data.duration);
   }
 
   handleTimerUpdate(data) {
-    const timerDisplay = document.getElementById('timer-display');
-    if (!timerDisplay) return;
+    const el = document.getElementById('timer-display');
+    if (!el) return;
     this.updateTimerDisplay(data.remaining, null);
-    if (data.isWarning) {
-      timerDisplay.classList.add('timer-warning');
-    } else {
-      timerDisplay.classList.remove('timer-warning');
-    }
+    el.classList.toggle('timer-warning', data.isWarning);
   }
 
-  handleTimerExpired(data) {
-    const timerDisplay = document.getElementById('timer-display');
-    if (!timerDisplay) return;
-    timerDisplay.classList.add('hidden');
-    timerDisplay.classList.remove('timer-warning');
+  handleTimerExpired() {
+    const el = document.getElementById('timer-display');
+    if (el) { el.classList.add('hidden'); el.classList.remove('timer-warning'); }
   }
 
-  handleTimerCancelled(data) {
-    const timerDisplay = document.getElementById('timer-display');
-    if (!timerDisplay) return;
-    timerDisplay.classList.add('hidden');
-    timerDisplay.classList.remove('timer-warning');
+  handleTimerCancelled() {
+    const el = document.getElementById('timer-display');
+    if (el) { el.classList.add('hidden'); el.classList.remove('timer-warning'); }
   }
 
   updateTimerDisplay(remaining, duration) {
-    const timerSeconds = document.getElementById('timer-seconds');
-    const timerProgressFill = document.querySelector('.timer-progress-fill');
-    if (!timerSeconds) return;
-    
-    const seconds = Math.ceil(remaining / 1000);
-    timerSeconds.textContent = seconds;
-    
-    if (timerProgressFill && duration) {
-      const progress = remaining / duration;
-      const circumference = 2 * Math.PI * 45;
-      const offset = circumference * (1 - progress);
-      timerProgressFill.style.strokeDashoffset = offset;
+    const secondsEl = document.getElementById('timer-seconds');
+    if (!secondsEl) return;
+    secondsEl.textContent = Math.ceil(remaining / 1000);
+
+    const fill = document.querySelector('.timer-progress-fill');
+    if (fill && duration) {
+      const offset = 2 * Math.PI * 45 * (1 - remaining / duration);
+      fill.style.strokeDashoffset = offset;
     }
   }
 
-  // ── Prediction Question (Haymarket Phase 2) ──────────────────────────────
+  // ── Prediction question ─────────────────────────────────────────────────────
 
   _renderPredictionQuestion(choicesContainer, pq, sceneId) {
     const wrapper = document.createElement('div');
     wrapper.className = 'prediction-question panel panel-parchment mt-md';
     wrapper.setAttribute('role', 'region');
     wrapper.setAttribute('aria-label', 'Prediction question');
-
-    const label = document.createElement('p');
-    label.className = 'prediction-label text-secondary';
-    label.textContent = this.content.predictionQuestion?.label || '';
 
     wrapper.insertAdjacentHTML('afterbegin', this._buildQuestExplainer('prediction'));
 
@@ -1438,7 +983,6 @@ class UIController {
 
     const revealEl = document.createElement('div');
     revealEl.className = 'prediction-reveal panel mt-sm hidden';
-    revealEl.setAttribute('role', 'status');
     revealEl.setAttribute('aria-live', 'polite');
     revealEl.innerHTML = `<p class="text-secondary">${pq.reveal}</p>`;
 
@@ -1446,13 +990,8 @@ class UIController {
       const btn = document.createElement('button');
       btn.className = 'option-button quest-option-button mt-sm';
       btn.textContent = opt.text;
-      btn.dataset.predId = opt.id;
-      btn.setAttribute('aria-label', opt.text);
       btn.addEventListener('click', () => {
-        optionsContainer.querySelectorAll('.option-button').forEach(b => {
-          b.disabled = true;
-          b.style.opacity = '0.6';
-        });
+        optionsContainer.querySelectorAll('.option-button').forEach(b => { b.disabled = true; b.style.opacity = '0.6'; });
         btn.style.opacity = '1';
         btn.classList.add('selected');
         revealEl.classList.remove('hidden');
@@ -1461,34 +1000,17 @@ class UIController {
       optionsContainer.appendChild(btn);
     });
 
-    wrapper.appendChild(label);
     wrapper.appendChild(questionText);
     wrapper.appendChild(optionsContainer);
     wrapper.appendChild(revealEl);
 
-    // Insert before the first choice button so choices appear below
     const firstChoice = choicesContainer.querySelector('.choice-button');
-    if (firstChoice) {
-      choicesContainer.insertBefore(wrapper, firstChoice);
-    } else {
-      choicesContainer.appendChild(wrapper);
-    }
+    if (firstChoice) choicesContainer.insertBefore(wrapper, firstChoice);
+    else choicesContainer.appendChild(wrapper);
   }
 
-  // ── Stimulus Document Overlay (Haymarket Phase 1 / StimuliManager) ────────
+  // ── Stimulus overlay ────────────────────────────────────────────────────────
 
-  handleStimuliShown(data) {
-  if (!data?.documentId || !data?.documentData) return;
-  // AnnotationInventory listens to stimuli:shown and tracks docs itself.
-  // UIController only needs to render the overlay DOM.
-  this._renderStimulusOverlay(data.documentData);
-}
-  /**
-   * Resolve a CSS class for the document card based on its id or documentType field.
-   * @param {Object} doc
-   * @returns {string}
-   * @private
-   */
   _stimuliDocTypeClass(doc) {
     const type = doc.documentType || '';
     if (type === 'arbeiter-zeitung') return 'doc-type--arbeiter-zeitung';
@@ -1496,27 +1018,19 @@ class UIController {
     if (type === 'harper-weekly')    return 'doc-type--harper-weekly';
     if (type === 'court-transcript') return 'doc-type--court-transcript';
 
-    // Fall back to id-based mapping for Haymarket docs
     const id = doc.id || '';
     if (id === 'hm-doc-1a' || id === 'hm-doc-1b' || id === 'hm-doc-3') return 'doc-type--arbeiter-zeitung';
     if (id === 'hm-doc-0')  return 'doc-type--pinkerton-report';
-    if (id === 'hm-doc-2')  return 'doc-type--harper-weekly';
-    if (id === 'hm-doc-4')  return 'doc-type--harper-weekly';   // Chicago Tribune — same heavy-press style
-    if (id === 'hm-doc-5')  return 'doc-type--court-transcript'; // Altgeld pardon — legal document
+    if (id === 'hm-doc-2' || id === 'hm-doc-4') return 'doc-type--harper-weekly';
+    if (id === 'hm-doc-5')  return 'doc-type--court-transcript';
     return 'doc-type--default';
   }
 
-  /**
-   * Inject floating dust particle divs into the overlay backdrop.
-   * @param {HTMLElement} overlay
-   * @private
-   */
   _injectDustParticles(overlay) {
     const dust = document.createElement('div');
     dust.className = 'stimuli-dust';
     dust.setAttribute('aria-hidden', 'true');
-    const count = 5;
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < 5; i++) {
       const p = document.createElement('div');
       p.className = 'stimuli-dust-particle';
       p.style.setProperty('--drift-duration', `${7 + Math.random() * 6}s`);
@@ -1530,149 +1044,114 @@ class UIController {
   }
 
   _renderStimulusOverlay(doc) {
-  // Remove any existing overlay
-  document.getElementById('stimuli-overlay')?.remove();
- 
-  const overlay = document.createElement('div');
-  overlay.id = 'stimuli-overlay';
-  overlay.className = 'stimuli-overlay';
-  overlay.setAttribute('role', 'dialog');
-  overlay.setAttribute('aria-modal', 'true');
-  overlay.setAttribute('aria-labelledby', 'stimuli-doc-title');
- 
-  this._injectDustParticles(overlay);
- 
-  const spiceStr   = (doc.spiceT || []).join(' · ');
-  const typeClass  = this._stimuliDocTypeClass(doc);
- 
-  const illustrationHTML = typeClass === 'doc-type--harper-weekly'
-    ? `<div class="stimuli-illustration-placeholder" aria-hidden="true">[ ${this.content.stimuliOverlay?.illustrationLabel || 'Engraving'} — ${doc.title} ]</div>`
-    : '';
- 
-  const signatureHTML = typeClass === 'doc-type--court-transcript'
-    ? `<div class="stimuli-signature" aria-label="Document signature line">${this.content.stimuliOverlay?.signatureLine || '_________________________'}</div>`
-    : '';
- 
-  const content = document.createElement('div');
-  content.className = `stimuli-content ${typeClass}`;
-  content.innerHTML = `
-    <div class="stimuli-meta">
-      <span class="ap-skill-tag">${spiceStr}</span>
-      <span class="stimuli-unit text-secondary">${doc.apUnit || ''}</span>
-    </div>
-    <h3 id="stimuli-doc-title" class="stimuli-title mt-sm">${doc.title}</h3>
-    <p class="stimuli-source">${doc.source} — ${doc.date}</p>
-    ${illustrationHTML}
-    <div class="stimuli-text mt-md">${doc.text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>
-    ${signatureHTML}
-  `;
- 
-  overlay.appendChild(content);
-  document.body.appendChild(overlay);
- 
-  // FIXED: Emit dom-ready inside requestAnimationFrame so the DOM is fully
-  // painted before StimuliRevealAnimator receives the element references.
-  // Previous bug: StimuliRevealAnimator queried .stimuli-content after
-  // stimuli:shown fired — element didn't exist yet, animation silently skipped.
-  requestAnimationFrame(() => {
-    this.eventBus.emit('stimuli:dom-ready', {
-      documentId: doc.id,
-      overlayEl:  overlay,
-      contentEl:  content
-    });
-  });
- 
-  // Add "I've read this" button — the explicit gate for the pause question.
-  // Previous bug: scroll detection misfired after 600ms regardless of scroll state.
-  this._attachReadConfirmButton(content, doc);
-}
-  _attachReadConfirmButton(contentEl, doc) {
-  const crossRolePrompt = doc.crossRolePrompt || null;
-  let questionMounted = false;
- 
-  const confirmBtn = document.createElement('button');
-  confirmBtn.id = 'stimuli-read-confirm';
-  confirmBtn.className = 'stimuli-read-confirm-btn mt-lg';
-  confirmBtn.setAttribute('aria-label', 'Confirm you have read this document and answer the question');
-  confirmBtn.textContent = "I've read this document →";
- 
-  contentEl.appendChild(confirmBtn);
- 
-  confirmBtn.addEventListener('click', () => {
-    if (questionMounted) return;
-    questionMounted = true;
-    confirmBtn.remove();
- 
-    if (!doc.pauseQuestion) {
-      // No question — show dismiss button immediately
-      this._showDismissButton(contentEl, doc.id);
-      this.eventBus.emit('stimuli:answer-submitted', {
+    document.getElementById('stimuli-overlay')?.remove();
+
+    const overlay = document.createElement('div');
+    overlay.id = 'stimuli-overlay';
+    overlay.className = 'stimuli-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-labelledby', 'stimuli-doc-title');
+
+    this._injectDustParticles(overlay);
+
+    const typeClass = this._stimuliDocTypeClass(doc);
+    const spiceStr  = (doc.spiceT || []).join(' · ');
+
+    const illustrationHTML = typeClass === 'doc-type--harper-weekly'
+      ? `<div class="stimuli-illustration-placeholder" aria-hidden="true">[ ${this.content.stimuliOverlay?.illustrationLabel || 'Engraving'} — ${doc.title} ]</div>`
+      : '';
+    const signatureHTML = typeClass === 'doc-type--court-transcript'
+      ? `<div class="stimuli-signature" aria-label="Document signature line">${this.content.stimuliOverlay?.signatureLine || '_________________________'}</div>`
+      : '';
+
+    const content = document.createElement('div');
+    content.className = `stimuli-content ${typeClass}`;
+    content.innerHTML = `
+      <div class="stimuli-meta">
+        <span class="ap-skill-tag">${spiceStr}</span>
+        <span class="stimuli-unit text-secondary">${doc.apUnit || ''}</span>
+      </div>
+      <h3 id="stimuli-doc-title" class="stimuli-title mt-sm">${doc.title}</h3>
+      <p class="stimuli-source">${doc.source} — ${doc.date}</p>
+      ${illustrationHTML}
+      <div class="stimuli-text mt-md">${doc.text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>
+      ${signatureHTML}
+    `;
+
+    overlay.appendChild(content);
+    document.body.appendChild(overlay);
+
+    // Emit dom-ready AFTER paint so StimuliRevealAnimator has the element
+    requestAnimationFrame(() => {
+      this.eventBus.emit('stimuli:dom-ready', {
         documentId: doc.id,
-        selectedId: null,
-        correct: false
+        overlayEl:  overlay,
+        contentEl:  content
       });
-      return;
-    }
-    this._mountPauseQuestion(contentEl, doc, crossRolePrompt);
-  });
-}
-
-  // ── NEW: stimuli:view-ready handler ──────────────────────────────────────
-  handleStimuliViewReady(data) {
-    if (!data || !data.documentId) return;
-    const choicesContainer = document.getElementById('scene-choices');
-    if (!choicesContainer) return;
-    if (document.getElementById('stimuli-view-doc-btn')) return;
-
-    const btn = document.createElement('button');
-    btn.id = 'stimuli-view-doc-btn';
-    btn.className = 'stimuli-view-doc-btn';
-    btn.setAttribute('aria-label', 'View primary source document');
-    btn.textContent = '📄 View Document';
-    btn.addEventListener('click', () => {
-      btn.remove();
-      if (this.stimuliManager) this.stimuliManager.playerRequestedView();
     });
-    choicesContainer.insertBefore(btn, choicesContainer.firstChild);
+
+    this._attachReadConfirmButton(content, doc);
   }
 
-  // ── NEW: open the unified inventory panel ─────────────────────────────────
+  _attachReadConfirmButton(contentEl, doc) {
+    const crossRolePrompt = doc.crossRolePrompt || null;
+    let questionMounted = false;
+
+    const btn = document.createElement('button');
+    btn.id = 'stimuli-read-confirm';
+    btn.className = 'stimuli-read-confirm-btn mt-lg';
+    btn.setAttribute('aria-label', 'I have read this document — answer the question');
+    btn.textContent = "I've read this document →";
+    contentEl.appendChild(btn);
+
+    btn.addEventListener('click', () => {
+      if (questionMounted) return;
+      questionMounted = true;
+      btn.remove();
+
+      if (!doc.pauseQuestion) {
+        this._showDismissButton(contentEl, doc.id);
+        this.eventBus.emit('stimuli:answer-submitted', { documentId: doc.id, selectedId: null, correct: false });
+        return;
+      }
+      this._mountPauseQuestion(contentEl, doc, crossRolePrompt);
+    });
+  }
+
   _openInventory() {
     document.getElementById('annotation-inventory-toggle')?.click();
   }
 
-  // ── NEW: mount pause question after player reads the document ─────────────
   _mountPauseQuestion(contentEl, doc, crossRolePrompt) {
-    const pq = doc.pauseQuestion;
-    this.currentDocHasPauseQuestion = !!pq;
+    this.currentDocHasPauseQuestion = true;
 
-    if (!pq) {
-      this._showDismissButton(contentEl, doc.id);
-      return;
-    }
+    const modal = new PauseQuestionModal(this.eventBus, doc.pauseQuestion, doc.id, crossRolePrompt || null);
 
-    const modal = new PauseQuestionModal(this.eventBus, pq, doc.id, crossRolePrompt || null);
-
-    const onAnswered = (answerData) => {
-      if (answerData.documentId !== doc.id) return;
+    const onAnswered = (data) => {
+      if (data.documentId !== doc.id) return;
       this.eventBus.off('stimuli:pause-question-answered', onAnswered);
+      this.eventBus.off('inventory:open-requested', onInventoryOpen);
       setTimeout(() => {
         modal.destroy();
         this._showDismissButton(contentEl, doc.id);
       }, 800);
     };
+
+    const onInventoryOpen = () => this._openInventory();
+
     this.eventBus.on('stimuli:pause-question-answered', onAnswered);
+    this.eventBus.on('inventory:open-requested', onInventoryOpen);
     modal.mount();
   }
 
-  // ── NEW: show the dismiss/continue button ─────────────────────────────────
   _showDismissButton(contentEl, documentId) {
     if (contentEl.querySelector('#stimuli-dismiss-btn')) return;
     const btn = document.createElement('button');
     btn.id = 'stimuli-dismiss-btn';
     btn.className = 'stimuli-dismiss-btn mt-lg';
     btn.textContent = this.content.stimuliOverlay?.dismissButton || 'Continue →';
-    btn.setAttribute('aria-label', this.content.stimuliOverlay?.dismissButtonAriaLabel || 'Continue and archive this document');
+    btn.setAttribute('aria-label', 'Continue and archive this document');
     btn.addEventListener('click', () => {
       this.eventBus.emit('stimuli:dismiss-requested', {
         documentId,
@@ -1683,6 +1162,6 @@ class UIController {
     btn.focus();
   }
 
-} // ← this closes the UIController class
+}
 
 export default UIController;

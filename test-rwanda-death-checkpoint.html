@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rwanda Death Checkpoint Test</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+      background: #0a0a0a;
+      color: #E8DCC8;
+    }
+    .test-section {
+      margin: 2rem 0;
+      padding: 1rem;
+      border: 1px solid #3D3D3D;
+      border-radius: 4px;
+    }
+    .pass { color: #1a8a1a; }
+    .fail { color: #8B0000; }
+    button {
+      background: #1E1E1E;
+      color: #E8DCC8;
+      border: 1px solid #3D3D3D;
+      padding: 0.5rem 1rem;
+      margin: 0.5rem;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #2A2A2A;
+    }
+    pre {
+      background: #111;
+      padding: 1rem;
+      overflow-x: auto;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Rwanda Death Checkpoint Test</h1>
+  <p>Testing mid-story death determination for Rwanda genocide mission roles.</p>
+
+  <div class="test-section">
+    <h2>Test 1: Hutu Moderate - Rescue Path (High Risk)</h2>
+    <p>Flags: helped_celestin=true, misdirected_militia=true, saved_at_roadblock=true</p>
+    <button onclick="testHutuModerateRescue()">Run Test</button>
+    <pre id="test1-output"></pre>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 2: Tutsi Survivor - Escaped Church</h2>
+    <p>Flags: escaped_church=true, witnessed_massacre=true</p>
+    <button onclick="testTutsiSurvivorEscape()">Run Test</button>
+    <pre id="test2-output"></pre>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 3: UN Peacekeeper - Defied Orders</h2>
+    <p>Flags: defied_orders=true, stayed_after_withdrawal=true, held_hotel=true</p>
+    <button onclick="testUNPeacekeeperDefiance()">Run Test</button>
+    <pre id="test3-output"></pre>
+  </div>
+
+  <div class="test-section">
+    <h2>Test 4: Scene Death Checkpoint Property</h2>
+    <p>Verify that death checkpoint scenes have the property set correctly</p>
+    <button onclick="testDeathCheckpointScenes()">Run Test</button>
+    <pre id="test4-output"></pre>
+  </div>
+
+  <script type="module">
+    import EventBus from './js/engine/EventBus.js';
+    import ConsequenceSystem from './js/engine/ConsequenceSystem.js';
+    import hutuModerateRole from './js/content/missions/rwanda/hutu-moderate.js';
+    import tutsiSurvivorRole from './js/content/missions/rwanda/tutsi-survivor.js';
+    import unPeacekeeperRole from './js/content/missions/rwanda/un-peacekeeper.js';
+
+    const eventBus = new EventBus();
+    const consequenceSystem = new ConsequenceSystem(eventBus);
+
+    window.testHutuModerateRescue = function() {
+      const output = document.getElementById('test1-output');
+      output.textContent = 'Running test...\n';
+
+      // Set flags for high-risk rescue path
+      consequenceSystem.setFlag('rw_helped_celestin', true);
+      consequenceSystem.setFlag('rw_misdirected_militia', true);
+      consequenceSystem.setFlag('rw_saved_at_roadblock', true);
+
+      // Run shouldDieNow check
+      const result = consequenceSystem.shouldDieNow('hutu-moderate');
+      
+      output.textContent += `Death Check Result:\n`;
+      output.textContent += `  dies: ${result.dies}\n`;
+      output.textContent += `  deathChance: ${(result.deathChance * 100).toFixed(1)}%\n`;
+      output.textContent += `  reason: ${result.reason}\n\n`;
+      
+      if (result.deathChance >= 0.70) {
+        output.textContent += '✓ PASS: Death chance is high (>70%) as expected\n';
+        output.className = 'pass';
+      } else {
+        output.textContent += '✗ FAIL: Death chance should be high for this path\n';
+        output.className = 'fail';
+      }
+
+      // Reset flags
+      consequenceSystem.reset();
+    };
+
+    window.testTutsiSurvivorEscape = function() {
+      const output = document.getElementById('test2-output');
+      output.textContent = 'Running test...\n';
+
+      // Set flags for escaped church path
+      consequenceSystem.setFlag('rw_escaped_church', true);
+      consequenceSystem.setFlag('rw_witnessed_massacre', true);
+
+      // Run shouldDieNow check
+      const result = consequenceSystem.shouldDieNow('tutsi-survivor');
+      
+      output.textContent += `Death Check Result:\n`;
+      output.textContent += `  dies: ${result.dies}\n`;
+      output.textContent += `  deathChance: ${(result.deathChance * 100).toFixed(1)}%\n`;
+      output.textContent += `  reason: ${result.reason}\n\n`;
+      
+      if (result.deathChance >= 0.40) {
+        output.textContent += '✓ PASS: Death chance is moderate-high (>40%) as expected\n';
+        output.className = 'pass';
+      } else {
+        output.textContent += '✗ FAIL: Death chance should be moderate-high for this path\n';
+        output.className = 'fail';
+      }
+
+      // Reset flags
+      consequenceSystem.reset();
+    };
+
+    window.testUNPeacekeeperDefiance = function() {
+      const output = document.getElementById('test3-output');
+      output.textContent = 'Running test...\n';
+
+      // Set flags for defiance path
+      consequenceSystem.setFlag('rw_defied_orders', true);
+      consequenceSystem.setFlag('rw_stayed_after_withdrawal', true);
+      consequenceSystem.setFlag('rw_held_hotel', true);
+
+      // Run shouldDieNow check
+      const result = consequenceSystem.shouldDieNow('un-peacekeeper');
+      
+      output.textContent += `Death Check Result:\n`;
+      output.textContent += `  dies: ${result.dies}\n`;
+      output.textContent += `  deathChance: ${(result.deathChance * 100).toFixed(1)}%\n`;
+      output.textContent += `  reason: ${result.reason}\n\n`;
+      
+      if (result.deathChance >= 0.45) {
+        output.textContent += '✓ PASS: Death chance is moderate (>45%) as expected\n';
+        output.className = 'pass';
+      } else {
+        output.textContent += '✗ FAIL: Death chance should be moderate for this path\n';
+        output.className = 'fail';
+      }
+
+      // Reset flags
+      consequenceSystem.reset();
+    };
+
+    window.testDeathCheckpointScenes = function() {
+      const output = document.getElementById('test4-output');
+      output.textContent = 'Checking death checkpoint scenes...\n\n';
+
+      const expectedCheckpoints = {
+        'hutu-moderate': ['rw-hm-scene-03a', 'rw-hm-scene-03b'],
+        'tutsi-survivor': ['rw-ts-scene-03a', 'rw-ts-scene-03b', 'rw-ts-scene-03c', 'rw-ts-scene-03d'],
+        'un-peacekeeper': ['rw-un-scene-03a', 'rw-un-scene-03b', 'rw-un-scene-03c', 'rw-un-scene-03d']
+      };
+
+      const roles = {
+        'hutu-moderate': hutuModerateRole,
+        'tutsi-survivor': tutsiSurvivorRole,
+        'un-peacekeeper': unPeacekeeperRole
+      };
+
+      let allPass = true;
+
+      for (const [roleName, expectedScenes] of Object.entries(expectedCheckpoints)) {
+        output.textContent += `${roleName}:\n`;
+        const role = roles[roleName];
+        
+        for (const sceneId of expectedScenes) {
+          const scene = role.scenes.find(s => s.id === sceneId);
+          if (scene && scene.deathCheckpoint === true) {
+            output.textContent += `  ✓ ${sceneId} has deathCheckpoint: true\n`;
+          } else {
+            output.textContent += `  ✗ ${sceneId} missing deathCheckpoint property\n`;
+            allPass = false;
+          }
+        }
+        output.textContent += '\n';
+      }
+
+      if (allPass) {
+        output.textContent += '✓ ALL TESTS PASSED\n';
+        output.className = 'pass';
+      } else {
+        output.textContent += '✗ SOME TESTS FAILED\n';
+        output.className = 'fail';
+      }
+    };
+  </script>
+</body>
+</html>
