@@ -1,146 +1,208 @@
 /**
- * DocumentInventory — Desk Drawer Styles
+ * Document Inventory — CoD / Modern Warfare Intel Style
  *
- * Top-down view of a wooden desk drawer with manila file folders.
- * Warm oak texture via CSS gradients. Aged manila folder tabs.
- * Locked documents show as blank cards with a ? stamp.
- * Lucy Parsons margin notes via .doc-card--annotated .doc-card-margin-note.
+ * Full-screen dark glassmorphism overlay with scanline overlay,
+ * glitch-on-open animation, snappy 0.1s transitions throughout,
+ * and a large card grid that scales on hover.
  *
- * All colors use CSS custom properties from style.css.
- * All animations respect prefers-reduced-motion.
- * All interactive targets minimum 44px.
+ * Z-index: var(--z-inventory) = 400 (above all stimuli/modal layers).
  */
 
-/* ── Trigger button ──────────────────────────────────────────────────────── */
+/* ── Trigger button ───────────────────────────────────────────────────────── */
+
 .doc-inventory-trigger {
   position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 200;
-  min-height: 44px;
-  padding: 10px 18px;
+  bottom: var(--spacing-md);
+  right: var(--spacing-md);
+  padding: 0.55rem 1rem;
+  background: rgba(10, 14, 26, 0.85);
+  border: 1px solid rgba(212, 175, 55, 0.55);
+  color: var(--color-accent-gold);
   font-family: 'Courier New', Courier, monospace;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
-  color: #2a1a0a;
-  background: linear-gradient(135deg, #c8a870 0%, #b89050 60%, #a07838 100%);
-  border: 2px solid #7a5828;
-  border-radius: 3px;
   cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.15);
-  transition: filter 0.15s ease, box-shadow 0.15s ease;
+  border-radius: 2px;
+  z-index: var(--z-inventory);
+  transition: background 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 0 12px rgba(212, 175, 55, 0.15);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
 }
 
-.doc-inventory-trigger:hover,
+.doc-inventory-trigger::before {
+  content: '📁';
+  font-size: 0.9rem;
+}
+
+.doc-inventory-trigger:hover {
+  background: rgba(212, 175, 55, 0.12);
+  border-color: var(--color-accent-gold);
+  box-shadow: 0 0 24px rgba(212, 175, 55, 0.35);
+}
+
 .doc-inventory-trigger:focus {
-  filter: brightness(1.1);
-  box-shadow: 0 4px 14px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.2);
-  outline: 2px solid #d4b896;
-  outline-offset: 2px;
+  outline: 2px solid var(--color-accent-gold);
+  outline-offset: 3px;
 }
 
-/* ── Full-screen overlay ─────────────────────────────────────────────────── */
+/* ── Full-screen overlay ──────────────────────────────────────────────────── */
+
 .doc-inventory-overlay {
   position: fixed;
   inset: 0;
-  z-index: 400;
-  background: rgba(5, 3, 1, 0.82);
+  z-index: var(--z-inventory);
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* Glassmorphism background */
+  background: rgba(5, 8, 18, 0.90);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+
+  /* Scanline overlay */
+  background-image:
+    repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0, 0, 0, 0.18) 3px,
+      rgba(0, 0, 0, 0.18) 4px
+    );
+
+  /* Entry animation */
   opacity: 0;
-  transition: opacity 0.25s ease;
+  clip-path: inset(5% 0 5% 0);
+  transition:
+    opacity 0.12s cubic-bezier(0.22, 1, 0.36, 1),
+    clip-path 0.12s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .doc-inventory-overlay.open {
   opacity: 1;
+  clip-path: inset(0% 0 0% 0);
+  animation: intelGlitchOpen 0.18s steps(2, end) forwards;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .doc-inventory-overlay { transition: none; }
+@keyframes intelGlitchOpen {
+  0%   { clip-path: inset(8% 0 8% 0); opacity: 0.6; }
+  40%  { clip-path: inset(1% 0 3% 0); opacity: 0.85; }
+  70%  { clip-path: inset(3% 0 1% 0); opacity: 0.92; }
+  100% { clip-path: inset(0% 0 0% 0); opacity: 1; }
 }
 
-/* ── Drawer container — oak wood texture ─────────────────────────────────── */
+/* ── Drawer panel ─────────────────────────────────────────────────────────── */
+
 .doc-inventory-drawer {
-  position: relative;
-  width: min(860px, 94vw);
+  width: min(900px, 96vw);
   max-height: 88vh;
   display: flex;
   flex-direction: column;
-  border-radius: 4px 4px 2px 2px;
-  overflow: hidden;
-
-  /* Oak wood grain via layered gradients */
-  background:
-    repeating-linear-gradient(
-      92deg,
-      transparent 0px,
-      transparent 18px,
-      rgba(90, 55, 20, 0.06) 18px,
-      rgba(90, 55, 20, 0.06) 19px
-    ),
-    repeating-linear-gradient(
-      180deg,
-      transparent 0px,
-      transparent 40px,
-      rgba(60, 35, 10, 0.04) 40px,
-      rgba(60, 35, 10, 0.04) 41px
-    ),
-    linear-gradient(160deg, #7a4e28 0%, #6b4020 30%, #7c5030 60%, #6a3e1c 100%);
-
-  border: 3px solid #4a2e10;
+  background: rgba(10, 14, 26, 0.96);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 4px;
   box-shadow:
-    0 0 0 1px #8a6030,
-    0 8px 40px rgba(0,0,0,0.8),
-    inset 0 1px 0 rgba(200,160,80,0.2);
+    0 0 0 1px rgba(212, 175, 55, 0.1),
+    0 24px 80px rgba(0, 0, 0, 0.9),
+    inset 0 0 60px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+  position: relative;
 }
 
-/* ── Header ──────────────────────────────────────────────────────────────── */
+/* Corner accent marks — CoD HUD aesthetic */
+.doc-inventory-drawer::before,
+.doc-inventory-drawer::after {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-color: rgba(212, 175, 55, 0.6);
+  border-style: solid;
+  pointer-events: none;
+}
+
+.doc-inventory-drawer::before {
+  top: 6px;
+  left: 6px;
+  border-width: 1px 0 0 1px;
+}
+
+.doc-inventory-drawer::after {
+  bottom: 6px;
+  right: 6px;
+  border-width: 0 1px 1px 0;
+}
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+
 .doc-inventory-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 20px 12px;
-  background: linear-gradient(180deg, #5a3418 0%, #4a2a10 100%);
-  border-bottom: 2px solid #3a1e08;
+  padding: 1rem 1.25rem 0.85rem;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  background: rgba(212, 175, 55, 0.04);
   flex-shrink: 0;
 }
 
 .doc-inventory-title {
-  margin: 0;
   font-family: 'Courier New', Courier, monospace;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
+  letter-spacing: 4px;
   text-transform: uppercase;
-  color: #d4b896;
+  color: var(--color-accent-gold);
+  margin: 0;
+  text-shadow: 0 0 16px rgba(212, 175, 55, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.doc-inventory-title::before {
+  content: '▶';
+  font-size: 0.6rem;
+  opacity: 0.7;
 }
 
 .doc-inventory-close {
-  min-width: 44px;
-  min-height: 44px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: transparent;
+  color: rgba(212, 175, 55, 0.7);
+  font-size: 1rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.1s ease;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 2px;
-  color: #a08060;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: color 0.15s, border-color 0.15s;
+  letter-spacing: 0;
+  text-transform: none;
+  font-weight: 400;
 }
 
-.doc-inventory-close:hover,
+.doc-inventory-close:hover {
+  background: rgba(212, 175, 55, 0.15);
+  color: var(--color-accent-gold);
+  border-color: var(--color-accent-gold);
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
+}
+
 .doc-inventory-close:focus {
-  color: #d4b896;
-  border-color: #7a5828;
-  outline: none;
+  outline: 2px solid var(--color-accent-gold);
+  outline-offset: 2px;
 }
 
-/* ── Desk surface — two-column layout ───────────────────────────────────── */
+/* ── Body: two-column desk layout ────────────────────────────────────────── */
+
 .doc-inventory-desk {
   display: grid;
   grid-template-columns: 220px 1fr;
@@ -149,269 +211,331 @@
   min-height: 0;
 }
 
-/* ── Folder column ───────────────────────────────────────────────────────── */
+/* ── Folder list (left column) ────────────────────────────────────────────── */
+
 .doc-inventory-folders {
+  border-right: 1px solid rgba(212, 175, 55, 0.14);
+  overflow-y: auto;
+  padding: 0.5rem 0;
+  background: rgba(0, 0, 0, 0.25);
   display: flex;
   flex-direction: column;
-  gap: 0;
-  padding: 20px 0 20px 16px;
-  overflow-y: auto;
-  border-right: 2px solid #3a1e08;
-  background: linear-gradient(180deg, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.05) 100%);
+  gap: 2px;
 }
 
-/* ── Individual folder tab ───────────────────────────────────────────────── */
-.doc-folder {
-  position: relative;
-  margin-bottom: 10px;
-}
+.doc-inventory-folders::-webkit-scrollbar { width: 4px; }
+.doc-inventory-folders::-webkit-scrollbar-track { background: transparent; }
+.doc-inventory-folders::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.25); border-radius: 2px; }
 
 .doc-folder-tab {
+  width: 100%;
+  padding: 0.65rem 1rem;
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  border-left: 2px solid transparent;
+  color: rgba(232, 220, 196, 0.6);
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.1s ease;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  min-height: 56px;
-  padding: 10px 14px 10px 12px;
-  cursor: pointer;
-  border: none;
-  border-radius: 6px 6px 0 0;
-  text-align: left;
-  position: relative;
-  transition: filter 0.15s ease, transform 0.1s ease;
-
-  /* Aged manila color */
-  background: linear-gradient(160deg, #d4b896 0%, #c8a878 50%, #bfa060 100%);
-  box-shadow:
-    0 -2px 6px rgba(0,0,0,0.3),
-    inset 0 1px 0 rgba(255,255,255,0.25),
-    inset 0 -1px 0 rgba(0,0,0,0.1);
-  color: #3a2010;
+  gap: 2px;
 }
 
-.doc-folder-tab:hover,
+.doc-folder-tab:hover {
+  background: rgba(212, 175, 55, 0.07);
+  color: var(--color-accent-gold);
+  border-left-color: rgba(212, 175, 55, 0.4);
+}
+
 .doc-folder-tab:focus {
-  filter: brightness(1.08);
-  transform: translateY(-2px);
-  outline: 2px solid #8a6030;
-  outline-offset: 1px;
+  outline: none;
+  background: rgba(212, 175, 55, 0.1);
 }
 
 .doc-folder--open .doc-folder-tab {
-  background: linear-gradient(160deg, #e8cca8 0%, #ddb880 50%, #c8a060 100%);
-  box-shadow:
-    0 -3px 10px rgba(0,0,0,0.4),
-    inset 0 1px 0 rgba(255,255,255,0.35);
-  transform: translateY(-3px);
-  z-index: 2;
+  background: rgba(212, 175, 55, 0.1);
+  color: var(--color-accent-gold);
+  border-left-color: var(--color-accent-gold);
+  text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
 }
 
 .doc-folder--empty .doc-folder-tab {
-  opacity: 0.55;
+  opacity: 0.35;
   cursor: default;
-}
-
-.doc-folder--empty .doc-folder-tab:hover {
-  filter: none;
-  transform: none;
 }
 
 .doc-folder-label {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.68rem;
   font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #2a1408;
-  line-height: 1.3;
 }
 
 .doc-folder-date {
-  font-family: 'Courier New', Courier, monospace;
+  font-weight: 400;
   font-size: 0.6rem;
-  color: #6a4020;
-  margin-top: 3px;
-  letter-spacing: 0.03em;
+  opacity: 0.6;
+  letter-spacing: 0.5px;
 }
 
 .doc-folder-count {
-  position: absolute;
-  top: 8px;
-  right: 10px;
-  font-family: 'Courier New', Courier, monospace;
   font-size: 0.6rem;
-  color: #8a5828;
-  font-weight: 700;
+  color: rgba(212, 175, 55, 0.55);
+  font-weight: 400;
 }
 
-/* ── Cards area ──────────────────────────────────────────────────────────── */
+/* ── Cards area (right column) ────────────────────────────────────────────── */
+
 .doc-inventory-cards-area {
-  padding: 20px 20px 20px 18px;
   overflow-y: auto;
-  background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.02) 100%);
+  padding: 1.25rem;
 }
+
+.doc-inventory-cards-area::-webkit-scrollbar { width: 4px; }
+.doc-inventory-cards-area::-webkit-scrollbar-track { background: transparent; }
+.doc-inventory-cards-area::-webkit-scrollbar-thumb { background: rgba(212, 175, 55, 0.25); border-radius: 2px; }
 
 .doc-inventory-hint {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 0.75rem;
-  color: #8a6840;
-  font-style: italic;
+  font-size: 0.72rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(232, 220, 196, 0.3);
+  text-align: center;
+  padding: 2rem 1rem;
   margin: 0;
-  padding-top: 8px;
 }
 
-/* ── Cards grid ──────────────────────────────────────────────────────────── */
+/* ── Card grid ────────────────────────────────────────────────────────────── */
+
 .doc-cards-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.85rem;
 }
 
-/* ── Individual document card ────────────────────────────────────────────── */
+/* ── Individual card ──────────────────────────────────────────────────────── */
+
 .doc-card {
   position: relative;
-  width: 110px;
-  height: 140px;
+  aspect-ratio: 3 / 4;
   border-radius: 2px;
+  overflow: hidden;
+  background: rgba(20, 26, 45, 0.9);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  transition:
+    transform 0.1s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.1s ease,
+    border-color 0.1s ease;
+}
+
+.doc-card--locked {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(20, 26, 45, 0.9) 0px,
+    rgba(20, 26, 45, 0.9) 8px,
+    rgba(10, 14, 26, 0.9) 8px,
+    rgba(10, 14, 26, 0.9) 16px
+  );
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  overflow: visible;
-
-  /* Aged manila card */
-  background: linear-gradient(160deg, #e0c898 0%, #d4b880 60%, #c8a868 100%);
-  border: 1px solid #9a7840;
-  box-shadow:
-    2px 3px 8px rgba(0,0,0,0.45),
-    inset 0 1px 0 rgba(255,255,255,0.3);
-}
-
-/* ── Locked card ─────────────────────────────────────────────────────────── */
-.doc-card--locked {
-  background: linear-gradient(160deg, #c8b090 0%, #b89870 60%, #a88858 100%);
-  opacity: 0.7;
-  cursor: default;
+  cursor: not-allowed;
+  border-color: rgba(184, 168, 136, 0.1);
 }
 
 .doc-card-stamp {
   font-family: 'Courier New', Courier, monospace;
-  font-size: 2.8rem;
-  font-weight: 900;
-  color: rgba(80, 40, 10, 0.35);
-  line-height: 1;
-  user-select: none;
-  /* Rubber-stamp look */
-  text-shadow: 1px 1px 0 rgba(80,40,10,0.15);
-  letter-spacing: -0.05em;
+  font-size: 2rem;
+  color: rgba(184, 168, 136, 0.2);
+  font-weight: 700;
 }
 
-/* ── Unlocked card ───────────────────────────────────────────────────────── */
 .doc-card--unlocked {
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  padding: 10px 8px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0.75rem 0.5rem 0.6rem;
   text-align: center;
+  /* Fake worn-paper texture with gradient */
+  background:
+    linear-gradient(
+      160deg,
+      rgba(32, 28, 18, 0.92) 0%,
+      rgba(18, 22, 38, 0.95) 100%
+    );
+  border-color: rgba(212, 175, 55, 0.25);
 }
 
-.doc-card--unlocked:hover,
+.doc-card--unlocked::before {
+  /* Scanline on card */
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.12) 2px,
+    rgba(0, 0, 0, 0.12) 3px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.doc-card--unlocked:hover {
+  transform: scale(1.07) translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.7), 0 0 16px rgba(212, 175, 55, 0.2);
+  border-color: rgba(212, 175, 55, 0.6);
+  z-index: 2;
+}
+
 .doc-card--unlocked:focus {
-  transform: translateY(-4px) rotate(-1deg);
-  box-shadow:
-    4px 8px 16px rgba(0,0,0,0.55),
-    inset 0 1px 0 rgba(255,255,255,0.35);
-  outline: 2px solid #8a6030;
+  outline: 2px solid var(--color-accent-gold);
   outline-offset: 2px;
+  transform: scale(1.05);
+  z-index: 2;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  .doc-card--unlocked { transition: none; }
-  .doc-card--unlocked:hover { transform: none; }
+.doc-card--annotated {
+  border-color: rgba(212, 175, 55, 0.5);
+  box-shadow: inset 0 0 0 1px rgba(212, 175, 55, 0.15);
 }
 
 .doc-card-title {
+  position: relative;
+  z-index: 2;
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.62rem;
   font-weight: 700;
-  color: #2a1408;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: rgba(212, 175, 55, 0.9);
   line-height: 1.4;
-  letter-spacing: 0.02em;
-  text-align: center;
-  display: block;
-}
-
-/* ── Margin note (Lucy Parsons, trust >= 3) ──────────────────────────────── */
-.doc-card--annotated {
-  /* Slight tilt to suggest a handwritten card */
-  transform: rotate(-0.5deg);
-}
-
-.doc-card--annotated:hover,
-.doc-card--annotated:focus {
-  transform: translateY(-4px) rotate(-1.5deg);
+  text-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
 }
 
 .doc-card-margin-note {
-  display: block;
-  position: absolute;
-  bottom: -28px;
-  left: 4px;
-  right: 4px;
+  position: relative;
+  z-index: 2;
   font-family: Georgia, 'Times New Roman', serif;
-  font-size: 0.55rem;
   font-style: italic;
-  color: #3a2010;
+  font-size: 0.55rem;
+  color: rgba(232, 220, 196, 0.45);
   line-height: 1.3;
-  text-align: left;
+  margin-top: 0.35rem;
+  padding: 0 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+/* Just-archived gold flash on the card */
+.saa-card--just-archived {
+  border-color: rgba(212, 175, 55, 0.9) !important;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.5) !important;
+  transition: border-color 2s ease, box-shadow 2s ease !important;
+}
+
+/* ── StimuliArchiveAnimator badge ─────────────────────────────────────────── */
+
+.saa-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 3px;
+  background: var(--color-accent-gold);
+  color: #0a0e1a;
+  border-radius: 8px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.6rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   pointer-events: none;
-  /* Faint pencil look */
-  opacity: 0.75;
-  /* Slight rotation for handwritten feel */
-  transform: rotate(-0.8deg);
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
 }
 
-/* Ensure annotated cards have enough bottom space for the note */
-.doc-cards-grid {
-  padding-bottom: 36px;
+.saa-badge--bounce {
+  animation: saaBadgeBounce 0.3s cubic-bezier(0.36, 0.07, 0.19, 0.97) forwards;
 }
 
-/* ── Mobile layout ───────────────────────────────────────────────────────── */
-@media (max-width: 600px) {
+@keyframes saaBadgeBounce {
+  0%   { transform: scale(0.5); }
+  60%  { transform: scale(1.3); }
+  80%  { transform: scale(0.9); }
+  100% { transform: scale(1.0); }
+}
+
+/* ── Responsive ───────────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
   .doc-inventory-desk {
     grid-template-columns: 1fr;
     grid-template-rows: auto 1fr;
   }
 
   .doc-inventory-folders {
+    border-right: none;
+    border-bottom: 1px solid rgba(212, 175, 55, 0.14);
     flex-direction: row;
-    flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 12px 12px 0;
-    border-right: none;
-    border-bottom: 2px solid #3a1e08;
-    gap: 8px;
-  }
-
-  .doc-folder {
-    flex-shrink: 0;
-    margin-bottom: 0;
+    padding: 0;
+    max-height: 52px;
   }
 
   .doc-folder-tab {
-    min-height: 44px;
-    padding: 8px 10px;
-    border-radius: 4px 4px 0 0;
-    min-width: 120px;
+    flex-direction: row;
+    align-items: center;
+    white-space: nowrap;
+    padding: 0.55rem 0.85rem;
+    border-bottom: 2px solid transparent;
+    border-left: none;
   }
 
-  .doc-inventory-cards-area {
-    padding: 14px;
+  .doc-folder--open .doc-folder-tab {
+    border-bottom-color: var(--color-accent-gold);
+    border-left-color: transparent;
   }
 
-  .doc-card {
-    width: 90px;
-    height: 116px;
+  .doc-folder-date { display: none; }
+
+  .doc-cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
   }
+
+  .doc-inventory-trigger {
+    bottom: var(--spacing-sm);
+    right: var(--spacing-sm);
+  }
+}
+
+/* ── Reduced motion ───────────────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .doc-inventory-overlay {
+    animation: none !important;
+    transition: opacity 0.15s ease !important;
+    clip-path: none !important;
+  }
+
+  .doc-card--unlocked {
+    transition: none !important;
+  }
+
+  .doc-card--unlocked:hover { transform: none; }
 }

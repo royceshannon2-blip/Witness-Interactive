@@ -111,7 +111,7 @@ class DocumentInventory {
     btn.className = 'doc-inventory-trigger';
     btn.setAttribute('aria-label', 'Open document inventory');
     btn.setAttribute('aria-haspopup', 'dialog');
-    btn.textContent = 'Open Inventory';
+    btn.textContent = 'Intel';
     btn.addEventListener('click', () => this._toggle());
     document.body.appendChild(btn);
     this._triggerBtn = btn;
@@ -174,7 +174,7 @@ class DocumentInventory {
     return `
       <div class="doc-inventory-drawer" role="document">
         <div class="doc-inventory-header">
-          <h2 id="doc-inventory-heading" class="doc-inventory-title">Evidence Drawer</h2>
+          <h2 id="doc-inventory-heading" class="doc-inventory-title">Intel</h2>
           <button class="doc-inventory-close" aria-label="Close document inventory">&#x2715;</button>
         </div>
         <div class="doc-inventory-desk">

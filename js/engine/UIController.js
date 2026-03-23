@@ -68,6 +68,7 @@ class UIController {
     this.eventBus.on('stimuli:shown',       this.handleStimuliShown.bind(this));
     this.eventBus.on('stimuli:dismissed',   this.handleStimuliDismissed.bind(this));
     this.eventBus.on('stimuli:view-ready',  this.handleStimuliViewReady.bind(this));
+    this.eventBus.on('stimuli:soft-closed', this.handleStimuliSoftClosed.bind(this));
     this.eventBus.on('scene:error', () => {
       console.warn('UIController: scene:error — re-rendering current scene');
       if (this.currentSceneData?.scene) {
@@ -213,6 +214,20 @@ class UIController {
   handleStimuliDismissed(data) {
     // Remove the overlay from DOM after archive animation completes
     document.getElementById('stimuli-overlay')?.remove();
+  }
+
+  handleStimuliSoftClosed(data) {
+    // Soft-close: the overlay was removed without archiving.
+    // Re-thaw the world (narrative + choices) so gameplay continues.
+    const narrative = document.getElementById('scene-narrative');
+    const choices   = document.getElementById('scene-choices');
+    [narrative, choices].filter(Boolean).forEach(el => {
+      el.classList.remove('sra-world-frozen');
+      el.querySelectorAll('button').forEach(btn => {
+        btn.disabled = false;
+        btn.removeAttribute('aria-disabled');
+      });
+    });
   }
 
   handleStimuliViewReady(data) {
@@ -1098,9 +1113,23 @@ class UIController {
     const crossRolePrompt = doc.crossRolePrompt || null;
     let questionMounted = false;
 
+    // ── "← Back to story" soft-close ────────────────────────────────────────
+    // Allows the player to return to the narrative WITHOUT archiving the doc.
+    // The document goes back to the front of the queue and can be re-opened.
+    const backBtn = document.createElement('button');
+    backBtn.id = 'stimuli-back-btn';
+    backBtn.className = 'stimuli-back-btn mt-sm';
+    backBtn.setAttribute('aria-label', 'Close document and return to narrative without archiving');
+    backBtn.textContent = '← Back to story';
+    backBtn.addEventListener('click', () => {
+      this.eventBus.emit('stimuli:soft-close-requested', { documentId: doc.id });
+    });
+    contentEl.appendChild(backBtn);
+
+    // ── "I've read this" confirm ─────────────────────────────────────────────
     const btn = document.createElement('button');
     btn.id = 'stimuli-read-confirm';
-    btn.className = 'stimuli-read-confirm-btn mt-lg';
+    btn.className = 'stimuli-read-confirm-btn mt-sm';
     btn.setAttribute('aria-label', 'I have read this document — answer the question');
     btn.textContent = "I've read this document →";
     contentEl.appendChild(btn);
@@ -1109,6 +1138,7 @@ class UIController {
       if (questionMounted) return;
       questionMounted = true;
       btn.remove();
+      backBtn.remove(); // remove back button once player commits to answering
 
       if (!doc.pauseQuestion) {
         this._showDismissButton(contentEl, doc.id);
@@ -1132,10 +1162,12 @@ class UIController {
       if (data.documentId !== doc.id) return;
       this.eventBus.off('stimuli:pause-question-answered', onAnswered);
       this.eventBus.off('inventory:open-requested', onInventoryOpen);
-      setTimeout(() => {
-        modal.destroy();
-        this._showDismissButton(contentEl, doc.id);
-      }, 800);
+      // FIX: destroy modal synchronously so StimuliArchiveAnimator always reads
+      // stable DOM geometry when it calls getBoundingClientRect().
+      // The old 800ms setTimeout caused a race where the modal was still in a
+      // CSS transition while the archive animator tried to snapshot coordinates.
+      modal.destroy();
+      this._showDismissButton(contentEl, doc.id);
     };
 
     const onInventoryOpen = () => this._openInventory();

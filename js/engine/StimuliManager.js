@@ -91,6 +91,7 @@ class StimuliManager {
     this.eventBus.on('typewriter:complete',        (data) => this._handleTypewriterComplete(data));
     this.eventBus.on('stimuli:answer-submitted',   (data) => this._handleAnswerSubmitted(data));
     this.eventBus.on('stimuli:dismiss-requested',  (data) => this._handleDismissRequested(data));
+    this.eventBus.on('stimuli:soft-close-requested',(data) => this._handleSoftCloseRequested(data));
     this.eventBus.on('stimuli:archive-complete',   (data) => this._handleArchiveComplete(data));
 
     // Briefing pages can unlock stimulus documents
@@ -274,6 +275,53 @@ class StimuliManager {
     // Just ensure the overlay DOM is gone. Queue was already advanced above.
     const overlay = document.getElementById('stimuli-overlay');
     if (overlay) overlay.remove();
+  }
+
+  // ─── Soft close: return to narrative without archiving ────────────────────────
+
+  /**
+   * The player clicked "← Back to story" before committing to the question.
+   * We hide the overlay WITHOUT the archive animation, restore the doc to the
+   * front of the queue, and re-emit stimuli:view-ready so the "View Document"
+   * button reappears immediately.
+   */
+  _handleSoftCloseRequested(data) {
+    if (!data || data.documentId !== this._currentDocumentId) return;
+
+    const docId = this._currentDocumentId;
+
+    // Destroy annotation layer
+    if (this._docAnnotationLayer) {
+      this._docAnnotationLayer.destroy();
+      this._docAnnotationLayer = null;
+    }
+
+    // Remove from shownDocuments so the doc CAN be re-shown when the player
+    // clicks "View Document" again.
+    this.shownDocuments.delete(docId);
+
+    // Reset all current-doc state
+    this._currentDocumentId = null;
+    this._currentAnswered = false;
+    this._currentAnsweredCorrectly = false;
+    this._forceAllowDismiss = false;
+
+    // Put the doc back at the FRONT of the queue
+    this._queue.unshift(docId);
+
+    // Remove overlay from DOM — no archive animation
+    document.getElementById('stimuli-overlay')?.remove();
+
+    // Signal UIController to thaw the narrative/choices layer
+    this.eventBus.emit('stimuli:soft-closed', { documentId: docId });
+
+    // Re-show the "View Document" button
+    if (this._queue.length > 0) {
+      this.eventBus.emit('stimuli:view-ready', {
+        documentId: this._queue[0],
+        count: this._queue.length
+      });
+    }
   }
 
   // ─── Typewriter complete handler (stored on instance, removed per-scene) ─────

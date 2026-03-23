@@ -74,18 +74,20 @@
     --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5);
 
     /* Z-index contract — every overlay must use these, no hardcoding elsewhere */
+    /* IMPORTANT: #scene-narrative / #scene-choices sit at z:60.              */
+    /* All stimuli / modal / inventory layers must exceed 60.                  */
     --z-base: 1;
     --z-elevated: 10;
     --z-scene: 1;
     --z-effects: 10;
-    --z-stimuli-surface: 14;
-    --z-stimuli-doc: 15;
-    --z-stimuli-dust: 16;
-    --z-stimuli-archive: 17;
-    --z-pause-modal: 20;
-    --z-modal: 100;
-    --z-inventory: 300;
-    --z-feedback: 400;
+    --z-stimuli-surface: 70;
+    --z-stimuli-doc: 80;
+    --z-stimuli-dust: 82;
+    --z-stimuli-archive: 85;
+    --z-pause-modal: 110;
+    --z-modal: 120;
+    --z-inventory: 400;
+    --z-feedback: 450;
     --z-loading: 1000;
 }
 
@@ -2026,6 +2028,30 @@ body.effect-shake #app { animation: shake 0.5s ease-in-out; }
     letter-spacing: normal;
     position: relative;
     z-index: 61; /* above #scene-choices z:60 */
+    
+    /* Intel drop entrance */
+    opacity: 0;
+    transform-origin: top center;
+    animation: intelDropIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes intelDropIn {
+    0% {
+        opacity: 0;
+        transform: scale(1.05) translateY(-10px);
+        background: rgba(212, 175, 55, 0.4);
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+    }
+    50% {
+        opacity: 1;
+        background: rgba(212, 175, 55, 0.2);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+        background: rgba(212, 175, 55, 0.08);
+        box-shadow: none;
+    }
 }
 
 .stimuli-view-doc-btn:hover,
@@ -2241,6 +2267,18 @@ body.effect-shake #app { animation: shake 0.5s ease-in-out; }
 #scene-narrative {
     position: relative;
     z-index: 60;
+}
+
+/* ============================================
+   World Freeze — applied when stimuli/inventory
+   overlay is open. Dims and blurs the narrative
+   layer so artifact content reads clearly above it.
+   ============================================ */
+.sra-world-frozen {
+    filter: blur(3px) brightness(0.35) !important;
+    pointer-events: none !important;
+    user-select: none !important;
+    transition: filter 0.25s ease !important;
 }
 
 /* ============================================

@@ -4,8 +4,8 @@
  * Cinematic document reveal: spotlight from above, slam-down entrance,
  * floating dust particles, period-accurate document textures by type.
  *
- * Z-index: 15 — above game scene (z:1), atmospheric (z:5), animations (z:10),
- *               but below modals (z:100) and choice buttons (z:20).
+ * Z-index: var(--z-stimuli-doc) = 80 — above scene (z:60), atmospheric (z:10),
+ *               but below pause-modal (z:110) and inventory (z:400).
  *
  * Document types styled by class:
  *   .doc-type--arbeiter-zeitung
@@ -22,7 +22,7 @@
 .stimuli-overlay {
   position: fixed;
   inset: 0;
-  z-index: 15;
+  z-index: var(--z-stimuli-doc);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -86,8 +86,8 @@
   padding: 2rem 2.25rem;
   border-radius: 2px;
 
-  /* Slam-down entrance: scale from 110% → 100%, ease-out, 300ms */
-  animation: slamDown 300ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+  /* Slam-down entrance: scale from 115% → 100%, heavy snap, 250ms */
+  animation: slamDown 250ms cubic-bezier(0.175, 0.885, 0.32, 1.1) both;
 
   /* Scrollbar styling */
   scrollbar-width: thin;
@@ -101,7 +101,8 @@
 @keyframes slamDown {
   from {
     opacity: 0;
-    transform: scale(1.1) translateY(-18px);
+    transform: scale(1.15) translateY(-25px);
+    box-shadow: 0 40px 100px rgba(0, 0, 0, 0.9);
   }
   to {
     opacity: 1;
@@ -152,6 +153,36 @@
   margin-top: 1.5rem;
   width: 100%;
 }
+
+/* ── "← Back to story" soft-close button ────────────────────────────────── */
+/* Subdued secondary action — does NOT archive the document */
+.stimuli-back-btn {
+  display: block;
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(184, 168, 136, 0.3);
+  color: rgba(184, 168, 136, 0.65);
+  font-family: var(--font-family-ui, sans-serif);
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 0.5rem 1rem;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+
+.stimuli-back-btn:hover {
+  color: rgba(232, 220, 196, 0.85);
+  border-color: rgba(184, 168, 136, 0.55);
+  background: rgba(184, 168, 136, 0.06);
+}
+
+.stimuli-back-btn:focus {
+  outline: 2px solid rgba(184, 168, 136, 0.5);
+  outline-offset: 2px;
+}
+
 
 /* ═══════════════════════════════════════════════════════════════════════════
    DOCUMENT TYPE TEXTURES
