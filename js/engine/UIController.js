@@ -743,49 +743,32 @@ class UIController {
     );
   }
 
-  _openInventory() {
-  // The unified AnnotationInventory handles its own toggle.
-  // We just programmatically click its toggle button.
-  const toggleBtn = document.getElementById('annotation-inventory-toggle');
-  if (toggleBtn) toggleBtn.click();
-}
-  // REPLACE _mountPauseQuestion in UIController.js with this version.
-// The dynamic import() was wrong — PauseQuestionModal is already statically
-// imported at the top of UIController.js. Use that reference directly.
-
-_mountPauseQuestion(contentEl, doc, crossRolePrompt) {
-  const modal = new PauseQuestionModal(
-    this.eventBus,
-    doc.pauseQuestion,
-    doc.id,
-    crossRolePrompt
-  );
-  modal.mount();
-
-  const onAnswered = (data) => {
-    if (data.documentId !== doc.id) return;
-    this.eventBus.off('stimuli:pause-question-answered', onAnswered);
-
-    // Wait 800ms so player can read the explanation before dismiss appears
-    setTimeout(() => {
-      modal.destroy();
-      this._showDismissButton(contentEl, doc.id);
-    }, 800);
-  };
-
-  this.eventBus.on('stimuli:pause-question-answered', onAnswered);
-
-  // Inventory open from inside modal
-  const onInventoryOpen = () => this._openInventory();
-  this.eventBus.on('inventory:open-requested', onInventoryOpen);
-
-  // Clean up inventory listener when modal is destroyed
-  const origDestroy = modal.destroy.bind(modal);
-  modal.destroy = () => {
-    this.eventBus.off('inventory:open-requested', onInventoryOpen);
-    origDestroy();
-  };
-}
+    _openInventory() {
+    // The unified AnnotationInventory handles its own toggle.
+    // We just programmatically click its toggle button.
+    const toggleBtn = document.getElementById('annotation-inventory-toggle');
+    if (toggleBtn) toggleBtn.click();
+  }
+ 
+  _mountPauseQuestion(contentEl, doc, crossRolePrompt) {
+    const modal = new PauseQuestionModal(
+      this.eventBus,
+      doc.pauseQuestion,
+      doc.id,
+      crossRolePrompt
+    );
+    modal.mount();
+ 
+    const onAnswered = (data) => {
+      if (data.documentId !== doc.id) return;
+      this.eventBus.off('stimuli:pause-question-answered', onAnswered);
+ 
+      // Wait 800ms so player can read the explanation before dismiss appears
+      setTimeout(() => {
+        modal.destroy();
+        this._showDismissButton(contentEl, doc.id);
+      }, 800);
+    };
  
     this.eventBus.on('stimuli:pause-question-answered', onAnswered);
  
@@ -799,21 +782,10 @@ _mountPauseQuestion(contentEl, doc, crossRolePrompt) {
       this.eventBus.off('inventory:open-requested', onInventoryOpen);
       origDestroy();
     };
-  }).catch(err => {
-    console.error('UIController: Failed to load PauseQuestionModal:', err);
-    // Fallback: allow dismiss without question
-    this._showDismissButton(contentEl, doc.id);
-  });
-}
-
-  handleChoiceClick(choice) {
-    this.eventBus.emit('choice:made', {
-      choiceId: choice.id,
-      nextSceneId: choice.nextScene,
-      consequences: choice.consequences || {}
-    });
   }
-
+ 
+  handleChoiceClick(choice) {
+ 
   showLoading() {
     this.showScreen('loading');
   }
