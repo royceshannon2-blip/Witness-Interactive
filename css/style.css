@@ -4,6 +4,15 @@
  *
  * Architecture: All colors, fonts, and spacing defined as CSS custom properties
  * for easy theming and maintenance.
+ *
+ * FIXES APPLIED (from haymarket-fixes.css):
+ *   BUG 1 — CSS BLEED: All Haymarket identity card selectors are now scoped
+ *            under .mission-haymarket so they cannot affect other missions.
+ *   BUG 2a — #effects-layer pointer-events: hard-locked to none via !important
+ *            to prevent Chromium stacking-context edge cases.
+ *   BUG 2b — .stimuli-overlay and .pqm-backdrop: pointer-events disabled when
+ *            opacity is 0 (archive animation race guard).
+ *   BUG 2c — #scene-choices / #scene-narrative z-index guarantee (z:60 > effects z:50).
  */
 
 /* ============================================
@@ -1535,7 +1544,6 @@ body.effect-shake #app { animation: shake 0.5s ease-in-out; }
 
 @keyframes mb-fade-in { from { opacity: 0; } to { opacity: 1; } }
 
-
 .mb-paper {
     background: #e2d4a8;
     width: 100%;
@@ -2016,6 +2024,8 @@ body.effect-shake #app { animation: shake 0.5s ease-in-out; }
     margin-bottom: var(--spacing-sm);
     text-transform: none;
     letter-spacing: normal;
+    position: relative;
+    z-index: 61; /* above #scene-choices z:60 */
 }
 
 .stimuli-view-doc-btn:hover,
@@ -2181,85 +2191,589 @@ body.effect-shake #app { animation: shake 0.5s ease-in-out; }
 .inventory-annotation-group-title { margin: 0 0 2px; font-size: 0.85rem; font-family: var(--font-family-ui); color: var(--color-text-primary); font-weight: 600; }
 
 /* ============================================
-   Haymarket Identity Cards
+   BUG FIX 2a: #effects-layer pointer-events
+   Hard-lock pointer-events: none on the effects
+   layer and ALL its children. Wins over any child
+   override via !important, preventing Chromium
+   stacking-context edge cases.
    ============================================ */
-.hm-surveillance-card,
-.hm-employee-card,
-.hm-pinkerton-card { width: 100%; max-width: 480px; margin: 0 auto; position: relative; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.7); }
+#effects-layer,
+#effects-layer * {
+    pointer-events: none !important;
+}
 
-.hm-surveillance-card { background: #e8d8b8; border: 1px solid #a08050; font-family: 'Special Elite', 'Courier New', cursive; box-shadow: 0 8px 40px rgba(0,0,0,0.7), inset 0 0 60px rgba(100,70,20,0.2); }
-.surv-header { background: #1a1a2e; padding: 10px 16px 8px; display: flex; justify-content: space-between; align-items: center; border-bottom: 3px solid #8b1a1a; }
-.surv-dept { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 700; font-size: 0.6rem; letter-spacing: 2px; color: #c8c0a0; text-transform: uppercase; }
-.surv-shield { width: 32px; height: 36px; }
-.surv-classification { background: #8b1a1a; text-align: center; padding: 6px; font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 700; font-size: 0.75rem; letter-spacing: 4px; color: #ffe8b0; text-transform: uppercase; }
-.surv-body { padding: 16px 20px 20px; display: grid; grid-template-columns: 130px 1fr; gap: 16px; position: relative; }
-.surv-photo-col { display: flex; flex-direction: column; gap: 8px; }
-.surv-photo-frame { width: 130px; height: 160px; border: 2px solid #6a4a20; background: #b8a880; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-.surv-photo-frame svg { width: 100%; height: 100%; }
-.surv-photo-label { font-size: 0.48rem; color: #5a3a10; text-align: center; letter-spacing: 1px; font-family: 'Special Elite', 'Courier New', cursive; }
-.surv-file-num { font-size: 0.55rem; color: #5a3a10; text-align: center; font-family: 'Special Elite', 'Courier New', cursive; margin-top: 4px; padding-top: 4px; border-top: 1px solid rgba(100,60,20,0.3); }
-.surv-fields { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
-.surv-field { border-bottom: 0.5px solid rgba(100,60,20,0.35); padding-bottom: 6px; }
-.surv-field-label { font-size: 0.5rem; letter-spacing: 1.5px; text-transform: uppercase; color: #6a4010; font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 400; margin-bottom: 1px; }
-.surv-field-value { font-size: 0.85rem; color: #1a0e04; font-family: 'Special Elite', 'Courier New', cursive; line-height: 1.2; min-height: 1rem; }
-.surv-notes { margin: 0 20px 16px; padding: 10px 12px; background: rgba(100,60,20,0.08); border-left: 3px solid #8b1a1a; font-size: 0.72rem; color: #2a1a04; line-height: 1.6; font-family: 'Special Elite', 'Courier New', cursive; position: relative; z-index: 2; }
-.surv-notes-label { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 0.52rem; letter-spacing: 2px; color: #6a3010; text-transform: uppercase; margin-bottom: 4px; display: block; }
-.surv-stamp { position: absolute; bottom: 24px; right: 16px; width: 110px; height: 110px; z-index: 15; opacity: 0.22; transform: rotate(-12deg); pointer-events: none; }
-.surv-footer { background: #1a1a2e; padding: 5px 16px; display: flex; justify-content: space-between; align-items: center; }
-.surv-footer span { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 0.45rem; letter-spacing: 1px; color: #8880a0; text-transform: uppercase; }
+/* ============================================
+   BUG FIX 2b: Overlay race-condition guards
+   Leftover .stimuli-overlay / .pqm-backdrop DOM
+   nodes (from the 820ms archive animation race)
+   must not block clicks while fading out.
+   .saa-doc--flying and .saa-overlay--dimming are
+   also pinned to pointer-events: none.
+   ============================================ */
+.stimuli-overlay[style*="opacity: 0"],
+.stimuli-overlay[style*="opacity:0"] {
+    pointer-events: none !important;
+}
 
-.hm-employee-card { background: #f2ead8; border: 1px solid #8a7040; font-family: 'Courier Prime', 'Courier New', monospace; }
-.emp-header { background: #2a3520; padding: 10px 16px 8px; display: flex; justify-content: space-between; align-items: center; }
-.emp-company { font-family: 'IM Fell English', Georgia, serif; font-style: italic; color: #d0c898; font-size: 1rem; }
-.emp-est { font-family: 'Courier Prime', 'Courier New', monospace; font-size: 0.55rem; color: #8a9878; letter-spacing: 1px; }
-.emp-rule { height: 2px; background: linear-gradient(to right, #5a7040, #c8a830, #5a7040); }
-.emp-title-band { background: #f2ead8; border-bottom: 1px solid rgba(80,60,20,0.4); padding: 8px 16px; display: flex; justify-content: space-between; align-items: baseline; }
-.emp-doc-title { font-family: 'IM Fell English', Georgia, serif; font-size: 0.9rem; color: #2a1e04; letter-spacing: 1px; }
-.emp-year { font-size: 0.7rem; color: #6a5020; letter-spacing: 2px; font-family: 'Courier Prime', 'Courier New', monospace; }
-.emp-body { padding: 12px 16px 16px; position: relative; }
-.emp-worker-banner { display: flex; justify-content: space-between; align-items: center; background: rgba(80,100,60,0.12); border: 1px solid rgba(80,100,60,0.3); padding: 6px 10px; margin-bottom: 12px; }
-.emp-worker-number { font-size: 1.1rem; font-weight: 700; color: #1a2e10; letter-spacing: 2px; font-family: 'Courier Prime', 'Courier New', monospace; }
-.emp-worker-label { font-size: 0.5rem; color: #4a6030; letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; font-family: 'Oswald', 'Arial Narrow', sans-serif; }
-.emp-status { font-size: 0.65rem; color: #8b1a1a; font-weight: 700; letter-spacing: 2px; border: 1px solid #8b1a1a; padding: 2px 8px; text-transform: uppercase; font-family: 'Courier Prime', 'Courier New', monospace; }
-.emp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
-.emp-row { padding: 6px 4px; border-bottom: 1px dashed rgba(80,60,20,0.25); }
-.emp-row.full { grid-column: 1 / -1; }
-.emp-row-label { font-size: 0.48rem; color: #4a6030; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 2px; font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 400; }
-.emp-row-value { font-size: 0.82rem; color: #1a1204; font-family: 'Courier Prime', 'Courier New', monospace; font-weight: 700; min-height: 1rem; }
-.emp-note { margin-top: 12px; padding: 8px 10px; background: rgba(139,26,26,0.06); border-left: 2px solid #8b1a1a; font-size: 0.65rem; color: #2a1604; line-height: 1.5; position: relative; z-index: 2; font-family: 'Courier Prime', 'Courier New', monospace; }
-.emp-note-label { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 0.48rem; letter-spacing: 2px; color: #6a3010; text-transform: uppercase; display: block; margin-bottom: 3px; }
-.emp-stamp { position: absolute; bottom: 50px; right: 20px; width: 90px; height: 90px; opacity: 0.12; transform: rotate(8deg); z-index: 1; pointer-events: none; }
-.emp-footer { background: #2a3520; padding: 5px 16px; display: flex; justify-content: space-between; }
-.emp-footer span { font-size: 0.45rem; color: #7a9060; letter-spacing: 1px; text-transform: uppercase; font-family: 'Oswald', 'Arial Narrow', sans-serif; }
+.pqm-backdrop[style*="opacity: 0"],
+.pqm-backdrop[style*="opacity:0"] {
+    pointer-events: none !important;
+}
 
-.hm-pinkerton-card { background: #e0c87a; border: 1px solid #a08030; font-family: 'Courier Prime', 'Courier New', monospace; box-shadow: 0 8px 40px rgba(0,0,0,0.7), inset 0 0 80px rgba(120,80,0,0.15); }
-.hm-pinkerton-card::after { content: 'CONFIDENTIAL'; position: absolute; top: 12px; right: -28px; background: #1a1a1a; color: #e0c87a; font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 0.5rem; font-weight: 700; letter-spacing: 3px; padding: 3px 36px; transform: rotate(45deg); z-index: 20; pointer-events: none; }
-.pink-header { background: #1a1a1a; padding: 10px 16px 8px; display: flex; justify-content: space-between; align-items: center; }
-.pink-agency { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 700; font-size: 0.85rem; letter-spacing: 2px; color: #e0c87a; text-transform: uppercase; }
-.pink-eye { display: flex; align-items: center; gap: 6px; }
-.pink-eye-text { font-family: 'IM Fell English', Georgia, serif; font-style: italic; font-size: 0.6rem; color: #b0a060; text-align: right; line-height: 1.2; }
-.pink-case-band { background: rgba(0,0,0,0.12); border-bottom: 1px solid rgba(100,70,0,0.4); border-top: 1px solid rgba(100,70,0,0.4); padding: 6px 16px; display: flex; justify-content: space-between; align-items: center; }
-.pink-case-num { font-family: 'Courier Prime', 'Courier New', monospace; font-size: 0.9rem; font-weight: 700; color: #1a1204; letter-spacing: 2px; }
-.pink-date { font-size: 0.6rem; color: #6a4a10; letter-spacing: 1px; font-family: 'Oswald', 'Arial Narrow', sans-serif; }
-.pink-body { padding: 12px 16px 16px; position: relative; }
-.pink-classify-bar { background: #1a1a1a; color: #e0c87a; font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 700; font-size: 0.6rem; letter-spacing: 4px; text-align: center; padding: 4px; margin-bottom: 12px; text-transform: uppercase; }
-.pink-field { margin-bottom: 9px; position: relative; z-index: 2; }
-.pink-field-label { font-size: 0.5rem; letter-spacing: 2px; text-transform: uppercase; color: #6a4a10; margin-bottom: 1px; font-family: 'Oswald', 'Arial Narrow', sans-serif; font-weight: 400; }
-.pink-field-value { font-size: 0.82rem; color: #1a0e04; font-family: 'Courier Prime', 'Courier New', monospace; line-height: 1.3; min-height: 1rem; }
-.pink-divider { height: 1px; background: rgba(100,70,0,0.3); margin: 10px 0; }
-.pink-instructions { background: rgba(0,0,0,0.06); border: 1px dashed rgba(100,70,0,0.4); padding: 10px 12px; position: relative; z-index: 2; margin-top: 8px; }
-.pink-instructions-label { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 0.5rem; letter-spacing: 3px; color: #6a3010; text-transform: uppercase; margin-bottom: 5px; display: block; }
-.pink-instructions-text { font-size: 0.7rem; color: #2a1604; line-height: 1.55; font-family: 'Courier Prime', 'Courier New', monospace; }
-.pink-stamp { position: absolute; bottom: 55px; right: 20px; width: 80px; height: 80px; opacity: 0.08; transform: rotate(-5deg); z-index: 1; pointer-events: none; }
-.pink-footer { background: #1a1a1a; padding: 5px 16px; display: flex; justify-content: space-between; align-items: center; }
-.pink-footer span { font-family: 'Oswald', 'Arial Narrow', sans-serif; font-size: 0.45rem; letter-spacing: 1px; color: #6a5a30; text-transform: uppercase; }
-.pink-warning { color: #c04020 !important; }
+.saa-doc--flying {
+    pointer-events: none !important;
+}
 
+.saa-overlay--dimming {
+    pointer-events: none !important;
+}
+
+/* ============================================
+   BUG FIX 2c: #scene-choices / #scene-narrative
+   z-index guarantee. Must sit above #effects-layer
+   (z:50) and all atmospheric glows (z:8–15).
+   ============================================ */
+#scene-choices {
+    position: relative;
+    z-index: 60;
+}
+
+#scene-narrative {
+    position: relative;
+    z-index: 60;
+}
+
+/* ============================================
+   Haymarket Identity Cards
+   ALL selectors scoped under .mission-haymarket
+   to prevent CSS bleed into Pearl Harbor, Rwanda,
+   and Urban Design missions. (BUG FIX 1)
+   ============================================ */
+
+/* ── Card wrappers ── */
+.mission-haymarket .hm-surveillance-card,
+.mission-haymarket .hm-employee-card,
+.mission-haymarket .hm-pinkerton-card {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7);
+}
+
+/* ── Surveillance card ── */
+.mission-haymarket .hm-surveillance-card {
+    background: #e8d8b8;
+    border: 1px solid #a08050;
+    font-family: 'Special Elite', 'Courier New', cursive;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7),
+                inset 0 0 60px rgba(100, 70, 20, 0.2);
+}
+
+.mission-haymarket .surv-header {
+    background: #1a1a2e;
+    padding: 10px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid #8b1a1a;
+}
+
+.mission-haymarket .surv-dept {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 700;
+    font-size: 0.6rem;
+    letter-spacing: 2px;
+    color: #c8c0a0;
+    text-transform: uppercase;
+}
+
+.mission-haymarket .surv-shield { width: 32px; height: 36px; }
+
+.mission-haymarket .surv-classification {
+    background: #8b1a1a;
+    text-align: center;
+    padding: 6px;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: #ffe8b0;
+    text-transform: uppercase;
+}
+
+.mission-haymarket .surv-body {
+    padding: 16px 20px 20px;
+    display: grid;
+    grid-template-columns: 130px 1fr;
+    gap: 16px;
+    position: relative;
+}
+
+.mission-haymarket .surv-photo-col { display: flex; flex-direction: column; gap: 8px; }
+
+.mission-haymarket .surv-photo-frame {
+    width: 130px;
+    height: 160px;
+    border: 2px solid #6a4a20;
+    background: #b8a880;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.mission-haymarket .surv-photo-frame svg { width: 100%; height: 100%; }
+
+.mission-haymarket .surv-photo-label {
+    font-size: 0.48rem;
+    color: #5a3a10;
+    text-align: center;
+    letter-spacing: 1px;
+    font-family: 'Special Elite', 'Courier New', cursive;
+}
+
+.mission-haymarket .surv-file-num {
+    font-size: 0.55rem;
+    color: #5a3a10;
+    text-align: center;
+    font-family: 'Special Elite', 'Courier New', cursive;
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid rgba(100, 60, 20, 0.3);
+}
+
+.mission-haymarket .surv-fields { display: flex; flex-direction: column; gap: 8px; padding-top: 4px; }
+
+.mission-haymarket .surv-field {
+    border-bottom: 0.5px solid rgba(100, 60, 20, 0.35);
+    padding-bottom: 6px;
+}
+
+.mission-haymarket .surv-field-label {
+    font-size: 0.5rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #6a4010;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 400;
+    margin-bottom: 1px;
+}
+
+.mission-haymarket .surv-field-value {
+    font-size: 0.85rem;
+    color: #1a0e04;
+    font-family: 'Special Elite', 'Courier New', cursive;
+    line-height: 1.2;
+    min-height: 1rem;
+}
+
+.mission-haymarket .surv-notes {
+    margin: 0 20px 16px;
+    padding: 10px 12px;
+    background: rgba(100, 60, 20, 0.08);
+    border-left: 3px solid #8b1a1a;
+    font-size: 0.72rem;
+    color: #2a1a04;
+    line-height: 1.6;
+    font-family: 'Special Elite', 'Courier New', cursive;
+    position: relative;
+    z-index: 2;
+}
+
+.mission-haymarket .surv-notes-label {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 0.52rem;
+    letter-spacing: 2px;
+    color: #6a3010;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+    display: block;
+}
+
+.mission-haymarket .surv-stamp {
+    position: absolute;
+    bottom: 24px;
+    right: 16px;
+    width: 110px;
+    height: 110px;
+    z-index: 15;
+    opacity: 0.22;
+    transform: rotate(-12deg);
+    pointer-events: none;
+}
+
+.mission-haymarket .surv-footer {
+    background: #1a1a2e;
+    padding: 5px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mission-haymarket .surv-footer span {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 0.45rem;
+    letter-spacing: 1px;
+    color: #8880a0;
+    text-transform: uppercase;
+}
+
+/* ── Employee card ── */
+.mission-haymarket .hm-employee-card {
+    background: #f2ead8;
+    border: 1px solid #8a7040;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+.mission-haymarket .emp-header {
+    background: #2a3520;
+    padding: 10px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mission-haymarket .emp-company {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-style: italic;
+    color: #d0c898;
+    font-size: 1rem;
+}
+
+.mission-haymarket .emp-est {
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    font-size: 0.55rem;
+    color: #8a9878;
+    letter-spacing: 1px;
+}
+
+.mission-haymarket .emp-rule {
+    height: 2px;
+    background: linear-gradient(to right, #5a7040, #c8a830, #5a7040);
+}
+
+.mission-haymarket .emp-title-band {
+    background: #f2ead8;
+    border-bottom: 1px solid rgba(80, 60, 20, 0.4);
+    padding: 8px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.mission-haymarket .emp-doc-title {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-size: 0.9rem;
+    color: #2a1e04;
+    letter-spacing: 1px;
+}
+
+.mission-haymarket .emp-year {
+    font-size: 0.7rem;
+    color: #6a5020;
+    letter-spacing: 2px;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+.mission-haymarket .emp-body { padding: 12px 16px 16px; position: relative; }
+
+.mission-haymarket .emp-worker-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(80, 100, 60, 0.12);
+    border: 1px solid rgba(80, 100, 60, 0.3);
+    padding: 6px 10px;
+    margin-bottom: 12px;
+}
+
+.mission-haymarket .emp-worker-number {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #1a2e10;
+    letter-spacing: 2px;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+.mission-haymarket .emp-worker-label {
+    font-size: 0.5rem;
+    color: #4a6030;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+}
+
+.mission-haymarket .emp-status {
+    font-size: 0.65rem;
+    color: #8b1a1a;
+    font-weight: 700;
+    letter-spacing: 2px;
+    border: 1px solid #8b1a1a;
+    padding: 2px 8px;
+    text-transform: uppercase;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+.mission-haymarket .emp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+.mission-haymarket .emp-row { padding: 6px 4px; border-bottom: 1px dashed rgba(80, 60, 20, 0.25); }
+.mission-haymarket .emp-row.full { grid-column: 1 / -1; }
+
+.mission-haymarket .emp-row-label {
+    font-size: 0.48rem;
+    color: #4a6030;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 400;
+}
+
+.mission-haymarket .emp-row-value {
+    font-size: 0.82rem;
+    color: #1a1204;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    font-weight: 700;
+    min-height: 1rem;
+}
+
+.mission-haymarket .emp-note {
+    margin-top: 12px;
+    padding: 8px 10px;
+    background: rgba(139, 26, 26, 0.06);
+    border-left: 2px solid #8b1a1a;
+    font-size: 0.65rem;
+    color: #2a1604;
+    line-height: 1.5;
+    position: relative;
+    z-index: 2;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+.mission-haymarket .emp-note-label {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 0.48rem;
+    letter-spacing: 2px;
+    color: #6a3010;
+    text-transform: uppercase;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.mission-haymarket .emp-stamp {
+    position: absolute;
+    bottom: 50px;
+    right: 20px;
+    width: 90px;
+    height: 90px;
+    opacity: 0.12;
+    transform: rotate(8deg);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.mission-haymarket .emp-footer {
+    background: #2a3520;
+    padding: 5px 16px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.mission-haymarket .emp-footer span {
+    font-size: 0.45rem;
+    color: #7a9060;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+}
+
+/* ── Pinkerton card ── */
+.mission-haymarket .hm-pinkerton-card {
+    background: #e0c87a;
+    border: 1px solid #a08030;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.7),
+                inset 0 0 80px rgba(120, 80, 0, 0.15);
+}
+
+.mission-haymarket .hm-pinkerton-card::after {
+    content: 'CONFIDENTIAL';
+    position: absolute;
+    top: 12px;
+    right: -28px;
+    background: #1a1a1a;
+    color: #e0c87a;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 0.5rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    padding: 3px 36px;
+    transform: rotate(45deg);
+    z-index: 20;
+    pointer-events: none;
+}
+
+.mission-haymarket .pink-header {
+    background: #1a1a1a;
+    padding: 10px 16px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mission-haymarket .pink-agency {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    color: #e0c87a;
+    text-transform: uppercase;
+}
+
+.mission-haymarket .pink-eye { display: flex; align-items: center; gap: 6px; }
+
+.mission-haymarket .pink-eye-text {
+    font-family: 'IM Fell English', Georgia, serif;
+    font-style: italic;
+    font-size: 0.6rem;
+    color: #b0a060;
+    text-align: right;
+    line-height: 1.2;
+}
+
+.mission-haymarket .pink-case-band {
+    background: rgba(0, 0, 0, 0.12);
+    border-bottom: 1px solid rgba(100, 70, 0, 0.4);
+    border-top: 1px solid rgba(100, 70, 0, 0.4);
+    padding: 6px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mission-haymarket .pink-case-num {
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #1a1204;
+    letter-spacing: 2px;
+}
+
+.mission-haymarket .pink-date {
+    font-size: 0.6rem;
+    color: #6a4a10;
+    letter-spacing: 1px;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+}
+
+.mission-haymarket .pink-body { padding: 12px 16px 16px; position: relative; }
+
+.mission-haymarket .pink-classify-bar {
+    background: #1a1a1a;
+    color: #e0c87a;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 700;
+    font-size: 0.6rem;
+    letter-spacing: 4px;
+    text-align: center;
+    padding: 4px;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+}
+
+.mission-haymarket .pink-field { margin-bottom: 9px; position: relative; z-index: 2; }
+
+.mission-haymarket .pink-field-label {
+    font-size: 0.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #6a4a10;
+    margin-bottom: 1px;
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-weight: 400;
+}
+
+.mission-haymarket .pink-field-value {
+    font-size: 0.82rem;
+    color: #1a0e04;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    line-height: 1.3;
+    min-height: 1rem;
+}
+
+.mission-haymarket .pink-divider {
+    height: 1px;
+    background: rgba(100, 70, 0, 0.3);
+    margin: 10px 0;
+}
+
+.mission-haymarket .pink-instructions {
+    background: rgba(0, 0, 0, 0.06);
+    border: 1px dashed rgba(100, 70, 0, 0.4);
+    padding: 10px 12px;
+    position: relative;
+    z-index: 2;
+    margin-top: 8px;
+}
+
+.mission-haymarket .pink-instructions-label {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 0.5rem;
+    letter-spacing: 3px;
+    color: #6a3010;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+    display: block;
+}
+
+.mission-haymarket .pink-instructions-text {
+    font-size: 0.7rem;
+    color: #2a1604;
+    line-height: 1.55;
+    font-family: 'Courier Prime', 'Courier New', monospace;
+}
+
+.mission-haymarket .pink-stamp {
+    position: absolute;
+    bottom: 55px;
+    right: 20px;
+    width: 80px;
+    height: 80px;
+    opacity: 0.08;
+    transform: rotate(-5deg);
+    z-index: 1;
+    pointer-events: none;
+}
+
+.mission-haymarket .pink-footer {
+    background: #1a1a1a;
+    padding: 5px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mission-haymarket .pink-footer span {
+    font-family: 'Oswald', 'Arial Narrow', sans-serif;
+    font-size: 0.45rem;
+    letter-spacing: 1px;
+    color: #6a5a30;
+    text-transform: uppercase;
+}
+
+.mission-haymarket .pink-warning { color: #c04020 !important; }
+
+/* ── Mobile responsive (scoped to Haymarket only) ── */
 @media (max-width: 600px) {
-    .surv-body { grid-template-columns: 100px 1fr; gap: 10px; }
-    .surv-photo-frame { width: 100px; height: 130px; }
-    .surv-field-value { font-size: 0.78rem; }
-    .emp-grid { grid-template-columns: 1fr; }
-    .emp-worker-number { font-size: 0.9rem; }
-    .pink-agency { font-size: 0.7rem; }
+    .mission-haymarket .surv-body {
+        grid-template-columns: 100px 1fr;
+        gap: 10px;
+    }
+    .mission-haymarket .surv-photo-frame { width: 100px; height: 130px; }
+    .mission-haymarket .surv-field-value { font-size: 0.78rem; }
+    .mission-haymarket .emp-grid { grid-template-columns: 1fr; }
+    .mission-haymarket .emp-worker-number { font-size: 0.9rem; }
+    .mission-haymarket .pink-agency { font-size: 0.7rem; }
 }
