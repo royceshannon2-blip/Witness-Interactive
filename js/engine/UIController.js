@@ -79,7 +79,7 @@ class UIController {
     this.eventBus.on('timer:cancelled', this.handleTimerCancelled.bind(this));
     this.eventBus.on('sound:muted', this.handleSoundMuted.bind(this));
     this.eventBus.on('narrator:muted', this.handleNarratorMuted.bind(this));
-    this.eventBus.on('stimuli:view-ready', this.handleStimuliViewReady.bind(this));
+ 
     this.eventBus.on('stimuli:shown',      this.handleStimuliShown.bind(this));
     this.eventBus.on('stimuli:dismissed',  this.handleStimuliDismissed.bind(this));
     this.eventBus.on('scene:error', () => {
