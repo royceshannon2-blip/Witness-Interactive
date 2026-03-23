@@ -528,13 +528,15 @@ class MissionBriefing {
     cardSec.style.display = 'block';
 
     const fieldEls   = cardSec.querySelectorAll('.id-field-value');
-    const fieldValues = card.rows.map(r => r[1]);
+    // FIX 1: Add a fallback for rows to prevent the .map() crash
+    const fieldValues = (card.rows || []).map(r => r[1]);
     let fi = 0;
 
     const typeFields = () => {
       if (fi >= fieldEls.length) { typeNote(); return; }
       const el  = fieldEls[fi];
-      const txt = fieldValues[fi];
+      // Extra safety: ensure the text exists
+      const txt = fieldValues[fi] || ''; 
       el.textContent = '';
       let j = 0;
       const iv = setInterval(() => {
@@ -548,7 +550,15 @@ class MissionBriefing {
     noteEl.innerHTML = '';
 
     const typeNote = () => {
-      const text = card.note;
+      // FIX 2: Add a fallback for the note to prevent a .slice() crash
+      const text = card.note || '';
+      
+      // If there is no note, skip directly to typing the final bar
+      if (!text) { 
+        setTimeout(typeFinal, 80); 
+        return; 
+      }
+
       let j = 0;
       noteEl.innerHTML = '<span class="mb-cursor"></span>';
       const iv = setInterval(() => {
@@ -564,7 +574,7 @@ class MissionBriefing {
 
     const typeFinal = () => {
       finalBar.style.display = 'block';
-      const plain = final.replace(/<[^>]+>/g, '');
+      const plain = (final || '').replace(/<[^>]+>/g, '');
       let j = 0;
       finalEl.innerHTML = '<span class="mb-cursor"></span>';
       const iv = setInterval(() => {
@@ -572,7 +582,7 @@ class MissionBriefing {
         finalEl.innerHTML = plain.slice(0, j) + '<span class="mb-cursor"></span>';
         if (j >= plain.length) {
           clearInterval(iv);
-          finalEl.innerHTML = final;
+          finalEl.innerHTML = final || '';
           beginBtn.style.opacity = '1';
           beginBtn.style.pointerEvents = 'all';
         }
