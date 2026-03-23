@@ -785,11 +785,12 @@ class UIController {
   }
  
   handleChoiceClick(choice) {
- 
-  showLoading() {
-    this.showScreen('loading');
-  }
-
+  this.eventBus.emit('choice:made', {
+    choiceId: choice.id,
+    nextSceneId: choice.nextScene,
+    consequences: choice.consequences || {}
+  });
+}
   updateProgress(current, total) {
     const progressContainer = document.getElementById('scene-progress');
     if (!progressContainer) return;
