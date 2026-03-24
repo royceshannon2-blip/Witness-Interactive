@@ -350,12 +350,14 @@ class MissionBriefing {
       <div style="color:#c8a840;font-family:'UnifrakturMaguntia',cursive;font-size:1.1rem;margin:3px 0;">Employee Record</div>
     </div>
     <div style="display:grid;grid-template-columns:110px 1fr;gap:14px;padding:12px 16px 14px;">
+      
+      <div>
+        <div style="width:110px;height:140px;background:#c0b494;border:1px solid #8a7a4a;overflow:hidden;background-image:url('images/karlbrenner.png');background-size:cover;background-position:center;"></div>
+      </div>
+
       <div style="display:flex;flex-direction:column;gap:6px;">
         ${rows.map(row=>`<div style="border-bottom:0.5px solid rgba(70,50,20,0.3);padding-bottom:4px;"><div style="font-size:0.5rem;text-transform:uppercase;letter-spacing:0.8px;color:#5a4a20;font-family:'IM Fell English',serif;font-style:italic;margin-bottom:1px;">${row[0]}</div><div style="font-size:0.9rem;color:#1a0e04;font-family:'IM Fell DW Pica',serif;" class="id-field-value"></div></div>`).join('')}
       </div>
-    </div>
-  </div>`;
-  }
 
   _buildPinkertonCard(card) {
     const rows = card.rows || [];
@@ -364,6 +366,11 @@ class MissionBriefing {
       <div style="text-align:center;"><div style="color:#c8a840;font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;letter-spacing:2px;">PINKERTON'S</div></div>
     </div>
     <div style="display:grid;grid-template-columns:110px 1fr;gap:14px;padding:12px 16px 14px;">
+      
+      <div>
+        <div style="width:110px;height:140px;background:#d4ccb8;border:1px solid #6a6050;overflow:hidden;background-image:url('images/jamesdoyle.png');background-size:cover;background-position:center;"></div>
+      </div>
+
       <div style="display:flex;flex-direction:column;gap:6px;">
         ${rows.map(row=>`<div style="border-bottom:0.5px solid rgba(70,60,40,0.3);padding-bottom:4px;"><div style="font-size:0.5rem;text-transform:uppercase;letter-spacing:1px;color:#5a5040;font-family:'IM Fell English',serif;font-style:italic;margin-bottom:1px;">${row[0]}</div><div style="font-size:${row[2]==='un'?'0.75rem':'0.9rem'};color:#1a1810;font-family:'IM Fell DW Pica',serif;" class="id-field-value"></div></div>`).join('')}
       </div>
