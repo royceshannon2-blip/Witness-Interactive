@@ -333,7 +333,7 @@ class MissionBriefing {
     </div>
     <div style="display:grid;grid-template-columns:120px 1fr;gap:14px;padding:14px 18px 16px;">
       <div>
-        <div style="width:110px;height:140px;background:#b8a070;border:1px solid #6a5030;display:flex;align-items:center;justify-content:center;font-family:'IM Fell English',serif;font-style:italic;font-size:0.6rem;color:#4a3010;text-align:center;line-height:1.4;">[Photograph<br>Not Available]</div>
+        <div style="width:110px;height:140px;background:#b8a070;border:1px solid #6a5030;overflow:hidden;background-image:url('images/haymarket-lucy-parsons.png');background-size:cover;background-position:center;"></div>
       </div>
       <div style="display:flex;flex-direction:column;gap:7px;padding-top:2px;">
         ${rows.map((row, i) => `<div style="border-bottom:0.5px solid rgba(70,50,20,0.3);padding-bottom:5px;"><div style="font-size:0.52rem;text-transform:uppercase;letter-spacing:0.8px;color:#4a3a10;font-family:'IM Fell English',serif;font-style:italic;margin-bottom:1px;">${row[0]}</div><div style="font-size:${row[2]==='redlined'?'1.1rem':'0.95rem'};font-weight:${i===0?'700':'400'};color:${row[2]==='redlined'?'#8a1212':'#1a0e04'};font-family:'Playfair Display',serif;" class="id-field-value"></div></div>`).join('')}
