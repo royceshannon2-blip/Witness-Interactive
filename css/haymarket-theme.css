@@ -109,9 +109,8 @@
   background: rgba(14, 12, 9, 0.9);
 }
 
-/* ── Glossary terms ───────────────────────────────────────────────────────── */
-.mission-haymarket .glossary-term { border-bottom-color: rgba(200, 150, 42, 0.5); }
-.mission-haymarket .glossary-term:hover { color: #d4a840; border-bottom-color: #c8962a; }
+.mission-haymarket .glossary-term { border-bottom: 2px solid rgba(160, 100, 10, 0.8); }
+.mission-haymarket .glossary-term:hover { color: #3a2200; border-bottom: 2px solid #a66a00; background-color: rgba(200, 150, 42, 0.15); }
 
 /* ── Mission briefing ─────────────────────────────────────────────────────── */
 .mission-haymarket #mission-briefing-overlay { background: #080604; }

@@ -29,7 +29,10 @@ class AmbientSoundManager {
     
     // Audio buffers storage: Map<soundId, AudioBuffer>
     this.audioBuffers = new Map();
-    
+
+    // Track pending loads to avoid duplicate fetches
+    this.pendingLoads = new Map();
+
     // Currently playing sounds: Map<soundId, {source, gainNode, startTime}>
     this.activeSounds = new Map();
     
@@ -157,31 +160,45 @@ class AmbientSoundManager {
    * @returns {Promise<AudioBuffer>}
    */
   async loadAudioFile(filename) {
-    // Check if already loaded
+    // 1. Check if already loaded
     if (this.audioBuffers.has(filename)) {
       return this.audioBuffers.get(filename);
     }
 
+    // 2. Check if already loading
+    if (this.pendingLoads.has(filename)) {
+      return this.pendingLoads.get(filename);
+    }
+
     const url = `${this.config.audioPath}${filename}`;
     
-    try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+    // 3. Start loading and store the promise
+    const loadPromise = (async () => {
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const arrayBuffer = await response.arrayBuffer();
+        const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
+        
+        this.audioBuffers.set(filename, audioBuffer);
+        console.log(`[Audio] Loaded: ${filename}`);
+        
+        return audioBuffer;
+      } catch (error) {
+        console.warn(`[Audio] Failed to load ${url}:`, error.message);
+        this.eventBus.emit('sound:error', { soundId: filename, error: error.message });
+        throw error;
+      } finally {
+        // Clean up pendingLoads regardless of outcome
+        this.pendingLoads.delete(filename);
       }
-      
-      const arrayBuffer = await response.arrayBuffer();
-      const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer);
-      
-      this.audioBuffers.set(filename, audioBuffer);
-      console.log(`[Audio] Loaded: ${filename}`);
-      
-      return audioBuffer;
-    } catch (error) {
-      console.warn(`[Audio] Failed to load ${url}:`, error.message);
-      this.eventBus.emit('sound:error', { soundId: filename, error: error.message });
-      throw error;
-    }
+    })();
+
+    this.pendingLoads.set(filename, loadPromise);
+    return loadPromise;
   }
 
   /**

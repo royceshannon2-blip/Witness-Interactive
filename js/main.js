@@ -35,7 +35,7 @@ import StimuliManager from './engine/StimuliManager.js';
 // UI imports
 import FeedbackSurveyPanel from './ui/FeedbackSurveyPanel.js';
 import UpdateNotesPanel from './ui/UpdateNotesPanel.js';
-import AnnotationInventory from './ui/AnnotationInventory.js';
+import IntelInventory from './ui/IntelInventory.js';
 import WitnessList from './ui/WitnessList.js';
 
 // Engine imports (data stores)
@@ -201,25 +201,15 @@ async function initializeApp() {
     );
     console.log('✓ UIController initialized');
 
-    // Initialize AnnotationInventory (persistent slide-out panel + toggle button)
-    const annotationInventory = new AnnotationInventory(annotationStore, eventBus);
-    console.log('✓ AnnotationInventory initialized');
+    // Initialize IntelInventory (Call of Duty style full-screen overlay)
+    const intelInventory = new IntelInventory(annotationStore, eventBus, stimuliManager);
+    console.log('✓ IntelInventory initialized');
 
     // Initialize WitnessList (Haymarket witness sidebar)
     const witnessList = new WitnessList(eventBus, consequenceSystem);
     console.log('✓ WitnessList initialized');
 
-    // Wire inventory:reopen-document → re-display the stimulus overlay
-    eventBus.on('inventory:reopen-document', (data) => {
-           if (!data?.documentId) return;
-           // AnnotationInventory emits this event when player clicks "Review ↗".
-           // The doc data lives in AnnotationInventory._collectedDocs.
-           // We ask StimuliManager to re-show it (bypasses deduplication for review).
-           // UIController._renderStimulusOverlay is called via stimuli:shown listener
-           // which StimuliManager emits, but for reviews we call directly:
-           const docData = annotationInventory.getCollectedDoc(data.documentId);
-           if (docData) uiController._renderStimulusOverlay(docData);
-       });
+
     
     // 17. Initialize FeedbackSurveyPanel (post-mission feedback)
     const feedbackSurveyPanel = new FeedbackSurveyPanel(eventBus, consequenceSystem);

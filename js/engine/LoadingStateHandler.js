@@ -19,8 +19,6 @@ class LoadingStateHandler {
     if (!this.loadingScreen) {
       console.warn('LoadingStateHandler: loading-screen element not found in DOM');
     }
-
-    console.log('✓ LoadingStateHandler initialized');
   }
 
   showLoading(message = 'Loading historical experience...') {

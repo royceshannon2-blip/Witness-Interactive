@@ -128,6 +128,70 @@ COMMISSIONER'S NOTE: "The data presented herein demonstrate that a significant p
     }
   },
   {
+    id: 'hm-doc-1c',
+    title: '"Eight Hours" — Marching Song of the Labor Movement',
+    source: 'Words by I.G. Blanchard; music by Rev. Jesse H. Jones. Published in The Alarm, Chicago, 1886.',
+    date: '1866 (widely republished 1886)',
+    docType: 'arbeiter-zeitung',
+    spiceT: ['Cultural', 'Social'],
+    apUnit: 'Unit 6.5',
+    text: `"EIGHT HOURS"
+Words by I.G. Blanchard — Music by Rev. Jesse H. Jones
+Published in The Alarm, Chicago, 1886
+Widely sung at the May 1st marches
+
+We mean to make things over,
+  We are tired of toil for naught,
+With but bare enough to live upon
+  And never an hour for thought;
+We want to feel the sunshine,
+  And we want to smell the flowers,
+We are sure that God has willed it,
+  And we mean to have eight hours.
+
+We're summoning our forces
+  From the shipyard, shop, and mill;
+Eight hours for work, eight hours for rest,
+  Eight hours for what we will!
+Eight hours for work, eight hours for rest,
+  Eight hours for what we will!
+
+The beasts that graze the hillside,
+  And the birds that wander free,
+In the life that God has meted,
+  Have a better life than we.
+Oh hands and hearts are weary,
+  And homes are heavy with dole;
+If our life's to be filled with drudg'ry,
+  What need of a human soul?
+
+[Chorus]
+Eight hours for work, eight hours for rest,
+  Eight hours for what we will!
+
+— I.G. Blanchard, "Eight Hours," 1866
+Widely republished in labor papers by 1886
+Sung at the May 1st, 1886 march in Chicago by an estimated 80,000 workers
+
+[Historical note: This song was written in 1866 — twenty years before Haymarket — by
+I.G. Blanchard, an American-born worker, not a foreign radical. It was set to music by
+a Methodist minister. By 1886 it had become the anthem of the eight-hour movement
+across the country, sung in English, German, Czech, and Polish. Its existence is evidence
+that the demand for an eight-hour workday was a long-standing American working-class
+aspiration, not a product of anarchist ideology imported from Europe.]`,
+    pauseQuestion: {
+      question: 'Which of the following best explains why a historian studying the Haymarket Affair would find the "Eight Hours" song a useful primary source, despite the fact that it is a poem rather than a political document?',
+      options: [
+        { id: 'a', text: 'Because songs and poems are always more reliable than official political documents, since they express the genuine feelings of ordinary people without political distortion.', correct: false },
+        { id: 'b', text: "Because the song's origin in 1866 demonstrates that the eight-hour demand predated anarchism and radicalism by two decades, providing evidence against the claim that the 1886 movement was driven by foreign radical ideology.", correct: true },
+        { id: 'c', text: 'Because the song proves that Chicago workers in 1886 were primarily motivated by religious belief, since it invokes the will of God.', correct: false },
+        { id: 'd', text: "Because I.G. Blanchard was a prominent labor leader whose views represent the official position of the Knights of Labor.", correct: false }
+      ],
+      correctId: 'b',
+      explanation: "The \"Eight Hours\" song is analytically useful precisely because it is not a radical anarchist document — it was written in 1866, twenty years before Haymarket, by an American-born worker, and set to music by a Methodist minister. When prosecution lawyers at the Haymarket trial argued that the 1886 labor movement was a foreign-born anarchist conspiracy, they were obscuring a much longer American working-class tradition of which Blanchard's song is evidence. For AP students practicing Sourcing (Historical Thinking Skill 2), the key insight is: what does the origin and genre of this document reveal about the nature of the movement? A song sung by 80,000 marchers on May Day tells us something about mass, shared working-class values that no editorial or proclamation can. The fact that it invokes God and nature — rather than class war — shows that the eight-hour demand was legible within mainstream American moral frameworks, not just radical ones. The song predating Haymarket by twenty years is the most powerful piece of evidence: it proves this was a workers' movement, not an anarchist plot."
+    }
+  },
+  {
     id: 'hm-doc-2',
     title: "Harper's Weekly Illustration, May 15, 1886",
     source: "Harper's Weekly, May 15, 1886 — illustration by Thure de Thulstrup",

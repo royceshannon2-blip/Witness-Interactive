@@ -266,15 +266,17 @@ class PauseQuestionModal {
       <rect x="calc(100% - 12px)" y="20" width="12" height="calc(100% - 40px)"
             fill="url(#pqm-scroll-v)" opacity="0.9"/>
 
-      <!-- Corner ornaments -->
-      <use href="#pqm-corner" x="0"           y="0"           width="24" height="24"/>
-      <use href="#pqm-corner" x="calc(100% - 24px)" y="0"     width="24" height="24"
-           transform-origin="calc(100% - 12px) 12px" transform="scale(-1,1) translate(calc(-100% + 24px), 0)"/>
-      <use href="#pqm-corner" x="0"           y="calc(100% - 24px)" width="24" height="24"
-           transform-origin="12px calc(100% - 12px)" transform="scale(1,-1) translate(0, calc(-100% + 24px))"/>
-      <use href="#pqm-corner" x="calc(100% - 24px)" y="calc(100% - 24px)" width="24" height="24"
-           transform-origin="calc(100% - 12px) calc(100% - 12px)"
-           transform="scale(-1,-1) translate(calc(-100% + 24px), calc(-100% + 24px))"/>
+      <!-- Corner ornaments using nested SVGs to avoid calc() in transforms -->
+      <use href="#pqm-corner" x="0" y="0" width="24" height="24"/>
+      <svg x="100%" y="0" overflow="visible">
+        <use href="#pqm-corner" transform="scale(-1, 1)"/>
+      </svg>
+      <svg x="0" y="100%" overflow="visible">
+        <use href="#pqm-corner" transform="scale(1, -1)"/>
+      </svg>
+      <svg x="100%" y="100%" overflow="visible">
+        <use href="#pqm-corner" transform="scale(-1, -1)"/>
+      </svg>
     `;
 
     return svg;

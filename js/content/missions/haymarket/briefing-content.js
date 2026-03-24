@@ -89,7 +89,7 @@ Spies, who had witnessed the shooting, went directly to the Arbeiter-Zeitung off
     spiceT: ['Economic', 'Political'],
     apUnit: 'Unit 6.5',
     apTheme: 'causation',
-    stimuliUnlock: []
+    stimuliUnlock: ['hm-doc-1c']
   },
 
   {

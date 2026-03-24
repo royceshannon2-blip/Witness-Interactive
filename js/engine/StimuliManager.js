@@ -60,85 +60,72 @@ class StimuliManager {
     // Session-scoped deduplication
     this.shownDocuments = new Set();
 
-    // Queue of document IDs waiting to be shown for the current scene
-    this._queue = [];
+    // Docs unlocked in the current scene
+    this._newlyUnlockedDocs = [];
 
-    // Pending docs waiting for typewriter:complete
-    this._pendingQueue = [];
+    // Docs from previous scenes waiting for their pause questions to be answered
+    this._pendingPauseQuestions = [];
     this._pendingSceneId = null;
 
-    // The document ID currently being displayed (null if none)
-    this._currentDocumentId = null;
-
-    // Whether the current document's pause question has been answered
-    this._currentAnswered = false;
-    this._currentAnsweredCorrectly = false;
-
-    // Whether dismiss is force-allowed (missing pauseQuestion fallback)
-    this._forceAllowDismiss = false;
-
-    // Active DocAnnotationLayer instance (one per open overlay)
+    // Active DocAnnotationLayer instance (one per open overlay in inventory)
     this._docAnnotationLayer = null;
-
-    // Archive animator
-    this._archiveAnimator = new StimuliArchiveAnimator(eventBus);
 
     // One-time typewriter listener (stored so we can remove it on scene change)
     this._typewriterHandler = null;
 
     // Subscribe to events
     this.eventBus.on('scene:transition',          (data) => this._handleSceneTransition(data));
-    this.eventBus.on('typewriter:complete',        (data) => this._handleTypewriterComplete(data));
-    this.eventBus.on('stimuli:answer-submitted',   (data) => this._handleAnswerSubmitted(data));
-    this.eventBus.on('stimuli:dismiss-requested',  (data) => this._handleDismissRequested(data));
-    this.eventBus.on('stimuli:soft-close-requested',(data) => this._handleSoftCloseRequested(data));
-    this.eventBus.on('stimuli:archive-complete',   (data) => this._handleArchiveComplete(data));
+    this.eventBus.on('stimuli:answer-submitted',  (data) => this._handleAnswerSubmitted(data));
 
     // Briefing pages can unlock stimulus documents
     this.eventBus.on('briefing:stimuli-unlock',    (data) => this._handleBriefingUnlock(data));
   }
 
-  // ─── Scene transition: store pending, do NOT show yet ───────────────────────
+  // ─── Scene transition: unlock silently, defer pause questions ───────────────────────
 
   _handleSceneTransition(data) {
-    // Cancel any pending typewriter listener from previous scene
     this._clearTypewriterListener();
-
-    // Reset pending state
-    this._pendingQueue = [];
     this._pendingSceneId = null;
 
+    // Docs unlocked in the last scene now need their pause questions presented
+    if (this._newlyUnlockedDocs.length > 0) {
+      this._pendingPauseQuestions.push(...this._newlyUnlockedDocs);
+      this._newlyUnlockedDocs = [];
+    }
+
     if (!data?.scene) return;
-
-    const unlock = data.scene.stimuliUnlock;
-    if (!Array.isArray(unlock) || unlock.length === 0) return;
-
-    // Filter already-shown docs
-    const toShow = unlock.filter(id => !this.shownDocuments.has(id));
-    if (toShow.length === 0) return;
-
-    // Store pending — wait for typewriter to finish
-    this._pendingQueue = toShow;
     this._pendingSceneId = data.scene.id;
 
-    // Register typewriter:complete listener (fires once for this scene)
-    this._typewriterHandler = (twData) => {
-      if (twData?.sceneId !== this._pendingSceneId) return;
-      this._clearTypewriterListener();
-      this._queue = [...this._pendingQueue];
-      this._pendingQueue = [];
-      this._pendingSceneId = null;
-      // Signal UIController to show the "View Document" button
-      // The first doc ID is passed so UIController can label the button
-      if (this._queue.length > 0) {
-        this.eventBus.emit('stimuli:view-ready', {
-          documentId: this._queue[0],
-          count: this._queue.length
+    const unlock = data.scene.stimuliUnlock;
+    if (Array.isArray(unlock) && unlock.length > 0) {
+      // Filter already-shown docs
+      const toUnlock = unlock.filter(id => !this.shownDocuments.has(id));
+      if (toUnlock.length > 0) {
+        toUnlock.forEach(id => {
+          this.shownDocuments.add(id);
+          this._newlyUnlockedDocs.push(id);
+          const documentData = getDocument(id);
+          if (documentData) {
+            // Emit stimuli:shown for AnnotationInventory/IntelInventory to track
+            this.eventBus.emit('stimuli:shown', { documentId: id, documentData });
+          }
         });
+        
+        // Notify UI that new intel was acquired silently
+        this.eventBus.emit('stimuli:new-unlocked', { documentIds: toUnlock });
       }
-    };
+    }
 
-    this.eventBus.on('typewriter:complete', this._typewriterHandler);
+    // Register typewriter:complete listener to trigger pause questions from PREVIOUS scenes
+    if (this._pendingPauseQuestions.length > 0) {
+      this._typewriterHandler = (twData) => {
+        if (twData?.sceneId !== this._pendingSceneId) return;
+        this._clearTypewriterListener();
+        this._pendingSceneId = null;
+        this._showNextPauseQuestion();
+      };
+      this.eventBus.on('typewriter:complete', this._typewriterHandler);
+    }
   }
 
   _clearTypewriterListener() {
@@ -148,217 +135,69 @@ class StimuliManager {
     }
   }
 
-  // ─── Called by UIController when player clicks "View Document" ───────────────
+  // ─── Pause Questions ─────────────────────────────────────────────────────────
 
-  /**
-   * Called externally by UIController when the player clicks the
-   * "View Document" button that appears after typewriter:complete.
-   * Kicks off the actual document display pipeline.
-   */
-  playerRequestedView() {
-    this._showNext();
-  }
-
-  // ─── Show next document in queue ─────────────────────────────────────────────
-
-  _showNext() {
-    if (this._queue.length === 0) return;
-    const nextId = this._queue.shift();
-    this._showDocument(nextId);
-  }
-
-  _showDocument(documentId) {
-    if (this.shownDocuments.has(documentId)) {
-      // Already shown this session — skip and advance
-      this._showNext();
+  _showNextPauseQuestion() {
+    if (this._pendingPauseQuestions.length === 0) {
+      // All pause questions answered for this scene
+      this.eventBus.emit('stimuli:all-pause-questions-complete', {});
       return;
     }
 
-    this.shownDocuments.add(documentId);
-    this._currentDocumentId = documentId;
-    this._currentAnswered = false;
-    this._currentAnsweredCorrectly = false;
-    this._forceAllowDismiss = false;
+    const docId = this._pendingPauseQuestions.shift();
+    const documentData = getDocument(docId);
 
-    const documentData = getDocument(documentId);
-
-    if (!documentData) {
-      console.warn(`StimuliManager: No document data for "${documentId}" — skipping`);
-      this._forceAllowDismiss = true;
-    }
-
-    if (documentData && !documentData.pauseQuestion) {
-      this._forceAllowDismiss = true;
-    }
-
-    // Emit stimuli:shown so AnnotationInventory can track collected docs
-    this.eventBus.emit('stimuli:shown', { documentId, documentData });
-
-    // After UIController paints the overlay, it will emit stimuli:dom-ready
-    // with element references. StimuliRevealAnimator listens for that directly.
-    // We attach the annotation layer once dom-ready fires.
-    if (this.annotationStore && documentData) {
-      const domReadyHandler = (domData) => {
-        if (domData?.documentId !== documentId) return;
-        this.eventBus.off('stimuli:dom-ready', domReadyHandler);
-        this._attachAnnotationOverlay(documentData, domData.contentEl);
-      };
-      this.eventBus.on('stimuli:dom-ready', domReadyHandler);
+    if (documentData && documentData.pauseQuestion) {
+      // Tell UIController to render the PauseQuestionModal
+      this.eventBus.emit('stimuli:present-pause-question', {
+        documentId: docId,
+        documentData: documentData
+      });
+    } else {
+      // No pause question for this document, skip to next
+      this._showNextPauseQuestion();
     }
   }
-
-  // ─── Answer submitted ─────────────────────────────────────────────────────────
 
   _handleAnswerSubmitted(data) {
-    if (!data || data.documentId !== this._currentDocumentId) return;
-
-    this._currentAnswered = true;
-    this._currentAnsweredCorrectly = !!data.correct;
-
-    this.eventBus.emit('stimuli:pause-question-answered', {
-      documentId: data.documentId,
-      correct: !!data.correct,
-      selectedId: data.selectedId
-    });
-  }
-
-  // ─── Dismiss requested ────────────────────────────────────────────────────────
-
-  _handleDismissRequested(data) {
-    if (!data || data.documentId !== this._currentDocumentId) return;
-
-    const canDismiss = this._currentAnswered
-      || this._forceAllowDismiss
-      || !!data.noPauseQuestion;
-
-    if (!canDismiss) return;
-
-    // CRITICAL FIX: Commit all state synchronously BEFORE the async animation.
-    // Previous bug: archive animation (800ms async) completed after state was
-    // already mutated by the next scene transition, causing silent queue failure.
-    const docId = this._currentDocumentId;
-    const answeredCorrectly = this._currentAnsweredCorrectly;
-
-    // Clear tracking immediately — re-entrant events cannot corrupt state
-    this._currentDocumentId = null;
-    this._currentAnswered = false;
-    this._currentAnsweredCorrectly = false;
-    this._forceAllowDismiss = false;
-
-    // Destroy annotation layer
-    if (this._docAnnotationLayer) {
-      this._docAnnotationLayer.destroy();
-      this._docAnnotationLayer = null;
-    }
-
-    // Trigger archive animation (purely cosmetic from this point)
-    this.eventBus.emit('stimuli:archive-requested', { documentId: docId });
-
-    // Advance queue and emit dismissed after archive animation completes.
-    // 820ms = slightly longer than the 800ms archive animation.
+    // When UIController's modal is submitted and closed, it emits this.
+    // We can show the next one.
+    // Small timeout to allow modal transitions
     setTimeout(() => {
-      this.eventBus.emit('stimuli:dismissed', { documentId: docId, answeredCorrectly });
-      // If more docs in queue, emit view-ready for next one
-      if (this._queue.length > 0) {
-        this.eventBus.emit('stimuli:view-ready', {
-          documentId: this._queue[0],
-          count: this._queue.length
-        });
-      }
-    }, 820);
+      this._showNextPauseQuestion();
+    }, 400);
   }
 
-  // ─── Archive complete: DOM cleanup ONLY, no queue logic ──────────────────────
-
-  _handleArchiveComplete(data) {
-    // Archive animator has finished the flight animation.
-    // Just ensure the overlay DOM is gone. Queue was already advanced above.
-    const overlay = document.getElementById('stimuli-overlay');
-    if (overlay) overlay.remove();
-  }
-
-  // ─── Soft close: return to narrative without archiving ────────────────────────
-
-  /**
-   * The player clicked "← Back to story" before committing to the question.
-   * We hide the overlay WITHOUT the archive animation, restore the doc to the
-   * front of the queue, and re-emit stimuli:view-ready so the "View Document"
-   * button reappears immediately.
-   */
-  _handleSoftCloseRequested(data) {
-    if (!data || data.documentId !== this._currentDocumentId) return;
-
-    const docId = this._currentDocumentId;
-
-    // Destroy annotation layer
-    if (this._docAnnotationLayer) {
-      this._docAnnotationLayer.destroy();
-      this._docAnnotationLayer = null;
-    }
-
-    // Remove from shownDocuments so the doc CAN be re-shown when the player
-    // clicks "View Document" again.
-    this.shownDocuments.delete(docId);
-
-    // Reset all current-doc state
-    this._currentDocumentId = null;
-    this._currentAnswered = false;
-    this._currentAnsweredCorrectly = false;
-    this._forceAllowDismiss = false;
-
-    // Put the doc back at the FRONT of the queue
-    this._queue.unshift(docId);
-
-    // Remove overlay from DOM — no archive animation
-    document.getElementById('stimuli-overlay')?.remove();
-
-    // Signal UIController to thaw the narrative/choices layer
-    this.eventBus.emit('stimuli:soft-closed', { documentId: docId });
-
-    // Re-show the "View Document" button
-    if (this._queue.length > 0) {
-      this.eventBus.emit('stimuli:view-ready', {
-        documentId: this._queue[0],
-        count: this._queue.length
-      });
-    }
-  }
-
-  // ─── Typewriter complete handler (stored on instance, removed per-scene) ─────
-
-  _handleTypewriterComplete(data) {
-    // This is only used as a fallback — the real handler is registered
-    // per-scene in _handleSceneTransition via _typewriterHandler.
-    // This global listener is intentionally empty.
-  }
-
-  // ─── Briefing unlock (same flow as scene unlock, but no typewriter gate) ─────
+  // ─── Briefing unlock ─────────────────────────────────────────────────────────
 
   _handleBriefingUnlock(data) {
     if (!Array.isArray(data?.documentIds) || data.documentIds.length === 0) return;
 
-    const toShow = data.documentIds.filter(id => !this.shownDocuments.has(id));
-    if (toShow.length === 0) return;
+    const toUnlock = data.documentIds.filter(id => !this.shownDocuments.has(id));
+    if (toUnlock.length === 0) return;
 
-    // Briefing docs bypass the typewriter gate — they appear when unlocked
-    // because the briefing itself IS the reading experience
-    this._queue = [...this._queue, ...toShow];
+    toUnlock.forEach(id => {
+      this.shownDocuments.add(id);
+      this._newlyUnlockedDocs.push(id);
+      const documentData = getDocument(id);
+      if (documentData) {
+        this.eventBus.emit('stimuli:shown', { documentId: id, documentData });
+      }
+    });
 
-    if (this._currentDocumentId === null) {
-      this.eventBus.emit('stimuli:view-ready', {
-        documentId: this._queue[0],
-        count: this._queue.length
-      });
-    }
+    this.eventBus.emit('stimuli:new-unlocked', { documentIds: toUnlock });
   }
 
-  // ─── Annotation overlay ───────────────────────────────────────────────────────
+  // ─── Annotation overlay (Called externally by IntelInventory) ────────────────
 
-  _attachAnnotationOverlay(documentData, contentEl) {
-    if (!contentEl) {
-      contentEl = document.querySelector('.stimuli-content');
-    }
+  attachAnnotationOverlay(documentData, contentEl) {
     if (!contentEl) return;
+
+    // Destroy previous layer if exists
+    if (this._docAnnotationLayer) {
+      this._docAnnotationLayer.destroy();
+      this._docAnnotationLayer = null;
+    }
 
     const textContainer = contentEl.querySelector('.stimuli-text');
     if (!textContainer) return;
@@ -391,6 +230,14 @@ class StimuliManager {
       if (highlightId) this._openNoteEditor(mark, documentData.id, highlightId);
     });
   }
+
+  detachAnnotationOverlay() {
+    if (this._docAnnotationLayer) {
+      this._docAnnotationLayer.destroy();
+      this._docAnnotationLayer = null;
+    }
+  }
+
 
   _showHighlightToolbar(range, selectedText, documentData) {
     document.getElementById('annotation-toolbar')?.remove();

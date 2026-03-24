@@ -28,7 +28,6 @@
     <link rel="stylesheet" href="css/stimuli-overlay.css">
     <link rel="stylesheet" href="css/stimuli-archive-animator.css">
     <link rel="stylesheet" href="css/pause-question-modal.css">
-    <link rel="stylesheet" href="css/haymarket-fixes.css">
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="favicon.png">
@@ -39,8 +38,15 @@
         <span class="sound-icon">🔊</span>
     </button>
     
-    <!-- Main App Container -->
     <div id="app" role="main">
+        <!-- Loading Screen (displayed during initialization) -->
+        <div id="loading-screen" class="screen active">
+            <div class="loading-content">
+                <h1>Witness Interactive</h1>
+                <div class="loading-spinner"></div>
+                <p>Initialising historical experience...</p>
+            </div>
+        </div>
         <!-- Screens will be dynamically rendered here by UIController -->
     </div>
     

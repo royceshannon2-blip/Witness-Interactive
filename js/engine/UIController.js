@@ -63,12 +63,9 @@ class UIController {
     this.eventBus.on('timer:update',        this.handleTimerUpdate.bind(this));
     this.eventBus.on('timer:expired',       this.handleTimerExpired.bind(this));
     this.eventBus.on('timer:cancelled',     this.handleTimerCancelled.bind(this));
-    this.eventBus.on('sound:muted',         this.handleSoundMuted.bind(this));
-    this.eventBus.on('narrator:muted',      this.handleNarratorMuted.bind(this));
-    this.eventBus.on('stimuli:shown',       this.handleStimuliShown.bind(this));
-    this.eventBus.on('stimuli:dismissed',   this.handleStimuliDismissed.bind(this));
-    this.eventBus.on('stimuli:view-ready',  this.handleStimuliViewReady.bind(this));
-    this.eventBus.on('stimuli:soft-closed', this.handleStimuliSoftClosed.bind(this));
+    this.eventBus.on('stimuli:new-unlocked',         this.handleStimuliNewUnlocked.bind(this));
+    this.eventBus.on('stimuli:present-pause-question', this.handleStimuliPresentPauseQuestion.bind(this));
+    this.eventBus.on('stimuli:all-pause-questions-complete', this.handleStimuliAllPauseQuestionsComplete.bind(this));
     this.eventBus.on('scene:error', () => {
       console.warn('UIController: scene:error — re-rendering current scene');
       if (this.currentSceneData?.scene) {
@@ -204,51 +201,62 @@ class UIController {
 
   // ── Stimuli handlers ────────────────────────────────────────────────────────
 
-  handleStimuliShown(data) {
+  handleStimuliNewUnlocked(data) {
+    if (!data?.documentIds?.length) return;
+    
+    const toast = document.createElement('div');
+    toast.className = 'intel-unlocked-toast';
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
+    toast.innerHTML = `<span class="toast-icon">📁</span> New Intel Acquired`;
+    document.body.appendChild(toast);
+    
+    // Base inline styles for the toast (can be overridden by CSS classes later)
+    Object.assign(toast.style, {
+      position: 'fixed', top: '20px', right: '20px', backgroundColor: '#8a6a3a', 
+      color: '#fff', padding: '12px 20px', borderRadius: '4px', zIndex: '9999',
+      boxShadow: '0 4px 12px rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', gap: '8px',
+      transform: 'translateX(120%)', transition: 'transform 0.4s ease-out', fontWeight: 'bold'
+    });
+    
+    requestAnimationFrame(() => {
+      toast.style.transform = 'translateX(0)';
+    });
+    
+    setTimeout(() => {
+      toast.style.transform = 'translateX(120%)';
+      setTimeout(() => toast.remove(), 400);
+    }, 4000);
+    
+    this.haptics.medium();
+  }
+
+  handleStimuliPresentPauseQuestion(data) {
     if (!data?.documentId || !data?.documentData) return;
-    // AnnotationInventory tracks docs itself via this same event.
-    // UIController only renders the overlay DOM.
-    this._renderStimulusOverlay(data.documentData);
+    
+    // Lock the world so the player MUST answer the question before advancing
+    const appEl = document.getElementById('app');
+    if (appEl) appEl.inert = true;
+    
+    document.getElementById('scene-choices').style.pointerEvents = 'none';
+    document.getElementById('scene-choices').style.opacity = '0.5';
+    this.disableChoices();
+
+    const doc = data.documentData;
+    this._mountPauseQuestion(doc, doc.crossRolePrompt);
   }
 
-  handleStimuliDismissed(data) {
-    // Remove the overlay from DOM after archive animation completes
-    document.getElementById('stimuli-overlay')?.remove();
-  }
-
-  handleStimuliSoftClosed(data) {
-    // Soft-close: the overlay was removed without archiving.
-    // Re-thaw the world (narrative + choices) so gameplay continues.
-    const narrative = document.getElementById('scene-narrative');
-    const choices   = document.getElementById('scene-choices');
-    [narrative, choices].filter(Boolean).forEach(el => {
-      el.classList.remove('sra-world-frozen');
-      el.querySelectorAll('button').forEach(btn => {
-        btn.disabled = false;
-        btn.removeAttribute('aria-disabled');
-      });
-    });
-  }
-
-  handleStimuliViewReady(data) {
-    // StimuliManager signals a document is ready to view.
-    // Insert a "View Document" button above choice buttons.
-    if (!data?.documentId) return;
-    const choicesContainer = document.getElementById('scene-choices');
-    if (!choicesContainer) return;
-    document.getElementById('stimuli-view-doc-btn')?.remove();
-
-    const btn = document.createElement('button');
-    btn.id = 'stimuli-view-doc-btn';
-    btn.className = 'stimuli-view-doc-btn mt-sm';
-    btn.setAttribute('aria-label', 'View primary source document');
-    const count = data.count || 1;
-    btn.textContent = count > 1 ? `📄 View Primary Sources (${count})` : '📄 View Primary Source';
-    btn.addEventListener('click', () => {
-      btn.remove();
-      this.stimuliManager?.playerRequestedView();
-    });
-    choicesContainer.insertBefore(btn, choicesContainer.firstChild);
+  handleStimuliAllPauseQuestionsComplete(data) {
+    // Thaw the world
+    const appEl = document.getElementById('app');
+    if (appEl) appEl.inert = false;
+    
+    const choicesEl = document.getElementById('scene-choices');
+    if (choicesEl) {
+      choicesEl.style.pointerEvents = 'auto';
+      choicesEl.style.opacity = '1';
+    }
+    this.enableChoices();
   }
 
   // ── Screen management ───────────────────────────────────────────────────────
@@ -535,7 +543,7 @@ class UIController {
   }
 
   disableChoices() {
-    document.querySelectorAll('.choice-button').forEach(btn => {
+    document.querySelectorAll('.choice-button, .prediction-option').forEach(btn => {
       btn.disabled = true;
       btn.style.pointerEvents = 'none';
       btn.style.opacity = '0.5';
@@ -1024,174 +1032,28 @@ class UIController {
     else choicesContainer.appendChild(wrapper);
   }
 
-  // ── Stimulus overlay ────────────────────────────────────────────────────────
-
-  _stimuliDocTypeClass(doc) {
-    const type = doc.documentType || '';
-    if (type === 'arbeiter-zeitung') return 'doc-type--arbeiter-zeitung';
-    if (type === 'pinkerton-report') return 'doc-type--pinkerton-report';
-    if (type === 'harper-weekly')    return 'doc-type--harper-weekly';
-    if (type === 'court-transcript') return 'doc-type--court-transcript';
-
-    const id = doc.id || '';
-    if (id === 'hm-doc-1a' || id === 'hm-doc-1b' || id === 'hm-doc-3') return 'doc-type--arbeiter-zeitung';
-    if (id === 'hm-doc-0')  return 'doc-type--pinkerton-report';
-    if (id === 'hm-doc-2' || id === 'hm-doc-4') return 'doc-type--harper-weekly';
-    if (id === 'hm-doc-5')  return 'doc-type--court-transcript';
-    return 'doc-type--default';
-  }
-
-  _injectDustParticles(overlay) {
-    const dust = document.createElement('div');
-    dust.className = 'stimuli-dust';
-    dust.setAttribute('aria-hidden', 'true');
-    for (let i = 0; i < 5; i++) {
-      const p = document.createElement('div');
-      p.className = 'stimuli-dust-particle';
-      p.style.setProperty('--drift-duration', `${7 + Math.random() * 6}s`);
-      p.style.setProperty('--drift-delay', `${Math.random() * 4}s`);
-      p.style.setProperty('--drift-x', `${(Math.random() - 0.5) * 60}px`);
-      p.style.left = `${10 + Math.random() * 80}%`;
-      p.style.bottom = '0';
-      dust.appendChild(p);
-    }
-    overlay.appendChild(dust);
-  }
-
-  _renderStimulusOverlay(doc) {
-    document.getElementById('stimuli-overlay')?.remove();
-
-    const overlay = document.createElement('div');
-    overlay.id = 'stimuli-overlay';
-    overlay.className = 'stimuli-overlay';
-    overlay.setAttribute('role', 'dialog');
-    overlay.setAttribute('aria-modal', 'true');
-    overlay.setAttribute('aria-labelledby', 'stimuli-doc-title');
-
-    this._injectDustParticles(overlay);
-
-    const typeClass = this._stimuliDocTypeClass(doc);
-    const spiceStr  = (doc.spiceT || []).join(' · ');
-
-    const illustrationHTML = typeClass === 'doc-type--harper-weekly'
-      ? `<div class="stimuli-illustration-placeholder" aria-hidden="true">[ ${this.content.stimuliOverlay?.illustrationLabel || 'Engraving'} — ${doc.title} ]</div>`
-      : '';
-    const signatureHTML = typeClass === 'doc-type--court-transcript'
-      ? `<div class="stimuli-signature" aria-label="Document signature line">${this.content.stimuliOverlay?.signatureLine || '_________________________'}</div>`
-      : '';
-
-    const content = document.createElement('div');
-    content.className = `stimuli-content ${typeClass}`;
-    content.innerHTML = `
-      <div class="stimuli-meta">
-        <span class="ap-skill-tag">${spiceStr}</span>
-        <span class="stimuli-unit text-secondary">${doc.apUnit || ''}</span>
-      </div>
-      <h3 id="stimuli-doc-title" class="stimuli-title mt-sm">${doc.title}</h3>
-      <p class="stimuli-source">${doc.source} — ${doc.date}</p>
-      ${illustrationHTML}
-      <div class="stimuli-text mt-md">${doc.text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>
-      ${signatureHTML}
-    `;
-
-    overlay.appendChild(content);
-    document.body.appendChild(overlay);
-
-    // Emit dom-ready AFTER paint so StimuliRevealAnimator has the element
-    requestAnimationFrame(() => {
-      this.eventBus.emit('stimuli:dom-ready', {
-        documentId: doc.id,
-        overlayEl:  overlay,
-        contentEl:  content
-      });
-    });
-
-    this._attachReadConfirmButton(content, doc);
-  }
-
-  _attachReadConfirmButton(contentEl, doc) {
-    const crossRolePrompt = doc.crossRolePrompt || null;
-    let questionMounted = false;
-
-    // ── "← Back to story" soft-close ────────────────────────────────────────
-    // Allows the player to return to the narrative WITHOUT archiving the doc.
-    // The document goes back to the front of the queue and can be re-opened.
-    const backBtn = document.createElement('button');
-    backBtn.id = 'stimuli-back-btn';
-    backBtn.className = 'stimuli-back-btn mt-sm';
-    backBtn.setAttribute('aria-label', 'Close document and return to narrative without archiving');
-    backBtn.textContent = '← Back to story';
-    backBtn.addEventListener('click', () => {
-      this.eventBus.emit('stimuli:soft-close-requested', { documentId: doc.id });
-    });
-    contentEl.appendChild(backBtn);
-
-    // ── "I've read this" confirm ─────────────────────────────────────────────
-    const btn = document.createElement('button');
-    btn.id = 'stimuli-read-confirm';
-    btn.className = 'stimuli-read-confirm-btn mt-sm';
-    btn.setAttribute('aria-label', 'I have read this document — answer the question');
-    btn.textContent = "I've read this document →";
-    contentEl.appendChild(btn);
-
-    btn.addEventListener('click', () => {
-      if (questionMounted) return;
-      questionMounted = true;
-      btn.remove();
-      backBtn.remove(); // remove back button once player commits to answering
-
-      if (!doc.pauseQuestion) {
-        this._showDismissButton(contentEl, doc.id);
-        this.eventBus.emit('stimuli:answer-submitted', { documentId: doc.id, selectedId: null, correct: false });
-        return;
-      }
-      this._mountPauseQuestion(contentEl, doc, crossRolePrompt);
-    });
-  }
-
   _openInventory() {
-    document.getElementById('annotation-inventory-toggle')?.click();
+    // Attempt to open the unified inventory toggle (supports the new IntelInventory)
+    document.getElementById('doc-inventory-trigger')?.click();
   }
 
-  _mountPauseQuestion(contentEl, doc, crossRolePrompt) {
+  _mountPauseQuestion(doc, crossRolePrompt) {
     this.currentDocHasPauseQuestion = true;
 
     const modal = new PauseQuestionModal(this.eventBus, doc.pauseQuestion, doc.id, crossRolePrompt || null);
 
-    const onAnswered = (data) => {
-      if (data.documentId !== doc.id) return;
-      this.eventBus.off('stimuli:pause-question-answered', onAnswered);
-      this.eventBus.off('inventory:open-requested', onInventoryOpen);
-      // FIX: destroy modal synchronously so StimuliArchiveAnimator always reads
-      // stable DOM geometry when it calls getBoundingClientRect().
-      // The old 800ms setTimeout caused a race where the modal was still in a
-      // CSS transition while the archive animator tried to snapshot coordinates.
-      modal.destroy();
-      this._showDismissButton(contentEl, doc.id);
-    };
-
     const onInventoryOpen = () => this._openInventory();
-
-    this.eventBus.on('stimuli:pause-question-answered', onAnswered);
     this.eventBus.on('inventory:open-requested', onInventoryOpen);
-    modal.mount();
-  }
 
-  _showDismissButton(contentEl, documentId) {
-    if (contentEl.querySelector('#stimuli-dismiss-btn')) return;
-    const btn = document.createElement('button');
-    btn.id = 'stimuli-dismiss-btn';
-    btn.className = 'stimuli-dismiss-btn mt-lg';
-    btn.textContent = this.content.stimuliOverlay?.dismissButton || 'Continue →';
-    btn.setAttribute('aria-label', 'Continue and archive this document');
-    btn.addEventListener('click', () => {
-      this.eventBus.emit('stimuli:dismiss-requested', {
-        documentId,
-        noPauseQuestion: !this.currentDocHasPauseQuestion
-      });
-    });
-    contentEl.appendChild(btn);
-    btn.focus();
+    // Clean up inventory listener when the modal is submitted and closed
+    const onAnswerSubmitted = (data) => {
+      if (data.documentId !== doc.id) return;
+      this.eventBus.off('inventory:open-requested', onInventoryOpen);
+      this.eventBus.off('stimuli:answer-submitted', onAnswerSubmitted);
+    };
+    this.eventBus.on('stimuli:answer-submitted', onAnswerSubmitted);
+
+    modal.mount();
   }
 
 }
