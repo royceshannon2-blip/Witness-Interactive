@@ -116,7 +116,7 @@ COMMISSIONER'S NOTE: "The data presented herein demonstrate that a significant p
 
 — Third Annual Report, Commissioner of Labor, 1887`,
     pauseQuestion: {
-      question: 'Which of the following conclusions is best supported by the Bureau of Labor Statistics data presented above?',
+      question: 'Which of the following conclusions is best supported by the Bureau of Labor Statistics data you collected in your Intel Inventory?',
       options: [
         { id: 'a', text: 'Chicago manufacturing workers in the 1880s earned wages sufficient to support a family, making the eight-hour movement primarily a political rather than economic demand.', correct: false },
         { id: 'b', text: 'The wage gap between skilled and unskilled workers was the primary cause of labor unrest, as skilled workers resented competition from unskilled immigrants.', correct: false },

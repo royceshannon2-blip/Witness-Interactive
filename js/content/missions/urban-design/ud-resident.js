@@ -59,13 +59,13 @@ Banks will not issue FHA-insured mortgages in D-grade zones. Property assessment
         id: "ud-res-choice-02a-a",
         text: "Document the discrimination — record the criteria in writing",
         consequences: { ud_documented_appraisal: true },
-        nextScene: "ud-res-scene-03"
+        nextScene: "ud-res-scene-03a"
       },
       {
         id: "ud-res-choice-02a-b",
         text: "Focus on maintaining the property despite the designation",
         consequences: { ud_maintained_property: true },
-        nextScene: "ud-res-scene-03"
+        nextScene: "ud-res-scene-03b"
       }
     ]
   },
@@ -83,19 +83,19 @@ Banks will not issue FHA-insured mortgages in D-grade zones. Property assessment
         id: "ud-res-choice-02b-a",
         text: "Document the discrimination",
         consequences: { ud_documented_appraisal: true },
-        nextScene: "ud-res-scene-03"
+        nextScene: "ud-res-scene-03a"
       },
       {
         id: "ud-res-choice-02b-b",
         text: "Focus on maintaining property",
         consequences: { ud_maintained_property: true },
-        nextScene: "ud-res-scene-03"
+        nextScene: "ud-res-scene-03b"
       }
     ]
   },
 
   {
-    id: "ud-res-scene-03",
+    id: "ud-res-scene-03a",
     narrative: `You gather the documents: the appraiser's notes, the HOLC map with its D-grade boundary, the bank rejection letters. The appraisal criteria are explicit in the HOLC manual — racial and ethnic composition is listed as a factor in neighborhood grading. The assessment was not based on housing condition or infrastructure quality. Some neighbors want to challenge the designation through legal channels or appeals to city officials. Others note that the federal government issued the grade and banks are following it — the administrative pathway for appeal is not defined in the HOLC documentation. The choice is yours: pursue a challenge through available channels, knowing the legal framework for contesting federal lending criteria does not yet exist, or focus resources on maintaining the property and household stability. The D-grade designation remains on file either way. The question is how you allocate your time and resources in response to it.`,
     apThemes: ["causation", "perspective"],
     atmosphericEffect: null,
@@ -104,13 +104,37 @@ Banks will not issue FHA-insured mortgages in D-grade zones. Property assessment
     soundEffects: null,
     choices: [
       {
-        id: "ud-res-choice-03-a",
+        id: "ud-res-choice-03a-a",
         text: "Challenge the designation",
         consequences: { ud_fought_redlining: true },
         nextScene: "ud-res-scene-04"
       },
       {
-        id: "ud-res-choice-03-b",
+        id: "ud-res-choice-03a-b",
+        text: "Accept and adapt",
+        consequences: { ud_accepted_situation: true },
+        nextScene: "ud-res-scene-04"
+      }
+    ]
+  },
+
+  {
+    id: "ud-res-scene-03b",
+    narrative: `You focus on the property. You ensure the roof is sound, the paint is fresh, and the steps are swept. But the D-grade boundary was not determined by housing condition. The assessment was based on HOLC criteria that included racial and ethnic composition. The map is now on file. Some neighbors want to challenge the designation through legal channels or appeals to city officials. Others note that the federal government issued the grade and banks are following it — the administrative pathway for appeal is not defined in the HOLC documentation. The choice is yours: pursue a challenge through available channels, knowing the legal framework for contesting federal lending criteria does not yet exist, or continue focusing resources on maintaining the property and household stability. The D-grade designation remains on file either way. The question is how you allocate your time and resources in response to it.`,
+    apThemes: ["causation", "perspective"],
+    atmosphericEffect: null,
+    ambientTrack: null,
+    narratorAudio: null,
+    soundEffects: null,
+    choices: [
+      {
+        id: "ud-res-choice-03b-a",
+        text: "Challenge the designation",
+        consequences: { ud_fought_redlining: true },
+        nextScene: "ud-res-scene-04"
+      },
+      {
+        id: "ud-res-choice-03b-b",
         text: "Accept and adapt",
         consequences: { ud_accepted_situation: true },
         nextScene: "ud-res-scene-04"
@@ -132,26 +156,26 @@ Banks will not issue FHA-insured mortgages in D-grade zones. Property assessment
         id: "ud-res-choice-04-a",
         text: "Refuse to sell to speculator",
         consequences: { ud_refused_speculator: true },
-        nextScene: "aftermath"
+        nextScene: "ud-res-scene-05a"
       },
       {
         id: "ud-res-choice-04-b",
         text: "Consider the speculator's offer",
         consequences: { ud_considered_offer: true },
-        nextScene: "aftermath"
+        nextScene: "ud-res-scene-05b"
       },
       {
         id: "ud-res-choice-04-c",
         text: "Organize neighbors to resist",
         consequences: { ud_organized_resistance: true },
-        nextScene: "aftermath"
+        nextScene: "ud-res-scene-05c"
       }
     ]
   },
 
   {
-    id: "ud-res-scene-05",
-    narrative: `The block transitions in six months. The Johnsons' moving truck idles at the curb — sold thirty percent below assessed value. The Millers follow two weeks later. The corner grocery sits vacant. Property tax revenue declined when assessments fell. The elementary school lost per-pupil funding. Bus routes were cut when ridership dropped below the district threshold. The agent's method is documented: manufactured urgency, below-market purchase from white homeowners, above-market resale to Black families on installment contracts. He extracted profit from both sides of the transaction. Your property assessment dropped forty percent in eighteen months — not from deferred maintenance, but from the withdrawal of FHA-insured lending that the 1934 D-grade designation had already set in motion. The disinvestment follows the grade boundary. You stand on the sidewalk, watching another moving truck load furniture. The choice is yours: remain in a neighborhood the city is reducing services to, or sell at a loss and relocate.`,
+    id: "ud-res-scene-05a",
+    narrative: `You refused the agent's initial offer. But the economic pressure from the 1934 designation was indifferent to individual refusal. The block transitions in six months. The Johnsons' moving truck idles at the curb — sold thirty percent below assessed value. The Millers follow two weeks later. The corner grocery sits vacant. Property tax revenue declined when assessments fell. The elementary school lost per-pupil funding. The agent's method is documented: manufactured urgency, below-market purchase, above-market resale on installment contracts. Your property assessment dropped forty percent in eighteen months — not from deferred maintenance, but from the withdrawal of FHA-insured lending that the D-grade designation had already set in motion. You stand on the sidewalk, watching another moving truck load furniture. The choice is yours: remain in a neighborhood the city is reducing services to, or sell at a loss and relocate.`,
     apThemes: ["causation", "spatial-analysis"],
     atmosphericEffect: null,
     ambientTrack: null,
@@ -159,23 +183,71 @@ Banks will not issue FHA-insured mortgages in D-grade zones. Property assessment
     soundEffects: null,
     choices: [
       {
-        id: "ud-res-choice-05-a",
+        id: "ud-res-choice-05a-a",
         text: "Stay and resist blockbusting",
         consequences: { ud_resisted_blockbusting: true, ud_stayed_through_transition: true },
         nextScene: "ud-res-scene-06"
       },
       {
-        id: "ud-res-choice-05-b",
+        id: "ud-res-choice-05a-b",
         text: "Sell to speculator at low price",
         consequences: { ud_sold_to_speculator: true },
+        nextScene: "outcome"
+      }
+    ]
+  },
+
+  {
+    id: "ud-res-scene-05b",
+    narrative: `You kept the agent's card containing the below-market offer. The block transitions in six months. The Johnsons' moving truck idles at the curb — sold thirty percent below assessed value. The Millers follow two weeks later. The corner grocery sits vacant. Property tax revenue declined when assessments fell. The elementary school lost per-pupil funding. The agent's method is documented: manufactured urgency, below-market purchase, above-market resale on installment contracts. Your property assessment dropped forty percent in eighteen months — not from deferred maintenance, but from the withdrawal of FHA-insured lending that the D-grade designation had already set in motion. You stand on the sidewalk, reviewing the offer while watching another moving truck load furniture. The choice is yours: remain in a neighborhood the city is reducing services to, or sign the contract and relocate.`,
+    apThemes: ["causation", "spatial-analysis"],
+    atmosphericEffect: null,
+    ambientTrack: null,
+    narratorAudio: null,
+    soundEffects: null,
+    choices: [
+      {
+        id: "ud-res-choice-05b-a",
+        text: "Tear up the offer and stay",
+        consequences: { ud_resisted_blockbusting: true, ud_stayed_through_transition: true },
         nextScene: "ud-res-scene-06"
+      },
+      {
+        id: "ud-res-choice-05b-b",
+        text: "Sign and sell at low price",
+        consequences: { ud_sold_to_speculator: true },
+        nextScene: "outcome"
+      }
+    ]
+  },
+
+  {
+    id: "ud-res-scene-05c",
+    narrative: `You tried to organize the block against panic selling. The economic pressure from the 1934 designation was systemic, and individual organizing could not replace the withdrawn FHA-insured lending. The block transitions in six months. The Johnsons' moving truck idles at the curb — sold thirty percent below assessed value. The Millers follow two weeks later. The corner grocery sits vacant. Property tax revenue declined when assessments fell. The elementary school lost per-pupil funding. The agent's method is documented: manufactured urgency, below-market purchase, above-market resale on installment contracts. Your property assessment dropped forty percent in eighteen months — from the withdrawal of lending that the D-grade designation had set in motion. The organizing failed because the capital was already gone. You stand on the sidewalk, watching another moving truck. The choice is yours: remain in a neighborhood the city is reducing services to, or capitulate and sell.`,
+    apThemes: ["causation", "spatial-analysis"],
+    atmosphericEffect: null,
+    ambientTrack: null,
+    narratorAudio: null,
+    soundEffects: null,
+    choices: [
+      {
+        id: "ud-res-choice-05c-a",
+        text: "Stay despite the failed organizing",
+        consequences: { ud_resisted_blockbusting: true, ud_stayed_through_transition: true },
+        nextScene: "ud-res-scene-06"
+      },
+      {
+        id: "ud-res-choice-05c-b",
+        text: "Accept defeat and sell low",
+        consequences: { ud_sold_to_speculator: true },
+        nextScene: "outcome"
       }
     ]
   },
 
   {
     id: "ud-res-scene-06",
-    narrative: `The block is half-empty now. The elementary school closed last month — enrollment fell below the district minimum. The bus route was cut. The corner store sits vacant. Your property tax bill arrives: assessed value down forty-three percent in eighteen months. The housing stock has not deteriorated — your home is maintained — but the D-grade designation removed FHA-insured lending from the area three decades ago, and assessed values track capital access. The city allocates infrastructure maintenance budgets proportionally to tax revenue. New families are moving in, directed here by the same lending restrictions that limited their options elsewhere. The demographic transition is a consequence of the capital withdrawal, not its cause. The agent's offer remains open: sell at a loss and relocate, or remain in a neighborhood with declining municipal services. The choice is yours.`,
+    narrative: `The block is half-empty now. The elementary school closed last month — enrollment fell below the district minimum. The bus route was cut. The corner store sits vacant. Your property tax bill arrives: assessed value down forty-three percent in eighteen months. The housing stock has not deteriorated — your home is maintained — but the D-grade designation removed FHA-insured lending from the area three decades ago, and assessed values track capital access. The city allocates infrastructure maintenance budgets proportionally to tax revenue. New families are moving in, directed here by the same lending restrictions that limited their options elsewhere. The demographic transition is a consequence of the capital withdrawal, not its cause. The choice is yours: stay in a neighborhood with declining municipal services, or pack up and abandon the property.`,
     apThemes: ["spatial-analysis", "continuity"],
     atmosphericEffect: null,
     ambientTrack: null,
@@ -192,7 +264,7 @@ Banks will not issue FHA-insured mortgages in D-grade zones. Property assessment
         id: "ud-res-choice-06-b",
         text: "Leave the neighborhood",
         consequences: { ud_left_neighborhood: true },
-        nextScene: "ud-res-scene-07"
+        nextScene: "outcome"
       }
     ]
   },
@@ -278,6 +350,33 @@ Banks will not issue FHA-insured mortgages in D-grade zones. Property assessment
 ];
 
 const udResidentOutcomes = [
+  // EARLY EXITS (Must be evaluated first to override passive flags like 'accepted_designation')
+  {
+    id: "ud-res-outcome-complicity-sold",
+    survived: true,
+    conditions: {
+      ud_sold_to_speculator: true
+    },
+    epilogue: `You sold. The agent offered thirty percent below assessed value — cash, immediate. Your neighbors had already sold. The Johnsons two weeks earlier. The Millers the week after. The corner grocery had closed when property tax revenue fell below operating viability. The elementary school was losing enrollment. Bus routes were being cut as ridership declined. The 1934 D-grade designation had removed FHA-insured lending from the area, which reduced assessed values, which contracted the tax base, which reduced municipal services. The agent was operating in conditions that federal policy had created over three decades.
+
+The economic pressure was documented and real. Your property assessment had declined forty percent in eighteen months, not from deferred maintenance but from the removal of capital access. Remaining meant holding a depreciating asset in an area with declining services. The decision to sell was a response to documented economic conditions, not an isolated choice.
+
+The aggregate effect is also documented. Each sale accelerated the next. The agent purchased below market from white homeowners and resold above market to Black families on installment contracts — land contracts that transferred no equity until full payment. The U.S. Commission on Civil Rights (1961) documented this practice across multiple cities. The agent extracted profit from both sides of the transaction.
+
+You relocated to a neighborhood graded B in 1934. Tree canopy. Funded schools. Stable assessed values. The Federal Reserve Bank of Chicago (2017) documents that differential home equity accumulation beginning in this period is the primary driver of the current racial wealth gap. Your family accumulated equity in a B-grade neighborhood. The neighborhood you sold recorded surface temperatures 5 to 12 degrees higher by 2024, per Hoffman et al. (2020). The blockbusting mechanism required sellers. The pattern required participation to function at scale.`
+  },
+  
+  {
+    id: "ud-res-outcome-left-neighborhood",
+    survived: true,
+    conditions: {
+      ud_left_neighborhood: true
+    },
+    epilogue: `You left the neighborhood. The block had transitioned and municipal services followed the contracting tax base. The elementary school lost funding and bus routes were cut. The D-grade designation from 1934 had established the framework for this disinvestment over three decades, making remaining unsustainable without sacrificing basic civic amenities.
+
+You relocated, losing the potential equity accumulation that a B-grade or A-grade neighborhood would have provided over the same period. The Federal Reserve Bank of Chicago (2017) documents that differential home equity accumulation beginning in this period is the primary driver of the current racial wealth gap. The transition was a direct consequence of federal mapping policy, manifesting as impossible individual choices.`
+  },
+
   // EQUITY PATH - Fought injustice at multiple stages
   {
     id: "ud-res-outcome-equity-path",
@@ -309,21 +408,6 @@ The consequences followed the documented pattern. FHA-insured lending was unavai
 By the 1960s, blockbusting agents operated in the area, exploiting the capital withdrawal the 1934 designation had set in motion. By 2024, Hoffman, Shandas, and Pendleton documented that your block recorded surface temperatures 5 to 12 degrees higher than formerly A-grade areas in the same city. Reduced tree canopy. Higher impervious surface ratios. Lower rates of public green infrastructure investment. All outcomes of the reduced capital flow that followed the 1934 grade.
 
 The designation was not contested. The consequences accumulated over ninety years. The spatial pattern of disinvestment is documented in the historical record.`
-  },
-
-  {
-    id: "ud-res-outcome-complicity-sold",
-    survived: true,
-    conditions: {
-      ud_sold_to_speculator: true
-    },
-    epilogue: `You sold. The agent offered thirty percent below assessed value — cash, immediate. Your neighbors had already sold. The Johnsons two weeks earlier. The Millers the week after. The corner grocery had closed when property tax revenue fell below operating viability. The elementary school was losing enrollment. Bus routes were being cut as ridership declined. The 1934 D-grade designation had removed FHA-insured lending from the area, which reduced assessed values, which contracted the tax base, which reduced municipal services. The agent was operating in conditions that federal policy had created over three decades.
-
-The economic pressure was documented and real. Your property assessment had declined forty percent in eighteen months, not from deferred maintenance but from the removal of capital access. Remaining meant holding a depreciating asset in an area with declining services. The decision to sell was a response to documented economic conditions, not an isolated choice.
-
-The aggregate effect is also documented. Each sale accelerated the next. The agent purchased below market from white homeowners and resold above market to Black families on installment contracts — land contracts that transferred no equity until full payment. The U.S. Commission on Civil Rights (1961) documented this practice across multiple cities. The agent extracted profit from both sides of the transaction.
-
-You relocated to a neighborhood graded B in 1934. Tree canopy. Funded schools. Stable assessed values. The Federal Reserve Bank of Chicago (2017) documents that differential home equity accumulation beginning in this period is the primary driver of the current racial wealth gap. Your family accumulated equity in a B-grade neighborhood. The neighborhood you sold recorded surface temperatures 5 to 12 degrees higher by 2024, per Hoffman et al. (2020). The blockbusting mechanism required sellers. The pattern required participation to function at scale.`
   },
 
   // ADAPTATION PATH - Focused on survival and adaptation

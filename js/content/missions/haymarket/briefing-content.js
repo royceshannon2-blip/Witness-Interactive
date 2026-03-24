@@ -22,32 +22,6 @@ const BRIEFING_PAGES = [
     price: 'Two cents',
     hSize: 'sz-lg',
     hClass: '',
-    h: 'Industrial Transformation, 1871–1885',
-    deck: 'From the ashes of the Great Fire, a city of iron and smoke — and the men who feed its furnaces',
-    body: `On the night of October 8, 1871, fire consumed four square miles of Chicago. By morning, 100,000 people were homeless and $200 million in property had turned to ash. The city rebuilt with a ferocity that matched the blaze itself.
-
-Within a decade, Chicago had become the industrial capital of the American interior. More than twenty railroads converged on the city. The Union Stock Yards processed four million animals a year. The McCormick Reaper Works on Blue Island Avenue employed 1,400 men and produced the mechanical harvesters that were transforming the Great Plains. The smell of the place — coal smoke, animal blood, machine oil — reached visitors before they could see the skyline.
-
-The population exploded with it. From just over 110,000 on the eve of the Civil War, Chicago grew to nearly 300,000 by 1870 and to almost 1.1 million by 1890. The newcomers came from Ireland, Germany, Bohemia, and the Scandinavian countries. They filled the tenements of the Near West Side and the South Side, within walking distance of the factories that needed their hands.
-
-The machinery they tended was new and indifferent to them. A reaper press stamped out parts at a rate no human hand could match. A blast furnace ran twenty-four hours and required men to feed it in shifts. The work was relentless and the hours were long — ten to twelve hours a day, six days a week, for wages that left little margin between a family and hunger. A skilled machinist at McCormick earned roughly $1.50 a day. An unskilled laborer earned less.
-
-The men who owned the machines lived differently. George Pullman built a model town south of the city for his workers and charged them rent. Cyrus McCormick Jr. inherited his father's reaper empire and expanded it. Marshall Field's department store on State Street sold goods that most of the city's workers could not afford to buy.
-
-By 1885, Chicago was a city of stark contrasts — magnificent and brutal, expanding and explosive. The conditions that would produce the events of May 1886 had been accumulating for fifteen years.`,
-    ticker: 'Chicago, 1885: The McCormick Reaper Works employs 1,400 workers. The plant runs 10 hours a day, six days a week.',
-    spiceT: ['Economic', 'Technological'],
-    apUnit: 'Unit 6.5',
-    apTheme: 'contextualization',
-    stimuliUnlock: []
-  },
-
-  {
-    vol: 'Vol. XLII — No. 124',
-    date: 'Chicago, Illinois — May 1886',
-    price: 'Two cents',
-    hSize: 'sz-lg',
-    hClass: '',
     h: 'The Workers',
     deck: 'Immigrant labor, the Arbeiter-Zeitung, and the demand for eight hours',
     body: `By 1886, nearly half of Chicago's working population had been born outside the United States. The largest single group was German. They settled in the neighborhoods west of the river — on Milwaukee Avenue, on West Indiana Street, in the blocks around the Arbeiter-Zeitung printing house on Fifth Avenue — and they brought with them a tradition of labor politics that had no equivalent in American-born working-class culture.
@@ -243,6 +217,10 @@ const BRIEFING_UI_TEXT = {
     rightCol: {
       dateline: 'Dispatches',
       sidebar: [
+        {
+          head: 'INTEL INVENTORY 📁',
+          text: 'As you navigate the historical scene, primary documents will unlock silently in your Intel Inventory (📁). Periodic pause questions will test your knowledge about the documents you have collected.'
+        },
         {
           head: 'THE STRIKE SITUATION',
           text: 'Eighty thousand workingmen have pledged to lay down their tools on May the first. The demand: eight hours of labor for eight hours\'s pay.'
