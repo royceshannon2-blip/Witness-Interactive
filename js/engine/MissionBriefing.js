@@ -362,17 +362,43 @@ class MissionBriefing {
 
   _buildPinkertonCard(card) {
     const rows = card.rows || [];
-    return `<div class="physical-card" style="background:linear-gradient(135deg,#e8e0cc 0%,#dcd4bc 100%);border:1px solid #6a6050;font-family:'Libre Baskerville',serif;max-width:620px;margin:0 auto;box-shadow:0 6px 24px rgba(0,0,0,0.35);">
-    <div style="background:#1a1810;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;">
-      <div style="text-align:center;"><div style="color:#c8a840;font-family:'Playfair Display',serif;font-size:0.9rem;font-weight:700;letter-spacing:2px;">PINKERTON'S</div></div>
+    return `<div class="physical-card" style="background:linear-gradient(135deg,#e8e0cc 0%,#dcd4bc 100%);border:1px solid #6a6050;font-family:'Libre Baskerville',serif;max-width:620px;margin:0 auto;box-shadow:0 6px 24px rgba(0,0,0,0.35);position:relative;overflow:hidden;">
+    <div style="background:#1a1810;padding:6px 14px;border-bottom:2px solid #c8a840;">
+      <div style="color:#c8a840;font-family:'Playfair Display',serif;font-size:0.85rem;font-weight:700;letter-spacing:3px;text-align:center;">PINKERTON'S NATIONAL DETECTIVE AGENCY</div>
     </div>
-    <div style="display:grid;grid-template-columns:110px 1fr;gap:14px;padding:12px 16px 14px;">
-      <div>
-        <div style="width:110px;height:140px;background:#d4ccb8;border:1px solid #6a6050;overflow:hidden;background-image:url('images/jamesdoyle.png');background-size:cover;background-position:center;"></div>
+    
+    <div style="display:grid;grid-template-columns:1fr 200px;gap:0;padding:15px;">
+      
+      <div style="border-right:1px solid rgba(0,0,0,0.1);padding-right:15px;">
+        <div style="display:flex;gap:15px;margin-bottom:12px;">
+           <div style="width:90px;height:110px;background:#d4ccb8;border:1px solid #6a6050;background-image:url('images/jamesdoyle.png');background-size:cover;background-position:center;"></div>
+           <div style="flex:1;">
+             <div style="font-size:0.5rem;text-transform:uppercase;color:#5a5040;font-family:'IM Fell English',serif;font-style:italic;">Identification No.</div>
+             <div style="font-size:1rem;color:#1a1810;font-family:'IM Fell DW Pica',serif;border-bottom:1px solid #6a6050;margin-bottom:8px;">2454672</div>
+             <div style="font-size:0.45rem;text-transform:uppercase;color:#5a5040;font-family:'IM Fell English',serif;">Agency Seal Authorized</div>
+             <div style="width:40px;height:40px;opacity:0.6;margin-top:4px;background-image:url('images/pinkerton-eye.png');background-size:contain;background-repeat:no-repeat;"></div>
+           </div>
+        </div>
+        
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+          ${rows.map(row => `
+            <div style="border-bottom:0.5px solid rgba(70,60,40,0.3);padding-bottom:2px;">
+              <div style="font-size:0.45rem;text-transform:uppercase;letter-spacing:0.5px;color:#5a5040;font-family:'IM Fell English',serif;font-style:italic;">${row[0]}</div>
+              <div style="font-size:0.8rem;color:#1a1810;font-family:'IM Fell DW Pica',serif;" class="id-field-value"></div>
+            </div>
+          `).join('')}
+        </div>
       </div>
-      <div style="display:flex;flex-direction:column;gap:6px;">
-        ${rows.map(row=>`<div style="border-bottom:0.5px solid rgba(70,60,40,0.3);padding-bottom:4px;"><div style="font-size:0.5rem;text-transform:uppercase;letter-spacing:1px;color:#5a5040;font-family:'IM Fell English',serif;font-style:italic;margin-bottom:1px;">${row[0]}</div><div style="font-size:${row[2]==='un'?'0.75rem':'0.9rem'};color:#1a1810;font-family:'IM Fell DW Pica',serif;" class="id-field-value"></div></div>`).join('')}
+
+      <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding-left:10px;">
+        <div style="width:140px;height:160px;background:radial-gradient(circle at center, #f0f0f0 0%, #a0a0a0 100%);clip-path:polygon(50% 0%, 100% 20%, 100% 80%, 50% 100%, 0% 80%, 0% 20%);border:2px solid #777;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:inset 0 0 15px rgba(0,0,0,0.2), 4px 4px 10px rgba(0,0,0,0.2);">
+          <div style="font-family:'Playfair Display',serif;font-weight:bold;font-size:0.6rem;color:#333;margin-bottom:5px;">PINKERTON</div>
+          <div style="width:30px;height:2px;background:#333;margin:4px 0;"></div>
+          <div style="font-family:'Playfair Display',serif;font-weight:bold;font-size:0.8rem;color:#222;letter-spacing:1px;text-align:center;">DETECTIVE<br>AGENCY</div>
+        </div>
+        <div style="font-size:0.5rem;margin-top:10px;color:#5a5040;font-family:'IM Fell English',serif;font-style:italic;">Property of the Agency</div>
       </div>
+
     </div>
   </div>`;
   }
