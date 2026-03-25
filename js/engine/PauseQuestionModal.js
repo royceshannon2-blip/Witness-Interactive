@@ -45,6 +45,7 @@ class PauseQuestionModal {
 
     // Bound handlers
     this._onKeyDown = this._onKeyDown.bind(this);
+    this._submit = this._submit.bind(this);
   }
 
   // ── Public API ─────────────────────────────────────────────────────────────
