@@ -113,16 +113,17 @@ From somewhere to the south, on Desplaines Street, you hear the sound of boots o
     apUnit: 'Unit 6.5',
     spiceT: ['Political', 'Social'],
     atmosphericEffect: null,
+    backgroundImage: 'images/atmospheric-chicago-1886.png',
     ambientTrack: './audio/ambient/hm-ambient-haymarket-crowd.mp3',
     narratorAudio: './audio/narration/lucy-parsons/hm-lp-scene-03.mp3',
     stimuliUnlock: [],
     predictionQuestion: {
       question: 'The Revenge Circular has been distributed. What do you predict will be the most immediate consequence of workers gathering at Haymarket Square tonight?',
       options: [
-        { id: 'a', text: 'The rally disperses peacefully as the rain arrives and the crowd goes home.' },
-        { id: 'b', text: 'A bomb is thrown into the police ranks, killing officers and workers alike.' },
-        { id: 'c', text: 'Police arrest the speakers before the meeting can begin.' },
-        { id: 'd', text: 'Mayor Harrison orders the meeting cancelled and the crowd disperses without incident.' }
+        { id: 'a', text: 'The rally disperses peacefully as the rain arrives and the crowd goes home.', class: 'prediction-option' },
+        { id: 'b', text: 'A bomb is thrown into the police ranks, killing officers and workers alike.', class: 'prediction-option' },
+        { id: 'c', text: 'Police arrest the speakers before the meeting can begin.', class: 'prediction-option' },
+        { id: 'd', text: 'Mayor Harrison orders the meeting cancelled and the crowd disperses without incident.', class: 'prediction-option' }
       ],
       reveal: 'On the evening of May 4th, 1886, as police moved to disperse the crowd, an unknown person threw a bomb into the police ranks at the corner of Randolph and Desplaines streets. The explosion and the gunfire that followed killed seven police officers and at least four workers. Sixty-seven officers were wounded. The identity of the bomber was never conclusively established. Eight anarchist leaders were arrested and charged with conspiracy to murder — none was proven to have thrown the bomb.'
     },

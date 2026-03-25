@@ -28,7 +28,25 @@
 class AnnotationStore {
   constructor() {
     /** @type {Object.<string, {documentTitle: string, documentSource: string, highlights: Array}>} */
-    this.data = {};
+    this.data = this._loadFromStorage() || {};
+  }
+
+  _loadFromStorage() {
+    try {
+      const saved = localStorage.getItem('witness_annotations');
+      return saved ? JSON.parse(saved) : null;
+    } catch (e) {
+      console.warn('AnnotationStore: failed to load from localStorage', e);
+      return null;
+    }
+  }
+
+  _saveToStorage() {
+    try {
+      localStorage.setItem('witness_annotations', JSON.stringify(this.data));
+    } catch (e) {
+      console.warn('AnnotationStore: failed to save to localStorage', e);
+    }
   }
 
   /**
@@ -53,6 +71,7 @@ class AnnotationStore {
       };
     }
     this.data[documentId].highlights.push(highlight);
+    this._saveToStorage();
   }
 
   /**
@@ -67,6 +86,7 @@ class AnnotationStore {
     const highlight = doc.highlights.find(h => h.id === highlightId);
     if (!highlight) return;
     Object.assign(highlight, changes);
+    this._saveToStorage();
   }
 
   /**
@@ -82,6 +102,7 @@ class AnnotationStore {
     if (doc.highlights.length === 0) {
       delete this.data[documentId];
     }
+    this._saveToStorage();
   }
 
   /**
@@ -117,6 +138,7 @@ class AnnotationStore {
    */
   clear() {
     this.data = {};
+    localStorage.removeItem('witness_annotations');
   }
 }
 

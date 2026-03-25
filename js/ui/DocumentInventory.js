@@ -33,7 +33,7 @@ const FOLDERS = [
     id: 'folder-april',
     label: 'APRIL — McCORMICK',
     date: 'April 1886',
-    documentIds: ['hm-doc-1a']
+    documentIds: ['hm-doc-1a', 'hm-doc-1c']
   },
   {
     id: 'folder-may3',
@@ -51,7 +51,7 @@ const FOLDERS = [
     id: 'folder-aftermath',
     label: 'AFTERMATH — TRIAL & PARDON',
     date: 'August 1886 – June 1893',
-    documentIds: ['hm-doc-4', 'hm-doc-5']
+    documentIds: ['hm-doc-4', 'hm-doc-5', 'hm-doc-6']
   }
 ];
 
@@ -60,10 +60,12 @@ const DOC_SHORT_TITLES = {
   'hm-doc-0': 'Hayes Troop Order\n1877',
   'hm-doc-1a': 'Arbeiter-Zeitung\nMay 1886',
   'hm-doc-1b': 'BLS Wage Data\n1880s',
+  'hm-doc-1c': 'Eight Hours Song\n1886',
   'hm-doc-2': "Harper's Weekly\nMay 15, 1886",
   'hm-doc-3': 'Revenge Circular\nMay 3, 1886',
   'hm-doc-4': 'Chicago Tribune\nMay 5, 1886',
-  'hm-doc-5': "Altgeld's Pardon\nJune 1893"
+  'hm-doc-5': "Altgeld's Pardon\nJune 1893",
+  'hm-doc-6': 'Pinkerton Logo\n1886'
 };
 
 // Margin notes shown on Lucy Parsons docs when hm_lp_movement_trust >= 3

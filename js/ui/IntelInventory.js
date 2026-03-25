@@ -232,9 +232,17 @@ class IntelInventory {
       padding: '40px', borderRadius: '4px' // Added some default padding just in case CSS doesn't apply
     });
 
-    const illustrationHTML = typeClass === 'doc-type--harper-weekly'
-      ? `<div class="stimuli-illustration-placeholder" aria-hidden="true" style="margin:20px 0; padding:40px; border:1px dashed #ccc; text-align:center;">[ Engraving — ${doc.title} ]</div>`
-      : '';
+    const illustrationHTML = doc.image
+      ? `<div class="stimuli-illustration" style="margin:20px 0; text-align:center;">
+           <img src="${doc.image}" alt="Historical illustration: ${doc.title}" style="max-width:100%; height:auto; border:1px solid #ddd; box-shadow:0 4px 10px rgba(0,0,0,0.1)">
+         </div>`
+      : (typeClass === 'doc-type--harper-weekly' 
+          ? `<div class="stimuli-illustration-placeholder" aria-hidden="true" style="margin:20px 0; padding:40px; border:1px dashed #ccc; text-align:center;">[ Engraving — ${doc.title} ]</div>`
+          : '');
+
+    const textHTML = doc.text 
+      ? `<div class="stimuli-text mt-md" style="line-height:1.6; font-size:1.1em">${doc.text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>`
+      : (doc.image ? '<p style="text-align:center; font-style:italic; color:#666; margin-top:20px;">[ This document is a primary source visual artifact ]</p>' : '');
 
     docWrapper.innerHTML = `
       <div class="stimuli-meta" style="margin-bottom:20px; text-transform:uppercase; font-size:0.8em; color:#666">
@@ -244,7 +252,7 @@ class IntelInventory {
       <h3 id="stimuli-doc-title" class="stimuli-title mt-sm" style="font-family:serif; font-size:1.8em; margin:0 0 5px 0">${doc.title}</h3>
       <p class="stimuli-source" style="font-style:italic; margin:0 0 20px 0">${doc.source} — ${doc.date}</p>
       ${illustrationHTML}
-      <div class="stimuli-text mt-md" style="line-height:1.6; font-size:1.1em">${doc.text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>')}</div>
+      ${textHTML}
     `;
 
     contentArea.appendChild(docWrapper);

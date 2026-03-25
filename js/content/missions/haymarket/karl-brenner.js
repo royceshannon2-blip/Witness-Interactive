@@ -74,6 +74,7 @@ The march turns south on State Street. The crowd is still moving behind you, sti
     apUnit: 'Unit 6.5',
     spiceT: ['Social', 'Economic'],
     atmosphericEffect: null,
+    backgroundImage: 'images/atmospheric-chicago-1886.png',
     ambientTrack: './audio/ambient/hm-ambient-haymarket-crowd.mp3',
     narratorAudio: './audio/narration/karl-brenner/hm-kb-scene-02.mp3',
     stimuliUnlock: ['hm-doc-2'],
@@ -126,10 +127,10 @@ You are standing in the same place you were standing before. Nothing has changed
     predictionQuestion: {
       question: 'You have just seen workers shot at the McCormick gates. What do you predict will happen next?',
       options: [
-        { id: 'a', text: 'The police will be held accountable and the strike will be settled through negotiation.' },
-        { id: 'b', text: 'Workers will call a mass protest meeting to respond to the shootings.' },
-        { id: 'c', text: 'The labor movement will collapse — workers will be too afraid to organize further.' },
-        { id: 'd', text: 'McCormick management will offer to rehire the locked-out workers to prevent further violence.' }
+        { id: 'a', text: 'The police will be held accountable and the strike will be settled through negotiation.', class: 'prediction-option' },
+        { id: 'b', text: 'Workers will call a mass protest meeting to respond to the shootings.', class: 'prediction-option' },
+        { id: 'c', text: 'The labor movement will collapse — workers will be too afraid to organize further.', class: 'prediction-option' },
+        { id: 'd', text: 'McCormick management will offer to rehire the locked-out workers to prevent further violence.', class: 'prediction-option' }
       ],
       reveal: 'August Spies witnessed the McCormick shooting from the crowd. That evening, May 3rd, he wrote the Revenge Circular — a document calling workers to arms and announcing a protest meeting at Haymarket Square for the following night. The shooting did not end the movement. It accelerated it. The Haymarket meeting was the direct causal link between employer violence at the McCormick gates and the police response that would end the eight-hour movement in Chicago for a generation.'
     },

@@ -130,17 +130,13 @@ COMMISSIONER'S NOTE: "The data presented herein demonstrate that a significant p
   {
     id: 'hm-doc-1c',
     title: '"Eight Hours" — Marching Song of the Labor Movement',
-    source: 'Words by I.G. Blanchard; music by Rev. Jesse H. Jones. Published in The Alarm, Chicago, 1886.',
-    date: '1866 (widely republished 1886)',
+    source: 'Words by I.G. Blanchard; music by Rev. Jesse H. Jones. Published in The Alarm, 1886.',
+    date: '1886',
     docType: 'arbeiter-zeitung',
+    image: 'images/labor-union-banner.png',
     spiceT: ['Cultural', 'Social'],
     apUnit: 'Unit 6.5',
-    text: `"EIGHT HOURS"
-Words by I.G. Blanchard — Music by Rev. Jesse H. Jones
-Published in The Alarm, Chicago, 1886
-Widely sung at the May 1st marches
-
-We mean to make things over,
+    text: `We mean to make things over,
   We are tired of toil for naught,
 With but bare enough to live upon
   And never an hour for thought;
@@ -153,42 +149,18 @@ We're summoning our forces
   From the shipyard, shop, and mill;
 Eight hours for work, eight hours for rest,
   Eight hours for what we will!
-Eight hours for work, eight hours for rest,
-  Eight hours for what we will!
 
-The beasts that graze the hillside,
-  And the birds that wander free,
-In the life that God has meted,
-  Have a better life than we.
-Oh hands and hearts are weary,
-  And homes are heavy with dole;
-If our life's to be filled with drudg'ry,
-  What need of a human soul?
-
-[Chorus]
-Eight hours for work, eight hours for rest,
-  Eight hours for what we will!
-
-— I.G. Blanchard, "Eight Hours," 1866
-Widely republished in labor papers by 1886
-Sung at the May 1st, 1886 march in Chicago by an estimated 80,000 workers
-
-[Historical note: This song was written in 1866 — twenty years before Haymarket — by
-I.G. Blanchard, an American-born worker, not a foreign radical. It was set to music by
-a Methodist minister. By 1886 it had become the anthem of the eight-hour movement
-across the country, sung in English, German, Czech, and Polish. Its existence is evidence
-that the demand for an eight-hour workday was a long-standing American working-class
-aspiration, not a product of anarchist ideology imported from Europe.]`,
+This song, written in 1866 by an American-born worker, became the anthem of the 1886 movement. Its existence proves that the demand for eight hours was a long-standing American labor goal, not a recent import of foreign radical ideology.`,
     pauseQuestion: {
-      question: 'Which of the following best explains why a historian studying the Haymarket Affair would find the "Eight Hours" song a useful primary source, despite the fact that it is a poem rather than a political document?',
+      question: 'Which of the following describes the most significant function of this song in the 1886 labor movement?',
       options: [
-        { id: 'a', text: 'Because songs and poems are always more reliable than official political documents, since they express the genuine feelings of ordinary people without political distortion.', correct: false },
-        { id: 'b', text: "Because the song's origin in 1866 demonstrates that the eight-hour demand predated anarchism and radicalism by two decades, providing evidence against the claim that the 1886 movement was driven by foreign radical ideology.", correct: true },
-        { id: 'c', text: 'Because the song proves that Chicago workers in 1886 were primarily motivated by religious belief, since it invokes the will of God.', correct: false },
-        { id: 'd', text: "Because I.G. Blanchard was a prominent labor leader whose views represent the official position of the Knights of Labor.", correct: false }
+        { id: 'a', text: 'It was used by anarchist leaders to coordinate the specific timing of the Haymarket bombing.', correct: false },
+        { id: 'b', text: 'It served as a unifying cultural tool, articulating common working-class values and demonstrating that labor demands were grounded in American traditions and religious ideals.', correct: true },
+        { id: 'c', text: 'It was a recruitment tool for the Democratic Party in the 1886 elections.', correct: false },
+        { id: 'd', text: 'It was written specifically for the McCormick lockout to protest the use of Pinkerton guards.', correct: false }
       ],
       correctId: 'b',
-      explanation: "The \"Eight Hours\" song is analytically useful precisely because it is not a radical anarchist document — it was written in 1866, twenty years before Haymarket, by an American-born worker, and set to music by a Methodist minister. When prosecution lawyers at the Haymarket trial argued that the 1886 labor movement was a foreign-born anarchist conspiracy, they were obscuring a much longer American working-class tradition of which Blanchard's song is evidence. For AP students practicing Sourcing (Historical Thinking Skill 2), the key insight is: what does the origin and genre of this document reveal about the nature of the movement? A song sung by 80,000 marchers on May Day tells us something about mass, shared working-class values that no editorial or proclamation can. The fact that it invokes God and nature — rather than class war — shows that the eight-hour demand was legible within mainstream American moral frameworks, not just radical ones. The song predating Haymarket by twenty years is the most powerful piece of evidence: it proves this was a workers' movement, not an anarchist plot."
+      explanation: "The 'Eight Hours' song provided the movement with a moral and cultural vocabulary. By invoking 'sunshine,' 'flowers,' and the 'will of God,' it framed the eight-hour day as a basic human right necessary for citizenship and family life. Sourcing this document reveals that the movement had deep American roots, countering the prosecution's later claims that it was an alien anarchist conspiracy."
     }
   },
   {
@@ -196,35 +168,47 @@ aspiration, not a product of anarchist ideology imported from Europe.]`,
     title: "Harper's Weekly Illustration, May 15, 1886",
     source: "Harper's Weekly, May 15, 1886 — illustration by Thure de Thulstrup",
     date: 'May 15, 1886',
+    docType: 'harper-weekly',
+    image: 'images/harper-weekly-haymarket.png',
     spiceT: ['Political', 'Cultural'],
     apUnit: 'Unit 6.5',
-    text: `HARPER'S WEEKLY: A JOURNAL OF CIVILIZATION
-May 15, 1886 — Full-Page Illustration
+    text: `The illustration from May 15, 1886, famously captioned "The Anarchist Riot in Chicago," depicts the dramatic moment when a dynamite bomb exploded among a column of police officers.
 
-"THE ANARCHIST RIOT IN CHICAGO — A DYNAMITE BOMB EXPLODING AMONG THE POLICE"
-Illustration by Thure de Thulstrup, based on sketches by C. Bunnell
+In the foreground, a disciplined column of uniformed police is struck by a burst of fire and white light. Officers fall backward in chaos. In the background, a faceless, anonymous crowd of rioters disperses into the darkness. 
 
-[Description of the illustration:]
-
-The image fills the full broadsheet page. In the foreground, a column of uniformed police officers advances in tight formation down a gas-lit street, their ranks orderly and disciplined, brass buttons catching the light. The officers are depicted as professional, controlled, and clearly identifiable as representatives of civic order.
-
-At the center of the image, a bomb explodes in a burst of flame and smoke among the police ranks. Several officers are shown falling or recoiling from the blast. The explosion is rendered with dramatic detail — a serpentine trail of fire, a burst of white light, bodies thrown backward.
-
-In the background and to the sides, a crowd of figures is depicted in chaotic motion — running, gesturing, some shown with weapons. These figures are rendered without individual faces or distinguishing features, a mass of anonymous threat. The contrast with the individually rendered police officers is stark and deliberate.
-
-Original caption text: "The Anarchist Riot in Chicago — A Dynamite Bomb Exploding Among the Police, in Randolph Street, Tuesday Evening, May 4th."
-
-Harper's Weekly was published in New York with a circulation exceeding 100,000 subscribers, drawn primarily from the educated middle and professional classes. The illustration appeared eleven days after the Haymarket events, before any trial had taken place.`,
+Harper's Weekly, with a circulation of over 100,000 middle-class readers, framed the event as a premeditated "anarchist riot" before any trial began. This visual narrative shaped the national public's perception of the labor movement as a violent, radical threat to civic order.`,
     pauseQuestion: {
-      question: "Which of the following best explains how the source of this illustration limits its usefulness as evidence about the perspectives of workers who attended the Haymarket meeting?",
+      question: "Which of the following best explains how the editorial framing of this illustration shaped public perception of the Haymarket Affair?",
       options: [
-        { id: 'a', text: "The illustration was created eleven days after the event, so the artist could not have witnessed it directly and may have made factual errors about the location.", correct: false },
-        { id: 'b', text: "Harper's Weekly's middle-class readership and its editorial framing of the event as an 'anarchist riot' means the illustration reflects the perspective of those who feared labor organizing, not those who participated in it — making it unreliable as evidence of working-class experience or intent.", correct: true },
-        { id: 'c', text: "Because the illustration is a visual source rather than a written document, it cannot be used as historical evidence about the Haymarket Affair.", correct: false },
-        { id: 'd', text: "The illustration is useful evidence about working-class perspectives because it was published in a widely circulated national magazine that all Americans would have read.", correct: false }
+        { id: 'a', text: "It accurately captured the testimony of workers who witnessed the bomb, providing a balanced account of the evening's events.", correct: false },
+        { id: 'b', text: "By depicting orderly police against a faceless, chaotic crowd and labeling it an 'anarchist riot,' it reinforced middle-class fears of labor radicalism and delegitimized the eight-hour movement.", correct: true },
+        { id: 'c', text: "It demonstrated that Harper's Weekly was an unbiased source that supported the workers' demand for shorter hours.", correct: false },
+        { id: 'd', text: "It proved that the bomb was thrown by one of the eight anarchist leaders later arrested by the Chicago police.", correct: false }
       ],
       correctId: 'b',
-      explanation: "AP Historical Thinking Skill 2 (Sourcing and Situation) requires asking: who created this source, for what audience, and how does that shape what it shows? Harper's Weekly reached over 100,000 subscribers, predominantly educated middle-class readers who were not factory workers and who feared labor radicalism. The illustration's visual choices — orderly police vs. faceless, chaotic crowd — reflect this audience's perspective. The caption labels the event an 'anarchist riot' before any investigation or trial. This framing shaped public opinion against the defendants. The illustration is valuable evidence of how the middle-class press constructed the meaning of Haymarket — but it tells us almost nothing about what workers at the meeting actually experienced or intended. A historian using this source must account for its origin and audience before drawing conclusions."
+      explanation: "AP Historical Thinking Skill 2 (Sourcing and Situation) requires examining who created a source and for what audience. Harper's Weekly reached over 100,000 subscribers, predominantly middle-class readers who feared labor radicalism. The illustration's visual choices — orderly police vs. faceless, chaotic crowd — and its 'anarchist riot' caption framed the event as a criminal conspiracy rather than a labor protest. This framing turned national public opinion against the defendants before the trial even began."
+    }
+  },
+  {
+    id: 'hm-doc-6',
+    title: 'Pinkerton National Detective Agency Identity Document',
+    source: 'Pinkerton Agency Archives, CHI-1886',
+    date: '1886',
+    docType: 'pinkerton-report',
+    image: 'images/pinkerton-eye.png',
+    spiceT: ['Political', 'Social'],
+    apUnit: 'Unit 6.5',
+    text: '', // IMAGE ONLY STIMULUS
+    pauseQuestion: {
+      question: "The 'We Never Sleep' logo of the Pinkerton Agency reflects which trend in Gilded Age labor relations?",
+      options: [
+        { id: 'a', text: 'The expansion of federal police powers to regulate industrial safety in factories.', correct: false },
+        { id: 'b', text: 'The rise of private security organizations hired by industrialists to monitor workers and suppress labor unions during a period of minimal government regulation.', correct: true },
+        { id: 'c', text: 'The cooperation between labor unions and detectives to identify corrupt factory foremen.', correct: false },
+        { id: 'd', text: 'The invention of the modern surveillance camera for use in retail stores.', correct: false }
+      ],
+      correctId: 'b',
+      explanation: "The Pinkerton Agency was the largest private security force in the world by the 1880s. Its logo symbolized the constant surveillance of the 'labor element.' Because there was little federal regulation of labor relations, companies relied on the Pinkertons for infiltration of unions and armed protection of replacement workers during strikes. This private enforcement of 'order' was central to the conflicts at McCormick and Haymarket."
     }
   },
   {

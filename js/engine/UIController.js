@@ -249,13 +249,23 @@ class UIController {
   handleStimuliAllPauseQuestionsComplete(data) {
     // Thaw the world
     const appEl = document.getElementById('app');
-    if (appEl) appEl.inert = false;
+    if (appEl) {
+      appEl.inert = false;
+    }
     
     const choicesEl = document.getElementById('scene-choices');
     if (choicesEl) {
-      choicesEl.style.pointerEvents = 'auto';
+      choicesEl.style.pointerEvents = 'all';
       choicesEl.style.opacity = '1';
     }
+
+    // Force enable all buttons to ensure no "deadlock" state
+    document.querySelectorAll('.choice-button, .prediction-option, .quest-option-button').forEach(btn => {
+      btn.disabled = false;
+      btn.style.pointerEvents = 'all';
+      btn.style.opacity = '1';
+    });
+
     this.enableChoices();
   }
 
@@ -508,7 +518,23 @@ class UIController {
 
     const onTypewriterComplete = () => {
       glossaryTooltip.apply(narrativeContainer);
+      // Update Background Image if present
+      const appWrap = document.getElementById('app');
+      if (appWrap) {
+        if (scene.backgroundImage) {
+          appWrap.style.backgroundImage = `url('${scene.backgroundImage}')`;
+          appWrap.style.backgroundSize = 'cover';
+          appWrap.style.backgroundPosition = 'center';
+          appWrap.style.backgroundRepeat = 'no-repeat';
+          appWrap.classList.add('has-background');
+        } else {
+          appWrap.style.backgroundImage = 'none';
+          appWrap.classList.remove('has-background');
+        }
+      }
+
       this.enableChoices();
+      this.currentSceneId = scene.id;
       this.eventBus.emit('typewriter:complete', { sceneId: scene.id });
       if (this.currentSceneData?.scene?.timedChoice?.enabled && this.timedChoiceSystem) {
         this.startTimedChoice(this.currentSceneData.scene.timedChoice);

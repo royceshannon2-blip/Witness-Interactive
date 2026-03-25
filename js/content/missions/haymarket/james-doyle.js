@@ -32,7 +32,7 @@ You write your reports. You attend the meetings. You are James Reilly.`,
     stimuliUnlock: [],
     predictionQuestion: null,
     timedChoice: null,
-    deathCheckpoint: false,
+    backgroundImage: 'images/atmospheric-chicago-1886.png',
     choices: [
       {
         id: 'hm-jd-choice-01-a',
@@ -156,10 +156,10 @@ Ward is waiting for your answer.`,
     predictionQuestion: {
       question: 'August Spies has called a protest meeting at Haymarket Square for tomorrow night. Based on what you have witnessed at the McCormick gates and in three months of IWPA meetings, what do you predict will happen?',
       options: [
-        { id: 'a', text: 'The meeting will be peaceful and the city will negotiate with labor leaders to prevent further violence.' },
-        { id: 'b', text: 'Police will confront the crowd and the confrontation will turn violent, ending the eight-hour movement in Chicago.' },
-        { id: 'c', text: 'The meeting will be cancelled — workers will be too afraid to gather after the McCormick shooting.' },
-        { id: 'd', text: 'The Pinkerton agency will intervene directly to disperse the crowd before police arrive.' }
+        { id: 'a', text: 'The meeting will be peaceful and the city will negotiate with labor leaders to prevent further violence.', class: 'prediction-option' },
+        { id: 'b', text: 'Police will confront the crowd and the confrontation will turn violent, ending the eight-hour movement in Chicago.', class: 'prediction-option' },
+        { id: 'c', text: 'The meeting will be cancelled — workers will be too afraid to gather after the McCormick shooting.', class: 'prediction-option' },
+        { id: 'd', text: 'The Pinkerton agency will intervene directly to disperse the crowd before police arrive.', class: 'prediction-option' }
       ],
       reveal: 'On the night of May 4th, an unknown person threw a bomb into the police formation as officers moved to disperse the meeting. Seven police officers and at least four workers died. The bombing gave authorities the pretext to arrest the eight IWPA leaders — not for throwing the bomb, but for conspiracy. The Pinkerton reports James filed over three months became evidence in the trial.'
     },
