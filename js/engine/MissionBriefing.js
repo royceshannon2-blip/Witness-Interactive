@@ -45,9 +45,14 @@ class MissionBriefing {
   constructor(eventBus) {
     this.eventBus = eventBus;
     this.container = null;
-    this._activeIv  = null;
     this._seqToken  = 0;
     this._tributeStyleEl = null;
+    this._active = false;
+    this._active = false;
+  }
+
+  isActive() {
+    return this._active;
   }
 
   hasBriefing(missionId) {
@@ -89,6 +94,7 @@ class MissionBriefing {
       : this._buildHTML(this._getRoleKey(roleId), uiText);
 
     document.getElementById('app').appendChild(this.container);
+    this._active = true;
 
     glossaryTooltip.showIntro();
 
@@ -102,11 +108,14 @@ class MissionBriefing {
 
     let pageIdx = 0;
     let typing  = false;
+    this._currentPage = null;
+    this._currentCard = null;
 
     const showPage = (i) => {
       const p      = pages[i];
       const isLast = (i === pages.length - 1);
       typing = true;
+      this._currentPage = p;
 
       if (isHaymarket) {
         this._showTribunePage(p, isLast, uiText);
@@ -443,6 +452,9 @@ class MissionBriefing {
   }
 
   _showCard(card, final, onComplete, isHaymarket = false) {
+    this._currentCard = { card, final, onComplete, isHaymarket };
+    this._seqToken++;
+    const token = this._seqToken;
     const content = this.container.querySelector('#mb-content');
     content.style.display = 'none';
     const cardSec = this.container.querySelector('#mb-card-section');
@@ -453,15 +465,18 @@ class MissionBriefing {
     let fi = 0;
 
     const typeFields = () => {
+      if (token !== this._seqToken) return;
       if (fi >= fieldEls.length) { typeNote(); return; }
       const el  = fieldEls[fi];
       const txt = fieldValues[fi] || ''; 
       el.textContent = '';
       let j = 0;
-      const iv = setInterval(() => {
+      if (this._activeIv) clearInterval(this._activeIv);
+      this._activeIv = setInterval(() => {
+        if (token !== this._seqToken) { clearInterval(this._activeIv); return; }
         j++;
         el.textContent = txt.slice(0, j);
-        if (j >= txt.length) { clearInterval(iv); fi++; setTimeout(typeFields, 28); }
+        if (j >= txt.length) { clearInterval(this._activeIv); this._activeIv = null; fi++; setTimeout(typeFields, 28); }
       }, 16);
     };
 
@@ -469,14 +484,17 @@ class MissionBriefing {
     noteEl.innerHTML = '';
 
     const typeNote = () => {
+      if (token !== this._seqToken) return;
       const text = card.note || '';
       if (!text) { setTimeout(typeFinal, 80); return; }
       let j = 0;
       noteEl.innerHTML = '<span class="mb-cursor"></span>';
-      const iv = setInterval(() => {
+      if (this._activeIv) clearInterval(this._activeIv);
+      this._activeIv = setInterval(() => {
+        if (token !== this._seqToken) { clearInterval(this._activeIv); return; }
         j++;
         noteEl.innerHTML = text.slice(0, j) + '<span class="mb-cursor"></span>';
-        if (j >= text.length) { clearInterval(iv); noteEl.innerHTML = text; setTimeout(typeFinal, 80); }
+        if (j >= text.length) { clearInterval(this._activeIv); this._activeIv = null; noteEl.innerHTML = text; setTimeout(typeFinal, 80); }
       }, 9);
     };
 
@@ -485,16 +503,20 @@ class MissionBriefing {
     const beginBtn = cardSec.querySelector('#mb-begin');
 
     const typeFinal = () => {
+      if (token !== this._seqToken) return;
       finalBar.style.display = 'block';
       const rawText = final || '';
       const plain   = rawText.replace(/<[^>]+>/g, '');
       let j = 0;
       finalEl.innerHTML = '<span class="mb-cursor"></span>';
-      const iv = setInterval(() => {
+      if (this._activeIv) clearInterval(this._activeIv);
+      this._activeIv = setInterval(() => {
+        if (token !== this._seqToken) { clearInterval(this._activeIv); return; }
         j++;
         finalEl.innerHTML = plain.slice(0, j) + '<span class="mb-cursor"></span>';
         if (j >= plain.length) {
-          clearInterval(iv);
+          clearInterval(this._activeIv);
+          this._activeIv = null;
           finalEl.innerHTML = rawText;
           beginBtn.style.opacity = '1';
           beginBtn.style.pointerEvents = 'all';
@@ -538,6 +560,84 @@ class MissionBriefing {
     if (old) old.remove();
     this._disableTribuneCSS();
     this.container = null;
+    this._active = false;
+  }
+
+  skip() {
+    if (!this._active || !this.container) return;
+    console.log('[Briefing] Skip triggered');
+
+    // Kill active typing
+    if (this._activeIv) { clearInterval(this._activeIv); this._activeIv = null; }
+    this._seqToken++;
+
+    // 1. Newspaper view skip
+    const content = this.container.querySelector('#mb-content');
+    if (content && content.style.display !== 'none') {
+      const btn = this.container.querySelector('#mb-cont');
+      if (btn && btn.style.opacity === '1') return;
+
+      if (this.container.classList.contains('trib')) {
+        const p = this._currentPage;
+        if (p) {
+          const bodyEl = this.container.querySelector('#trib-body-text');
+          const deckEl = this.container.querySelector('#trib-deck-text');
+          const hlEl   = this.container.querySelector('#trib-headline-text');
+          const tickEl = this.container.querySelector('#trib-ticker-text');
+          if (bodyEl) bodyEl.innerHTML = p.body || '';
+          if (deckEl) deckEl.innerHTML = p.deck || '';
+          if (hlEl)   hlEl.innerHTML   = p.h    || '';
+          if (tickEl && p.ticker) tickEl.innerHTML = '◆  ' + p.ticker;
+          if (bodyEl) glossaryTooltip.apply(bodyEl);
+        }
+      } else {
+        const p = this._currentPage;
+        if (p) {
+          ['mb-dateline','hl','mb-deck','mb-body','mb-ticker'].forEach(id => {
+            const el = this.container.querySelector('#' + id);
+            if (!el) return;
+            if (id === 'hl') el.innerHTML = p.h || '';
+            else if (id === 'mb-dateline') el.innerHTML = (p.date || '').toUpperCase();
+            else if (id === 'mb-deck') el.innerHTML = p.deck || '';
+            else if (id === 'mb-body') el.innerHTML = p.body || '';
+            else if (id === 'mb-ticker' && p.ticker) el.innerHTML = '◆  ' + p.ticker;
+            glossaryTooltip.apply(el);
+          });
+        }
+      }
+
+      if (btn) {
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'all';
+        // Note: we don't change textContent because logic in showPage sets it based on isLast
+      }
+      return;
+    }
+
+    // 2. Card view skip
+    const cardSec = this.container.querySelector('#mb-card-section');
+    if (cardSec && cardSec.style.display === 'block') {
+      const beginBtn = cardSec.querySelector('#mb-begin');
+      if (beginBtn && beginBtn.style.opacity === '1') return;
+
+      const cc = this._currentCard;
+      if (cc) {
+        const fieldEls = cardSec.querySelectorAll('.id-field-value');
+        const rows = cc.card.rows || [];
+        fieldEls.forEach((el, i) => { if (rows[i]) el.textContent = rows[i][1]; });
+        
+        const noteEl = cardSec.querySelector('#mb-id-note');
+        if (noteEl) noteEl.innerHTML = cc.card.note || '';
+        
+        const finalEl = cardSec.querySelector('#mb-final-text');
+        if (finalEl) finalEl.innerHTML = cc.final || '';
+        
+        if (beginBtn) {
+          beginBtn.style.opacity = '1';
+          beginBtn.style.pointerEvents = 'all';
+        }
+      }
+    }
   }
 
   _setText(id, text) {

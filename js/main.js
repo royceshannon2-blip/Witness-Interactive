@@ -274,10 +274,14 @@ async function initializeApp() {
     
     // Dev cheat code: Ctrl+Shift+6 skips typewriter animation instantly
     document.addEventListener('keydown', (e) => {
-        if (e.ctrlKey && e.shiftKey && e.key === '^') {
+        if (e.ctrlKey && e.shiftKey && (e.key === '6' || e.key === '^')) {
             if (typewriterEffect.isActive()) {
                 console.log('[Dev] Typewriter skipped');
                 typewriterEffect.skipToEnd();
+            }
+            if (missionBriefing && missionBriefing.isActive()) {
+                console.log('[Dev] Briefing skipped');
+                missionBriefing.skip();
             }
         }
     });
