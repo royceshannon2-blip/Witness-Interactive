@@ -197,7 +197,7 @@ class PauseQuestionModal {
     submitBtn.disabled = true;
     submitBtn.setAttribute('aria-describedby', 'pqm-question-text');
     submitBtn.textContent = 'Submit Answer';
-    submitBtn.addEventListener('click', () => this._submit());
+    submitBtn.addEventListener('click', this._submit); // USE BOUND REFERENCE
     actions.appendChild(submitBtn);
 
     // Inventory button
@@ -326,7 +326,7 @@ class PauseQuestionModal {
     const correctId = this._pq.correctId;
     const isCorrect = this._selectedOptId === correctId;
 
-    // Mark all rows
+    // Mark all rows (correct/incorrect)
     this._el.querySelectorAll('.pqm-option-row').forEach(row => {
       row.classList.add('disabled');
       if (row.dataset.optId === correctId) row.classList.add('correct');
@@ -343,13 +343,19 @@ class PauseQuestionModal {
       submitBtn.textContent = 'Continue';
       submitBtn.classList.remove('ready');
       submitBtn.disabled = false;
+      
+      // Successfully remove the old bound listener
       submitBtn.removeEventListener('click', this._submit);
+      
       submitBtn.addEventListener('click', () => {
+        // Emit exactly what advances the StimuliManager queue
         this._eventBus.emit('stimuli:answer-submitted', {
           documentId: this._documentId,
           selectedId: this._selectedOptId,
           correct: isCorrect
         });
+        // Optional: Emit dismiss-requested if you want to align with your header architecture
+        this._eventBus.emit('stimuli:dismiss-requested', { documentId: this._documentId });
         this.destroy();
       });
       submitBtn.focus();
