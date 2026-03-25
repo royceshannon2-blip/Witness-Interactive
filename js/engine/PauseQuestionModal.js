@@ -377,7 +377,10 @@ class PauseQuestionModal {
     }
     if (e.key === 'Enter') {
       const submitBtn = this._el?.querySelector('#pqm-submit');
-      if (submitBtn && !submitBtn.disabled) submitBtn.click();
+      if (submitBtn && !submitBtn.disabled) {
+        e.preventDefault(); // ADD THIS to prevent the instant-skip bug!
+        submitBtn.click();
+      }
     }
   }
 
