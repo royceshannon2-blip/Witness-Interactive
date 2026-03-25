@@ -4,44 +4,44 @@
  * FIXED ARCHITECTURE:
  *
  * Previous bugs:
- *   1. Documents appeared simultaneously with narrative (no typewriter gate)
- *   2. Pause question mounted via broken scroll detection (fired after 600ms regardless)
- *   3. Archive-to-dismiss race condition silently killed queue advancement
- *   4. StimuliRevealAnimator queried .stimuli-content after UIController painted it —
- *      timing race caused silent animation skips
+ * 1. Documents appeared simultaneously with narrative (no typewriter gate)
+ * 2. Pause question mounted via broken scroll detection (fired after 600ms regardless)
+ * 3. Archive-to-dismiss race condition silently killed queue advancement
+ * 4. StimuliRevealAnimator queried .stimuli-content after UIController painted it —
+ * timing race caused silent animation skips
  *
  * New flow:
- *   scene:transition fires
- *     → pending doc IDs stored, NOT shown yet
- *     → typewriter:complete fires (player has read narrative)
- *       → "View Document" button appears in scene choices area
- *         → player clicks button
- *           → stimuli:dom-ready emitted AFTER overlay is painted (requestAnimationFrame)
- *             → StimuliRevealAnimator receives element reference directly
- *               → player reads document
- *                 → "I've read this" button appears
- *                   → PauseQuestionModal mounts
- *                     → player answers
- *                       → dismiss button appears
- *                         → player clicks dismiss
- *                           → state committed synchronously
- *                             → archive animation plays (cosmetic only)
- *                               → queue advances to next doc
+ * scene:transition fires
+ * → pending doc IDs stored, NOT shown yet
+ * → typewriter:complete fires (player has read narrative)
+ * → "View Document" button appears in scene choices area
+ * → player clicks button
+ * → stimuli:dom-ready emitted AFTER overlay is painted (requestAnimationFrame)
+ * → StimuliRevealAnimator receives element reference directly
+ * → player reads document
+ * → "I've read this" button appears
+ * → PauseQuestionModal mounts
+ * → player answers
+ * → dismiss button appears
+ * → player clicks dismiss
+ * → state committed synchronously
+ * → archive animation plays (cosmetic only)
+ * → queue advances to next doc
  *
  * Events consumed:
- *   scene:transition          — stores pending doc IDs
- *   typewriter:complete       — triggers "View Document" button
- *   stimuli:answer-submitted  — { documentId, selectedId, correct }
- *   stimuli:dismiss-requested — { documentId }
- *   stimuli:archive-complete  — DOM cleanup only (no queue logic)
+ * scene:transition          — stores pending doc IDs
+ * typewriter:complete       — triggers "View Document" button
+ * stimuli:answer-submitted  — { documentId, selectedId, correct }
+ * stimuli:dismiss-requested — { documentId }
+ * stimuli:archive-complete  — DOM cleanup only (no queue logic)
  *
  * Events emitted:
- *   stimuli:view-ready        — { documentId } — "View Document" button should appear
- *   stimuli:dom-ready         — { documentId, overlayEl, contentEl } — animator hook
- *   stimuli:shown             — { documentId, documentData } — inventory hook
- *   stimuli:pause-question-answered — { documentId, correct, selectedId }
- *   stimuli:dismissed         — { documentId, answeredCorrectly }
- *   stimuli:archive-requested — { documentId } — triggers StimuliArchiveAnimator
+ * stimuli:view-ready        — { documentId } — "View Document" button should appear
+ * stimuli:dom-ready         — { documentId, overlayEl, contentEl } — animator hook
+ * stimuli:shown             — { documentId, documentData } — inventory hook
+ * stimuli:pause-question-answered — { documentId, correct, selectedId }
+ * stimuli:dismissed         — { documentId, answeredCorrectly }
+ * stimuli:archive-requested — { documentId } — triggers StimuliArchiveAnimator
  */
 
 import { getDocument } from '../content/missions/haymarket/stimulus-documents.js';
@@ -79,6 +79,24 @@ class StimuliManager {
 
     // Briefing pages can unlock stimulus documents
     this.eventBus.on('briefing:stimuli-unlock',    (data) => this._handleBriefingUnlock(data));
+
+    // Listen for role/mission changes to wipe the session state and prevent stale queues
+    this.eventBus.on('game:start',                 () => this.reset());
+    this.eventBus.on('role:started',               () => this.reset());
+  }
+
+  // ─── Session Reset ───────────────────────────────────────────────────────────
+
+  reset() {
+    // Completely clear document tracking to prevent state bleed across roles/missions
+    this.shownDocuments.clear();
+    this._newlyUnlockedDocs = [];
+    this._pendingPauseQuestions = [];
+    this._pendingSceneId = null;
+
+    // Clean up any lingering UI or listeners
+    this._clearTypewriterListener();
+    this.detachAnnotationOverlay();
   }
 
   // ─── Scene transition: unlock silently, defer pause questions ───────────────────────
