@@ -71,7 +71,7 @@ Wilhelm does not meet your eyes. He says he thought you should know. Then he wal
     atmosphericEffect: null,
     ambientTrack: './audio/ambient/hm-ambient-westside-evening.mp3',
     narratorAudio: './audio/narration/lucy-parsons/hm-lp-scene-02.mp3',
-    stimuliUnlock: ['hm-doc-2'],
+    stimuliUnlock: [],
     predictionQuestion: null,
     timedChoice: null,
     deathCheckpoint: false,
@@ -116,7 +116,7 @@ From somewhere to the south, on Desplaines Street, you hear the sound of boots o
     backgroundImage: 'images/atmospheric-chicago-1886.png',
     ambientTrack: './audio/ambient/hm-ambient-haymarket-crowd.mp3',
     narratorAudio: './audio/narration/lucy-parsons/hm-lp-scene-03.mp3',
-    stimuliUnlock: [],
+    stimuliUnlock: ['hm-doc-2'],
     predictionQuestion: {
       question: 'The Revenge Circular has been distributed. What do you predict will be the most immediate consequence of workers gathering at Haymarket Square tonight?',
       options: [
@@ -170,7 +170,7 @@ The street in front of you is filling with people running away from the square. 
     atmosphericEffect: 'shake',
     ambientTrack: './audio/ambient/hm-ambient-chaos.mp3',
     narratorAudio: './audio/narration/lucy-parsons/hm-lp-scene-04.mp3',
-    stimuliUnlock: [],
+    stimuliUnlock: ['hm-doc-3'],
     predictionQuestion: null,
     timedChoice: { enabled: true, duration: 14000, defaultChoice: 'hm-lp-choice-04-c' },
     deathCheckpoint: false,

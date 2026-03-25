@@ -178,15 +178,15 @@ In the foreground, a disciplined column of uniformed police is struck by a burst
 
 Harper's Weekly, with a circulation of over 100,000 middle-class readers, framed the event as a premeditated "anarchist riot" before any trial began. This visual narrative shaped the national public's perception of the labor movement as a violent, radical threat to civic order.`,
     pauseQuestion: {
-      question: "Which of the following best explains how the editorial framing of this illustration shaped public perception of the Haymarket Affair?",
+      question: "Based on the chaos you witnessed in the square during Scene 5, how does the editorial framing of this illustration—specifically its use of the label 'Anarchist Riot'—work to shape the reader's perception of the event?",
       options: [
-        { id: 'a', text: "It accurately captured the testimony of workers who witnessed the bomb, providing a balanced account of the evening's events.", correct: false },
-        { id: 'b', text: "By depicting orderly police against a faceless, chaotic crowd and labeling it an 'anarchist riot,' it reinforced middle-class fears of labor radicalism and delegitimized the eight-hour movement.", correct: true },
-        { id: 'c', text: "It demonstrated that Harper's Weekly was an unbiased source that supported the workers' demand for shorter hours.", correct: false },
-        { id: 'd', text: "It proved that the bomb was thrown by one of the eight anarchist leaders later arrested by the Chicago police.", correct: false }
+        { id: 'a', text: "It accurately captured the testimony of workers who witnessed the bomb, providing a balanced account of the evening's events as you saw them.", correct: false },
+        { id: 'b', text: "By depicting orderly police against a faceless, chaotic crowd and labeling it a 'riot' rather than a protest, it reinforces middle-class fears of radicalism and delegitimizes the labor movement.", correct: true },
+        { id: 'c', text: "It demonstrates that Harper's Weekly was an unbiased source that supported the workers' demand for shorter hours.", correct: false },
+        { id: 'd', text: "It proved that the bomb was thrown by one of the eight anarchist leaders you saw in the crowd.", correct: false }
       ],
       correctId: 'b',
-      explanation: "AP Historical Thinking Skill 2 (Sourcing and Situation) requires examining who created a source and for what audience. Harper's Weekly reached over 100,000 subscribers, predominantly middle-class readers who feared labor radicalism. The illustration's visual choices — orderly police vs. faceless, chaotic crowd — and its 'anarchist riot' caption framed the event as a criminal conspiracy rather than a labor protest. This framing turned national public opinion against the defendants before the trial even began."
+      explanation: "AP Historical Thinking Skill 2 (Sourcing and Situation) requires examining who created a source and for what audience. Harper's Weekly reached over 100,000 subscribers, predominantly middle-class readers who feared labor radicalism. The illustration's visual choices—orderly police vs. faceless, chaotic crowd—and its 'anarchist riot' caption framed the event as a criminal conspiracy rather than the labor protest you experienced. This framing turned national public opinion against the defendants before the trial even began."
     }
   },
   {
@@ -321,15 +321,15 @@ Springfield, Illinois, June 26, 1893
 
 [Historical note: Altgeld knew before signing this pardon that it would end his political career. He was correct. He was denounced by newspapers across the country, including the Chicago Tribune, as an anarchist sympathizer. He lost his bid for re-election in 1896. He died in 1902, largely forgotten. Historians have since confirmed the substance of his three conclusions.]`,
     pauseQuestion: {
-      question: "Governor Altgeld's pardon message is most significant as historical evidence because it:",
+      question: "Reflecting on the courtroom proceedings you observed in Scene 6, which of Governor Altgeld's subsequently documented findings in this 1893 pardon message most directly addresses the judicial environment you witnessed?",
       options: [
-        { id: 'a', text: 'Proved conclusively that the Haymarket defendants were innocent and that the bomb was thrown by a government agent provocateur.', correct: false },
-        { id: 'b', text: 'Demonstrated that Illinois governors had the legal authority to pardon convicted criminals, establishing an important precedent in state law.', correct: false },
-        { id: 'c', text: 'Showed that public opinion had shifted in favor of labor by 1893, making it politically safe for Altgeld to issue the pardon without risking his career.', correct: false },
-        { id: 'd', text: "Provided a detailed legal critique of the trial's procedural failures — packed jury, biased judge, absence of evidence connecting defendants to the bomb — establishing a documented record of judicial misconduct that historians have since confirmed.", correct: true }
+        { id: 'a', text: 'His proof that the bomb was thrown by a government agent provocateur, confirming what you saw in the crowd.', correct: false },
+        { id: 'b', text: 'His assertion that the eight-hour movement was legally recognized, establishing an important precedent for the trial.', correct: false },
+        { id: 'c', text: 'His observation that the public had turned against business interests, making the trial safer for the defendants than it appeared.', correct: false },
+        { id: 'd', text: "His documented critique of the trial's procedural failures—a packed jury and a judge acting with 'malicious ferocity'—which aligns with your observation of the court's biased atmosphere.", correct: true }
       ],
       correctId: 'd',
-      explanation: "Altgeld's pardon message is significant not because it exonerated the defendants in a legal sense — they had already served years in prison, and four had been executed — but because it provided a systematic, documented critique of the trial's failures. His three conclusions (packed jury, biased judge, no evidence connecting defendants to the bomb) were based on his personal review of the full trial record. Historians including Paul Avrich have since confirmed the substance of all three. The pardon was politically devastating: Altgeld was denounced as an anarchist sympathizer and lost his re-election bid. The fact that he issued it anyway — knowing the cost — makes the document a primary source about both the injustice of the trial and the political courage required to name it. The Haymarket trial is now recognized as one of the most unjust in American legal history."
+      explanation: "Altgeld's 1893 pardon message is significant because it provides a documented, legal foundation for the procedural failures you observed in the courtroom. His three conclusions (packed jury, biased judge, no evidence connecting defendants to the bomb) were reached after a review of the same record you helped create. Historians have since confirmed these findings, recognizing the Haymarket trial as one of the most unjust in American legal history—not due to the lack of a crime, but due to the systematic failure of the judicial process."
     }
   }
 ];

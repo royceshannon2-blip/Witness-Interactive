@@ -1063,6 +1063,34 @@ class UIController {
     document.getElementById('doc-inventory-trigger')?.click();
   }
 
+  /**
+   * Shows a small popup/hint reminding the player they can use their inventory
+   * to reference stimuli while answering a pause question.
+   */
+  _showInventoryReminder() {
+    const hint = document.createElement('div');
+    hint.className = 'pqm-inventory-hint';
+    hint.setAttribute('role', 'status');
+    hint.setAttribute('aria-live', 'polite');
+    hint.innerHTML = `
+      <span class="pqm-inventory-hint-icon" aria-hidden="true">📁</span>
+      <div class="pqm-inventory-hint-text">If needed, open your Intel Inventory to reference the source material.</div>
+    `;
+    
+    document.body.appendChild(hint);
+
+    // Auto-dismiss after 6 seconds, or if the user clicks anywhere
+    const dismiss = () => {
+      if (!hint.parentNode) return;
+      hint.classList.add('fade-out');
+      setTimeout(() => hint.remove(), 500);
+      document.removeEventListener('mousedown', dismiss);
+    };
+
+    setTimeout(dismiss, 6000);
+    document.addEventListener('mousedown', dismiss);
+  }
+
   _mountPauseQuestion(doc, crossRolePrompt) {
     this.currentDocHasPauseQuestion = true;
 
@@ -1080,6 +1108,9 @@ class UIController {
     this.eventBus.on('stimuli:answer-submitted', onAnswerSubmitted);
 
     modal.mount();
+
+    // Show the inventory reminder after a short delay
+    setTimeout(() => this._showInventoryReminder(), 800);
   }
 
 }

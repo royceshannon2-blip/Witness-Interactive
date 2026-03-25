@@ -117,7 +117,16 @@ class StimuliManager {
     }
 
     // Register typewriter:complete listener to trigger pause questions from PREVIOUS scenes
+    // CRITICAL: Ensure prediction questions are never used in the same scene as a pause question.
+    // If the current scene has a predictionQuestion, we defer these pause questions until the next scene.
+    const hasPrediction = !!data.scene.predictionQuestion;
+
     if (this._pendingPauseQuestions.length > 0) {
+      if (hasPrediction) {
+        console.warn(`StimuliManager: Deferring ${this._pendingPauseQuestions.length} pause questions for scene ${data.scene.id} due to predictionQuestion collision.`);
+        return;
+      }
+
       this._typewriterHandler = (twData) => {
         if (twData?.sceneId !== this._pendingSceneId) return;
         this._clearTypewriterListener();
