@@ -329,6 +329,7 @@ class PauseQuestionModal {
     // Mark all rows (correct/incorrect)
     this._el.querySelectorAll('.pqm-option-row').forEach(row => {
       row.classList.add('disabled');
+    const radio = row.querySelector('.pqm-radio-input');
       if (row.dataset.optId === correctId) row.classList.add('correct');
       if (row.dataset.optId === this._selectedOptId && !isCorrect) row.classList.add('incorrect');
     });
