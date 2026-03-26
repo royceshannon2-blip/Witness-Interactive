@@ -1091,27 +1091,28 @@ class UIController {
     document.addEventListener('mousedown', dismiss);
   }
 
-  _mountPauseQuestion(contentEl, doc, crossRolePrompt) {
+  _mountPauseQuestion(doc, crossRolePrompt) {
     this.currentDocHasPauseQuestion = true;
 
     const modal = new PauseQuestionModal(this.eventBus, doc.pauseQuestion, doc.id, crossRolePrompt || null);
 
-    // Listen for the user clicking "Continue" AFTER answering (stimuli:answer-submitted),
-    // NOT stimuli:pause-question-answered which fires immediately on answer selection
-    // and would destroy the "Continue" button before the user can click it.
-    const onSubmitted = (data) => {
-      if (data.documentId !== doc.id) return;
-      this.eventBus.off('stimuli:answer-submitted', onSubmitted);
-      this.eventBus.off('inventory:open-requested', onInventoryOpen);
-      modal.destroy();
-      this._showDismissButton(contentEl, doc.id);
-    };
-
     const onInventoryOpen = () => this._openInventory();
-
-    this.eventBus.on('stimuli:answer-submitted', onSubmitted);
     this.eventBus.on('inventory:open-requested', onInventoryOpen);
+
+    // Clean up inventory listener when the modal is submitted and closed
+    const onAnswerSubmitted = (data) => {
+      if (data.documentId !== doc.id) return;
+      this.eventBus.off('inventory:open-requested', onInventoryOpen);
+      this.eventBus.off('stimuli:answer-submitted', onAnswerSubmitted);
+    };
+    this.eventBus.on('stimuli:answer-submitted', onAnswerSubmitted);
+
     modal.mount();
+
+    // Show the inventory reminder after a short delay
+    setTimeout(() => this._showInventoryReminder(), 800);
   }
+
+}
 
 export default UIController;
