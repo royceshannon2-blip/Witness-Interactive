@@ -277,17 +277,7 @@ The Anarchists have long threatened that they would inaugurate a reign of terror
 The city is now thoroughly aroused. The authorities are determined to stamp out the Anarchist conspiracy root and branch. Warrants have been issued for the arrest of the leaders of the movement, and it is expected that before nightfall the ringleaders will be in custody.
 
 — Chicago Tribune, May 5, 1886`,
-    pauseQuestion: {
-      question: "The Chicago Tribune framing of the Haymarket bombing as an 'anarchist conspiracy' and a 'long-planned' attack best reflects which of the following about this source?",
-      options: [
-        { id: 'a', text: "The Tribune reporters had access to police intelligence reports that confirmed the bombing was premeditated, making their framing an accurate reflection of the available evidence.", correct: false },
-        { id: 'b', text: "The Tribune coverage reflects the standard journalistic practice of the 1880s, in which all major newspapers reported the Haymarket events in identical terms.", correct: false },
-        { id: 'c', text: "The Tribune close ties to business interests and its owner Joseph Medill's Republican politics shaped its interpretation of the bombing as a threat to social order, framing it as anarchist conspiracy before any investigation had taken place.", correct: true },
-        { id: 'd', text: "The Tribune framing as 'anarchist conspiracy' was accurate because the trial later proved that all eight defendants had planned the bombing in advance.", correct: false }
-      ],
-      correctId: 'c',
-      explanation: "AP Historical Thinking Skill 2 (Sourcing and Situation) requires examining who created a source and why. The Chicago Tribune was owned by Joseph Medill, a Republican political figure with deep ties to Chicago's business community and a long editorial history of hostility to labor organizing. The Tribune had opposed the eight-hour movement for months before Haymarket. Its May 5 headline — published the morning after the bombing, before any investigation — declared the event a 'long-planned conspiracy' and called for the arrest of 'ringleaders.' This framing preceded any evidence. Governor Altgeld's 1893 pardon message later documented that the trial itself was conducted with 'malicious ferocity' and that no evidence connected the defendants to the bomb. The Tribune's coverage is valuable evidence of how business-aligned media constructed the meaning of Haymarket — not as evidence of what actually happened."
-    }
+  
   },
   {
     id: 'hm-doc-5',
