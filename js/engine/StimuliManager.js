@@ -1,52 +1,45 @@
 /**
  * StimuliManager — Primary Source Document Display Engine
  *
- * FIXED ARCHITECTURE:
+ * SIMPLIFIED ARCHITECTURE (Bug-fix rewrite):
  *
- * Previous bugs:
- * 1. Documents appeared simultaneously with narrative (no typewriter gate)
- * 2. Pause question mounted via broken scroll detection (fired after 600ms regardless)
- * 3. Archive-to-dismiss race condition silently killed queue advancement
- * 4. StimuliRevealAnimator queried .stimuli-content after UIController painted it —
- * timing race caused silent animation skips
+ * Root cause of the "scene 2 freezes" bug:
+ *   The previous version deferred pause questions to the NEXT scene's
+ *   typewriter:complete. Scene 3 has a predictionQuestion, so the deferred
+ *   docs from scene 2 were silently dropped (the `if (hasPrediction) return`
+ *   guard skipped registering the typewriter listener). Choices were disabled
+ *   by UIController but `stimuli:all-pause-questions-complete` never fired,
+ *   leaving the scene permanently frozen.
  *
- * New flow:
- * scene:transition fires
- * → pending doc IDs stored, NOT shown yet
- * → typewriter:complete fires (player has read narrative)
- * → "View Document" button appears in scene choices area
- * → player clicks button
- * → stimuli:dom-ready emitted AFTER overlay is painted (requestAnimationFrame)
- * → StimuliRevealAnimator receives element reference directly
- * → player reads document
- * → "I've read this" button appears
- * → PauseQuestionModal mounts
- * → player answers
- * → dismiss button appears
- * → player clicks dismiss
- * → state committed synchronously
- * → archive animation plays (cosmetic only)
- * → queue advances to next doc
- *
- * Events consumed:
- * scene:transition          — stores pending doc IDs
- * typewriter:complete       — triggers "View Document" button
- * stimuli:answer-submitted  — { documentId, selectedId, correct }
- * stimuli:dismiss-requested — { documentId }
- * stimuli:archive-complete  — DOM cleanup only (no queue logic)
+ * New flow (same-scene, no deferral):
+ *   scene:transition fires
+ *     → doc IDs in stimuliUnlock stored as pendingForThisScene
+ *     → typewriter:complete fires
+ *       → docs are marked shown, stimuli:shown emitted (for inventory)
+ *       → stimuli:new-unlocked emitted (toast notification)
+ *       → pause questions queue built from docs that HAVE a pauseQuestion
+ *       → first pause question presented immediately
+ *         → player answers → next pause question
+ *           → when queue empty → stimuli:all-pause-questions-complete emitted
+ *             → UIController re-enables choices
  *
  * Events emitted:
- * stimuli:view-ready        — { documentId } — "View Document" button should appear
- * stimuli:dom-ready         — { documentId, overlayEl, contentEl } — animator hook
- * stimuli:shown             — { documentId, documentData } — inventory hook
- * stimuli:pause-question-answered — { documentId, correct, selectedId }
- * stimuli:dismissed         — { documentId, answeredCorrectly }
- * stimuli:archive-requested — { documentId } — triggers StimuliArchiveAnimator
+ *   stimuli:new-unlocked               — { documentIds }  toast notification
+ *   stimuli:shown                      — { documentId, documentData }  inventory hook
+ *   stimuli:present-pause-question     — { documentId, documentData }  UIController mounts modal
+ *   stimuli:pause-question-answered    — { documentId, correct, selectedId }
+ *   stimuli:all-pause-questions-complete — {}  UIController re-enables choices
+ *
+ * Events consumed:
+ *   scene:transition          — stores pending doc IDs for current scene
+ *   typewriter:complete       — triggers unlock + first pause question
+ *   stimuli:answer-submitted  — advances pause question queue
+ *   briefing:stimuli-unlock   — unlocks docs from briefing pages (no pause Q)
+ *   game:start / role:started — full session reset
  */
 
 import { getDocument } from '../content/missions/haymarket/stimulus-documents.js';
 import DocAnnotationLayer from './DocAnnotationLayer.js';
-import StimuliArchiveAnimator from './StimuliArchiveAnimator.js';
 
 class StimuliManager {
   /**
@@ -57,102 +50,71 @@ class StimuliManager {
     this.eventBus = eventBus;
     this.annotationStore = annotationStore;
 
-    // Session-scoped deduplication
+    // Session-scoped deduplication — never show the same doc twice
     this.shownDocuments = new Set();
 
-    // Docs unlocked in the current scene
-    this._newlyUnlockedDocs = [];
-
-    // Docs from previous scenes waiting for their pause questions to be answered
-    this._pendingPauseQuestions = [];
+    // Docs pending for the current scene (set on scene:transition, consumed on typewriter:complete)
+    this._pendingForThisScene = [];
     this._pendingSceneId = null;
 
-    // Active DocAnnotationLayer instance (one per open overlay in inventory)
+    // Queue of document IDs whose pause questions still need answering this scene
+    this._pauseQuestionQueue = [];
+
+    // Active DocAnnotationLayer (one per open overlay in inventory)
     this._docAnnotationLayer = null;
 
-    // One-time typewriter listener (stored so we can remove it on scene change)
+    // Stored typewriter listener reference so we can remove it cleanly
     this._typewriterHandler = null;
 
-    // Subscribe to events
-    this.eventBus.on('scene:transition',          (data) => this._handleSceneTransition(data));
+    // Subscribe
+    this.eventBus.on('scene:transition',         (data) => this._handleSceneTransition(data));
     this.eventBus.on('stimuli:answer-submitted',  (data) => this._handleAnswerSubmitted(data));
-
-    // Briefing pages can unlock stimulus documents
-    this.eventBus.on('briefing:stimuli-unlock',    (data) => this._handleBriefingUnlock(data));
-
-    // Listen for role/mission changes to wipe the session state and prevent stale queues
-    this.eventBus.on('game:start',                 () => this.reset());
-    this.eventBus.on('role:started',               () => this.reset());
+    this.eventBus.on('briefing:stimuli-unlock',   (data) => this._handleBriefingUnlock(data));
+    this.eventBus.on('game:start',                ()     => this.reset());
+    this.eventBus.on('role:started',              ()     => this.reset());
   }
 
-  // ─── Session Reset ───────────────────────────────────────────────────────────
+  // ── Session reset ───────────────────────────────────────────────────────────
 
   reset() {
-    // Completely clear document tracking to prevent state bleed across roles/missions
     this.shownDocuments.clear();
-    this._newlyUnlockedDocs = [];
-    this._pendingPauseQuestions = [];
+    this._pendingForThisScene = [];
     this._pendingSceneId = null;
-
-    // Clean up any lingering UI or listeners
+    this._pauseQuestionQueue = [];
     this._clearTypewriterListener();
     this.detachAnnotationOverlay();
   }
 
-  // ─── Scene transition: unlock silently, defer pause questions ───────────────────────
+  // ── Scene transition ────────────────────────────────────────────────────────
 
   _handleSceneTransition(data) {
+    // Cancel any typewriter listener from the previous scene
     this._clearTypewriterListener();
-    this._pendingSceneId = null;
 
-    // Docs unlocked in the last scene now need their pause questions presented
-    if (this._newlyUnlockedDocs.length > 0) {
-      this._pendingPauseQuestions.push(...this._newlyUnlockedDocs);
-      this._newlyUnlockedDocs = [];
-    }
+    // Reset per-scene state
+    this._pendingForThisScene = [];
+    this._pendingSceneId = null;
+    this._pauseQuestionQueue = [];
 
     if (!data?.scene) return;
-    this._pendingSceneId = data.scene.id;
 
     const unlock = data.scene.stimuliUnlock;
-    if (Array.isArray(unlock) && unlock.length > 0) {
-      // Filter already-shown docs
-      const toUnlock = unlock.filter(id => !this.shownDocuments.has(id));
-      if (toUnlock.length > 0) {
-        toUnlock.forEach(id => {
-          this.shownDocuments.add(id);
-          this._newlyUnlockedDocs.push(id);
-          const documentData = getDocument(id);
-          if (documentData) {
-            // Emit stimuli:shown for AnnotationInventory/IntelInventory to track
-            this.eventBus.emit('stimuli:shown', { documentId: id, documentData });
-          }
-        });
-        
-        // Notify UI that new intel was acquired silently
-        this.eventBus.emit('stimuli:new-unlocked', { documentIds: toUnlock });
-      }
-    }
+    if (!Array.isArray(unlock) || unlock.length === 0) return;
 
-    // Register typewriter:complete listener to trigger pause questions from PREVIOUS scenes
-    // CRITICAL: Ensure prediction questions are never used in the same scene as a pause question.
-    // If the current scene has a predictionQuestion, we defer these pause questions until the next scene.
-    const hasPrediction = !!data.scene.predictionQuestion;
+    // Filter docs already shown this session
+    const toUnlock = unlock.filter(id => !this.shownDocuments.has(id));
+    if (toUnlock.length === 0) return;
 
-    if (this._pendingPauseQuestions.length > 0) {
-      if (hasPrediction) {
-        console.warn(`StimuliManager: Deferring ${this._pendingPauseQuestions.length} pause questions for scene ${data.scene.id} due to predictionQuestion collision.`);
-        return;
-      }
+    this._pendingForThisScene = toUnlock;
+    this._pendingSceneId = data.scene.id;
 
-      this._typewriterHandler = (twData) => {
-        if (twData?.sceneId !== this._pendingSceneId) return;
-        this._clearTypewriterListener();
-        this._pendingSceneId = null;
-        this._showNextPauseQuestion();
-      };
-      this.eventBus.on('typewriter:complete', this._typewriterHandler);
-    }
+    // Wait for typewriter to finish before revealing docs / asking questions
+    this._typewriterHandler = (twData) => {
+      if (twData?.sceneId !== this._pendingSceneId) return;
+      this._clearTypewriterListener();
+      this._onTypewriterComplete();
+    };
+    this.eventBus.on('typewriter:complete', this._typewriterHandler);
   }
 
   _clearTypewriterListener() {
@@ -162,40 +124,75 @@ class StimuliManager {
     }
   }
 
-  // ─── Pause Questions ─────────────────────────────────────────────────────────
+  // ── Typewriter complete → unlock docs + start pause question queue ──────────
+
+  _onTypewriterComplete() {
+    const toUnlock = this._pendingForThisScene;
+    this._pendingForThisScene = [];
+    this._pendingSceneId = null;
+
+    if (toUnlock.length === 0) return;
+
+    // Mark as shown, emit events
+    const docsWithQuestions = [];
+    for (const id of toUnlock) {
+      if (this.shownDocuments.has(id)) continue;
+      this.shownDocuments.add(id);
+
+      const documentData = getDocument(id);
+      // Emit for inventory tracking regardless of whether doc has a pause question
+      this.eventBus.emit('stimuli:shown', { documentId: id, documentData });
+
+      if (documentData?.pauseQuestion) {
+        docsWithQuestions.push(id);
+      }
+    }
+
+    // Toast notification for newly unlocked intel
+    this.eventBus.emit('stimuli:new-unlocked', { documentIds: toUnlock });
+
+    if (docsWithQuestions.length === 0) {
+      // No pause questions needed — choices stay enabled
+      return;
+    }
+
+    // Build the queue and kick off the first question
+    this._pauseQuestionQueue = docsWithQuestions;
+    this._showNextPauseQuestion();
+  }
+
+  // ── Pause question queue ────────────────────────────────────────────────────
 
   _showNextPauseQuestion() {
-    if (this._pendingPauseQuestions.length === 0) {
-      // All pause questions answered for this scene
+    if (this._pauseQuestionQueue.length === 0) {
+      // All done — unfreeze the world
       this.eventBus.emit('stimuli:all-pause-questions-complete', {});
       return;
     }
 
-    const docId = this._pendingPauseQuestions.shift();
+    const docId = this._pauseQuestionQueue.shift();
     const documentData = getDocument(docId);
 
-    if (documentData && documentData.pauseQuestion) {
-      // Tell UIController to render the PauseQuestionModal
-      this.eventBus.emit('stimuli:present-pause-question', {
-        documentId: docId,
-        documentData: documentData
-      });
-    } else {
-      // No pause question for this document, skip to next
+    if (!documentData?.pauseQuestion) {
+      // No question for this doc (shouldn't happen given queue build logic, but be safe)
       this._showNextPauseQuestion();
+      return;
     }
+
+    this.eventBus.emit('stimuli:present-pause-question', {
+      documentId: docId,
+      documentData: documentData
+    });
   }
 
   _handleAnswerSubmitted(data) {
-    // When UIController's modal is submitted and closed, it emits this.
-    // We can show the next one.
-    // Small timeout to allow modal transitions
+    // Small delay lets the modal's "Continue" animation complete gracefully
     setTimeout(() => {
       this._showNextPauseQuestion();
     }, 400);
   }
 
-  // ─── Briefing unlock ─────────────────────────────────────────────────────────
+  // ── Briefing unlock (no pause questions — briefing IS the reading) ──────────
 
   _handleBriefingUnlock(data) {
     if (!Array.isArray(data?.documentIds) || data.documentIds.length === 0) return;
@@ -203,40 +200,32 @@ class StimuliManager {
     const toUnlock = data.documentIds.filter(id => !this.shownDocuments.has(id));
     if (toUnlock.length === 0) return;
 
-    toUnlock.forEach(id => {
+    for (const id of toUnlock) {
       this.shownDocuments.add(id);
-      this._newlyUnlockedDocs.push(id);
       const documentData = getDocument(id);
       if (documentData) {
         this.eventBus.emit('stimuli:shown', { documentId: id, documentData });
       }
-    });
+    }
 
     this.eventBus.emit('stimuli:new-unlocked', { documentIds: toUnlock });
   }
 
-  // ─── Annotation overlay (Called externally by IntelInventory) ────────────────
+  // ── Annotation overlay (called by IntelInventory when player reviews a doc) ─
 
   attachAnnotationOverlay(documentData, contentEl) {
     if (!contentEl) return;
 
-    // Destroy previous layer if exists
-    if (this._docAnnotationLayer) {
-      this._docAnnotationLayer.destroy();
-      this._docAnnotationLayer = null;
-    }
+    this.detachAnnotationOverlay();
 
     const textContainer = contentEl.querySelector('.stimuli-text');
     if (!textContainer) return;
 
-    // Mount DocAnnotationLayer (charcoal underline + sticky notes)
     this._docAnnotationLayer = new DocAnnotationLayer(contentEl);
     this._docAnnotationLayer.mount();
 
-    // Restore any existing highlights for this document
     this._restoreHighlights(textContainer, documentData.id);
 
-    // Selection → highlight toolbar
     const onSelectionEnd = () => {
       const selection = window.getSelection();
       const selectedText = selection ? selection.toString().trim() : '';
@@ -249,7 +238,6 @@ class StimuliManager {
     textContainer.addEventListener('mouseup', onSelectionEnd);
     textContainer.addEventListener('touchend', onSelectionEnd);
 
-    // Click existing highlight → note editor
     textContainer.addEventListener('click', (e) => {
       const mark = e.target.closest('mark.annotation-highlight');
       if (!mark) return;
@@ -265,6 +253,7 @@ class StimuliManager {
     }
   }
 
+  // ── Highlight toolbar ───────────────────────────────────────────────────────
 
   _showHighlightToolbar(range, selectedText, documentData) {
     document.getElementById('annotation-toolbar')?.remove();
@@ -335,6 +324,7 @@ class StimuliManager {
   }
 
   _applyHighlight(range, selectedText, color, colorLabel, documentData) {
+    if (!this.annotationStore) return null;
     try {
       const id   = `highlight_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
       const mark = document.createElement('mark');
@@ -363,6 +353,7 @@ class StimuliManager {
   }
 
   _openNoteEditor(mark, documentId, highlightId) {
+    if (!this.annotationStore) return;
     document.getElementById('annotation-note-editor')?.remove();
 
     const doc       = this.annotationStore.getDocument(documentId);
@@ -410,7 +401,8 @@ class StimuliManager {
   }
 
   _restoreHighlights(textContainer, documentId) {
-    const doc = this.annotationStore?.getDocument(documentId);
+    if (!this.annotationStore) return;
+    const doc = this.annotationStore.getDocument(documentId);
     if (!doc || doc.highlights.length === 0) return;
     doc.highlights.forEach(h => {
       this._wrapTextInContainer(textContainer, h.text, h.color, h.colorLabel, h.id, !!h.note);
@@ -434,7 +426,7 @@ class StimuliManager {
         mark.setAttribute('aria-label', `${colorLabel} highlight: ${text}`);
         mark.setAttribute('tabindex', '0');
         range.surroundContents(mark);
-      } catch (_) { /* skip */ }
+      } catch (_) { /* skip cross-element selections */ }
       return;
     }
   }
