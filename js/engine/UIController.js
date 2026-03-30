@@ -233,42 +233,44 @@ class UIController {
 
   handleStimuliPresentPauseQuestion(data) {
     if (!data?.documentId || !data?.documentData) return;
-    
-    // Lock the world so the player MUST answer the question before advancing
-    const appEl = document.getElementById('app');
-    if (appEl) appEl.inert = true;
-    
-    document.getElementById('scene-choices').style.pointerEvents = 'none';
-    document.getElementById('scene-choices').style.opacity = '0.5';
+ 
+    // Freeze choices while the modal is active
     this.disableChoices();
-
-    const doc = data.documentData;
-    this._mountPauseQuestion(doc, doc.crossRolePrompt);
-  }
-
-  handleStimuliAllPauseQuestionsComplete(data) {
-    // Thaw the world
-    const appEl = document.getElementById('app');
-    if (appEl) {
-      appEl.inert = false;
-    }
-    
     const choicesEl = document.getElementById('scene-choices');
     if (choicesEl) {
-      choicesEl.style.pointerEvents = 'all';
-      choicesEl.style.opacity = '1';
+      choicesEl.style.pointerEvents = 'none';
+      choicesEl.style.opacity = '0.5';
     }
-
-    // Force enable all buttons to ensure no "deadlock" state
-    document.querySelectorAll('.choice-button, .prediction-option, .quest-option-button').forEach(btn => {
+ 
+    // Mount the modal — pass arguments in the correct order:
+    // _mountPauseQuestion(documentData, crossRolePrompt)
+    const doc = data.documentData;
+    this._mountPauseQuestion(doc, doc.crossRolePrompt || null);
+  }
+ 
+  handleStimuliAllPauseQuestionsComplete(_data) {
+    // Restore choices
+    const choicesEl = document.getElementById('scene-choices');
+    if (choicesEl) {
+      choicesEl.style.pointerEvents = '';
+      choicesEl.style.opacity = '';
+    }
+ 
+    // Remove inert if it was set
+    const appEl = document.getElementById('app');
+    if (appEl) appEl.inert = false;
+ 
+    // Re-enable all interactive buttons in the scene
+    document.querySelectorAll(
+      '.choice-button, .prediction-option, .quest-option-button'
+    ).forEach(btn => {
       btn.disabled = false;
-      btn.style.pointerEvents = 'all';
+      btn.style.pointerEvents = 'auto';
       btn.style.opacity = '1';
     });
-
+ 
     this.enableChoices();
   }
-
   // ── Screen management ───────────────────────────────────────────────────────
 
   showScreen(screenName, data = {}) {
@@ -1090,30 +1092,41 @@ class UIController {
     setTimeout(dismiss, 6000);
     document.addEventListener('mousedown', dismiss);
   }
-
-_mountPauseQuestion(contentEl, doc, crossRolePrompt) {
+  
+  _mountPauseQuestion(doc, crossRolePrompt) {
+    // Guard: doc must have a pauseQuestion
+    if (!doc?.pauseQuestion) return;
+ 
     this.currentDocHasPauseQuestion = true;
-
-    const modal = new PauseQuestionModal(this.eventBus, doc.pauseQuestion, doc.id, crossRolePrompt || null);
-
-    // Listen for the user clicking "Continue" AFTER answering (stimuli:answer-submitted),
-    // NOT stimuli:pause-question-answered which fires immediately on answer selection
-    // and would destroy the "Continue" button before the user can click it.
-    const onSubmitted = (data) => {
-      if (data.documentId !== doc.id) return;
-      this.eventBus.off('stimuli:answer-submitted', onSubmitted);
-      this.eventBus.off('inventory:open-requested', onInventoryOpen);
-      modal.destroy();
-      this._showDismissButton(contentEl, doc.id);
-    };
-
+ 
+    // PauseQuestionModal(eventBus, pauseQuestion, documentId, crossRolePrompt)
+    const modal = new PauseQuestionModal(
+      this.eventBus,
+      doc.pauseQuestion,
+      doc.id,
+      crossRolePrompt || null
+    );
+ 
+    // When the player clicks "Continue" inside the modal, it emits
+    // stimuli:answer-submitted then stimuli:dismiss-requested and calls destroy().
+    // StimuliManager._handleAnswerSubmitted advances the queue and eventually
+    // emits stimuli:all-pause-questions-complete, which calls
+    // handleStimuliAllPauseQuestionsComplete above.
+ 
+    // Clean up listeners when inventory is opened mid-question
     const onInventoryOpen = () => this._openInventory();
-
-    this.eventBus.on('stimuli:answer-submitted', onSubmitted);
     this.eventBus.on('inventory:open-requested', onInventoryOpen);
+ 
+    // Remove inventory listener once modal is done
+    const onAnswerSubmitted = (answerData) => {
+      if (answerData?.documentId !== doc.id) return;
+      this.eventBus.off('stimuli:answer-submitted', onAnswerSubmitted);
+      this.eventBus.off('inventory:open-requested', onInventoryOpen);
+    };
+    this.eventBus.on('stimuli:answer-submitted', onAnswerSubmitted);
+ 
     modal.mount();
   }
-
 }
 
 export default UIController;
